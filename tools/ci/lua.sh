@@ -21,6 +21,7 @@ print(*matches)
 EOF`
 
 global_objects=(
+    LQS
     xi
     ai
     os
