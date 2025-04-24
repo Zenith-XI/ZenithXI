@@ -36,5 +36,23 @@
 #
 # Live example:
 
-custom/commands/
-custom/lua/test_npcs_in_gm_home.lua
+LQS/cpp
+LQS/lib
+LQS/commands
+
+zenith-public/cpp
+zenith-public/sql
+zenith-private/cpp
+zenith-private/sql
+
+zenith-public/lua/1-enum
+zenith-private/lua/1-enum
+
+zenith-public/lua/2-base
+zenith-private/lua/2-base
+
+zenith-public/lua/3-complete
+zenith-private/lua/3-complete
+
+zenith-public/lua/4-additive
+zenith-private/lua/4-additive

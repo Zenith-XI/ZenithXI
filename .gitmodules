@@ -4,3 +4,13 @@
 [submodule "losmeshes"]
 	path = losmeshes
 	url = https://github.com/LandSandBoat/losmeshes.git
+[submodule "mod-lqs"]
+	path = modules/LQS
+	url = https://github.com/LoxleyXI/LQS.git
+	branch = main
+    ignore = dirty
+[submodule "mod-priv"]
+	path = modules/zenith-private
+	url = https://github.com/Zenith-XI/Modules.git
+    branch = main
+	ignore = all
