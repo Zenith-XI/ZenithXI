@@ -3,7 +3,13 @@ import subprocess
 
 # If launching from somewhere that isnt <root>/tools/, figure out where dbtool.py is located, and the server root.
 dbtool_dir_path = os.path.normpath(os.path.realpath(os.path.dirname(__file__)))
-patch_dirs = [ "../modules/zenith-public/git-patches", "../modules/zenith-private/git-patches" ]
+patch_dirs = []
+
+# collects all "git-patches" directories in the modules folder
+for root, dirs, files in os.walk("../modules"):
+    for d in dirs:
+        if d == "git-patches":
+            patch_dirs.append(os.path.join(root, d))
 
 def from_dbtool_path(path):
     return os.path.normpath(os.path.join(dbtool_dir_path, path))
