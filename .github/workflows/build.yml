@@ -336,9 +336,10 @@ jobs:
         with:
           fetch-depth: 1
       - name: Include only public modules
+        shell: bash
         run: |
-          grep -v private modules/init.txt > modules/init.txt || true
-          git submodule update --init --remote --force modules/LQS || true
+          grep -v private modules/init.txt | tee modules/init.txt
+          git submodule update --init --remote --force modules/LQS
       - name: Cache 'build' folder
         uses: actions/cache@v4
         with:
@@ -689,9 +690,10 @@ jobs:
         with:
           fetch-depth: 1
       - name: Include only public modules
+        shell: bash
         run: |
-          grep -v private modules/init.txt > modules/init.txt || true
-          git submodule update --init --remote --force modules/LQS || true
+          grep -v private modules/init.txt | tee modules/init.txt
+          git submodule update --init --remote --force modules/LQS
       - uses: actions/download-artifact@v4
         with:
           name: windows_executables
@@ -716,6 +718,7 @@ jobs:
       - name: Startup checks
         shell: bash
         run: |
+          type modules/init.txt
           python3 ./tools/ci/startup_checks.py
 
   Full_Startup_Checks_Windows_Tracy_Modules:
