@@ -341,6 +341,7 @@ jobs:
           sed /private/d modules/init.txt -i
           git submodule update --init --remote --force modules/LQS || true
       - name: Apply git Patches
+        shell: bash
         run: |
           cd tools
           python3 apply_patches.py 2> git-patches.log
@@ -703,6 +704,7 @@ jobs:
           sed /private/d modules/init.txt -i
           git submodule update --init --remote --force modules/LQS || true
       - name: Apply git Patches
+        shell: bash
         run: |
           cd tools
           python3 apply_patches.py 2> git-patches.log
