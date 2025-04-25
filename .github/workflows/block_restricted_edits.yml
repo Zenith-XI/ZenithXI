@@ -32,7 +32,7 @@ jobs:
 
       - name: Check for restricted path changes
         run: |
-          IFS=',' read -ra FILES <<< "$CHANGED_FILES"
+          IFS=',' read -ra ITEMS <<< "$CHANGED_FILES"
           for item in "${ITEMS[@]}"; do
             echo $item
           done
