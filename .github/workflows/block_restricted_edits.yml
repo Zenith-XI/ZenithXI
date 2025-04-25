@@ -32,8 +32,8 @@ jobs:
 
       - name: Check for restricted path changes
         run: |
-          IFS=',' read -ra ITEMS <<< "$CHANGED_FILES"
-          for item in "${ITEMS[@]}"; do
-            echo $item
-          done
-          echo "✅ No restricted changes."
+          if echo "$CHANGED_FILES" | sed 's/\([^,]*\)/\n\1/g' | grep -qv "^modules"; then
+            echo "🚫 Changes to restricted paths detected!"
+          else
+            echo "✅ No restricted changes."
+          fi
