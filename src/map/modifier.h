@@ -381,6 +381,21 @@ enum class Mod
     MIJIN_RERAISE = 258, // Augments Mijin Gakure
     DUAL_WIELD    = 259, // Percent reduction in dual wield delay.
 
+    // SPARE IDs: 544 to 551, both included.
+    // SPARE IDs: 1144 and onward
+
+    // fTP modifiers
+    FIRE_FTP_BONUS    = 544,  // Gives bonus fTP when weaponskill has a Fire property. (Elemental beltes and gorgets) /256
+    ICE_FTP_BONUS     = 545,  // Gives bonus fTP when weaponskill has a Ice property. (Elemental beltes and gorgets) /256
+    WIND_FTP_BONUS    = 546,  // Gives bonus fTP when weaponskill has a Wind property. (Elemental beltes and gorgets) /256
+    EARTH_FTP_BONUS   = 547,  // Gives bonus fTP when weaponskill has a Earth property. (Elemental beltes and gorgets) /256
+    THUNDER_FTP_BONUS = 548,  // Gives bonus fTP when weaponskill has a Thunder property. (Elemental beltes and gorgets) /256
+    WATER_FTP_BONUS   = 549,  // Gives bonus fTP when weaponskill has a Water property. (Elemental beltes and gorgets) /256
+    LIGHT_FTP_BONUS   = 550,  // Gives bonus fTP when weaponskill has a Light property. (Elemental beltes and gorgets) /256
+    DARK_FTP_BONUS    = 551,  // Gives bonus fTP when weaponskill has a Dark property. (Elemental beltes and gorgets) /256
+    ANY_FTP_BONUS     = 1144, // Gives bonus fTP when weaponskill has a (any) property. (Fotia Gorget, Fotia Belt) /256
+    DAY_FTP_BONUS     = 1145, // Gives bonus fTP when weaponskill has a property that matches current day. (Mekira Oto, Gavialis helm, etc...) /256
+
     // Warrior
     DOUBLE_ATTACK       = 288,  // Percent chance to proc
     DOUBLE_ATTACK_DMG   = 1038, // Increases "Double Attack" damage/"Double Attack" damage + (in percents, e.g. +20 = +20% damage)
@@ -449,6 +464,7 @@ enum class Mod
 
     // Paladin
     HOLY_CIRCLE_DURATION   = 857,  // Holy Circle extended duration in seconds
+    HOLY_CIRCLE_POTENCY    = 1141, // Increases the potency of the Holy Circle effect (e.g. mod value 2 = +2% Undead Killer)
     RAMPART_DURATION       = 92,   // Rampart duration in seconds
     ABSORB_PHYSDMG_TO_MP   = 426,  // Absorbs a percentage of physical damage taken to MP.
     SHIELD_MASTERY_TP      = 485,  // Shield mastery TP bonus when blocking with a shield
@@ -542,6 +558,7 @@ enum class Mod
 
     // Samurai
     WARDING_CIRCLE_DURATION   = 95,   // Warding Circle extended duration in seconds
+    WARDING_CIRCLE_POTENCY    = 1143, // Increases the potency of the Warding Circle effect (e.g. mod value 2 = +2% Demon Killer)
     MEDITATE_DURATION         = 94,   // Meditate duration in seconds
     ZANSHIN                   = 306,  // Zanshin percent chance
     THIRD_EYE_COUNTER_RATE    = 508,  // Adds counter to 3rd eye anticipates & if using Seigan counter rate is increased by 15%
@@ -563,6 +580,7 @@ enum class Mod
 
     // Dragoon
     ANCIENT_CIRCLE_DURATION    = 859,  // Ancient Circle extended duration in seconds
+    ANCIENT_CIRCLE_POTENCY     = 1142, // Increases the potency of the Ancient Circle effect (e.g. mod value 2 = +2% Dragon Killer)
     JUMP_TP_BONUS              = 361,  // bonus tp player receives when using jump
     JUMP_SPIRIT_TP_BONUS       = 285,  // bonus tp player receives when using jump for spirit jump only
     JUMP_ATT_BONUS             = 362,  // ATT% bonus for all jumps
@@ -601,10 +619,12 @@ enum class Mod
     SPIRIT_CAST_REDUCTION     = 140,  // Spirit Pact casting time reduction in seconds
 
     // Blue Mage
-    BLUE_POINTS          = 309,  // Tracks extra blue points
-    BLUE_LEARN_CHANCE    = 945,  // Additional chance to learn blue magic
-    BLUE_JOB_TRAIT_BONUS = 1058, // TODO: Increases job traits gained from equipped blue magic (percent)
-    BLUE_MAGIC_EFFECT    = 1059, // TODO: Bonus to Attribute Value of spell (percent)
+    BLUE_POINTS             = 309,  // Tracks extra blue points
+    BLUE_LEARN_CHANCE       = 945,  // Additional chance to learn blue magic
+    BLUE_JOB_TRAIT_BONUS    = 1058, // TODO: Increases job traits gained from equipped blue magic (percent)
+    BLUE_MAGIC_EFFECT       = 1059, // TODO: Bonus to Attribute Value of spell (percent)
+    ENHANCES_BURST_AFFINITY = 1139, // Increases WSC bonus on spells cast with Burst Affinity (percent)
+    ENHANCES_CHAIN_AFFINITY = 1140, // TODO: Increases WSC bonus on spells cast with Chain Affinity (base damage +)
 
     // Corsair
     EXP_BONUS         = 382,  //
@@ -1071,8 +1091,7 @@ enum class Mod
     // The spares take care of finding the next ID to use so long as we don't forget to list IDs that have been freed up by refactoring.
     // 570 through 825 used by WS DMG mods these are not spares.
     //
-    // SPARE IDs: 544 to 551, both included.
-    // SPARE IDs: 1139 and onward
+    // SPARE IDs: 1146 and onward
 };
 
 // temporary workaround for using enum class as unordered_map key until compilers support it

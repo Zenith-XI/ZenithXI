@@ -14643,26 +14643,6 @@ int32 CLuaBaseEntity::physicalDmgTaken(double damage, sol::variadic_args va)
 }
 
 /************************************************************************
- *  Function: magicDmgTaken()
- *  Purpose : Returns the value of Magic Damage taken after calculation
- *  Example : dmg = target:magicDmgTaken(dmg)
- *  Notes   : Passes argument to MagicDmgTaken member of battleutils
- ************************************************************************/
-
-int32 CLuaBaseEntity::magicDmgTaken(double damage, sol::variadic_args va)
-{
-    if (m_PBaseEntity->objtype == TYPE_NPC)
-    {
-        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
-        return 0;
-    }
-
-    ELEMENT elementType = va[0].is<uint32>() ? va[0].as<ELEMENT>() : ELEMENT_NONE;
-
-    return battleutils::MagicDmgTaken(static_cast<CBattleEntity*>(m_PBaseEntity), static_cast<int32>(damage), elementType);
-}
-
-/************************************************************************
  *  Function: rangedDmgTaken()
  *  Purpose : Returns the value of Ranged Damage taken after calculation
  *  Example : dmg = target:rangedDmgTaken(dmg)
@@ -18324,7 +18304,7 @@ uint16 CLuaBaseEntity::getDespoilItem()
 
     DropList_t* PDropList = itemutils::GetDropList(PMob->m_DropID);
 
-    if (PDropList && !PMob->m_ItemStolen)
+    if (PDropList && !PMob->m_ItemDespoiled)
     {
         std::vector<DropItem_t> despoilableItems;
 
@@ -18361,7 +18341,7 @@ uint16 CLuaBaseEntity::getDespoilDebuff(uint16 itemID)
  *  Function: itemStolen()
  *  Purpose : Flags a mob's item as stolen, returns true upon update
  *  Example : target:itemStolen()
- *  Notes   : Used in scripts/actions/abilities/steal.lua
+ *  Notes   : Used in scripts/globals/job_utils/thief.lua
  ************************************************************************/
 
 bool CLuaBaseEntity::itemStolen()
@@ -18373,6 +18353,25 @@ bool CLuaBaseEntity::itemStolen()
     }
 
     static_cast<CMobEntity*>(m_PBaseEntity)->m_ItemStolen = true;
+    return true;
+}
+
+/************************************************************************
+ *  Function: itemDespoiled()
+ *  Purpose : Flags a mob's item as despoiled, returns true upon update
+ *  Example : target:itemDespoiled()
+ *  Notes   : Used in scripts/globals/job_utils/thief.lua
+ ************************************************************************/
+
+bool CLuaBaseEntity::itemDespoiled()
+{
+    if (m_PBaseEntity->objtype != TYPE_MOB)
+    {
+        ShowWarning("Attempting to flag despoiled item for invalid entity type (%s).", m_PBaseEntity->getName());
+        return false;
+    }
+
+    static_cast<CMobEntity*>(m_PBaseEntity)->m_ItemDespoiled = true;
     return true;
 }
 
@@ -19616,7 +19615,6 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("isSpellAoE", CLuaBaseEntity::isSpellAoE);
 
     SOL_REGISTER("physicalDmgTaken", CLuaBaseEntity::physicalDmgTaken);
-    SOL_REGISTER("magicDmgTaken", CLuaBaseEntity::magicDmgTaken);
     SOL_REGISTER("rangedDmgTaken", CLuaBaseEntity::rangedDmgTaken);
     SOL_REGISTER("breathDmgTaken", CLuaBaseEntity::breathDmgTaken);
     SOL_REGISTER("handleAfflatusMiseryDamage", CLuaBaseEntity::handleAfflatusMiseryDamage);
@@ -19800,6 +19798,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("getDespoilItem", CLuaBaseEntity::getDespoilItem);
     SOL_REGISTER("getDespoilDebuff", CLuaBaseEntity::getDespoilDebuff);
     SOL_REGISTER("itemStolen", CLuaBaseEntity::itemStolen);
+    SOL_REGISTER("itemDespoiled", CLuaBaseEntity::itemDespoiled);
     SOL_REGISTER("getTHlevel", CLuaBaseEntity::getTHlevel);
     SOL_REGISTER("setTHlevel", CLuaBaseEntity::setTHlevel);
 

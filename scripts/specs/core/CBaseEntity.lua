@@ -3164,13 +3164,6 @@ end
 
 ---@nodiscard
 ---@param damage number
----@param element integer?
----@return integer
-function CBaseEntity:magicDmgTaken(damage, element)
-end
-
----@nodiscard
----@param damage number
 ---@param damageType integer?
 ---@return integer
 function CBaseEntity:rangedDmgTaken(damage, damageType)
@@ -3990,6 +3983,11 @@ end
 ---@nodiscard
 ---@return boolean
 function CBaseEntity:itemStolen()
+end
+
+---@nodiscard
+---@return boolean
+function CBaseEntity:itemDespoiled()
 end
 
 ---@nodiscard

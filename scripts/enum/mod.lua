@@ -446,6 +446,18 @@ xi.mod =
     PERPETUATION_REDUCTION          = 346,
     SPIKES_DMG_BONUS                = 1079, -- Increases Blaze/Ice/Shock spikes damage by percentage (e.g. mod value 50 = +50% spikes damage)
 
+    -- fTP modifiers
+    FIRE_FTP_BONUS                  = 544,  -- Gives bonus fTP when weaponskill has a Fire property. (Elemental beltes and gorgets) /256
+    ICE_FTP_BONUS                   = 545,  -- Gives bonus fTP when weaponskill has a Ice property. (Elemental beltes and gorgets) /256
+    WIND_FTP_BONUS                  = 546,  -- Gives bonus fTP when weaponskill has a Wind property. (Elemental beltes and gorgets) /256
+    EARTH_FTP_BONUS                 = 547,  -- Gives bonus fTP when weaponskill has a Earth property. (Elemental beltes and gorgets) /256
+    THUNDER_FTP_BONUS               = 548,  -- Gives bonus fTP when weaponskill has a Thunder property. (Elemental beltes and gorgets) /256
+    WATER_FTP_BONUS                 = 549,  -- Gives bonus fTP when weaponskill has a Water property. (Elemental beltes and gorgets) /256
+    LIGHT_FTP_BONUS                 = 550,  -- Gives bonus fTP when weaponskill has a Light property. (Elemental beltes and gorgets) /256
+    DARK_FTP_BONUS                  = 551,  -- Gives bonus fTP when weaponskill has a Dark property. (Elemental beltes and gorgets) /256
+    ANY_FTP_BONUS                   = 1144, -- Gives bonus fTP when weaponskill has a (any) property. (Fotia Gorget, Fotia Belt) /256
+    DAY_FTP_BONUS                   = 1145, -- Gives bonus fTP when weaponskill has a property that matches current day. (Mekira Oto, Gavialis helm, etc...) /256
+
     -- Warrior
     BERSERK_POTENCY                 = 948,  -- Augments "Berserk"/Enhances "Berserk" effect (Conqueror)
     BERSERK_DURATION                = 954,  -- Berserk Duration
@@ -928,7 +940,10 @@ xi.mod =
 
     -- Circle Abilities Extended Duration from AF/AF+1
     HOLY_CIRCLE_DURATION            = 857,
+    HOLY_CIRCLE_POTENCY             = 1141, -- Increases the potency of the Holy Circle effect (e.g. mod value 2 = +2% Undead Killer)
     ANCIENT_CIRCLE_DURATION         = 859,
+    ANCIENT_CIRCLE_POTENCY          = 1142, -- Increases the potency of the Ancient Circle effect (e.g. mod value 2 = +2% Dragon Killer)
+    WARDING_CIRCLE_POTENCY          = 1143, -- Increases the potency of the Warding Circle effect (e.g. mod value 2 = +2% Demon Killer)
 
     -- Other
     CURE2MP_PERCENT                 = 860, -- Converts % of "Cure" amount to MP
@@ -937,7 +952,7 @@ xi.mod =
     SMITE                           = 898, -- Att increase with H2H or 2H weapons
     TACTICAL_GUARD                  = 899, -- Tp gain increase when guarding
     GUARD_PERCENT                   = 976, -- Guard Percent
-    COUNTER_DAMAGE                  = 1047, -- TODO: Increases Damage from Counter Attacks (Percent)
+    COUNTER_DAMAGE                  = 1047, -- Increases Damage from Counter Attacks (adds to base damage)
     FENCER_TP_BONUS                 = 903, -- TP Bonus to weapon skills from Fencer Trait
     FENCER_CRITHITRATE              = 904, -- Increased Crit chance from Fencer Trait
     SHIELD_DEF_BONUS                = 905, -- Shield Defense Bonus
@@ -1025,6 +1040,9 @@ xi.mod =
     ENHANCES_ABSORB_EFFECTS = 1136, -- Absorb Spell duration +x seconds (Enhances "Absorb" effects)
     AUGMENTS_ABSORB         = 1337, -- Non-Liberator Absorb Spell potency +x% (Augments "Absorb" effects)
     ABSORB_EFFECT_DURATION  = 1138, -- Absorb Spell duration +% ("Absorb" effect duration +x%)
+
+    ENHANCES_BURST_AFFINITY = 1139, -- Increases WSC bonus on spells cast with Burst Affinity (percent)
+    ENHANCES_CHAIN_AFFINITY = 1140, -- TODO: Increases WSC bonus on spells cast with Chain Affinity (base damage +)
 
     -- IF YOU ADD ANY NEW MODIFIER HERE, ADD IT IN src/map/modifier.h ASWELL!
 

@@ -36,11 +36,24 @@ xi.mobSkill =
     SILENCE_GAS_1            =  314,
     DARK_SPORE_1             =  315,
 
+    DRILL_BRANCH             =  328,
+    PINECONE_BOMB            =  329,
+
+    LEAFSTORM                =  331,
+    ENTANGLE                 =  332,
+
     RANGED_ATTACK_2          =  412,
 
     DANSE_MACABRE            =  533,
 
     VULTURE_3                =  626,
+
+    BENEDICTION_1            =  689, -- Season's Greetings KSNM 30 (Gilagoge Tlugvi)
+    HUNDRED_FISTS_1          =  690, -- Season's Greetings KSNM 30 (Goga Tlugvi)
+
+    BLOOD_WEAPON_1           =  695, -- Season's Greetings KSNM 30 (Gola Tlugvi)
+
+    MIJIN_GAKURE_1           =  731, -- Season's Greetings KSNM 30 (Ulagohvsdi Tlugvi)
 
     DISPELLING_WIND          =  813,
     DEADLY_DRIVE             =  814,
@@ -159,6 +172,14 @@ xi.mobSkill =
     NECROPURGE               = 2117,
     BILGESTORM               = 2118,
     THUNDRIS_SHRIEK          = 2119,
+
+    RADIANT_SACRAMENT        = 2141,
+    MEGA_HOLY                = 2142,
+    PERFECT_DEFENSE          = 2143,
+    DIVINE_SPEAR             = 2144,
+    GOSPEL_OF_THE_LOST       = 2145,
+    VOID_OF_REPENTANCE       = 2146,
+    DIVINE_JUDGMENT          = 2147,
 
     HELL_SCISSORS            = 2221,
 
