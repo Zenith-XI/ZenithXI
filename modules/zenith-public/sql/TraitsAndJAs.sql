@@ -130,10 +130,15 @@ UPDATE `traits` SET `value` = 3 WHERE `name` = 'crit. def. bonus' AND `rank` = 1
 UPDATE `traits` SET `value` = 5 WHERE `name` = 'crit. def. bonus' AND `rank` = 2; -- Crit. Def. Bonus II, 5%
 UPDATE `traits` SET `value` = 7 WHERE `name` = 'crit. def. bonus' AND `rank` = 3; -- Crit. Def. Bonus III, 7%
 
-UPDATE `traits` SET `value` = 3 WHERE `name` = 'damage limit+' AND `rank` = 1; -- Damage Limit+ I, 0.03
-UPDATE `traits` SET `value` = 5 WHERE `name` = 'damage limit+' AND `rank` = 2; -- Damage Limit+ II, 0.05
-UPDATE `traits` SET `value` = 6 WHERE `name` = 'damage limit+' AND `rank` = 3; -- Damage Limit+ III, 0.06
-UPDATE `traits` SET `value` = 7 WHERE `name` = 'damage limit+' AND `rank` = 4; -- Damage Limit+ IV, 0.07
+UPDATE `traits` SET `value` = 3 WHERE `name` = 'damage limit+' AND `rank` = 1; -- Damage Limit+ I, 3%
+UPDATE `traits` SET `value` = 5 WHERE `name` = 'damage limit+' AND `rank` = 2; -- Damage Limit+ II, 5%
+UPDATE `traits` SET `value` = 6 WHERE `name` = 'damage limit+' AND `rank` = 3; -- Damage Limit+ III, 6%
+UPDATE `traits` SET `value` = 7 WHERE `name` = 'damage limit+' AND `rank` = 4; -- Damage Limit+ IV, 7%
+
+UPDATE `traits` SET `value` = 8 WHERE `name` = 'smite' AND `rank` = 1;  -- Smite I, 3.12%
+UPDATE `traits` SET `value` = 10 WHERE `name` = 'smite' AND `rank` = 2; -- Smite II, 3.9%
+UPDATE `traits` SET `value` = 12 WHERE `name` = 'smite' AND `rank` = 3; -- Smite III, 4.68%
+UPDATE `traits` SET `value` = 14 WHERE `name` = 'smite' AND `rank` = 4; -- Smite IV, 5.46%
 
 UPDATE `traits` SET `value` = 3 WHERE `name` = 'skillchain bonus' AND `rank` = 1; -- Skillchain Bonus I, 3%
 UPDATE `traits` SET `value` = 5 WHERE `name` = 'skillchain bonus' AND `rank` = 2; -- Skillchain Bonus II, 5%
