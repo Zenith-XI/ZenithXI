@@ -381,9 +381,6 @@ enum class Mod
     MIJIN_RERAISE = 258, // Augments Mijin Gakure
     DUAL_WIELD    = 259, // Percent reduction in dual wield delay.
 
-    // SPARE IDs: 544 to 551, both included.
-    // SPARE IDs: 1144 and onward
-
     // fTP modifiers
     FIRE_FTP_BONUS    = 544,  // Gives bonus fTP when weaponskill has a Fire property. (Elemental beltes and gorgets) /256
     ICE_FTP_BONUS     = 545,  // Gives bonus fTP when weaponskill has a Ice property. (Elemental beltes and gorgets) /256
@@ -416,7 +413,7 @@ enum class Mod
     KICK_ATTACK_RATE    = 292,   // Percent chance to kick
     PERFECT_COUNTER_ATT = 428,   // TODO: Raises weapon damage by 20 when countering while under the Perfect Counter effect. This also affects Weapon Rank (though
                                  // not if fighting barehanded).
-    COUNTER_DAMAGE       = 1047, // TODO: Increases Damage from Counter Attacks (Percent)
+    COUNTER_DAMAGE       = 1047, // Increases Damage from Counter Attacks (Percent)
     FOOTWORK_ATT_BONUS   = 429,  // Raises the attack bonus of Footwork. (Tantra Gaiters +2 raise 25/256 to 38/256)
     COUNTERSTANCE_EFFECT = 543,  // Counterstance effect in percents
     DODGE_EFFECT         = 552,  // Dodge effect in percents
@@ -435,15 +432,19 @@ enum class Mod
     REGEN_BONUS      = 989, // Increases the amount of HP restored by Regen
 
     // Black Mage
-    CLEAR_MIND  = 295, // Used in conjunction with HEALMP to increase amount between tics
-    CONSERVE_MP = 296, // Percent chance
+    CLEAR_MIND              = 295,  // Used in conjunction with HEALMP to increase amount between tics
+    CONSERVE_MP             = 296,  // Percent chance
+    ELEMENTAL_MAGIC_RECAST  = 1146, // Recast time for elemental magic spells (percent, usually negative)
+    ENHANCES_ELEMENTAL_SEAL = 1149, // Bonus magic damage when using Elemental Seal (percent)
+    ELEMENTAL_DEBUFF_EFFECT = 1150, // Increase stat reduction by N, and DoT by N/2 HP per tick
 
     // Red Mage
-    BLINK             = 299, // Tracks blink shadows
-    STONESKIN         = 300, // Tracks stoneskin HP pool
-    PHALANX           = 301, // Tracks direct damage reduction
-    ENF_MAG_POTENCY   = 290, // Increases Enfeebling magic potency %
-    ENHANCES_SABOTEUR = 297, // Increases Saboteur Potency %
+    BLINK             = 299,  // Tracks blink shadows
+    STONESKIN         = 300,  // Tracks stoneskin HP pool
+    PHALANX           = 301,  // Tracks direct damage reduction
+    ENF_MAG_POTENCY   = 290,  // Increases Enfeebling magic potency %
+    ENF_MAG_DURATION  = 1151, // Increases enfeebling magic duration %
+    ENHANCES_SABOTEUR = 297,  // Increases Saboteur Potency %
 
     // Thief
     FLEE_DURATION        = 93,   // Flee duration in seconds
@@ -484,32 +485,37 @@ enum class Mod
     SHIELD_BARRIER         = 1082, // Grants a bonus to Protect spells cast by self while a shield is equipped.
 
     // Dark Knight
-    ARCANE_CIRCLE_DURATION = 858,  // Arcane Circle extended duration in seconds
-    ARCANE_CIRCLE_POTENCY  = 1069, // Increases the potency of the Arcane Circle effect (e.g. mod value 2 = +2% Arcana Killer)
-    SOULEATER_EFFECT       = 96,   // Souleater power in percents
-    SOULEATER_EFFECT_II    = 53,   // Uncapped additive Souleaterbonus in percents, 10 = .1
-    DESPERATE_BLOWS        = 906,  // Adds ability haste to Last Resort
-    STALWART_SOUL          = 907,  // Reduces damage taken from Souleater
-    DREAD_SPIKES_EFFECT    = 998,  // Percent increase to total HP drain for Dread Spikes
-    DARK_MAGIC_CAST        = 1071, // Reduces Dark Magic Casting Time by percentage (e.g. mod value -10 = -10% cast time)
-    DARK_MAGIC_DURATION    = 1072, // Increases Dark Magic spell durations by percentage (e.g. mod value 10 = +10% duration)
-    ENHANCES_BLOOD_WEAPON  = 1070, // Enhances "Blood Weapon" effect (increases Blood Weapon's duration in seconds)
-    ENHANCES_DARK_SEAL     = 1073, // Enhances "Dark Seal" effect (Increases Dark Magic spell durations by 10% per Dark Seal merit while Dark Seal active)
-    ENHANCES_DIABOLIC_EYE  = 275,  // Diabolic Eye duration + "modifier-value" seconds per Diabolic Eye merit.
-    ENHANCES_NETHER_VOID   = 1083, // Enhances "Nether Void" effect (Increases the potency of the next Absorb or Drain Dark Magic by <value>%
-    ENHANCES_MUTED_SOUL    = 1084, // Enhances "Muted Soul" effect (Adds 3% Zanshin rate per MUTED_SOUL merit level)
+    ARCANE_CIRCLE_DURATION  = 858,  // Arcane Circle extended duration in seconds
+    ARCANE_CIRCLE_POTENCY   = 1069, // Increases the potency of the Arcane Circle effect (e.g. mod value 2 = +2% Arcana Killer)
+    SOULEATER_EFFECT        = 96,   // Souleater power in percents
+    SOULEATER_EFFECT_II     = 53,   // Uncapped additive Souleaterbonus in percents, 10 = .1
+    DESPERATE_BLOWS         = 906,  // Adds ability haste to Last Resort
+    STALWART_SOUL           = 907,  // Reduces damage taken from Souleater
+    DREAD_SPIKES_EFFECT     = 998,  // Percent increase to total HP drain for Dread Spikes
+    DARK_MAGIC_CAST         = 1071, // Reduces Dark Magic Casting Time by percentage (e.g. mod value -10 = -10% cast time)
+    DARK_MAGIC_DURATION     = 1072, // Increases Dark Magic spell durations by percentage (e.g. mod value 10 = +10% duration)
+    ENHANCES_BLOOD_WEAPON   = 1070, // Enhances "Blood Weapon" effect (increases Blood Weapon's duration in seconds)
+    ENHANCES_DARK_SEAL      = 1073, // Enhances "Dark Seal" effect (Increases Dark Magic spell durations by 10% per Dark Seal merit while Dark Seal active)
+    ENHANCES_DIABOLIC_EYE   = 275,  // Diabolic Eye duration + "modifier-value" seconds per Diabolic Eye merit.
+    ENHANCES_NETHER_VOID    = 1083, // Enhances "Nether Void" effect (Increases the potency of the next Absorb or Drain Dark Magic by <value>%
+    ENHANCES_MUTED_SOUL     = 1084, // Enhances "Muted Soul" effect (Adds 3% Zanshin rate per MUTED_SOUL merit level)
+    ENHANCES_ABSORB_EFFECTS = 1136, // Absorb Spell duration +x seconds (Enhances "Absorb" effects)
+    AUGMENTS_ABSORB         = 1137, // Non-Liberator Absorb Spell potency +x% (Augments "Absorb" effects)
+    ABSORB_EFFECT_DURATION  = 1138, // Absorb Spell duration +% ("Absorb" effect duration +x%)
+    AUGMENTS_ABSORB_TP      = 1153, // Increases absorb-TP potency, stacks with AUGMENTS_ABSORB
 
     // Beastmaster
-    TAME                = 304,  // Additional percent chance to charm
-    CHARM_TIME          = 360,  // extends the charm time only, no effect of charm chance
-    REWARD_HP_BONUS     = 364,  // Percent to add to reward HP healed. (364)
-    CHARM_CHANCE        = 391,  // extra chance to charm (light+apollo staff ect)
-    FERAL_HOWL_DURATION = 503,  // +20% duration per merit when wearing augmented Monster Jackcoat +2
-    JUG_LEVEL_RANGE     = 564,  // Decreases the level range of spawned jug pets. Maxes out at 2.
-    CALL_BEAST_DELAY    = 273,  // Lowers Call Beast recast
-    SIC_READY_RECAST    = 1052, // SIC/Ready recast reduction (seconds)
-    TANDEM_STRIKE_POWER = 271,  // Grants a bonus to your and your pet's accuracy and magic accuracy when you and your pet are attacking the same target.
-    TANDEM_BLOW_POWER   = 272,  // Reduces amount of TP gained by enemies when striking them if you and your pet are attacking the same target.
+    TAME                         = 304,  // Additional percent chance to charm
+    CHARM_TIME                   = 360,  // extends the charm time only, no effect of charm chance
+    REWARD_HP_BONUS              = 364,  // Percent to add to reward HP healed. (364)
+    CHARM_CHANCE                 = 391,  // extra chance to charm (light+apollo staff ect)
+    FERAL_HOWL_DURATION          = 503,  // +20% duration per merit when wearing augmented Monster Jackcoat +2
+    JUG_LEVEL_RANGE              = 564,  // Decreases the level range of spawned jug pets. Maxes out at 2.
+    CALL_BEAST_DELAY             = 273,  // Lowers Call Beast recast
+    SIC_READY_RECAST             = 1052, // SIC/Ready recast reduction (seconds)
+    TANDEM_STRIKE_POWER          = 271,  // Grants a bonus to your and your pet's accuracy and magic accuracy when you and your pet are attacking the same target.
+    TANDEM_BLOW_POWER            = 272,  // Reduces amount of TP gained by enemies when striking them if you and your pet are attacking the same target.
+    ENHANCES_MONSTER_CORRELATION = 1155, // Grants your pet acc +X and attp +X% against a weaker opposing ecosystem. Typically applied to pet, not owner (item_mods_pet.sql)
 
     // Bard
     MINNE_EFFECT           = 433,  //
@@ -577,6 +583,7 @@ enum class Mod
     DAKEN                = 911, // chance to throw a shuriken without consuming it
     NINJUTSU_DURATION    = 1000,
     ENHANCES_SANGE       = 1091, // 1 = +1 attack for Daken during Sange per Sange merit (i.e. 20 with 5 merits = +100 attack during Sange)
+    ENHANCES_FUTAE       = 1148, // Adds to the +50% bonus damage to elemental ninjutsu provided by Futae (percent)
 
     // Dragoon
     ANCIENT_CIRCLE_DURATION    = 859,  // Ancient Circle extended duration in seconds
@@ -610,7 +617,7 @@ enum class Mod
     BP_DELAY_II               = 541,  // Blood Pact Delay Reduction II
     BP_DAMAGE                 = 126,  // Blood Pact: Rage Damage increase percentage
     BLOOD_BOON                = 913,  // Occasionally cuts down MP cost of Blood Pact abilities. Does not affect abilities that require Astral Flow.
-    AVATARS_FAVOR_ENHANCE     = 141,  // Enhances Avatars Favor Effect by 1 tier per point
+    AVATARS_FAVOR_ENHANCE     = 1154, // Enhances Avatars Favor Effect by 1 tier per point
     AVATAR_LVL_BONUS          = 1040, // Avatar: Lv.+ (Increases all avatar's base level above 99)
     CARBUNCLE_LVL_BONUS       = 1041, // Carbuncle: Lv.+ (Increases Carbuncle's base level above 99)
     CAIT_SITH_LVL_BONUS       = 1042, // Cait Sith: Lv.+ (Increases Cait Sith's base level above 99)
@@ -625,6 +632,7 @@ enum class Mod
     BLUE_MAGIC_EFFECT       = 1059, // TODO: Bonus to Attribute Value of spell (percent)
     ENHANCES_BURST_AFFINITY = 1139, // Increases WSC bonus on spells cast with Burst Affinity (percent)
     ENHANCES_CHAIN_AFFINITY = 1140, // TODO: Increases WSC bonus on spells cast with Chain Affinity (base damage +)
+    BLUE_MAGIC_RECAST       = 1147, // Recast time for blue magic spells (percent, usually negative)
 
     // Corsair
     EXP_BONUS         = 382,  //
@@ -1082,16 +1090,15 @@ enum class Mod
 
     PARRY_HP_RECOVERY = 1135, // Recover <Mod Value> HP on successful parry.
 
-    ENHANCES_ABSORB_EFFECTS = 1136, // Absorb Spell duration +x seconds (Enhances "Absorb" effects)
-    AUGMENTS_ABSORB         = 1337, // Non-Liberator Absorb Spell potency +x% (Augments "Absorb" effects)
-    ABSORB_EFFECT_DURATION  = 1138, // Absorb Spell duration +% ("Absorb" effect duration +x%)
+    // TODO: These mods are not yet implemented.
+    REWARD_RECAST = 1152, // TODO: Reward recast time reduction (seconds)
 
     // IF YOU ADD ANY NEW MODIFIER HERE, ADD IT IN scripts/enum/mod.lua ASWELL!
 
     // The spares take care of finding the next ID to use so long as we don't forget to list IDs that have been freed up by refactoring.
     // 570 through 825 used by WS DMG mods these are not spares.
     //
-    // SPARE IDs: 1146 and onward
+    // SPARE IDs: 1156 and onward
 };
 
 // temporary workaround for using enum class as unordered_map key until compilers support it

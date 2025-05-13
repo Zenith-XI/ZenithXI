@@ -1042,12 +1042,12 @@ end
 
 ---@nodiscard
 ---@param name string
----@param mobFamily integer
+---@param interestData integer
 ---@param zeni integer
 ---@param skillIndex integer
 ---@param fp integer
 ---@return CItem?
-function CBaseEntity:addSoulPlate(name, mobFamily, zeni, skillIndex, fp)
+function CBaseEntity:addSoulPlate(name, interestData, zeni, skillIndex, fp)
 end
 
 ---@nodiscard
@@ -3087,6 +3087,11 @@ end
 
 ---@return nil
 function CBaseEntity:uncharm()
+end
+
+---@nodiscard
+---@return boolean
+function CBaseEntity:isTandemActive()
 end
 
 ---@nodiscard

@@ -369,6 +369,7 @@ xi.mod =
     SUBTLE_BLOW                     = 289,
     SUBTLE_BLOW_II                  = 973, -- Subtle Blow II Effect (Cap 50%) Total Effect (SB + SB_II cap 75%)
     ENF_MAG_POTENCY                 = 290, -- Increases Enfeebling magic potency %
+    ENF_MAG_DURATION                = 1151, -- Increases enfeebling magic duration %
     COUNTER                         = 291,
     KICK_ATTACK_RATE                = 292,
     AFFLATUS_SOLACE                 = 293,
@@ -470,6 +471,10 @@ xi.mod =
     ADDITIVE_GUARD                  = 1092, -- Additive % bonus to final Guard rate (adds after clamp)
     AUGMENTS_IMPETUS                = 1097, -- see https://www.bg-wiki.com/ffxi/Impetus, adds Crit Hit Damage & Accuracy for Impetus
 
+    -- Black Mage
+    ENHANCES_ELEMENTAL_SEAL         = 1149, -- Bonus magic damage when using Elemental Seal (percent)
+    ELEMENTAL_DEBUFF_EFFECT         = 1150, -- Increase stat reduction by N, and DoT by N/2 HP per tick
+
     -- Paladin
     ENHANCES_CHIVALRY               = 1061, -- Enhances "Chivalry" effect (increases the base TP modifier by the provided value / 100, e.g. mod value 5 = +0.05)
     ENHANCES_DIVINE_EMBLEM          = 1062, -- Enhances "Divine Emblem" effect/"Divine Emblem" + (increases the ability's special enmity bonus by the provided value)
@@ -499,10 +504,15 @@ xi.mod =
     ENHANCES_DIABOLIC_EYE           = 275,  -- Diabolic Eye duration + "modifier-value" seconds per Diabolic Eye merit.
     ENHANCES_NETHER_VOID            = 1083, -- Enhances "Nether Void" effect (Increases the potency of the next Absorb or Drain Dark Magic by <value>%
     ENHANCES_MUTED_SOUL             = 1084, -- Enhances "Muted Soul" effect (Adds 3% Zanshin rate per MUTED_SOUL merit level)
+    ENHANCES_ABSORB_EFFECTS         = 1136, -- Absorb Spell duration +x seconds (Enhances "Absorb" effects)
+    AUGMENTS_ABSORB                 = 1137, -- Non-Liberator Absorb Spell potency +x% (Augments "Absorb" effects)
+    ABSORB_EFFECT_DURATION          = 1138, -- Absorb Spell duration +% ("Absorb" effect duration +x%)
+    AUGMENTS_ABSORB_TP              = 1153, -- Increases absorb-TP potency, stacks with AUGMENTS_ABSORB
 
     -- Beastmaster
     TANDEM_STRIKE_POWER             = 271,  -- Grants a bonus to your and your pet's accuracy and magic accuracy when you and your pet are attacking the same target.
     TANDEM_BLOW_POWER               = 272,  -- Reduces amount of TP gained by enemies when striking them if you and your pet are attacking the same target.
+    ENHANCES_MONSTER_CORRELATION    = 1155, -- Grants acc +X and attp +X% against a weaker opposing ecosystem. Typically applied to pet, not owner (item_mods_pet.sql)
 
     -- Samurai
     SENGIKORI_SC_DMG_DEBUFF         = 1088, -- % Increase to closing skillchain damage. Applied to defender.
@@ -511,6 +521,7 @@ xi.mod =
 
     -- Ninja
     ENHANCES_SANGE                  = 1091, -- 1 = +1 attack for Daken during Sange per Sange merit (i.e. 20 with 5 merits = +100 attack during Sange)
+    ENHANCES_FUTAE                  = 1148, -- Adds to the +50% bonus damage to elemental ninjutsu provided by Futae (percent)
 
     -- Dragoon
     WYVERN_LVL_BONUS                = 1043, -- Wyvern: Lv.+ (Increases wyvern's base level above 99)
@@ -525,6 +536,11 @@ xi.mod =
 
     -- Puppetmaster
     AUTOMATON_LVL_BONUS             = 1044, -- Automaton: Lv. (Increases automaton's base level above 99)
+
+    -- Blue Mage
+    ENHANCES_BURST_AFFINITY         = 1139, -- Increases WSC bonus on spells cast with Burst Affinity (percent)
+    ENHANCES_CHAIN_AFFINITY         = 1140, -- TODO: Increases WSC bonus on spells cast with Chain Affinity (base damage +)
+    BLUE_MAGIC_RECAST               = 1147, -- Recast time for blue magic spells (percent, usually negative)
 
     -- Geomancer
     FULL_CIRCLE                     = 1025, -- Increases the initial multiplier on MP returned via Full Circle
@@ -608,6 +624,7 @@ xi.mod =
     WHITE_MAGIC_CAST                = 396,
     BLACK_MAGIC_RECAST              = 397,
     WHITE_MAGIC_RECAST              = 398,
+    ELEMENTAL_MAGIC_RECAST          = 1146, -- Recast time for elemental magic spells (percent, usually negative)
     ALACRITY_CELERITY_EFFECT        = 399,
     LIGHT_ARTS_EFFECT               = 334,
     DARK_ARTS_EFFECT                = 335,
@@ -683,7 +700,7 @@ xi.mod =
     SONG_DURATION_BONUS             = 454, --
     SONG_SPELLCASTING_TIME          = 455, --
 
-    AVATARS_FAVOR_ENHANCE           = 141, -- Adds 1 rank to avatars favor
+    AVATARS_FAVOR_ENHANCE           = 1154, -- Adds 1 rank to avatars favor
 
     QUICK_DRAW_DMG                  = 411, --
     QUICK_DRAW_MACC                 = 191, -- Quick draw magic accuracy
@@ -1037,12 +1054,8 @@ xi.mod =
 
     PARRY_HP_RECOVERY = 1135, -- Recover <Mod Value> HP on successful parry.
 
-    ENHANCES_ABSORB_EFFECTS = 1136, -- Absorb Spell duration +x seconds (Enhances "Absorb" effects)
-    AUGMENTS_ABSORB         = 1337, -- Non-Liberator Absorb Spell potency +x% (Augments "Absorb" effects)
-    ABSORB_EFFECT_DURATION  = 1138, -- Absorb Spell duration +% ("Absorb" effect duration +x%)
-
-    ENHANCES_BURST_AFFINITY = 1139, -- Increases WSC bonus on spells cast with Burst Affinity (percent)
-    ENHANCES_CHAIN_AFFINITY = 1140, -- TODO: Increases WSC bonus on spells cast with Chain Affinity (base damage +)
+    -- TODO: These mods are not yet implemented.
+    REWARD_RECAST                   = 1152, -- TODO: Reduces Reward recast time (seconds)
 
     -- IF YOU ADD ANY NEW MODIFIER HERE, ADD IT IN src/map/modifier.h ASWELL!
 

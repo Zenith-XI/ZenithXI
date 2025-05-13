@@ -613,7 +613,7 @@ xi.spells.damage.calculateMagicBonusDiff = function(caster, target, spellId, ski
         end
 
         -- "Enhances ninjutsu damage" ("Koga Hatsuburi" type gear)
-        mab = mab + caster:getMod(xi.mod.NIN_NUKE_BONUS_INNIN)
+        mab = mab + caster:getMod(xi.mod.NIN_NUKE_BONUS_GEAR)
     end
 
     if math.random(1, 100) <= mabCrit then
@@ -710,6 +710,22 @@ xi.spells.damage.calculateDivineEmblemMultiplier = function(caster, skillType)
     return divineEmblemMultiplier
 end
 
+-- Elemental seal applies its own multiplier to spells when Laevateinn is equipped,
+-- or some other source of ENHANCES_ELEMENTAL_SEAL is available to the caster.
+xi.spells.damage.calculateEnhancedElementalSealMultiplier = function(caster, skillType, spellElement)
+    local eleSealMultiplier = 1
+
+    if
+        caster:hasStatusEffect(xi.effect.ELEMENTAL_SEAL) and
+        spellElement >= xi.element.FIRE and -- TODO: Test impact and meteor.
+        skillType == xi.skill.ELEMENTAL_MAGIC
+    then
+        eleSealMultiplier = 1 + caster:getMod(xi.mod.ENHANCES_ELEMENTAL_SEAL) / 100
+    end
+
+    return eleSealMultiplier
+end
+
 -- Ebullience applies an entirely separate multiplier to Black Magic.
 xi.spells.damage.calculateEbullienceMultiplier = function(caster, spellGroup)
     local ebullienceMultiplier = 1
@@ -778,7 +794,7 @@ xi.spells.damage.calculateNinFutaeBonus = function(caster, skillType)
         skillType == xi.skill.NINJUTSU and
         caster:hasStatusEffect(xi.effect.FUTAE)
     then
-        ninFutaeBonus = (150 + caster:getJobPointLevel(xi.jp.FUTAE_EFFECT) * 5) / 100
+        ninFutaeBonus = 1.5 + caster:getJobPointLevel(xi.jp.FUTAE_EFFECT) / 20 + caster:getMod(xi.mod.ENHANCES_FUTAE) / 100
         caster:delStatusEffect(xi.effect.FUTAE)
     end
 
@@ -1070,6 +1086,7 @@ xi.spells.damage.useDamageSpell = function(caster, target, spell)
     local magicBonusDiff            = xi.spells.damage.calculateMagicBonusDiff(caster, target, spellId, skillType, spellElement)
     local divineSealMultiplier      = xi.spells.damage.calculateDivineSealMultiplier(caster, skillType)
     local divineEmblemMultiplier    = xi.spells.damage.calculateDivineEmblemMultiplier(caster, skillType)
+    local eleSealMultiplier         = xi.spells.damage.calculateEnhancedElementalSealMultiplier(caster, skillType, spellElement)
     local ebullienceMultiplier      = xi.spells.damage.calculateEbullienceMultiplier(caster, spellGroup)
     local skillTypeMultiplier       = xi.spells.damage.calculateSkillTypeMultiplier(skillType)
     local ninSkillBonus             = xi.spells.damage.calculateNinSkillBonus(caster, spellId, skillType)
@@ -1092,6 +1109,7 @@ xi.spells.damage.useDamageSpell = function(caster, target, spell)
     finalDamage = math.floor(finalDamage * targetMagicDamageAdjustment)
     finalDamage = math.floor(finalDamage * divineSealMultiplier)
     finalDamage = math.floor(finalDamage * divineEmblemMultiplier)
+    finalDamage = math.floor(finalDamage * eleSealMultiplier)
     finalDamage = math.floor(finalDamage * ebullienceMultiplier)
     finalDamage = math.floor(finalDamage * skillTypeMultiplier)
     finalDamage = math.floor(finalDamage * ninSkillBonus)

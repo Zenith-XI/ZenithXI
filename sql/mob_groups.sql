@@ -8521,9 +8521,9 @@ INSERT INTO `mob_groups` VALUES (3,3682,118,'Snipper_fished',0,128,482,0,0,18,23
 INSERT INTO `mob_groups` VALUES (4,6780,118,'Shoal_Pugil_fished',0,128,248,0,0,24,28,0);
 INSERT INTO `mob_groups` VALUES (5,6765,118,'Clipper_fished',0,128,481,0,0,15,18,0);
 
-INSERT INTO `mob_groups` VALUES (6,3830,118,'Sylvestre',330,0,43,0,0,15,19,0);
+INSERT INTO `mob_groups` VALUES (6,3830,118,'Sylvestre',330,0,2369,0,0,15,19,0);
 INSERT INTO `mob_groups` VALUES (7,2652,118,'Mighty_Rarab',330,0,1670,0,0,15,18,0);
-INSERT INTO `mob_groups` VALUES (8,4523,118,'Zu',330,0,2812,0,0,20,24,0);
+INSERT INTO `mob_groups` VALUES (8,4523,118,'Zu',330,0,43,0,0,20,24,0);
 INSERT INTO `mob_groups` VALUES (9,1635,118,'Goblin_Ambusher',330,0,1017,0,0,17,20,0);
 INSERT INTO `mob_groups` VALUES (10,1738,118,'Goblin_Tinkerer',330,0,1032,0,0,17,20,0);
 INSERT INTO `mob_groups` VALUES (11,1643,118,'Goblin_Butcher',330,0,1032,0,0,17,20,0);
