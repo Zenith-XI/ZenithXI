@@ -114,7 +114,11 @@ UPDATE `abilities` SET `level` = 71, `content_tag`= NULL WHERE `name` = 'theurgi
 ------------------------
 -- Disabled Abilities --
 ------------------------
-DELETE FROM `abilities` WHERE `name`='majesty'; -- Majesty disabled
+UPDATE `abilities`
+SET `level` = 76
+WHERE `name` IN (
+    'majesty'
+);
 
 ------------
 -- Traits --
