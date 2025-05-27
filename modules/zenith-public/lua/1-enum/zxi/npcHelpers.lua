@@ -1,7 +1,7 @@
------------------------------------
+--------------------------------------------------------------
 -- Various helpers to manipulate npcs
------------------------------------
-local m = Module:new('e_z-npcHelpers')
+--------------------------------------------------------------
+local m = Module:new('zxi-npcHelpers')
 
 zxi = zxi or {}
 zxi.npcHelpers = zxi.npcHelpers or {}
@@ -38,10 +38,10 @@ local removeDefaultHandler = function(zoneId, npcName)
                     then
                         if foundAction then
                             print(fmt('ERROR: Multiple default actions found for {} in zoneid {}???', npcName, zoneId))
-                        else
-                            table.remove(entries, i)
-                            foundAction = true
                         end
+
+                        table.remove(entries, i)
+                        foundAction = true
                     end
                 end
             end

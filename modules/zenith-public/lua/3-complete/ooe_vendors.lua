@@ -16,10 +16,9 @@ local m = Module:new('ooe_vendors')
 -----------------------------------
 xi.module.ensureTable("xi.zones.Lower_Jeuno.npcs.Taza")
 
-m:addOverride('xi.zones.Lower_Jeuno.npcs.Taza.onTrigger', function(player, npc)
-    -- force default action to trigger
-    InteractionGlobal.lookup:onTrigger(player, npc)
+zxi.npcHelpers.removeDefaultHandler(xi.zone.LOWER_JEUNO, 'Taza')
 
+m:addOverride('xi.zones.Lower_Jeuno.npcs.Taza.onTrigger', function(player, npc)
     local stock = {
         { xi.item.SCROLL_OF_SLEEP_II,      18720 },
         { xi.item.SCROLL_OF_SLEEPGA,       11200 },
