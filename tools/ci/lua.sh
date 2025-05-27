@@ -22,6 +22,7 @@ EOF`
 
 global_objects=(
     LQS
+    zxi
     xi
     ai
     os
