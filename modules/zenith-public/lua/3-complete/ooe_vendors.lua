@@ -68,7 +68,7 @@ m:addOverride('xi.zones.Bastok_Markets.npcs.Hortense.onTrigger', function(player
     }
 
     player:showText(npc, zones[player:getZoneID()].text.HORTENSE_SHOP_DIALOG)
-    xi.shop.general(player, stock)
+    xi.shop.nation(player, stock, xi.nation.BASTOK)
 end)
 
 m:addOverride('xi.shop.handleValerianoShop', function(player, npc)
@@ -226,10 +226,10 @@ m:addOverride('xi.zones.Lower_Jeuno.npcs.Yoskolo.onTrigger', function(player, np
     {
         { xi.item.FLASK_OF_DISTILLED_WATER,       12 },
         { xi.item.BOTTLE_OF_ORANGE_JUICE,        200 },
-        { xi.item.BOTTLE_OF_APPLE_JUICE,         300 },
-        { xi.item.BOTTLE_OF_MELON_JUICE,        1100 },
-        { xi.item.BOTTLE_OF_GRAPE_JUICE,         930 },
-        { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,     400 },
+        { xi.item.BOTTLE_OF_APPLE_JUICE,         430 }, -- *
+        { xi.item.BOTTLE_OF_MELON_JUICE,        1200 }, -- *
+        { xi.item.BOTTLE_OF_GRAPE_JUICE,         967 },
+        { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,     770 }, -- *
         { xi.item.SERVING_OF_ICECAP_ROLANBERRY, 5544 },
         { xi.item.SCROLL_OF_FIRE_CAROL,         6380 },
         { xi.item.SCROLL_OF_ICE_CAROL,          7440 },
@@ -512,7 +512,7 @@ m:addOverride('xi.zones.Northern_San_dOria.npcs.Pirvidiauce.onTrigger', function
     }
 
     player:showText(npc, zones[player:getZoneID()].text.PIRVIDIAUCE_SHOP_DIALOG)
-    xi.shop.general(player, stock)
+    xi.shop.nation(player, stock, xi.nation.SANDORIA)
 end)
 
 m:addOverride('xi.zones.Bastok_Mines.npcs.Boytz.onTrigger', function(player, npc)
@@ -530,8 +530,6 @@ m:addOverride('xi.zones.Bastok_Mines.npcs.Boytz.onTrigger', function(player, npc
         { xi.item.CROSSBOW_BOLT,           6, 3 },
 -- { xi.item.REPUBLIC_WAYSTONE,   10500, 3 },
     }
-
-    local rank = GetNationRank(xi.nation.BASTOK)
 
     if GetNationRank(player:getNation()) >= 2 then -- Player nation rank 2 or 3.
         table.insert(stock, { xi.item.SET_OF_THIEFS_TOOLS, 4158, 3 })
@@ -573,7 +571,83 @@ m:addOverride('xi.zones.Port_Bastok.npcs.Numa.onTrigger', function(player, npc)
     }
 
     player:showText(npc, zones[player:getZoneID()].text.NUMA_SHOP_DIALOG)
-    xi.shop.general(player, stock)
+    xi.shop.nation(player, stock, xi.nation.BASTOK)
+end)
+
+m:addOverride('xi.zones.Port_Bastok.npcs.Sawyer.onTrigger', function(player, npc)
+    local stock =
+    {
+        { xi.item.LOAF_OF_IRON_BREAD,         105, 3 },
+        { xi.item.BRETZEL,                     25, 2 },
+        { xi.item.LOAF_OF_PUMPERNICKEL,       166, 1 },
+        { xi.item.BAKED_POPOTO,               336, 3 },
+        { xi.item.SAUSAGE,                    163, 2 },
+        { xi.item.BOWL_OF_PEBBLE_SOUP,        210, 3 },
+        { xi.item.BOWL_OF_EGG_SOUP,          3432, 1 },
+        { xi.item.FLASK_OF_DISTILLED_WATER,    12, 3 },
+        { xi.item.BOTTLE_OF_MELON_JUICE,     1200, 2 }, -- *
+        { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  770, 1 }, -- *
+        { xi.item.SLICE_OF_ROAST_MUTTON,      756, 2 },
+    }
+
+    player:showText(npc, zones[player:getZoneID()].text.SAWYER_SHOP_DIALOG)
+    xi.shop.nation(player, stock, xi.nation.BASTOK)
+end)
+
+m:addOverride('xi.zones.Port_Bastok.npcs.Melloa.onTrigger', function(player, npc)
+    local stock =
+    {
+        { xi.item.LOAF_OF_IRON_BREAD,         104, 3 },
+        { xi.item.BRETZEL,                     24, 2 },
+        { xi.item.LOAF_OF_PUMPERNICKEL,       166, 1 },
+        { xi.item.BAKED_POPOTO,               332, 3 },
+        { xi.item.SAUSAGE,                    162, 2 },
+        { xi.item.BOWL_OF_PEBBLE_SOUP,        208, 3 },
+        { xi.item.BOWL_OF_EGG_SOUP,          3432, 1 },
+        { xi.item.FLASK_OF_DISTILLED_WATER,    12, 3 },
+        { xi.item.BOTTLE_OF_MELON_JUICE,     1200, 2 }, -- *
+        { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  770, 1 }, -- *
+        { xi.item.SLICE_OF_ROAST_MUTTON,      756, 2 },
+    }
+
+    player:showText(npc, zones[player:getZoneID()].text.MELLOA_SHOP_DIALOG)
+    xi.shop.nation(player, stock, xi.nation.BASTOK)
+end)
+
+m:addOverride('xi.zones.Bastok_Mines.npcs.Griselda.onTrigger', function(player, npc)
+    local stock =
+    {
+        { xi.item.LOAF_OF_IRON_BREAD,         105, 3 },
+        { xi.item.BRETZEL,                     25, 2 },
+        { xi.item.STRIP_OF_MEAT_JERKY,        126, 3 },
+        { xi.item.PICKLED_HERRING,           1497, 2 }, -- *
+        { xi.item.FLASK_OF_DISTILLED_WATER,    12, 3 },
+        { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  770, 1 }, -- *
+        { xi.item.BOTTLE_OF_MELON_JUICE,     1200, 2 }, -- *
+    }
+
+    player:showText(npc, zones[player:getZoneID()].text.GRISELDA_SHOP_DIALOG)
+    xi.shop.nation(player, stock, xi.nation.BASTOK)
+end)
+
+m:addOverride('xi.zones.Metalworks.npcs.Tomasa.onTrigger', function(player, npc)
+    local stock =
+    {
+        { xi.item.LOAF_OF_IRON_BREAD,         105, 3 },
+        { xi.item.BRETZEL,                     25, 2 },
+        { xi.item.SAUSAGE_ROLL,               873, 1 }, -- *
+        { xi.item.BAKED_POPOTO,               336, 3 },
+        { xi.item.SAUSAGE,                    163, 2 },
+        { xi.item.HARD_BOILED_EGG,             83, 1 },
+        { xi.item.BOWL_OF_PEBBLE_SOUP,        210, 3 },
+        { xi.item.BOWL_OF_EGG_SOUP,          3432, 1 },
+        { xi.item.FLASK_OF_DISTILLED_WATER,    12, 3 },
+        { xi.item.BOTTLE_OF_MELON_JUICE,     1155, 2 },
+        { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  770, 1 }, -- *
+    }
+
+    player:showText(npc, zones[player:getZoneID()].text.TOMASA_SHOP_DIALOG)
+    xi.shop.nation(player, stock, xi.nation.BASTOK)
 end)
 
 m:addOverride('xi.zones.Windurst_Waters.npcs.Ness_Rugetomal.onTrigger', function(player, npc)
@@ -593,7 +667,7 @@ m:addOverride('xi.zones.Windurst_Waters.npcs.Ness_Rugetomal.onTrigger', function
     }
 
     player:showText(npc, zones[player:getZoneID()].text.NESSRUGETOMALL_SHOP_DIALOG)
-    xi.shop.general(player, stock)
+    xi.shop.nation(player, stock, xi.nation.WINDURST)
 end)
 
 m:addOverride('xi.zones.Windurst_Waters.npcs.Taajiji.onTrigger', function(player, npc)
@@ -617,7 +691,7 @@ m:addOverride('xi.zones.Windurst_Waters.npcs.Taajiji.onTrigger', function(player
     }
 
     player:showText(npc, zones[player:getZoneID()].text.TAAJIJI_SHOP_DIALOG)
-    xi.shop.general(player, stock)
+    xi.shop.nation(player, stock, xi.nation.WINDURST)
 end)
 
 m:addOverride('xi.zones.Windurst_Woods.npcs.Wije_Tiren.onTrigger', function(player, npc)
@@ -634,17 +708,17 @@ m:addOverride('xi.zones.Windurst_Woods.npcs.Wije_Tiren.onTrigger', function(play
     }
 
     player:showText(npc, zones[player:getZoneID()].text.WIJETIREN_SHOP_DIALOG)
-    xi.shop.general(player, stock)
+    xi.shop.general(player, stock, xi.fameArea.WINDURST)
 end)
 
 m:addOverride('xi.zones.Mhaura.npcs.Pikini-Mikini.onTrigger', function(player, npc)
     local stock =
     {
-        { xi.item.FLASK_OF_EYE_DROPS,     2724, 3 },
-        { xi.item.ANTIDOTE,                331, 3 },
-        { xi.item.FLASK_OF_ECHO_DROPS,     840, 2 },
-        { xi.item.POTION,                  955, 2 },
-        { xi.item.ETHER,                  5025, 1 },
+        { xi.item.FLASK_OF_EYE_DROPS,        2724 },
+        { xi.item.ANTIDOTE,                   331 },
+        { xi.item.FLASK_OF_ECHO_DROPS,        840 },
+        { xi.item.POTION,                     955 },
+        { xi.item.ETHER,                     5025 },
         { xi.item.FLASK_OF_DISTILLED_WATER,    12 },
         { xi.item.SHEET_OF_PARCHMENT,        2059 },
         { xi.item.LUGWORM,                     12 },
@@ -674,6 +748,51 @@ m:addOverride('xi.zones.Lower_Jeuno.npcs.Stinknix.onTrigger', function(player, n
     xi.shop.general(player, stock)
 end)
 
+m:addOverride('xi.zones.Lower_Jeuno.npcs.Pawkrix.onTrigger', function(player, npc)
+    local stock =
+    {
+        { xi.item.BAG_OF_HORO_FLOUR,           40 },
+        { xi.item.LOAF_OF_GOBLIN_BREAD,       300 },
+        { xi.item.GOBLIN_PIE,                 650 },
+        { xi.item.CHUNK_OF_GOBLIN_CHOCOLATE,   35 },
+        { xi.item.GOBLIN_MUSHPOT,           10140 }, -- *
+        { xi.item.BAG_OF_POISON_FLOUR,        515 },
+        { xi.item.GOBLIN_DOLL,                500 },
+    }
+
+    player:showText(npc, zones[player:getZoneID()].text.PAWKRIX_SHOP_DIALOG)
+    xi.shop.general(player, stock)
+end)
+
+m:addOverride('xi.zones.Upper_Jeuno.npcs.Glyke.onTrigger', function(player, npc)
+    local stock =
+    {
+        { xi.item.LOAF_OF_IRON_BREAD,         100 },
+        { xi.item.TORTILLA,                   145 },
+        { xi.item.LOAF_OF_WHITE_BREAD,        200 },
+        { xi.item.BOWL_OF_PEA_SOUP,          1400 },
+        { 4420,                              2510 }, -- Tomato Soup*
+        { 5686,                               900 }, -- Cheese Sandwich*
+        { xi.item.BOILED_CRAB,               2340 },
+        { xi.item.SLICE_OF_ROAST_MUTTON,      756 },
+        { xi.item.PICKLED_HERRING,           1497 }, -- *
+        { xi.item.BAKED_APPLE,                640 }, -- *
+        { 5653,                               910 }, -- Cherry Muffin*
+        { xi.item.WINDURST_SALAD,            1934 },
+        { xi.item.SERVING_OF_HERB_QUUS,      4984 },
+        { xi.item.BOTTLE_OF_ORANGE_JUICE,     200 },
+        { xi.item.BOTTLE_OF_APPLE_JUICE,      410 }, -- *
+        { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  750 }, -- *
+        { xi.item.BOTTLE_OF_MELON_JUICE,     1180 }, -- *
+        { xi.item.BOTTLE_OF_GRAPE_JUICE,      967 },
+        { xi.item.FLASK_OF_ORANGE_AU_LAIT,    360 }, -- *
+        { xi.item.FLASK_OF_APPLE_AU_LAIT,     570 }, -- *
+    }
+
+    player:showText(npc, zones[player:getZoneID()].text.GLYKE_SHOP_DIALOG)
+    xi.shop.general(player, stock)
+end)
+
 m:addOverride('xi.zones.Kazham.npcs.Nuh_Celodehki.onTrigger', function(player, npc)
     local stock =
     {
@@ -681,8 +800,8 @@ m:addOverride('xi.zones.Kazham.npcs.Nuh_Celodehki.onTrigger', function(player, n
         { xi.item.BLACKENED_FROG,            3576 },
         { xi.item.ROAST_MUSHROOM,             722 }, -- *
         { xi.item.EEL_KABOB,                 3150 },
-        { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  832 }, -- *
-        { xi.item.WINDURST_SALAD,            2046 }, -- *
+        { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  770 }, -- *
+        { xi.item.WINDURST_SALAD,            1934 }, -- *
     }
 
     player:showText(npc, zones[player:getZoneID()].text.NUHCELODENKI_SHOP_DIALOG)
@@ -733,8 +852,8 @@ end)
 m:addOverride('xi.zones.Aht_Urhgan_Whitegate.npcs.Khaf_Jhifanm.onTrigger', function(player, npc)
     local stock =
     {
-        { 5567,                           600, }, -- Dried Date*
-        { 5576,                           800, }, -- Ayran
+        { 5567,                           650, }, -- Dried Date*
+        { 5576,                           400, }, -- Ayran*
         { 5590,                          3750, }, -- Balik Sandvici
         { xi.item.BAG_OF_WILDGRASS_SEEDS, 320, },
         { 5075,                          4400, }, -- Scroll of Raptor Mazurka
