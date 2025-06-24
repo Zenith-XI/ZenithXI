@@ -857,6 +857,7 @@ UPDATE `mob_groups` SET `minLevel` = 18, `maxLevel` = 20 WHERE `zoneid` = 118 AN
 UPDATE `mob_groups` SET `minLevel` = 14, `maxLevel` = 16 WHERE `zoneid` = 119 AND `name` = 'Wandering_Sapling'; -- *13-16
 UPDATE `mob_groups` SET `minLevel` = 19, `maxLevel` = 21 WHERE `zoneid` = 119 AND `name` = 'Zombie_war'; -- *16-26
 UPDATE `mob_groups` SET `minLevel` = 19, `maxLevel` = 21 WHERE `zoneid` = 119 AND `name` = 'Zombie_blm'; -- *16-26
+UPDATE `mob_groups` SET `minLevel` = 20, `maxLevel` = 22 WHERE `zoneid` = 119 AND `name` = 'Scavenging_Hound'; -- *18-25
 UPDATE `mob_groups` SET `minLevel` = 23, `maxLevel` = 26 WHERE `zoneid` = 119 AND `name` = 'Coeurl'; -- *22-26
 UPDATE `mob_groups` SET `minLevel` = 17, `maxLevel` = 20 WHERE `zoneid` = 119 AND `name` IN ( -- *16-20
     'Goblin_Ambusher',
@@ -875,6 +876,62 @@ UPDATE `mob_groups` SET `minLevel` = 22, `maxLevel` = 25 WHERE `zoneid` = 119 AN
     'Yagudo_Theologist',
     'Yagudo_Priest'
 );
+UPDATE `mob_groups` SET `minLevel` = 53, `maxLevel` = 55, `HP` = 5000 WHERE `zoneid` = 119 AND `name` = 'Chonchon'; -- *42-42
 
 -- SAUROMUGUE_CHAMPAIGN (Zone 120)
+-----------------------------------
+UPDATE `mob_groups` SET `minLevel` = 22, `maxLevel` = 24 WHERE `zoneid` = 120 AND `name` = 'Midnight_Wings'; -- *20-24
+UPDATE `mob_groups` SET `minLevel` = 23, `maxLevel` = 26 WHERE `zoneid` = 120 AND `name` = 'Hill_Lizard'; -- *22-26
+UPDATE `mob_groups` SET `minLevel` = 26, `maxLevel` = 28 WHERE `zoneid` = 120 AND `name` = 'Diving_Beetle'; -- *25-28
+UPDATE `mob_groups` SET `minLevel` = 29, `maxLevel` = 32 WHERE `zoneid` = 120 AND `name` = 'Sauromugue_Skink'; -- *28-32
+UPDATE `mob_groups` SET `minLevel` = 30, `maxLevel` = 32 WHERE `zoneid` = 120 AND `name` = 'Goblin_Digger'; -- *28-32
+UPDATE `mob_groups` SET `minLevel` = 30, `maxLevel` = 32 WHERE `zoneid` = 120 AND `name` = 'Wight_war'; -- *26-36
+UPDATE `mob_groups` SET `minLevel` = 31, `maxLevel` = 34 WHERE `zoneid` = 120 AND `name` = 'Champaign_Coeurl'; -- *30-34
+UPDATE `mob_groups` SET `minLevel` = 27, `maxLevel` = 30 WHERE `zoneid` = 120 AND `name` IN ( -- *26-30
+    'Yagudo_Votary',
+    'Yagudo_Theologist',
+    'Yagudo_Priest',
+    'Goblin_Mugger',
+    'Goblin_Leecher',
+    'Goblin_Gambler'
+);
+UPDATE `mob_groups` SET `minLevel` = 33, `maxLevel` = 36 WHERE `zoneid` = 120 AND `name` IN ( -- *30-36
+    'Yagudo_Herald',
+    'Yagudo_Drummer',
+    'Yagudo_Oracle',
+    'Yagudo_Interrogator',
+    'Goblin_Pathfinder',
+    'Goblin_Furrier',
+    'Goblin_Smithy',
+    'Goblin_Shaman'
+);
+
+-- THE_SANCTUARY_OF_ZITAH (Zone 121)
+-----------------------------------
+UPDATE `mob_groups` SET `minLevel` = 41, `maxLevel` = 43 WHERE `zoneid` = 121 AND `name` = 'Goobbue_Gardener'; -- *40-43
+UPDATE `mob_groups` SET `minLevel` = 42, `maxLevel` = 44 WHERE `zoneid` = 121 AND `name` = 'Ogrefly'; -- *41-44
+UPDATE `mob_groups` SET `minLevel` = 43, `maxLevel` = 46 WHERE `zoneid` = 121 AND `name` = 'Myxomycete'; -- *41-46
+UPDATE `mob_groups` SET `minLevel` = 45, `maxLevel` = 47 WHERE `zoneid` = 121 AND `name` = 'Master_Coeurl'; -- *44-47
+UPDATE `mob_groups` SET `minLevel` = 46, `maxLevel` = 48 WHERE `zoneid` = 121 AND `name` = 'Hell_Hound'; -- *46-50
+UPDATE `mob_groups` SET `minLevel` = 46, `maxLevel` = 49 WHERE `zoneid` = 121 AND `name` = 'Rot_Prowler'; -- *49-53
+UPDATE `mob_groups` SET `minLevel` = 47, `maxLevel` = 49 WHERE `zoneid` = 121 AND `name` = 'Lost_Soul_blm'; -- *51-55
+UPDATE `mob_groups` SET `minLevel` = 27, `maxLevel` = 29 WHERE `zoneid` = 121 AND `name` IN ( -- *25-29
+    'Goblin_Mugger',
+    'Goblin_Gambler',
+    'Goblin_Leecher'
+);
+UPDATE `mob_groups` SET `minLevel` = 43, `maxLevel` = 46 WHERE `zoneid` = 121 AND `name` IN ( -- *42-46
+    'Goblin_Robber',
+    'Goblin_Trader',
+    'Goblin_Poacher',
+    'Goblin_Reaper'
+);
+
+-- ROMAEVE (Zone 122)
+-----------------------------------
+
+-- YUHTUNGA_JUNGLE (Zone 123)
+-----------------------------------
+
+-- YHOATOR_JUNGLE (Zone 124)
 -----------------------------------
