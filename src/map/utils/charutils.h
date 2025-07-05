@@ -67,7 +67,7 @@ const std::vector<std::pair<uint16, uint8>> roeCapacityBonusRecords = {
 namespace charutils
 {
     void LoadExpTable();
-    auto LoadChar(uint32 charId) -> CCharEntity*;
+    auto LoadChar(uint32 charId) -> std::unique_ptr<CCharEntity>;
     void LoadSpells(CCharEntity* PChar);
     void LoadInventory(CCharEntity* PChar);
     void LoadEquip(CCharEntity* PChar);
@@ -293,6 +293,8 @@ namespace charutils
 
     bool isOrchestrionPlaced(CCharEntity* PChar);
     void updateMannequins(CCharEntity* PChar);
+
+    bool raceChange(CCharEntity* PChar, CharRace newRace, CharFace newFace, CharSize newSize);
 }; // namespace charutils
 
 #endif // _CHARUTILS_H

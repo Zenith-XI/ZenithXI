@@ -26,6 +26,10 @@
 
 enum ITEMID : uint16
 {
+    NEW_LINKSHELL       = 512,
+    LINKSHELL           = 513,
+    PEARLSACK           = 514,
+    LINKPEARL           = 515,
     BEASTMENS_SEAL      = 1126,
     KINDREDS_SEAL       = 1127,
     UCHITAKE            = 1161,
@@ -76,6 +80,7 @@ enum ITEMID : uint16
     WATER_CRYSTAL       = 4101,
     LIGHT_CRYSTAL       = 4102,
     DARK_CRYSTAL        = 4103,
+    DARK_CLUSTER        = 4111,
     INFERNO_CRYSTAL     = 4238,
     GLACIER_CRYSTAL     = 4239,
     CYCLONE_CRYSTAL     = 4240,

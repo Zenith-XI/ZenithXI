@@ -168,22 +168,29 @@ namespace charutils
 
         uint8 race = 0; // Hume
 
-        switch (PChar->look.race)
+        switch (static_cast<CharRace>(PChar->look.race))
         {
-            case 3:
-            case 4:
+            case CharRace::HumeMale:
+            case CharRace::HumeFemale:
+                race = 0;
+                break;
+            case CharRace::ElvaanMale:
+            case CharRace::ElvaanFemale:
                 race = 1;
-                break; // Elvaan
-            case 5:
-            case 6:
+                break;
+            case CharRace::TarutaruMale:
+            case CharRace::TarutaruFemale:
                 race = 2;
-                break; // Tarutaru
-            case 7:
+                break;
+            case CharRace::Mithra:
                 race = 3;
-                break; // Mithra
-            case 8:
+                break;
+            case CharRace::Galka:
                 race = 4;
-                break; // Galka
+                break;
+            default:
+                race = 0;
+                break;
         }
 
         // HP Calculation from Main Job
@@ -340,12 +347,13 @@ namespace charutils
      *                                                                       *
      ************************************************************************/
 
-    CCharEntity* LoadChar(uint32 charId)
+    auto LoadChar(uint32 charId) -> std::unique_ptr<CCharEntity>
     {
         TracyZoneScoped;
 
-        CCharEntity* PChar = new CCharEntity();
-        PChar->id          = charId;
+        std::unique_ptr<CCharEntity> charEntity = std::make_unique<CCharEntity>();
+        auto*                        PChar      = charEntity.get();
+        PChar->id                               = charId;
 
         uint8  meritPoints = 0;
         uint16 limitPoints = 0;
@@ -867,7 +875,7 @@ namespace charutils
 
         PChar->status = STATUS_TYPE::DISAPPEAR;
 
-        return PChar;
+        return charEntity;
     }
 
     void LoadSpells(CCharEntity* PChar)
@@ -1678,6 +1686,18 @@ namespace charutils
 
     void UnequipItem(CCharEntity* PChar, uint8 equipSlotID, bool update)
     {
+        if (PChar == nullptr)
+        {
+            ShowWarning("PChar was null.");
+            return;
+        }
+
+        if (equipSlotID > 15)
+        {
+            ShowWarning("Invalid slot ID. Must be between 0 and 15.");
+            return;
+        }
+
         CItem* PItem = PChar->getEquip((SLOTTYPE)equipSlotID);
 
         if ((PItem != nullptr) && PItem->isType(ITEM_EQUIPMENT))
@@ -7483,5 +7503,45 @@ namespace charutils
                 }
             }
         }
+    }
+
+    bool raceChange(CCharEntity* PChar, CharRace newRace, CharFace newFace, CharSize newSize)
+    {
+        if (!PChar)
+        {
+            return false;
+        }
+
+        if (newRace < CharRace::HumeMale ||
+            newRace > CharRace::Galka ||
+            newFace > CharFace::Face8B ||
+            newSize > CharSize::Large)
+        {
+            ShowError("charutils::raceChange: Arguments out of bounds for charid: %u", PChar->id);
+            return false;
+        }
+
+        if (!db::preparedStmt("UPDATE char_look SET "
+                              "face = ?, race = ?, size = ? "
+                              "WHERE charid = ?",
+                              newFace, newRace, newSize, PChar->id))
+        {
+            ShowError("charutils::raceChange: Failed to update char_look for charid: %u", PChar->id);
+            return false;
+        }
+
+        for (uint8 slotId = SLOT_MAIN; slotId <= SLOT_BACK; ++slotId)
+        {
+            if (auto* PItem = PChar->getEquip(static_cast<SLOTTYPE>(slotId)))
+            {
+                if (!PItem->isEquippableByRace(static_cast<uint8>(newRace)))
+                {
+                    charutils::UnequipItem(PChar, slotId);
+                }
+            }
+        }
+
+        ForceRezone(PChar);
+        return true;
     }
 }; // namespace charutils

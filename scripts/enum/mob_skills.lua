@@ -42,9 +42,29 @@ xi.mobSkill =
     LEAFSTORM                =  331,
     ENTANGLE                 =  332,
 
+    VELOCIOUS_BLADE          =  347, -- Mammet-800
+
     RANGED_ATTACK_2          =  412,
 
+    SCISSION_THRUST          =  419, -- Mammet-800
+
+    SONIC_BLADE              =  422, -- Mammet-800
+
+    MICROQUAKE               =  441, -- Mammet-800
+
+    PERCUSSIVE_FOIN          =  447, -- Mammet-800
+
+    GRAVITY_WHEEL            =  457, -- Mammet-800
+
+    PSYCHOMANCY              =  464, -- Mammet-800
+
+    MIND_WALL                =  471, -- Mammet-800
+
+    TRANSMOGRIFICATION       =  487, -- Mammet-800
+
     DANSE_MACABRE            =  533,
+
+    TREMOROUS_TREAD          =  540, -- Mammet-800
 
     VULTURE_3                =  626,
 
@@ -93,6 +113,16 @@ xi.mobSkill =
     DIAMOND_DUST_2           =  917, -- Confirmed usage: Untargetable avatar astral flow. (Ex. Kirin) (Shiva model avatar)
     JUDGMENT_BOLT_2          =  918, -- Confirmed usage: Untargetable avatar astral flow. (Ex. Kirin) (Ramuh model avatar)
     SEARING_LIGHT_2          =  919, -- Confirmed usage: Untargetable avatar astral flow. (Ex. Kirin, Crimson-toothed Pawberry) (Carbuncle model avatar)
+
+    PHASE_SHIFT_1_EXOPLATES  =  993,
+
+    PHASE_SHIFT_2_EXOPLATES  =  997,
+
+    PHASE_SHIFT_3_EXOPLATES  = 1001,
+
+    ZEID_SUMMON_SHADOWS_1    = 1002, -- TODO: Investigate why was this in sql, where it came from and why wasnt it actually used in an scripted way.
+
+    ZEID_SUMMON_SHADOWS_2    = 1007, -- Captured. Bastok mission 9-2 BCNM, phase 2. No actual name in log.
 
     CALL_BEAST               = 1017, -- "Tango with a Tracker" Shikaree X
 

@@ -4976,17 +4976,17 @@ void CLuaBaseEntity::equipItem(uint16 itemID, sol::object const& container)
 
 /************************************************************************
  *  Function: unequipItem()
- *  Purpose : Unequips an item from player
- *  Example : player:unequipItem(17845)
- *  Notes   :
+ *  Purpose : Unequips an item from player based on slot id
+ *  Example : player:unequipItem(4) -- Head
+ *  Notes   : Range 0 - 15
  ************************************************************************/
 
-void CLuaBaseEntity::unequipItem(uint8 itemID)
+void CLuaBaseEntity::unequipItem(uint8 slotID)
 {
     if (m_PBaseEntity->objtype == TYPE_PC)
     {
         auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-        charutils::UnequipItem(PChar, itemID);
+        charutils::UnequipItem(PChar, slotID);
     }
 }
 
@@ -5396,13 +5396,13 @@ void CLuaBaseEntity::retrieveItemFromSlip(uint16 slipId, uint16 itemId, uint16 e
 
 uint8 CLuaBaseEntity::getRace()
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (const auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
-        return 0;
+        return PChar->look.race;
     }
 
-    return static_cast<CCharEntity*>(m_PBaseEntity)->look.race;
+    ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+    return 0;
 }
 
 /************************************************************************
@@ -5414,13 +5414,13 @@ uint8 CLuaBaseEntity::getRace()
 
 uint8 CLuaBaseEntity::getFace()
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (const auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
-        return 0;
+        return PChar->look.face;
     }
 
-    return static_cast<CCharEntity*>(m_PBaseEntity)->look.face;
+    ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+    return 0;
 }
 
 /************************************************************************
@@ -5432,15 +5432,49 @@ uint8 CLuaBaseEntity::getFace()
 
 uint8 CLuaBaseEntity::getGender()
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
-        return 0;
+        return PChar->GetGender();
     }
 
-    auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
+    ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+    return 0;
+}
 
-    return PChar->GetGender();
+/************************************************************************
+ *  Function: getSize()
+ *  Purpose : Returns the integer value of the size of the character
+ *  Small: 0, Medium: 1, Large: 2
+ *  Example : player:getSize()
+ ************************************************************************/
+
+uint8 CLuaBaseEntity::getSize()
+{
+    if (const auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    {
+        return PChar->look.size;
+    }
+
+    ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+    return 0;
+}
+
+/************************************************************************
+ *  Function: raceChange()
+ *  Purpose : Updates a character race, face and size.
+ *  Example : player:raceChange(xi.race.HUME_F, 1, 0)
+ *  Note    : Will force-zone the character after the change.
+ ************************************************************************/
+
+bool CLuaBaseEntity::raceChange(const CharRace newRace, const CharFace newFace, const CharSize newSize)
+{
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    {
+        return charutils::raceChange(PChar, newRace, newFace, newSize);
+    }
+
+    ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+    return false;
 }
 
 /************************************************************************
@@ -5572,6 +5606,25 @@ void CLuaBaseEntity::setModelId(uint16 modelId, sol::object const& slotObj)
         m_PBaseEntity->SetModelId(modelId);
     }
     m_PBaseEntity->updatemask |= UPDATE_LOOK;
+}
+
+/************************************************************************
+ *  Function: setLook()
+ *  Purpose : Updates the look of an equipped NPC
+ *  Example : npc:setLook({ race = xi.race.HUME_M, face = 1 })
+ *  Note    : Only for equipped NPCs that dynamically change their race/face
+ ************************************************************************/
+void CLuaBaseEntity::setLook(sol::table const& look)
+{
+    if (auto* PNpc = dynamic_cast<CNpcEntity*>(m_PBaseEntity))
+    {
+        PNpc->look.size = MODEL_EQUIPPED;
+        PNpc->look.face = look.get_or<uint32>("face", 0);
+        PNpc->look.race = look.get_or<uint32>("race", 0);
+        return;
+    }
+
+    ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
 }
 
 /************************************************************************
@@ -9851,7 +9904,7 @@ void CLuaBaseEntity::takeDamage(int32 damage, sol::object const& attacker, sol::
     // Check to see if the target has a nightmare effect active, reset wakeUp accordingly
     // see mobskills/nightmare.lua for full explanation
     if (PDefender->StatusEffectContainer->GetStatusEffect(EFFECT_SLEEP) &&
-        PDefender->StatusEffectContainer->GetStatusEffect(EFFECT_SLEEP)->GetTier() > 0)
+        PDefender->StatusEffectContainer->GetStatusEffect(EFFECT_SLEEP)->GetTier() >= 4) // Tier 4 = Player Avatar Nightmare
     {
         // Don't break nightmare sleep from any dmg that doesn't break bind (DoT damage)
         if (breakBind == false)
@@ -9862,7 +9915,7 @@ void CLuaBaseEntity::takeDamage(int32 damage, sol::object const& attacker, sol::
         // Diabolos NM/mob ability
         // "Damage will not wake you up from Nightmare, only Cure and Benediction (Benediction will also remove the Bio effect)."
         if (wakeUp == true &&
-            PDefender->StatusEffectContainer->GetStatusEffect(EFFECT_SLEEP)->GetTier() > 1)
+            PDefender->StatusEffectContainer->GetStatusEffect(EFFECT_SLEEP)->GetTier() >= 5) // Tier 5 = Diabolos NM Nightmare
         {
             wakeUp = false;
         }
@@ -19206,12 +19259,15 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("getRace", CLuaBaseEntity::getRace);
     SOL_REGISTER("getFace", CLuaBaseEntity::getFace);
     SOL_REGISTER("getGender", CLuaBaseEntity::getGender);
+    SOL_REGISTER("getSize", CLuaBaseEntity::getSize);
+    SOL_REGISTER("raceChange", CLuaBaseEntity::raceChange);
     SOL_REGISTER("getName", CLuaBaseEntity::getName);
     SOL_REGISTER("getPacketName", CLuaBaseEntity::getPacketName);
     SOL_REGISTER("renameEntity", CLuaBaseEntity::renameEntity);
     SOL_REGISTER("hideName", CLuaBaseEntity::hideName);
     SOL_REGISTER("getModelId", CLuaBaseEntity::getModelId);
     SOL_REGISTER("setModelId", CLuaBaseEntity::setModelId);
+    SOL_REGISTER("setLook", CLuaBaseEntity::setLook);
     SOL_REGISTER("getCostume", CLuaBaseEntity::getCostume);
     SOL_REGISTER("setCostume", CLuaBaseEntity::setCostume);
     SOL_REGISTER("getCostume2", CLuaBaseEntity::getCostume2);
