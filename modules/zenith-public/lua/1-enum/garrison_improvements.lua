@@ -12,7 +12,7 @@ m:addOverride('xi.garrison.handleGilPayout', function(levelCap, players)
         -- User-friendly region names mapping (matching outpost teleporter display)
         local regionNames = {
             [xi.region.RONFAURE]         = 'The Ronfaure Region',
-            [xi.region.ZULKHEIM]         = 'The Zulkheim Region', 
+            [xi.region.ZULKHEIM]         = 'The Zulkheim Region',
             [xi.region.NORVALLEN]        = 'The Norvallen Region',
             [xi.region.GUSTABERG]        = 'The Gustaberg Region',
             [xi.region.DERFLAND]         = 'The Derfland Region',
