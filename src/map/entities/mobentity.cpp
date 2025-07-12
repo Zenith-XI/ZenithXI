@@ -804,7 +804,7 @@ auto CMobEntity::GetEligibleGeodes() -> std::vector<uint16>
         element = battleutils::GetDayElement();
     }
 
-    if (GetMLevel() >= 80)
+    if (GetMLevel() >= 80 && luautils::IsContentEnabled("ABYSSEA"))
     {
         return { geodeMap[element], avatariteMap[element] };
     }
