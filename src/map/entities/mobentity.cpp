@@ -804,7 +804,7 @@ auto CMobEntity::GetEligibleGeodes() -> std::vector<uint16>
         element = battleutils::GetDayElement();
     }
 
-    if (GetMLevel() >= 80 && luautils::IsContentEnabled("ABYSSEA"))
+    if (GetMLevel() >= 80)
     {
         return { geodeMap[element], avatariteMap[element] };
     }
@@ -958,7 +958,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
 
         // Check for geode/avatarites drops
         // Only one type of geode can drop per mob
-        if (xirand::GetRandomNumber(100) < 20 && CanAddSpecial(RECAST_GEODE))
+        if (xirand::GetRandomNumber(100) < 20 && CanAddSpecial(RECAST_GEODE) && luautils::IsContentEnabled("ABYSSEA"))
         {
             if (const auto geodes = GetEligibleGeodes(); !geodes.empty())
             {
