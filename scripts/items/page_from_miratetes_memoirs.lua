@@ -1,7 +1,7 @@
 -----------------------------------
 -- ID: 4247
 -- Item: Page From Miratete's Memo
--- Grants 1,250 - 2,000 EXP
+-- Grants 750 - 1, 500 EXP
 -- Does not grant Limit Points.
 -----------------------------------
 ---@type TItem
@@ -17,7 +17,7 @@ itemObject.onItemCheck = function(target, item, param, caster)
 end
 
 itemObject.onItemUse = function(target)
-    target:addExp(xi.settings.main.EXP_RATE * math.random(1250, 2000))
+    target:addExp(xi.settings.main.EXP_RATE * math.random(750, 1500))
 end
 
 return itemObject
