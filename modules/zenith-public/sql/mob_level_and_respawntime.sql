@@ -1056,11 +1056,91 @@ UPDATE `mob_groups` SET `minLevel` = 90, `maxLevel` = 92 WHERE `zoneid` = 130 AN
 
 -- DYNAMIS_BEAUCEDINE (Zone 134)
 -----------------------------------
--- TODO
+-- Beastmen Tier 1 - 75-77 -- Unchanged
+-- Hydra Tier 1 - 77-80 -- Era
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 159 AND `name` = 'Hydra_Warrior';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 160 AND `name` = 'Hydra_Monk';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 161 AND `name` = 'Hydra_White_Mage';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 162 AND `name` = 'Hydra_Red_Mage';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 164 AND `name` = 'Hydra_Black_Mage';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 165 AND `name` = 'Hydra_Thief';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 166 AND `name` = 'Hydra_Paladin';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 167 AND `name` = 'Hydra_Dark_Knight';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 168 AND `name` = 'Hydra_Beastmaster';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 169 AND `name` = 'Hydras_Hound';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 170 AND `name` = 'Hydra_Bard';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 171 AND `name` = 'Hydra_Ranger';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 172 AND `name` = 'Hydra_Samurai';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 173 AND `name` = 'Hydra_Ninja';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 174 AND `name` = 'Hydra_Dragoon';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 175 AND `name` = 'Hydras_Wyvern';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 176 AND `name` = 'Hydra_Summoner';
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 134 AND `groupid` = 177 AND `name` = 'Hydras_Avatar';
+-- Tier 2 - 85-87
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 134 AND `groupid` = 32 AND `name` = 'Vanguard_Vindicator';
+-- Hydra Tier 2 - 87-90
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 178 AND `name` = 'Hydra_Beastmaster';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 179 AND `name` = 'Hydras_Hound';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 180 AND `name` = 'Hydra_Thief';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 181 AND `name` = 'Hydra_Dark_Knight';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 183 AND `name` = 'Hydra_Warrior';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 184 AND `name` = 'Hydra_Bard';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 185 AND `name` = 'Hydra_Ranger';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 186 AND `name` = 'Hydra_White_Mage';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 187 AND `name` = 'Hydra_Monk';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 188 AND `name` = 'Hydra_Ninja';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 189 AND `name` = 'Hydra_Summoner';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 190 AND `name` = 'Hydras_Avatar';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 191 AND `name` = 'Hydra_Black_Mage';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 192 AND `name` = 'Hydra_Dragoon';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 193 AND `name` = 'Hydras_Wyvern';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 194 AND `name` = 'Hydra_Red_Mage';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 195 AND `name` = 'Hydra_Paladin';
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 90 WHERE `zoneid` = 134 AND `groupid` = 196 AND `name` = 'Hydra_Samurai';
+-- TODO: OoE force spawn NMs
 
 -- DYNAMIS_XARCABARD (Zone 135)
 -----------------------------------
--- TODO
+-- Tier 1 Kindred - 77-80 -- Unchanged
+-- Tier 2 Kindred - 88-90
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 90 AND `name` = 'Kindred_Warrior';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 91 AND `name` = 'Kindred_White_Mage';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 92 AND `name` = 'Kindred_Red_Mage';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 94 AND `name` = 'Kindred_Monk';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 95 AND `name` = 'Kindred_Black_Mage';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 96 AND `name` = 'Kindred_Thief';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 97 AND `name` = 'Kindred_Paladin';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 98 AND `name` = 'Kindred_Dark_Knight';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 99 AND `name` = 'Kindred_Beastmaster';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 100 AND `name` = 'Kindreds_Vouivre';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 101 AND `name` = 'Kindred_Bard';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 102 AND `name` = 'Kindred_Ranger';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 103 AND `name` = 'Kindred_Samurai';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 104 AND `name` = 'Kindred_Ninja';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 105 AND `name` = 'Kindred_Dragoon';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 106 AND `name` = 'Kindreds_Wyvern';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 107 AND `name` = 'Kindred_Summoner';
+UPDATE `mob_groups` SET `minLevel` = 88, `maxLevel` = 90 WHERE `zoneid` = 135 AND `groupid` = 108 AND `name` = 'Kindreds_Avatar';
+-- Satelite Weapons
+UPDATE `mob_groups` SET `minLevel` = 77, `maxLevel` = 80 WHERE `zoneid` = 135 AND `name` IN ( -- *77-79
+    'Satellite_Shield',
+    'Satellite_Guns',
+    'Satellite_Horns',
+    'Satellite_Tachi',
+    'Satellite_Kunai',
+    'Satellite_Spears',
+    'Satellite_Scythes',
+    'Satellite_Great_Axes',
+    'Satellite_Tabars',
+    'Satellite_Claymores',
+    'Satellite_Longswords',
+    'Satellite_Staves',
+    'Satellite_Hammers',
+    'Satellite_Knuckles',
+    'Satellite_Daggers',
+    'Satellite_Longbows'
+);
+-- TODO: OoE force spawn NMs
 
 -- BEAUCEDINE_GLACIER_S (Zone 136)
 -----------------------------------
@@ -2133,21 +2213,177 @@ UPDATE `mob_groups` SET `respawntime`= 330 WHERE `zoneid` = 184 AND `name` IN (
     'Ancient_Bat'
 );
 
+-- TODO: Dynamis balance testing. Below is a draft.
+-- Dynamis City
+-- Beastmen Tier 1: 75-77
+-- Beastmen Tier 2: 85-87 -- *90-92
+
+-- Glacier
+-- Beastmen Tier 1: 75-77
+-- Hydra Tier 1: 78-80
+-- Hydra Tier 2: 87-90 -- *92-95
+
+-- Xarcabard
+-- Kindred Tier 1: 77-80
+-- Kindred Tier 2: 88-90 -- *93-95
+
+-- Dreamlands
+-- Beastmen Tier 1: 75-77
+-- Beastmen Tier 2: 88-90 -- *93-95
+-- Nightmare Tier 1: 78-80
+-- Nightmare Tier 2: 90-92 -- *95-97
+
+-- Tavnazia
+-- Hydra: 78-80
+-- Kindred: 90-92
+-- Nightmare Tier 1: 78-80 - Bugard, Worm, Hornet, Taurus and Makara
+-- Nightmare Tier 2: 90-92 - Cluster and Leech
+
+-- Tier 1 City Boss - 85
+-- Tier 1 Glacier Boss - 85
+-- Tier 1 Dynamis Lord - 90
+-- Tier 1 Dreamlands Boss - 85
+-- Tier 2 City Boss - 95
+-- Tier 2 Glacier Boss - 95
+-- Tier 2 Arch Dynamis Lord - 95 with higher stats
+-- Tier 2 Dreamlands Boss - 95
+
 -- DYNAMIS_SAN_DORIA (Zone 185)
 -----------------------------------
--- TODO
+-- Tier 1 - 75-77 -- Unchanged
+-- Tier 2 - 85-87
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 34 AND `name` = 'Vanguard_Footsoldier';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 35 AND `name` = 'Vanguard_Grappler';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 36 AND `name` = 'Vanguard_Amputator';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 37 AND `name` = 'Vanguard_Mesmerizer';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 38 AND `name` = 'Vanguard_Vexer';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 39 AND `name` = 'Vanguard_Pillager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 40 AND `name` = 'Vanguard_Trooper';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 41 AND `name` = 'Vanguard_Neckchopper';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 42 AND `name` = 'Vanguard_Hawker';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 43 AND `name` = 'Vanguards_Hecteyes';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 44 AND `name` = 'Vanguard_Bugler';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 45 AND `name` = 'Vanguard_Predator';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 46 AND `name` = 'Vanguard_Gutslasher';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 47 AND `name` = 'Vanguard_Backstabber';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 48 AND `name` = 'Vanguard_Impaler';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 49 AND `name` = 'Vanguards_Wyvern';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 50 AND `name` = 'Vanguard_Dollmaster';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 185 AND `groupid` = 51 AND `name` = 'Vanguards_Avatar';
+-- TODO: OoE force spawn NMs
 
 -- DYNAMIS_BASTOK (Zone 186)
 -----------------------------------
--- TODO
+-- Tier 1 - 75-77 -- Unchanged
+-- Tier 2 - 85-87
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 32 AND `name` = 'Vanguard_Vindicator';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 33 AND `name` = 'Vanguard_Militant';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 34 AND `name` = 'Vanguard_Constable';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 35 AND `name` = 'Vanguard_Thaumaturge';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 36 AND `name` = 'Vanguard_Protector';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 37 AND `name` = 'Vanguard_Defender';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 38 AND `name` = 'Vanguard_Beasttender';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 39 AND `name` = 'Vanguards_Scorpion';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 40 AND `name` = 'Vanguard_Drakekeeper';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 41 AND `name` = 'Vanguards_Wyvern';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 42 AND `name` = 'Vanguard_Purloiner';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 43 AND `name` = 'Vanguard_Vigilante';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 44 AND `name` = 'Vanguard_Minstrel';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 45 AND `name` = 'Vanguard_Hatamoto';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 46 AND `name` = 'Vanguard_Mason';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 47 AND `name` = 'Vanguard_Kusa';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 48 AND `name` = 'Vanguard_Undertaker';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 186 AND `groupid` = 49 AND `name` = 'Vanguards_Avatar';
+-- TODO: OoE force spawn NMs
 
 -- DYNAMIS_WINDURST (Zone 187)
 -----------------------------------
--- TODO
+-- Tier 1 - 75-77 -- Unchanged
+-- Tier 2 - 85-87
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 34 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 35 AND `name` = 'Vanguard_Skirmisher';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 36 AND `name` = 'Vanguard_Priest';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 37 AND `name` = 'Vanguard_Prelate';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 38 AND `name` = 'Vanguard_Visionary';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 39 AND `name` = 'Vanguard_Sentinel';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 40 AND `name` = 'Vanguard_Exemplar';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 41 AND `name` = 'Vanguard_Ogresoother';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 42 AND `name` = 'Vanguards_Crow';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 43 AND `name` = 'Vanguard_Inciter';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 44 AND `name` = 'Vanguard_Liberator';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 45 AND `name` = 'Vanguard_Assassin';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 46 AND `name` = 'Vanguard_Persecutor';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 47 AND `name` = 'Vanguard_Chanter';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 48 AND `name` = 'Vanguard_Partisan';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 49 AND `name` = 'Vanguards_Wyvern';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 50 AND `name` = 'Vanguard_Oracle';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 187 AND `groupid` = 51 AND `name` = 'Vanguards_Avatar';
+-- TODO: OoE force spawn NMs
 
 -- DYNAMIS_JEUNO (Zone 188)
 -----------------------------------
--- TODO
+-- Tier 1 - 75-77 -- Unchanged
+-- Tier 1 NMs
+UPDATE `mob_groups` SET `minLevel` = 83, `maxLevel` = 84 WHERE `zoneid` = 188 AND `name` IN ( -- * 73/75/79-73/77/79
+    'Gabblox_Magpietongue',
+    'Tufflix_Loglimbs',
+    'Vanguard_Ronin',
+    'Tufflix_Loglimbs',
+    'Smeltix_Thickhide',
+    'Jabkix_Pigeonpecs',
+    'Wasabix_Callusdigit',
+    'Hermitrix_Toothrot',
+    'Wyrmwix_Snakespecs',
+    'Morgmox_Moldnoggin',
+    'Sparkspox_Sweatbrow',
+    'Elixmix_Hooknose',
+    'Bandrix_Rockjaw',
+    'Buffrix_Eargone',
+    'Humnox_Drumbelly',
+    'Ticktox_Beadyeyes',
+    'Lurklox_Dhalmelneck',
+    'Trailblix_Goatmug',
+    'Rutrix_Hamgams',
+    'Anvilix_Sootwrists',
+    'Bootrix_Jaggedelbow',
+    'Mobpix_Mucousmouth',
+    'Distilix_Stickytoes',
+    'Jabbrox_Grannyguise',
+    'Scruffix_Shaggychest',
+    'Blazox_Boneybod',
+    'Cloktix_Longnail',
+    'Slystix_Megapeepers'
+);
+-- Tier 2 - 85-87
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 62 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 63 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 64 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 65 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 66 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 67 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 68 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 69 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 70 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 71 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 72 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 73 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 74 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 75 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 76 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 77 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 78 AND `name` = 'Vanguard_Salvager';
+UPDATE `mob_groups` SET `minLevel` = 85, `maxLevel` = 87 WHERE `zoneid` = 188 AND `groupid` = 79 AND `name` = 'Vanguard_Salvager';
+-- Tier 2 NMs
+UPDATE `mob_groups` SET `minLevel` = 87, `maxLevel` = 89 WHERE `zoneid` = 188 AND `name` IN (
+    'Kikklix_Longlegs',
+    'Karashix_Swollenskull',
+    'Snypestix_Eaglebeak',
+    'Eremix_Snottynostril',
+    'Prowlox_Barrelbelly',
+    'Mortilox_Wartpaws',
+    'Tymexox_Ninefingers'
+);
+-- TODO: OoE force spawn NMs
 
 -- KING_RANPERRES_TOMB (Zone 190)
 -----------------------------------
