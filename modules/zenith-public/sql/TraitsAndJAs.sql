@@ -74,6 +74,7 @@ UPDATE `abilities` SET `level` = 71, `recastTime`= 90, `content_tag`= NULL WHERE
 UPDATE `abilities` SET `level` = 75, `content_tag`= NULL WHERE `name` = 'dragon_breaker'; -- TODO: Duration changed from 180 to 120
 
 -- SMN
+UPDATE `abilities` SET `level` = 75, `recastTime`= 300, `content_tag`= NULL WHERE `name` = 'avatars_favor'; -- Recast changed from 30 to 300
 UPDATE `abilities` SET `level` = 75, `content_tag`= NULL WHERE `name` = 'mana_cede';
 
 -- BLU
@@ -86,6 +87,7 @@ UPDATE `abilities` SET `level` = 75, `content_tag`= NULL WHERE `name` = 'triple_
 -- PUP
 UPDATE `abilities` SET `level` = 60, `content_tag`= NULL WHERE `name` = 'cooldown';
 -- UPDATE `abilities` SET `level` = 71, `content_tag`= NULL WHERE `name` = 'tactical_switch'; -- TODO: Not yet implemented
+UPDATE `abilities` SET `recastTime`= 90, `content_tag`= NULL WHERE `name` = 'deus_ex_automata'; -- Recast changed from 60 to 90
 
 -- DNC
 UPDATE `abilities` SET `level` = 71, `recastTime`= 30, `content_tag`= NULL WHERE `name` = 'presto'; -- TODO: Potency changed from 5 steps to original 3. Daze increase from 5 to original 2. Step Accuracy from +50 to +20.
@@ -110,6 +112,29 @@ UPDATE `abilities` SET `level` = 75, `content_tag`= NULL WHERE `name` = 'one_for
 -- GEO
 UPDATE `abilities` SET `level` = 65, `content_tag`= NULL WHERE `name` = 'concentric_pulse';
 UPDATE `abilities` SET `level` = 71, `content_tag`= NULL WHERE `name` = 'theurgic_focus'; -- TODO: Not yet implemented. TODO: Potency changed from +50MAB to +25MAB
+
+-------------------------
+-- Content Tag Updates --
+-------------------------
+UPDATE `abilities` SET `content_tag`= NULL WHERE `name` IN (
+    'footwork',
+    'afflatus_solace',
+    'afflatus_misery',
+    'composure',
+    'snarl',
+    'bestial_loyalty',
+    'pianissimo',
+    'yonin',
+    'innin',
+    'hasso',
+    'seigan',
+    'sekkanoki',
+    'spirit_surge',
+    'elemental_siphon',
+    'maintenance',
+    'chocobo_jig_ii',
+    'contradance'
+);
 
 ------------------------
 -- Disabled Abilities --
