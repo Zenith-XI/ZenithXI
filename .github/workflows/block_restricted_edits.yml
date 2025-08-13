@@ -11,7 +11,6 @@ jobs:
         shell: bash
         id: check
         run: |
-          cat "$GITHUB_EVENT_PATH"
           # technically zenith _is_ a fork of LSB, so we have to detect based on repo
           HEAD_REPO="${{ github.event.pull_request.head.repo.full_name }}"
           BASE_REPO="${{ github.repository }}"
