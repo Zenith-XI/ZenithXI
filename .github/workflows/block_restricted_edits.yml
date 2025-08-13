@@ -12,14 +12,19 @@ jobs:
         id: check
         run: |
           cat "$GITHUB_EVENT_PATH"
-          FORK=false
+          # technically zenith _is_ a fork of LSB, so we have to detect based on repo
+          HEAD_REPO="${{ github.event.pull_request.head.repo.full_name }}"
+          BASE_REPO="${{ github.repository }}"
+          FORK=true
           BRANCH=""
 
+          if [ "$HEAD_REPO" = "$BASE_REPO" ]; then
+            FORK=false
+          fi
+
           if [ "$GITHUB_EVENT_NAME" = "push" ]; then
-            FORK=$(jq -r '.repository.fork' "$GITHUB_EVENT_PATH")
             BRANCH="$GITHUB_REF_NAME"
           elif [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
-            FORK=$(jq -r '.pull_request.head.repo.fork' "$GITHUB_EVENT_PATH")
             BRANCH=$(jq -r '.pull_request.head.ref' "$GITHUB_EVENT_PATH")
           fi
 
