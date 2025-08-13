@@ -11,6 +11,7 @@ jobs:
         shell: bash
         id: check
         run: |
+          echo $GITHUB_EVENT_PATH
           FORK=false
           BRANCH=""
 
