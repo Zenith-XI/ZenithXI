@@ -11,13 +11,38 @@ jobs:
         shell: bash
         id: check
         run: |
-          if [[ "${{ github.head_ref }}" != "base" ]]; then
-            echo "Not a PR from 'base' branch, checking which files are modified"
-            echo "should_continue=true" >> $GITHUB_OUTPUT
-          else
+          # technically zenith _is_ a fork of LSB, so we have to detect based on repo
+          HEAD_REPO="${{ github.event.pull_request.head.repo.full_name }}"
+          BASE_REPO="${{ github.repository }}"
+          FORK=true
+          BRANCH=""
+
+          if [ "$HEAD_REPO" = "$BASE_REPO" ]; then
+            FORK=false
+          fi
+
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            BRANCH="$GITHUB_REF_NAME"
+          elif [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            BRANCH=$(jq -r '.pull_request.head.ref' "$GITHUB_EVENT_PATH")
+          fi
+
+          echo "Fork: $FORK"
+          echo "Branch: $BRANCH"
+
+          if [ "$FORK" = "false" ] && [ "$BRANCH" = "base" ]; then
             echo "'base' branch is allowed to modify anything in the codebase"
             echo "should_continue=false" >> $GITHUB_OUTPUT
+            exit 0
           fi
+
+          if [ "$FORK" = "false" ]; then
+            echo "All PRs should come from forks."
+            echo "Please fork this repository and inform someone about deleting this branch."
+            exit 1
+          fi
+
+          echo "should_continue=true" >> $GITHUB_OUTPUT
 
       - name: Check out the code
         if: steps.check.outputs.should_continue == 'true'
