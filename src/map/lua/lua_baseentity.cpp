@@ -48,9 +48,9 @@
 #include "items.h"
 #include "latent_effect_container.h"
 #include "linkshell.h"
-#include "map_server.h"
 #include "mob_modifier.h"
 #include "mob_spell_container.h"
+#include "mob_spell_list.h"
 #include "mobskill.h"
 #include "notoriety_container.h"
 #include "recast_container.h"
@@ -2542,11 +2542,6 @@ bool CLuaBaseEntity::sendGuild(uint16 guildID, uint8 open, uint8 close, uint8 ho
 
     PChar->PGuildShop = PGuildShop;
     PChar->pushPacket<CGuildMenuPacket>(status, open, close, holiday);
-
-    if (status == GUILD_OPEN)
-    {
-        PChar->pushPacket<CGuildMenuBuyPacket>(PChar, PGuildShop);
-    }
 
     return status == GUILD_OPEN;
 }
@@ -13303,10 +13298,11 @@ bool CLuaBaseEntity::addStatusEffect(sol::variadic_args va)
 
         // Optional
         auto subType         = va[4].is<uint32>() ? va[4].as<uint32>() : 0;
-        auto subPower        = va[5].is<uint16>() ? va[5].as<uint16>() : 0;
+        auto subPower        = va[5].is<double>() ? static_cast<uint16>(va[5].as<double>()) : 0;
         auto tier            = va[6].is<uint16>() ? va[6].as<uint16>() : 0;
-        auto sourceType      = va[7].is<EffectSourceType>() ? va[7].as<EffectSourceType>() : EffectSourceType::SOURCE_NONE;
-        auto sourceTypeParam = va[8].is<uint16>() ? va[8].as<uint16>() : 0;
+        auto sourceType      = va[7].is<uint16>() ? va[7].as<uint16>() : 0;
+        auto sourceTypeParam = va[8].is<uint32>() ? va[8].as<uint32>() : 0;
+        auto originID        = va[9].is<uint32>() ? va[9].as<uint32>() : 0;
 
         CStatusEffect* PEffect = new CStatusEffect(effectID,
                                                    effectIcon,
@@ -13321,6 +13317,9 @@ bool CLuaBaseEntity::addStatusEffect(sol::variadic_args va)
         {
             PEffect->SetSource(sourceType, sourceTypeParam);
         }
+
+        // Set the originID. This is the original source of the effect(Usually an entity)
+        PEffect->SetOriginID(originID);
 
         if (PEffect->GetStatusID() == EFFECT_FOOD)
         {
@@ -13370,7 +13369,7 @@ bool CLuaBaseEntity::addStatusEffectEx(sol::variadic_args va)
 
     // Optional
     auto subType    = va[5].is<uint32>() ? va[5].as<uint32>() : 0;
-    auto subPower   = va[6].is<uint16>() ? va[6].as<uint16>() : 0;
+    auto subPower   = va[6].is<double>() ? static_cast<uint16>(va[6].as<double>()) : 0;
     auto tier       = va[7].is<uint16>() ? va[7].as<uint16>() : 0;
     auto effectFlag = va[8].is<uint32>() ? va[8].as<uint32>() : 0;
 
@@ -15654,6 +15653,27 @@ void CLuaBaseEntity::despawnPet()
 }
 
 /************************************************************************
+ *  Function: setJugRemainingTime()
+ *  Purpose : Sets remaining jug pet duration
+ *  Example : pet:setJugRemainingTime(300)
+ ************************************************************************/
+
+void CLuaBaseEntity::setJugRemainingTime(uint32 remainingSeconds)
+{
+    auto* PPetEntity = dynamic_cast<CPetEntity*>(m_PBaseEntity);
+
+    if (!PPetEntity || PPetEntity->getPetType() != PET_TYPE::JUG_PET)
+    {
+        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+        return;
+    }
+
+    auto previousJugLifetime = timer::now() - PPetEntity->getJugSpawnTime();
+
+    PPetEntity->setJugDuration(previousJugLifetime + std::chrono::seconds(remainingSeconds));
+}
+
+/************************************************************************
  *  Function: hasValidJugPetItem()
  *  Purpose : Returns true if subSkill Type is of sufficient value
  *  Example : if player:hasValidJugPetItem() then
@@ -17397,20 +17417,40 @@ void CLuaBaseEntity::setDamage(uint16 damage)
 }
 
 /************************************************************************
+ *  Function: getSpellListId()
+ *  Purpose : Returns ID of the spell list a Mob is using
+ *  Example : local spellListId = mob:getSpellListId()
+ ************************************************************************/
+
+auto CLuaBaseEntity::getSpellListId() const -> uint16
+{
+    if (const auto* PMob = dynamic_cast<CMobEntity*>(m_PBaseEntity))
+    {
+        if (PMob->m_SpellListContainer)
+        {
+            return PMob->m_SpellListContainer->getId();
+        }
+    }
+
+    ShowError("function call on invalid entity! (name: %s type: %d)", m_PBaseEntity->name, m_PBaseEntity->objtype);
+    return 0;
+}
+
+/************************************************************************
  *  Function: hasSpellList()
  *  Purpose : Returns true if a Mob has spells to cast
  *  Example : if mob:hasSpellList() then
  ************************************************************************/
 
-bool CLuaBaseEntity::hasSpellList()
+auto CLuaBaseEntity::hasSpellList() const -> bool
 {
-    if (m_PBaseEntity->objtype & TYPE_NPC || m_PBaseEntity->objtype & TYPE_PC)
+    if (const auto* PMob = dynamic_cast<CMobEntity*>(m_PBaseEntity))
     {
-        ShowError("function call on invalid entity! (name: %s type: %d)", m_PBaseEntity->name, m_PBaseEntity->objtype);
-        return false;
+        return PMob->SpellContainer->HasSpells();
     }
 
-    return static_cast<CMobEntity*>(m_PBaseEntity)->SpellContainer->HasSpells();
+    ShowError("function call on invalid entity! (name: %s type: %d)", m_PBaseEntity->name, m_PBaseEntity->objtype);
+    return false;
 }
 
 /************************************************************************
@@ -17420,15 +17460,15 @@ bool CLuaBaseEntity::hasSpellList()
  *  Notes   :
  ************************************************************************/
 
-void CLuaBaseEntity::setSpellList(uint16 spellList)
+void CLuaBaseEntity::setSpellList(const uint16 spellListId) const
 {
-    if (m_PBaseEntity->objtype & TYPE_NPC || m_PBaseEntity->objtype & TYPE_PC)
+    if (auto* PMob = dynamic_cast<CMobEntity*>(m_PBaseEntity))
     {
-        ShowError("function call on invalid entity! (name: %s type: %d)", m_PBaseEntity->name, m_PBaseEntity->objtype);
+        mobutils::SetSpellList(PMob, spellListId);
         return;
     }
 
-    mobutils::SetSpellList(static_cast<CMobEntity*>(m_PBaseEntity), spellList);
+    ShowError("function call on invalid entity! (name: %s type: %d)", m_PBaseEntity->name, m_PBaseEntity->objtype);
 }
 
 /************************************************************************
@@ -19798,6 +19838,7 @@ void CLuaBaseEntity::Register()
     // Pets and Automations
     SOL_REGISTER("spawnPet", CLuaBaseEntity::spawnPet);
     SOL_REGISTER("despawnPet", CLuaBaseEntity::despawnPet);
+    SOL_REGISTER("setJugRemainingTime", CLuaBaseEntity::setJugRemainingTime);
 
     SOL_REGISTER("hasValidJugPetItem", CLuaBaseEntity::hasValidJugPetItem);
 
@@ -19900,6 +19941,7 @@ void CLuaBaseEntity::Register()
 
     SOL_REGISTER("setDelay", CLuaBaseEntity::setDelay);
     SOL_REGISTER("setDamage", CLuaBaseEntity::setDamage);
+    SOL_REGISTER("getSpellListId", CLuaBaseEntity::getSpellListId);
     SOL_REGISTER("hasSpellList", CLuaBaseEntity::hasSpellList);
     SOL_REGISTER("setSpellList", CLuaBaseEntity::setSpellList);
     SOL_REGISTER("setAutoAttackEnabled", CLuaBaseEntity::setAutoAttackEnabled);

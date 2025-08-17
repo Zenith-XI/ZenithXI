@@ -1,5 +1,7 @@
 -----------------------------------
 -- xi.effect.FOOD
+-- Notes: Effect subType is used to store itemID of usable food item. See: CStatusEffectContainer::SetEffectParams
+-- Effect subType of 0 allows effect to use the effect script below.
 -----------------------------------
 ---@type TEffect
 local effectObject = {}

@@ -664,7 +664,7 @@ protected:
     void TrackArrowUsageForScavenge(CItemWeapon* PAmmo);
 
 private:
-    CAMANContainer m_AMAN;
+    xi::lazy<CAMANContainer> m_AMAN;
 
     std::unique_ptr<CItemContainer> m_Inventory;
     std::unique_ptr<CItemContainer> m_Mogsafe;

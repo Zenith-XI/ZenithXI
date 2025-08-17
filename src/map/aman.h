@@ -28,8 +28,6 @@ class CAMANContainer
 {
 public:
     CAMANContainer(CCharEntity* PChar);
-    auto isInitialized() const -> bool; // Has the container been initialized with the character data?
-    void init();                        // Must be called explicitly once the character is fully loaded.
 
     auto isAssistChannelEligible() const -> bool; // Can the player participate in the Assist Channel?
     auto onZoneIn() const -> void;                // Displays the Assist Channel eligibility message when the player zones in.
@@ -62,6 +60,5 @@ private:
     bool         m_assistChannelEligible{ false };
     uint32_t     m_assistChannelPlaytimeExpiry{ 0 };
     bool         m_notifyExpired{ false };
-    bool         m_isInitialized{ false };
     CCharEntity* m_player;
 };

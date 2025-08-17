@@ -13,8 +13,8 @@ itemObject.onItemCheck = function(target, item, param, caster)
     return xi.itemUtils.foodOnItemCheck(target, xi.foodType.BASIC)
 end
 
-itemObject.onItemUse = function(target)
-    target:addStatusEffect(xi.effect.FOOD, 0, 0, 10800, 4493)
+itemObject.onItemUse = function(target, user, item)
+    target:addStatusEffect(xi.effect.FOOD, 0, 0, 10800, item:getID())
 end
 
 itemObject.onEffectGain = function(target, effect)

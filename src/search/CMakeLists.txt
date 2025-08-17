@@ -7,10 +7,12 @@ set(SOURCES
     data_loader.h
     handler.h
     main.cpp
+    search_application.h
+    search_application.cpp
+    search_engine.h
+    search_engine.cpp
     search_handler.h
     search_handler.cpp
-    search_server.h
-    search_server.cpp
 )
 
 if(UNIX)

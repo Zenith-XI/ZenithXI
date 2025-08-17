@@ -2,8 +2,10 @@ set(SOURCES
     ${COMMON_SOURCES}
     auth_session.h
     auth_session.cpp
-    connect_server.h
-    connect_server.cpp
+    connect_application.h
+    connect_application.cpp
+    connect_engine.h
+    connect_engine.cpp
     data_session.h
     data_session.cpp
     handler.h

@@ -2923,6 +2923,7 @@ INSERT INTO `item_mods` VALUES (10715,8,5);   -- STR: 5
 INSERT INTO `item_mods` VALUES (10715,9,5);   -- DEX: 5
 INSERT INTO `item_mods` VALUES (10715,25,10); -- ACC: 10
 INSERT INTO `item_mods` VALUES (10715,27,6);  -- ENMITY: 6
+INSERT INTO `item_mods` VALUES (10715,897,1); -- GILFINDER: 1 (Unconfirmed)
 
 -- Valor Breeches +2
 INSERT INTO `item_mods` VALUES (10716,1,56);     -- DEF: 56
@@ -5329,11 +5330,12 @@ INSERT INTO `item_mods` VALUES (11151,30,8);   -- MACC: 8
 INSERT INTO `item_mods` VALUES (11151,902,25); -- OCCULT_ACUMEN: 25
 
 -- Ferine Ocreae +2
-INSERT INTO `item_mods` VALUES (11152,1,25);  -- DEF: 25
-INSERT INTO `item_mods` VALUES (11152,8,7);   -- STR: 7
-INSERT INTO `item_mods` VALUES (11152,9,7);   -- DEX: 7
-INSERT INTO `item_mods` VALUES (11152,25,8);  -- ACC: 8
-INSERT INTO `item_mods` VALUES (11152,288,3); -- DOUBLE_ATTACK: 3
+INSERT INTO `item_mods` VALUES (11152,1,25);    -- DEF: 25
+INSERT INTO `item_mods` VALUES (11152,8,7);     -- STR: 7
+INSERT INTO `item_mods` VALUES (11152,9,7);     -- DEX: 7
+INSERT INTO `item_mods` VALUES (11152,25,8);    -- ACC: 8
+INSERT INTO `item_mods` VALUES (11152,288,3);   -- DOUBLE_ATTACK: 3
+INSERT INTO `item_mods` VALUES (11152,1157,10); -- ENHANCES_SPUR: 10
 
 -- Aoidos Cothurnes +2
 INSERT INTO `item_mods` VALUES (11153,1,18);   -- DEF: 18
@@ -6021,11 +6023,12 @@ INSERT INTO `item_mods` VALUES (11251,30,6);   -- MACC: 6
 INSERT INTO `item_mods` VALUES (11251,902,15); -- OCCULT_ACUMEN: 15
 
 -- Ferine Ocreae +1
-INSERT INTO `item_mods` VALUES (11252,1,23);  -- DEF: 23
-INSERT INTO `item_mods` VALUES (11252,8,5);   -- STR: 5
-INSERT INTO `item_mods` VALUES (11252,9,5);   -- DEX: 5
-INSERT INTO `item_mods` VALUES (11252,25,5);  -- ACC: 5
-INSERT INTO `item_mods` VALUES (11252,288,2); -- DOUBLE_ATTACK: 2
+INSERT INTO `item_mods` VALUES (11252,1,23);   -- DEF: 23
+INSERT INTO `item_mods` VALUES (11252,8,5);    -- STR: 5
+INSERT INTO `item_mods` VALUES (11252,9,5);    -- DEX: 5
+INSERT INTO `item_mods` VALUES (11252,25,5);   -- ACC: 5
+INSERT INTO `item_mods` VALUES (11252,288,2);  -- DOUBLE_ATTACK: 2
+INSERT INTO `item_mods` VALUES (11252,1157,5); -- ENHANCES_SPUR: 5
 
 -- Aoidos Cothurnes +1
 INSERT INTO `item_mods` VALUES (11253,1,16);   -- DEF: 16
@@ -20076,6 +20079,7 @@ INSERT INTO `item_mods` VALUES (14074,23,12); -- ATT: 12
 -- Andvaranauts
 INSERT INTO `item_mods` VALUES (14075,1,12);  -- DEF: 12
 INSERT INTO `item_mods` VALUES (14075,12,-7); -- INT: -7
+INSERT INTO `item_mods` VALUES (14075,897,1); -- GILFINDER: 1
 
 -- Hecatomb Mittens
 INSERT INTO `item_mods` VALUES (14076,1,25);     -- DEF: 25
@@ -25858,6 +25862,7 @@ INSERT INTO `item_mods` VALUES (15122,1,34);  -- DEF: 34
 INSERT INTO `item_mods` VALUES (15122,2,19);  -- HP: 19
 INSERT INTO `item_mods` VALUES (15122,27,4);  -- ENMITY: 4
 INSERT INTO `item_mods` VALUES (15122,298,5); -- STEAL: 5
+INSERT INTO `item_mods` VALUES (15122,897,1); -- GILFINDER: 1
 
 -- Valor Breeches
 INSERT INTO `item_mods` VALUES (15123,1,43);   -- DEF: 43
@@ -28205,6 +28210,7 @@ INSERT INTO `item_mods` VALUES (15585,1,35);  -- DEF: 35
 INSERT INTO `item_mods` VALUES (15585,2,25);  -- HP: 25
 INSERT INTO `item_mods` VALUES (15585,27,5);  -- ENMITY: 5
 INSERT INTO `item_mods` VALUES (15585,298,5); -- STEAL: 5
+INSERT INTO `item_mods` VALUES (15585,897,1); -- GILFINDER: 1 (Unconfirmed)
 
 -- Valor Breeches +1
 INSERT INTO `item_mods` VALUES (15586,1,44);   -- DEF: 44
@@ -31366,7 +31372,8 @@ INSERT INTO `item_mods` VALUES (16276,71,1);  -- MPHEAL: 1
 INSERT INTO `item_mods` VALUES (16276,72,1);  -- HPHEAL: 1
 
 -- Bandolero Scarf
-INSERT INTO `item_mods` VALUES (16277,68,5); -- EVA: 5
+INSERT INTO `item_mods` VALUES (16277,68,5);  -- EVA: 5
+INSERT INTO `item_mods` VALUES (16277,897,1); -- GILFINDER: 1
 
 -- Pipers Torque
 INSERT INTO `item_mods` VALUES (16278,14,5);  -- CHR: 5
@@ -53567,8 +53574,8 @@ INSERT INTO `item_mods` VALUES (23361,31,120);  -- MEVA: 120
 INSERT INTO `item_mods` VALUES (23361,68,95);   -- EVA:  95
 INSERT INTO `item_mods` VALUES (23361,288,5);   -- DOUBLE_ATTACK: 5
 INSERT INTO `item_mods` VALUES (23361,384,300); -- HASTE_GEAR: 3%
+INSERT INTO `item_mods` VALUES (23361,1157,18); -- ENHANCES_SPUR: 18
 -- TODO: Physical damage limit +7%
--- TODO: "Spur"+18
 
 -- Fili Cothurnes +2
 INSERT INTO `item_mods` VALUES (23362,1,86);    -- DEF: 86
@@ -69006,6 +69013,7 @@ INSERT INTO `item_mods` VALUES (27162,29,2);    -- MDEF: 2
 INSERT INTO `item_mods` VALUES (27162,31,47);   -- MEVA: 47
 INSERT INTO `item_mods` VALUES (27162,68,17);   -- EVA: 17
 INSERT INTO `item_mods` VALUES (27162,384,600); -- HASTE_GEAR: 600
+INSERT INTO `item_mods` VALUES (27162,897,2);   -- GILFINDER: 2
 
 -- Plunderers Culottes +1
 INSERT INTO `item_mods` VALUES (27163,1,110);   -- DEF: 110
@@ -69023,6 +69031,7 @@ INSERT INTO `item_mods` VALUES (27163,29,5);    -- MDEF: 5
 INSERT INTO `item_mods` VALUES (27163,31,69);   -- MEVA: 69
 INSERT INTO `item_mods` VALUES (27163,68,38);   -- EVA: 38
 INSERT INTO `item_mods` VALUES (27163,384,600); -- HASTE_GEAR: 600
+INSERT INTO `item_mods` VALUES (27163,897,2);   -- GILFINDER: 2
 
 -- Caballarius Breeches
 INSERT INTO `item_mods` VALUES (27164,1,95);     -- DEF: 95
@@ -72361,6 +72370,7 @@ INSERT INTO `item_mods` VALUES (27427,31,54);   -- MEVA: 54
 INSERT INTO `item_mods` VALUES (27427,68,25);   -- EVA: 25
 INSERT INTO `item_mods` VALUES (27427,288,3);   -- DOUBLE_ATTACK: 3
 INSERT INTO `item_mods` VALUES (27427,384,300); -- HASTE_GEAR: 300
+INSERT INTO `item_mods` VALUES (27427,1157,12); -- ENHANCES_SPUR: 12
 
 -- Nukumi Ocreae +1
 INSERT INTO `item_mods` VALUES (27428,1,71);    -- DEF: 71
@@ -72376,6 +72386,7 @@ INSERT INTO `item_mods` VALUES (27428,31,80);   -- MEVA: 80
 INSERT INTO `item_mods` VALUES (27428,68,55);   -- EVA: 55
 INSERT INTO `item_mods` VALUES (27428,288,4);   -- DOUBLE_ATTACK: 4
 INSERT INTO `item_mods` VALUES (27428,384,300); -- HASTE_GEAR: 300
+INSERT INTO `item_mods` VALUES (27428,1157,15); -- ENHANCES_SPUR: 15
 
 -- Fili Cothurnes
 INSERT INTO `item_mods` VALUES (27429,1,46);    -- DEF: 46
@@ -73367,6 +73378,7 @@ INSERT INTO `item_mods` VALUES (27584,369,1);  -- REFRESH: 1
 -- Gorney Ring
 INSERT INTO `item_mods` VALUES (27585,298,2); -- STEAL: 2
 INSERT INTO `item_mods` VALUES (27585,303,1); -- TREASURE_HUNTER: 1
+INSERT INTO `item_mods` VALUES (27585,897,2); -- GILFINDER: 1
 
 -- Haverton Ring
 INSERT INTO `item_mods` VALUES (27586,26,20);  -- RACC: 20

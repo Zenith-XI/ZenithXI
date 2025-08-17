@@ -7535,8 +7535,8 @@ INSERT INTO `mob_groups` VALUES (59,1879,104,'Halforc_Dark_Knight',0,128,0,0,0,0
 INSERT INTO `mob_groups` VALUES (60,1883,104,'Halforc_Ranger',0,128,0,0,0,35,35,0);
 INSERT INTO `mob_groups` VALUES (61,1880,104,'Halforc_Dragoon',0,128,0,0,0,35,35,0);
 INSERT INTO `mob_groups` VALUES (62,3048,104,'Orcs_Wyvern',0,128,0,0,0,32,32,0);
-INSERT INTO `mob_groups` VALUES (63,1605,104,'Giollemitte_B_Feroun',0,128,0,0,0,0,0,0);
-INSERT INTO `mob_groups` VALUES (64,3645,104,'Skeleton_Esquire',0,128,0,0,0,17,29,0);
+INSERT INTO `mob_groups` VALUES (63,1605,104,'Giollemitte_B_Feroun',0,128,0,2950,0,38,38,0);
+INSERT INTO `mob_groups` VALUES (64,3645,104,'Skeleton_Esquire_NM',0,128,0,2120,0,35,35,0);
 
 -- garrison
 INSERT INTO `mob_groups` VALUES (65,3009,104,'Orcish_Fighter_G',0,128,3226,0,0,30,35,0);
@@ -8197,7 +8197,7 @@ INSERT INTO `mob_groups` VALUES (16,1295,113,'Fantasma',330,1,817,0,0,65,68,0);
 INSERT INTO `mob_groups` VALUES (17,3375,113,'Robber_Crab',330,0,2107,0,0,64,67,0);
 INSERT INTO `mob_groups` VALUES (18,1235,113,'Enna-enna',330,8,569,0,0,65,69,0);
 INSERT INTO `mob_groups` VALUES (19,3451,113,'Sand_Cockatrice',330,0,2147,0,0,71,74,0);
-INSERT INTO `mob_groups` VALUES (20,5889,113,'Killer_Jonny',28800,0,3088,0,0,85,85,0);
+INSERT INTO `mob_groups` VALUES (20,5889,113,'Killer_Jonny',0,32,3088,0,0,85,85,0);
 INSERT INTO `mob_groups` VALUES (21,3882,113,'Terror_Pugil',330,0,279,0,0,66,70,0);
 INSERT INTO `mob_groups` VALUES (22,71,113,'Air_Elemental',330,4,38,0,0,52,54,0);
 INSERT INTO `mob_groups` VALUES (23,5425,113,'Tegmine',7200,0,2945,10500,5000,70,73,0);

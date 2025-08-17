@@ -445,7 +445,7 @@ bool CBattleEntity::Rest(float rate)
 uint16 CBattleEntity::GetWeaponDelay(bool tp)
 {
     TracyZoneScoped;
-    uint16 finalDelay = 9999;
+    uint16 finalDelay = 8000; // 480 (base) * 1000 / 60 (milisecond conversion)
 
     if (auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_MAIN]))
     {
@@ -462,7 +462,6 @@ uint16 CBattleEntity::GetWeaponDelay(bool tp)
         // H2H
         if (weapon->isHandToHand())
         {
-            weaponDelay = weaponDelay + 8000;                    // (480) base * (1000 / 60) milisecond conversion
             martialArts = getMod(Mod::MARTIAL_ARTS) * 1000 / 60; // TODO: Job points?
         }
 
@@ -478,7 +477,7 @@ uint16 CBattleEntity::GetWeaponDelay(bool tp)
         if (!tp && StatusEffectContainer->HasStatusEffect(EFFECT_HUNDRED_FISTS))
         {
             finalDelay = std::clamp<uint16>(weaponDelay - martialArts, 1600, 8000);
-            finalDelay = finalDelay * 0.25;
+            finalDelay = finalDelay * 0.25f;
 
             return finalDelay;
         }
@@ -504,7 +503,7 @@ uint16 CBattleEntity::GetWeaponDelay(bool tp)
 
                 if (weapon->isTwoHanded())
                 {
-                    hasteAbility = hasteAbility - getMod(Mod::TWOHAND_HASTE_ABILITY) / 10000.0f;
+                    hasteAbility = hasteAbility + getMod(Mod::TWOHAND_HASTE_ABILITY) / 10000.0f;
                 }
 
                 hasteMagic   = std::clamp<float>(hasteMagic, -1.0f, 0.4375f);
@@ -2614,8 +2613,7 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
                         auto PEffect = PTarget->StatusEffectContainer->GetStatusEffect(EFFECT_EVASION_DOWN);
 
                         // When Feint's evasion down effect is on, the target can get "debuffed" with TREASURE_HUNTER_PROC +25% * level above first on Feint
-                        PEffect->addMod(Mod::TREASURE_HUNTER_PROC, PFeintEffect->GetSubPower());      // Remove TREASURE_HUNTER_PROC debuff on effect wearing off. This isnt added to the mob directly.
-                        PTarget->addModifier(Mod::TREASURE_HUNTER_PROC, PFeintEffect->GetSubPower()); // Add TREASURE_HUNTER_PROC debuff immediately to mob
+                        PEffect->addMod(Mod::TREASURE_HUNTER_PROC, PFeintEffect->GetSubPower());
                     }
                     StatusEffectContainer->DelStatusEffect(EFFECT_FEINT);
                 }

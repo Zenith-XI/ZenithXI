@@ -82,10 +82,12 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/linkshell.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/linkshell.h
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/map_application.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/map_application.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/map_engine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/map_engine.h
     ${CMAKE_CURRENT_SOURCE_DIR}/map_networking.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map_networking.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/map_server.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/map_server.h
     ${CMAKE_CURRENT_SOURCE_DIR}/map_session_container.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map_session_container.h
     ${CMAKE_CURRENT_SOURCE_DIR}/map_session.cpp

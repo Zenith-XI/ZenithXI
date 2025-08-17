@@ -13,7 +13,6 @@
 mixins =
 {
     require('scripts/mixins/draw_in'),
-    require('scripts/mixins/families/poroggo'),
 }
 -----------------------------------
 ---@type TMobEntity
@@ -30,11 +29,6 @@ entity.onMobInitialize = function(mob)
     mob:addImmunity(xi.immunity.BIND)
     mob:addImmunity(xi.immunity.GRAVITY)
     mob:addImmunity(xi.immunity.SILENCE)
-end
-
-entity.onMobSpawn = function(mob)
-    -- Reset Ariri to the right spell list after Providence
-    mob:setLocalVar('spellListId', 540)
 end
 
 entity.onMobEngage = reset

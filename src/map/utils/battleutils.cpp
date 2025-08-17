@@ -59,7 +59,7 @@
 #include "items/item_weapon.h"
 #include "job_points.h"
 #include "los/zone_los.h"
-#include "map_server.h"
+#include "map_engine.h"
 #include "mob_modifier.h"
 #include "mobskill.h"
 #include "modifier.h"
@@ -3835,9 +3835,6 @@ namespace battleutils
 
             Mod resistanceRankMods[] = { Mod::FIRE_RES_RANK, Mod::ICE_RES_RANK, Mod::WIND_RES_RANK, Mod::EARTH_RES_RANK, Mod::THUNDER_RES_RANK, Mod::ICE_RES_RANK, Mod::LIGHT_RES_RANK, Mod::DARK_RES_RANK };
 
-            // Reset any resistance rank mods on the defender
-            PDefender->delModifiers(&PSCEffect->modList);
-
             // Reset the effects resistance rank mods
             for (auto& resistanceRank : resistanceRankMods)
             {
@@ -3859,9 +3856,6 @@ namespace battleutils
                     Mod resistanceRankMod = GetResistanceRankModFromElement(element);
                     PSCEffect->setMod(resistanceRankMod, -1);
                 }
-
-                // Add the mods back to the player (effect cleanup will destroy the mods for us later)
-                PDefender->addModifiers(&PSCEffect->modList);
 
                 return (SUBEFFECT)GetSkillchainSubeffect(skillchain);
             }

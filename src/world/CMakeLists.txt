@@ -21,8 +21,10 @@ set(SOURCES
     party_system.h
     time_server.h
     time_server.cpp
-    world_server.cpp
-    world_server.h
+    world_application.cpp
+    world_application.h
+    world_engine.cpp
+    world_engine.h
     zone_settings.h
 )
 

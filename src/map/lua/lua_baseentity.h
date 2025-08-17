@@ -763,6 +763,7 @@ public:
     // Pets and Automations
     void spawnPet(sol::object const& arg0);
     void despawnPet();
+    void setJugRemainingTime(uint32 remainingSeconds);
 
     auto   spawnTrust(uint16 trustId) -> CBaseEntity*;
     void   clearTrusts();
@@ -865,8 +866,9 @@ public:
 
     void setDelay(uint16 delay);
     void setDamage(uint16 damage);
-    bool hasSpellList();
-    void setSpellList(uint16 spellList);
+    auto getSpellListId() const -> uint16;
+    auto hasSpellList() const -> bool;
+    void setSpellList(uint16 spellListId) const;
     void setAutoAttackEnabled(bool state);   // halts/resumes auto attack of entity
     void setMagicCastingEnabled(bool state); // halt/resumes casting magic
     void setMobAbilityEnabled(bool state);   // halt/resumes mob skills

@@ -65,15 +65,6 @@ namespace
 CAMANContainer::CAMANContainer(CCharEntity* PChar)
 : m_player(PChar)
 {
-}
-
-auto CAMANContainer::isInitialized() const -> bool
-{
-    return m_isInitialized;
-}
-
-void CAMANContainer::init()
-{
     const auto fmtQuery = "SELECT "
                           "mentor, "
                           "DATEDIFF(CURRENT_TIMESTAMP, last_logout) AS days_since_logout, "
@@ -87,7 +78,6 @@ void CAMANContainer::init()
         const auto logoutDiff = rset->get<uint32>("days_since_logout");
         m_mentorUnlocked      = rset->get<uint32>("mentor") > 0;
         m_isMuted             = rset->get<bool>("muted");
-        m_isInitialized       = true;
 
         if (!settings::get<bool>("main.ASSIST_CHANNEL_ENABLED"))
         {

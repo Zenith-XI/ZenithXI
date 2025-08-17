@@ -1,4 +1,3 @@
-
 -----------------------------------
 -- ID: 4331
 -- Item: imperial_omelette
@@ -31,15 +30,12 @@ itemObject.onItemCheck = function(target, item, param, caster)
     return xi.itemUtils.foodOnItemCheck(target, xi.foodType.BASIC)
 end
 
-itemObject.onItemUse = function(target)
-    target:addStatusEffect(xi.effect.FOOD, 0, 0, 14400, 4331)
+itemObject.onItemUse = function(target, user, item)
+    target:addStatusEffect(xi.effect.FOOD, 0, 0, 14400, item:getID())
 end
 
 itemObject.onEffectGain = function(target, effect)
-    if
-        target:getRace() == xi.race.ELVAAN_M or
-        target:getRace() == xi.race.ELVAAN_F
-    then
+    if target:getRace() == xi.race.ELVAAN_M or target:getRace() == xi.race.ELVAAN_F then
         target:addMod(xi.mod.STR, 5)
         target:addMod(xi.mod.DEX, 2)
         target:addMod(xi.mod.INT, -3)
@@ -64,10 +60,7 @@ itemObject.onEffectGain = function(target, effect)
 end
 
 itemObject.onEffectLose = function(target, effect)
-    if
-        target:getRace() == xi.race.ELVAAN_M or
-        target:getRace() == xi.race.ELVAAN_F
-    then
+    if target:getRace() == xi.race.ELVAAN_M or target:getRace() == xi.race.ELVAAN_F then
         target:delMod(xi.mod.STR, 5)
         target:delMod(xi.mod.DEX, 2)
         target:delMod(xi.mod.INT, -3)
