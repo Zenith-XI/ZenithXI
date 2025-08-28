@@ -1,0 +1,82 @@
+diff --git a/src/map/entities/battleentity.cpp b/src/map/entities/battleentity.cpp
+index 9590a26cac..50b41935e1 100644
+--- a/src/map/entities/battleentity.cpp
++++ b/src/map/entities/battleentity.cpp
+@@ -879,6 +879,13 @@ uint16 CBattleEntity::CHR()
+     return std::clamp(stats.CHR + m_modStat[Mod::CHR], 0, 999);
+ }
+ 
++// Era-style attribute scaling for levels 37-75
++static float getEraScaling(int level, float startValue, float endValue) {
++    if (level < 37) return startValue;
++    if (level >= 75) return endValue;
++    return startValue + (endValue - startValue) * ((level - 37) / 38.0f);
++}
++
+ uint16 CBattleEntity::ATT(SLOTTYPE slot)
+ {
+     TracyZoneScoped;
+@@ -891,15 +898,19 @@ uint16 CBattleEntity::ATT(SLOTTYPE slot)
+     // https://www.bg-wiki.com/ffxi/Strength
+     if (weapon && weapon->isTwoHanded()) // 2-handed weapon
+     {
+-        strMultiplier = 1.0;
++        strMultiplier = 0.75f;
+     }
+     else if (weapon && weapon->isHandToHand()) // H2H Weapon
+     {
+-        strMultiplier = 0.75;
++        strMultiplier = getEraScaling(GetMLevel(), 0.5f, 0.625f);
+     }
+-    else if (slot == SLOT_MAIN || slot == SLOT_RANGED || slot == SLOT_AMMO) // 1-handed weapon in main slot, Ranged or ammo weapon.
++    else if (slot == SLOT_MAIN) // 1-handed weapon in main slot
+     {
+-        strMultiplier = 1.0;
++        strMultiplier = getEraScaling(GetMLevel(), 0.5f, 0.75f);
++    }
++    else if (slot == SLOT_RANGED || slot == SLOT_AMMO) // Ranged or ammo weapon
++    {
++        strMultiplier = getEraScaling(GetMLevel(), 0.5f, 0.625f);
+     }
+ 
+     if (settings::get<bool>("main.USE_PRE_2013_STR_MULTIPLIER"))
+@@ -963,7 +974,7 @@ uint16 CBattleEntity::RATT(uint8 skill, uint16 bonusSkill)
+ 
+     // make sure to not use fishing skill
+     uint16 baseSkill = skill == SKILL_FISHING ? 0 : GetSkill(skill);
+-    int32  RATT      = 8 + baseSkill + bonusSkill + m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this) + STR();
++    int32  RATT      = 8 + baseSkill + bonusSkill + m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this) + (int16)(STR() * getEraScaling(GetMLevel(), 0.5f, 0.625f));
+     // use max to prevent any underflow
+     return std::max(1, RATT + (RATT * m_modStat[Mod::RATTP] / 100) + std::min<int16>((RATT * m_modStat[Mod::FOOD_RATTP] / 100), m_modStat[Mod::FOOD_RATT_CAP]));
+ }
+@@ -987,7 +998,7 @@ uint16 CBattleEntity::RACC(uint8 skill, uint16 bonusSkill)
+     }
+     RACC += getMod(Mod::RACC);
+     RACC += battleutils::GetRangedAccuracyBonuses(this);
+-    RACC += (AGI() * 3) / 4;
++    RACC += (int16)(AGI() * getEraScaling(GetMLevel(), 0.5f, 0.75f));
+     // use max to prevent underflow
+     return std::max(0, RACC + std::min<int16>(((100 + getMod(Mod::FOOD_RACCP) * RACC) / 100), getMod(Mod::FOOD_RACC_CAP)));
+ }
+@@ -1045,10 +1056,10 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint16 offsetAccuracy)
+         }
+         int32 ACC           = GetSkill(skill) + iLvlSkill;
+         ACC                 = (ACC > 200 ? (int16)(((ACC - 200) * 0.9) + 200) : ACC);
+-        float dexMultiplier = settings::get<bool>("main.USE_PRE_2013_DEX_MULTIPLIER") ? 0.50f : 0.75f;
++        float dexMultiplier = getEraScaling(GetMLevel(), 0.5f, 0.75f);
+         if (auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_MAIN]); weapon && weapon->isTwoHanded())
+         {
+-            ACC += (int16)(DEX() * dexMultiplier);
++            ACC += (int16)(DEX() * 0.75f);
+             ACC += m_modStat[Mod::TWOHAND_ACC];
+         }
+         else
+@@ -1146,7 +1157,7 @@ uint16 CBattleEntity::DEF()
+     // https://wiki.ffo.jp/html/35712.html
+     // https://forum.square-enix.com/ffxi/threads/51154-Aug.-3-2016-%28JST%29-Version-Update?p=583669&viewfull=1#post583669
+     int32 DEF       = 8 + m_modStat[Mod::DEF];
+-    float vitFactor = 1.5f;
++    float vitFactor = getEraScaling(GetMLevel(), 0.5f, 1.0f);
+ 
+     if (this->objtype == TYPE_MOB)
+     {
