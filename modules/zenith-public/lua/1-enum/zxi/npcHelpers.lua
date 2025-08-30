@@ -38,10 +38,10 @@ local removeDefaultHandler = function(zoneId, npcName)
                     then
                         if foundAction then
                             print(fmt('ERROR: Multiple default actions found for {} in zoneid {}???', npcName, zoneId))
+                        else
+                            table.remove(entries, i)
+                            foundAction = true
                         end
-
-                        table.remove(entries, i)
-                        foundAction = true
                     end
                 end
             end
