@@ -6,11 +6,7 @@
 
 require('modules/module_utils')
 
-local m = Module:new('treasure_casket_loot')
-
--- Override the casket loot table
-xi = xi or {}
-xi.casket_loot = xi.casket_loot or {}
+local m = Module:new('e_x_casketLoot')
 
 xi.casket_loot.casketItems =
 {

@@ -4,7 +4,7 @@
 zxi = zxi or {}
 zxi.mobHelpers = zxi.mobHelpers or {}
 
-local m = Module:new('mobHelpers')
+local m = Module:new('e_z_mobHelpers')
 
 zxi.mobHelpers.getRespawnVarName = function(mob, mobId)
     if not mob then

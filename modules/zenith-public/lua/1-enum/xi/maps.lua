@@ -1,16 +1,12 @@
 -- -----------------------------------
 -- Maps Tables Module
 --
--- This module overrides the maps table for vendors and maps.
+-- This module adjusts the maps table for vendors and maps to adjust costs/availability.
 -- -----------------------------------
 
 require('modules/module_utils')
 
-local m = Module:new('maps_tables')
-
--- Override the maps table
-xi = xi or {}
-xi.maps = xi.maps or {}
+local m = Module:new('e_x_maps')
 
 -- Map vendors by region
 xi.maps.mapVendors = {
