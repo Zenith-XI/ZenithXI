@@ -63,7 +63,7 @@ local effectAdjustments =
         effectId = xi.effect.SENGIKORI,
         add =
         {
-            power = -10, -- Changed from 25% to 15%
+            power = -15, -- Changed from 25% to 10%
         },
     },
     -- Dragoon
