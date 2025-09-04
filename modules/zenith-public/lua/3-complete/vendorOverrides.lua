@@ -61,6 +61,39 @@ local npcOverrides =
                 { xi.item.SCROLL_OF_BLIND_II,     139125 },
             },
         },
+        ['Amalasanda'] =
+        {
+            shopDialog = 'AMALASANDA_SHOP_DIALOG',
+            stock =
+            {
+                { xi.item.BAMBOO_STICK,             151 },
+                { xi.item.PINCH_OF_BLACK_PEPPER,    267 },
+                { xi.item.SQUARE_OF_SILK_CLOTH,   35070 }, -- *
+                { xi.item.KOMA,                     231 },
+                { xi.item.LUMP_OF_TAMA_HAGANE,    12000 }, -- *
+                { xi.item.POT_OF_URUSHI,          77206 },
+                { xi.item.ONZ_OF_CURRY_POWDER,     1039 },
+                { xi.item.JAR_OF_GROUND_WASABI,    2724 },
+                { xi.item.BOTTLE_OF_RICE_VINEGAR,   210 },
+                { xi.item.SCROLL_OF_KATON_ICHI,    2447 },
+                { xi.item.SCROLL_OF_HYOTON_ICHI,   2447 },
+                { xi.item.SCROLL_OF_HUTON_ICHI,    2447 },
+                { xi.item.SCROLL_OF_DOTON_ICHI,    2447 },
+                { xi.item.SCROLL_OF_RAITON_ICHI,   2447 },
+                { xi.item.SCROLL_OF_SUITON_ICHI,   2447 },
+            },
+            stockCOPafter = xi.item.POT_OF_URUSHI,
+            stockCOP =
+            {
+                { xi.item.BOX_OF_STICKY_RICE,       331 },
+                { xi.item.BUNDLE_OF_SHIRATAKI,      516 },
+            },
+            stockWOTGafter = xi.item.BOTTLE_OF_RICE_VINEGAR,
+            stockWOTG =
+            {
+                { xi.item.BAG_OF_BUCKWHEAT_FLOUR,  2250 },
+            },
+        },
     },
     [xi.zone.BASTOK_MARKETS] =
     {
@@ -91,18 +124,38 @@ local npcOverrides =
 -- iterates through the table above, inserting conditional items as needed, then showing the appropriate shop
 -----------------------------------
 
-local addStockToTable = function(stock, newStock)
+-- inserts a single item or a table of items into stock
+-- optionally, inserts after a particular itemid in the stock table
+local addStockToTable = function(stock, newStock, afterItemId)
     if not type(newStock) == 'table' then
         return
     end
 
+    local index = nil
+    if afterItemId then
+        for k, v in ipairs(stock) do
+            if v[1] == afterItemId then
+                index = k + 1
+            end
+        end
+    end
+
     if type(newStock[1]) ~= 'table' then
         -- single item
-        table.insert(stock, newStock)
+        if index then
+            table.insert(stock, index, newStock)
+        else
+            table.insert(stock, newStock)
+        end
     else
         -- newStock is table of items
         for _, newStockItem in ipairs(newStock) do
-            table.insert(stock, newStockItem)
+            if index then
+                table.insert(stock, index, newStockItem)
+                index = index + 1
+            else
+                table.insert(stock, newStockItem)
+            end
         end
     end
 end
@@ -128,9 +181,27 @@ for zoneId, npcs in pairs(npcOverrides) do
         -- add any level-cap restricted items
         for _, lvlCap in pairs({55, 60, 65, 70, 75}) do
             if xi.settings.main.MAX_LEVEL >= lvlCap then
-                local capStock = npcData[fmt('stock{}', lvlCap)]
+                local keyName = fmt('stock{}', lvlCap)
+                local capStock = npcData[keyName]
                 if capStock then
-                    addStockToTable(stock, capStock)
+                    addStockToTable(stock, capStock, npcData[keyName..'after'])
+                end
+            end
+        end
+
+        -- add any content-restricted items by checking the ENABLE_* server setting
+        for k, v in pairs(xi.settings.main) do
+            local prefix = 'ENABLE_'
+            if string.sub(k, 1, #prefix) == prefix then
+                -- if expansion is enabled, insert the items
+                local keyName = fmt('stock{}', string.sub(k, #prefix + 1, #k))
+                local expansionStock = npcData[keyName]
+                if
+                    expansionStock and
+                    (v == 1 or
+                    v == true)
+                then
+                    addStockToTable(stock, expansionStock, npcData[keyName..'after'])
                 end
             end
         end
@@ -266,33 +337,6 @@ m:addOverride('xi.zones.Lower_Jeuno.npcs.Yoskolo.onTrigger', function(player, np
     }
 
     player:showText(npc, zones[player:getZoneID()].text.YOSKOLO_SHOP_DIALOG)
-    xi.shop.general(player, stock)
-end)
-
-m:addOverride('xi.zones.Lower_Jeuno.npcs.Amalasanda.onTrigger', function(player, npc)
-    local stock =
-    {
-        { xi.item.BAMBOO_STICK,             151 },
-        { xi.item.PINCH_OF_BLACK_PEPPER,    267 },
-        { xi.item.SQUARE_OF_SILK_CLOTH,   35070 }, -- *
-        { xi.item.KOMA,                     231 },
-        { xi.item.LUMP_OF_TAMA_HAGANE,    12000 }, -- *
-        { xi.item.POT_OF_URUSHI,          77206 },
--- { xi.item.BOX_OF_STICKY_RICE,       331 }, (COP)
-        { xi.item.ONZ_OF_CURRY_POWDER,     1039 },
-        { xi.item.JAR_OF_GROUND_WASABI,    2724 },
-        { xi.item.BOTTLE_OF_RICE_VINEGAR,   210 },
--- { xi.item.BUNDLE_OF_SHIRATAKI,      516 }, (COP)
--- { xi.item.BAG_OF_BUCKWHEAT_FLOUR,  2250 }, -- * (WOTG)
-        { xi.item.SCROLL_OF_KATON_ICHI,    2447 },
-        { xi.item.SCROLL_OF_HYOTON_ICHI,   2447 },
-        { xi.item.SCROLL_OF_HUTON_ICHI,    2447 },
-        { xi.item.SCROLL_OF_DOTON_ICHI,    2447 },
-        { xi.item.SCROLL_OF_RAITON_ICHI,   2447 },
-        { xi.item.SCROLL_OF_SUITON_ICHI,   2447 },
-    }
-
-    player:showText(npc, zones[player:getZoneID()].text.AMALASANDA_SHOP_DIALOG)
     xi.shop.general(player, stock)
 end)
 
