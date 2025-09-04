@@ -6,100 +6,152 @@
 -----------------------------------
 local m = Module:new('ooe_vendors')
 
+-- TODO: Dibstix is not yet implemented.
+
+-- TODO: Lollyspox is not yet implemented.
+
+-- stock tables are generally tables of rows of the form { itemid, minimum price }
+-- nation shops will have an extra column to further define the place that nation needs to be in
+local npcOverrides =
+{
+    [xi.zone.LOWER_JEUNO] =
+    {
+        ['Taza'] =
+        {
+            removeDefault = true, -- remove default action from IF to avoid flip-flopping trigger action
+            shopDialog = 'WAAG_DEEG_SHOP_DIALOG',
+            stock =
+            {
+                { xi.item.SCROLL_OF_SLEEP_II,      18720 },
+                { xi.item.SCROLL_OF_SLEEPGA,       11200 },
+            },
+            stock55 =
+            {
+                { xi.item.SCROLL_OF_STONE_III,     19932 },
+                { xi.item.SCROLL_OF_WATER_III,     22682 },
+            },
+            stock60 =
+            {
+                { xi.item.SCROLL_OF_AERO_III,      27744 },
+            },
+            stock65 =
+            {
+                { xi.item.SCROLL_OF_FIRE_III,      33306 },
+                { xi.item.SCROLL_OF_BLIZZARD_III,  39368 },
+            },
+            stock70 =
+            {
+                { xi.item.SCROLL_OF_THUNDER_III,   45930 },
+            },
+            stock75 =
+            {
+                { xi.item.SCROLL_OF_PROTECTRA_V,  119240 },
+                { xi.item.SCROLL_OF_SHELLRA_V,    124540 },
+                { xi.item.SCROLL_OF_DIA_III,      139135 },
+                { xi.item.SCROLL_OF_SLOW_II,      139135 },
+                { xi.item.SCROLL_OF_PARALYZE_II,  139135 },
+                { xi.item.SCROLL_OF_PHALANX_II,   139135 },
+                { xi.item.SCROLL_OF_QUAKE_II,     119180 },
+                { xi.item.SCROLL_OF_FLOOD_II,     119180 },
+                { xi.item.SCROLL_OF_TORNADO_II,   119180 },
+                { xi.item.SCROLL_OF_FLARE_II,     119180 },
+                { xi.item.SCROLL_OF_FREEZE_II,    119180 },
+                { xi.item.SCROLL_OF_BURST_II,     119180 },
+                { xi.item.SCROLL_OF_BIO_III,      139125 },
+                { xi.item.SCROLL_OF_BLIND_II,     139125 },
+            },
+        },
+    },
+    [xi.zone.BASTOK_MARKETS] =
+    {
+        ['Hortense'] =
+        {
+            nationShop = xi.nation.BASTOK,
+            shopDialog = 'HORTENSE_SHOP_DIALOG',
+            stock =
+            {
+                { xi.item.SCROLL_OF_FOE_REQUIEM,         74, },
+                { xi.item.SCROLL_OF_FOE_REQUIEM_II,     509, },
+                { xi.item.SCROLL_OF_FOE_REQUIEM_III,   4576, },
+                { xi.item.SCROLL_OF_FOE_REQUIEM_IV,    7987, },
+                { xi.item.SCROLL_OF_ARMYS_PAEON,         43, },
+                { xi.item.SCROLL_OF_ARMYS_PAEON_II,     371, },
+                { xi.item.SCROLL_OF_ARMYS_PAEON_III,   3744, },
+                { xi.item.SCROLL_OF_ARMYS_PAEON_IV,    6864, },
+                { xi.item.SCROLL_OF_VALOR_MINUET,        24, },
+                { xi.item.SCROLL_OF_VALOR_MINUET_II,   1272, },
+                { xi.item.SCROLL_OF_VALOR_MINUET_III,  6406, },
+            },
+        },
+    },
+}
+
 -----------------------------------
 -- Scroll Vendor Overrides
+-- iterates through the table above, inserting conditional items as needed, then showing the appropriate shop
 -----------------------------------
 
------------------------------------
--- Restores Taza as a scroll vendor
--- Area: Lower Jeuno
------------------------------------
-xi.module.ensureTable('xi.zones.Lower_Jeuno.npcs.Taza')
-
-zxi.npcHelpers.removeDefaultHandler(xi.zone.LOWER_JEUNO, 'Taza')
-
-m:addOverride('xi.zones.Lower_Jeuno.npcs.Taza.onTrigger', function(player, npc)
-    local stock = {
-        { xi.item.SCROLL_OF_SLEEP_II,      18720 },
-        { xi.item.SCROLL_OF_SLEEPGA,       11200 },
--- { xi.item.SCROLL_OF_STONE_III,     19932 }, -- 55 Cap
--- { xi.item.SCROLL_OF_WATER_III,     22682 }, -- 55 Cap
--- { xi.item.SCROLL_OF_AERO_III,      27744 }, -- 60 Cap
--- { xi.item.SCROLL_OF_FIRE_III,      33306 }, -- 65 Cap
--- { xi.item.SCROLL_OF_BLIZZARD_III,  39368 }, -- 65 Cap
--- { xi.item.SCROLL_OF_THUNDER_III,   45930 }, -- 70 Cap
--- { xi.item.SCROLL_OF_PROTECTRA_V,  119240 }, -- 75 Cap
--- { xi.item.SCROLL_OF_SHELLRA_V,    124540 }, -- 75 Cap
--- { xi.item.SCROLL_OF_DIA_III,      139135 }, -- 75 Cap
--- { xi.item.SCROLL_OF_SLOW_II,      139135 }, -- 75 Cap
--- { xi.item.SCROLL_OF_PARALYZE_II,  139135 }, -- 75 Cap
--- { xi.item.SCROLL_OF_PHALANX_II,   139135 }, -- 75 Cap
--- { xi.item.SCROLL_OF_QUAKE_II,     119180 }, -- 75 Cap
--- { xi.item.SCROLL_OF_FLOOD_II,     119180 }, -- 75 Cap
--- { xi.item.SCROLL_OF_TORNADO_II,   119180 }, -- 75 Cap
--- { xi.item.SCROLL_OF_FLARE_II,     119180 }, -- 75 Cap
--- { xi.item.SCROLL_OF_FREEZE_II,    119180 }, -- 75 Cap
--- { xi.item.SCROLL_OF_BURST_II,     119180 }, -- 75 Cap
--- { xi.item.SCROLL_OF_BIO_III,      139125 }, -- 75 Cap
--- { xi.item.SCROLL_OF_BLIND_II,     139125 }, -- 75 Cap
-    }
-
-    player:showText(npc, zones[player:getZoneID()].text.WAAG_DEEG_SHOP_DIALOG)
-    xi.shop.general(player, stock)
-end)
-
------------------------------------
--- Stock overrides
------------------------------------
-m:addOverride('xi.zones.Bastok_Markets.npcs.Hortense.onTrigger', function(player, npc)
-    local stock =
-    {
-        { xi.item.SCROLL_OF_FOE_REQUIEM,         74, 3, },
-        { xi.item.SCROLL_OF_FOE_REQUIEM_II,     509, 3, },
-        { xi.item.SCROLL_OF_FOE_REQUIEM_III,   4576, 3, },
-        { xi.item.SCROLL_OF_FOE_REQUIEM_IV,    7987, 3, },
-        { xi.item.SCROLL_OF_ARMYS_PAEON,         43, 3, },
-        { xi.item.SCROLL_OF_ARMYS_PAEON_II,     371, 3, },
-        { xi.item.SCROLL_OF_ARMYS_PAEON_III,   3744, 3, },
-        { xi.item.SCROLL_OF_ARMYS_PAEON_IV,    6864, 3, },
-        { xi.item.SCROLL_OF_VALOR_MINUET,        24, 3, },
-        { xi.item.SCROLL_OF_VALOR_MINUET_II,   1272, 3, },
-        { xi.item.SCROLL_OF_VALOR_MINUET_III,  6406, 3, },
-    }
-
-    player:showText(npc, zones[player:getZoneID()].text.HORTENSE_SHOP_DIALOG)
-    xi.shop.nation(player, stock, xi.nation.BASTOK)
-end)
-
-m:addOverride('xi.shop.handleValerianoShop', function(player, npc)
-    local zoneTable =
-    {
-        [xi.zone.SOUTHERN_SAN_DORIA] = { xi.nation.SANDORIA, xi.fameArea.SANDORIA },
-        [xi.zone.PORT_BASTOK       ] = { xi.nation.BASTOK,   xi.fameArea.BASTOK   },
-        [xi.zone.WINDURST_WOODS    ] = { xi.nation.WINDURST, xi.fameArea.WINDURST },
-    }
-    local stock =
-    {
-        { xi.item.GINGER_COOKIE,                  12 },
-        { xi.item.FLUTE,                          49 },
-        { xi.item.PICCOLO,                      1144 },
-        { xi.item.SCROLL_OF_SCOPS_OPERETTA,      677 },
--- { xi.item.SCROLL_OF_PUPPETS_OPERETTA,  19552 }, -- 70 Cap
-        { xi.item.SCROLL_OF_FOWL_AUBADE,        3369 },
-        { xi.item.SCROLL_OF_ADVANCING_MARCH,    2379 },
--- { xi.item.SCROLL_OF_GODDESSS_HYMNUS,  104000 }, -- 75 Cap
-    }
-
-    local zoneId = player:getZoneID()
-
-    -- fail-safe in case npc didnt despawn.
-    if GetNationRank(zoneTable[zoneId][1]) ~= 1 then
+local addStockToTable = function(stock, newStock)
+    if not type(newStock) == 'table' then
         return
     end
 
-    player:showText(npc, zones[zoneId].text.VALERIANO_SHOP_DIALOG)
-    xi.shop.general(player, stock, zoneTable[zoneId][2])
-end)
+    if type(newStock[1]) ~= 'table' then
+        -- single item
+        table.insert(stock, newStock)
+    else
+        -- newStock is table of items
+        for _, newStockItem in ipairs(newStock) do
+            table.insert(stock, newStockItem)
+        end
+    end
+end
+
+for zoneId, npcs in pairs(npcOverrides) do
+    local zoneName = zxi.zoneName[zoneId]
+
+    for npcName, npcData in pairs(npcs) do
+        local npcMsgID   = zones[zoneId].text[shopDialog]
+        local nationShop = npcData.nationShop
+        local fameArea   = npcData.fameArea
+        local npcLuaPath = fmt('xi.zones.{}.npcs.{}', zoneName, npcName)
+
+        xi.module.ensureTable(npcLuaPath)
+        if npcData.removeDefault then
+            zxi.npcHelpers.removeDefaultHandler(zoneId, npcName)
+        end
+
+        -- add all relevant stock to table (deep copy instead of direct assignment)
+        local stock = {}
+        addStockToTable(stock, npcData.stock)
+
+        -- add any level-cap restricted items
+        for _, lvlCap in pairs({55, 60, 65, 70, 75}) do
+            if xi.settings.main.MAX_LEVEL >= lvlCap then
+                local capStock = npcData[fmt('stock{}', lvlCap)]
+                if capStock then
+                    addStockToTable(stock, capStock)
+                end
+            end
+        end
+
+        m:addOverride(fmt('{}.onTrigger', npcLuaPath), function(player, npc)
+            if #stock == 0 then
+                player:printToPlayer(fmt('Apologies, {} I have no stock at this time', player:getName()), xi.msg.channel.SYSTEM_3, npc:getName())
+            else
+                if npcMsgID then
+                    player:showText(npc, npcMsgID)
+                end
+
+                if nationShop ~= nil then
+                    xi.shop.nation(player, stock, nationShop)
+                else
+                    xi.shop.general(player, stock, fameArea)
+                end
+            end
+        end)
+    end
+end
 
 m:addOverride('xi.zones.Port_Jeuno.npcs.Gekko.onTrigger', function(player, npc)
     local stock =
@@ -1686,8 +1738,43 @@ m:addOverride('xi.zones.Fort_Karugo-Narugo_[S].npcs.Spondulix.onTrigger', functi
     xi.shop.general(player, stock)
 end)
 
--- TODO: Dibstix is not yet implemented.
+-- Other shops that can't fit into the paradigm above
 
--- TODO: Lollyspox is not yet implemented.
+m:addOverride('xi.shop.handleValerianoShop', function(player, npc)
+    local zoneTable =
+    {
+        [xi.zone.SOUTHERN_SAN_DORIA] = { xi.nation.SANDORIA, xi.fameArea.SANDORIA },
+        [xi.zone.PORT_BASTOK       ] = { xi.nation.BASTOK,   xi.fameArea.BASTOK   },
+        [xi.zone.WINDURST_WOODS    ] = { xi.nation.WINDURST, xi.fameArea.WINDURST },
+    }
+
+    local stock =
+    {
+        { xi.item.GINGER_COOKIE,               12 },
+        { xi.item.FLUTE,                       49 },
+        { xi.item.PICCOLO,                   1144 },
+        { xi.item.SCROLL_OF_SCOPS_OPERETTA,   677 },
+        { xi.item.SCROLL_OF_FOWL_AUBADE,     3369 },
+        { xi.item.SCROLL_OF_ADVANCING_MARCH, 2379 },
+    }
+
+    if xi.settings.main.MAX_LEVEL >= 70 then
+        table.insert(stock, 5, { xi.item.SCROLL_OF_PUPPETS_OPERETTA,  19552 })
+    end
+
+    if xi.settings.main.MAX_LEVEL >= 75 then
+        table.insert(stock, { xi.item.SCROLL_OF_GODDESSS_HYMNUS,  104000 })
+    end
+
+    local zoneId = player:getZoneID()
+
+    -- fail-safe in case npc didnt despawn.
+    if GetNationRank(zoneTable[zoneId][1]) ~= 1 then
+        --return
+    end
+
+    player:showText(npc, zones[zoneId].text.VALERIANO_SHOP_DIALOG)
+    xi.shop.general(player, stock, zoneTable[zoneId][2])
+end)
 
 return m
