@@ -311,7 +311,7 @@ local function applyArgusLK(choice, restoreOnly)
 
     DisallowRespawn(other, true)
     DisallowRespawn(choice, false)
-    UpdateNMSpawnPoint(choice)
+    xi.mob.updateNMSpawnPoint(GetMobByID(choice))
     local spawnTime = math.random(0, 6) * (5 * 60) + (21 * 3600) -- 21 hours, 5 minute windows
 
     if restoreOnly then
