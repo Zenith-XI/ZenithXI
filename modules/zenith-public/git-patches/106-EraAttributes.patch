@@ -63,7 +63,7 @@ index 9590a26cac..50b41935e1 100644
          int32 ACC           = GetSkill(skill) + iLvlSkill;
          ACC                 = (ACC > 200 ? (int16)(((ACC - 200) * 0.9) + 200) : ACC);
 -        float dexMultiplier = settings::get<bool>("main.USE_PRE_2013_DEX_MULTIPLIER") ? 0.50f : 0.75f;
-+        float dexMultiplier = getEraScaling(GetMLevel(), 0.5f, 0.75f);
++        float dexMultiplier = attackNumber == 2 && skill != SKILL_HAND_TO_HAND ? 0.50f : getEraScaling(GetMLevel(), 0.5f, 0.75f);
          if (auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_MAIN]); weapon && weapon->isTwoHanded())
          {
 -            ACC += (int16)(DEX() * dexMultiplier);
