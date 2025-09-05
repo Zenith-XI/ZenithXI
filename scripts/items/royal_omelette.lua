@@ -31,11 +31,16 @@ itemObject.onItemCheck = function(target, item, param, caster)
 end
 
 itemObject.onItemUse = function(target, user, item)
-    target:addStatusEffect(xi.effect.FOOD, 0, 0, 10800, item:getID())
+    target:addStatusEffect(xi.effect.FOOD, 0, 0, 10800, 0, 0, 0, xi.effectSourceType.FOOD, item:getID(), user:getID())
 end
 
 itemObject.onEffectGain = function(target, effect)
-    if target:getRace() == xi.race.ELVAAN_M or target:getRace() == xi.race.ELVAAN_F then
+    local targetRace = target:getRace()
+
+    if
+        targetRace == xi.race.ELVAAN_M or
+        targetRace == xi.race.ELVAAN_F
+    then
         target:addMod(xi.mod.FOOD_HP, 20)
         target:addMod(xi.mod.FOOD_MP, 20)
         target:addMod(xi.mod.STR, 6)
@@ -60,7 +65,12 @@ itemObject.onEffectGain = function(target, effect)
 end
 
 itemObject.onEffectLose = function(target, effect)
-    if target:getRace() == xi.race.ELVAAN_M or target:getRace() == xi.race.ELVAAN_F then
+    local targetRace = target:getRace()
+
+    if
+        targetRace == xi.race.ELVAAN_M or
+        targetRace == xi.race.ELVAAN_F
+    then
         target:delMod(xi.mod.FOOD_HP, 20)
         target:delMod(xi.mod.FOOD_MP, 20)
         target:delMod(xi.mod.STR, 6)

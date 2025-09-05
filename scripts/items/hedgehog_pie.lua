@@ -24,7 +24,7 @@ itemObject.onItemCheck = function(target, item, param, caster)
 end
 
 itemObject.onItemUse = function(target, user, item)
-    target:addStatusEffect(xi.effect.FOOD, 0, 0, 10800, item:getID())
+    target:addStatusEffect(xi.effect.FOOD, 0, 0, 10800, 0, 0, 0, xi.effectSourceType.FOOD, item:getID(), user:getID())
 end
 
 itemObject.onEffectGain = function(target, effect)
