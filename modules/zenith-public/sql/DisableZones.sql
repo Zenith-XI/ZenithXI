@@ -1,4 +1,5 @@
 -- Disables Zones by setting IP and Port to zero.
+-- we set both to ensure that modules targetting disabled zones don't emit errors on startup
 -- SET an expansion variable to 1 to skip disabling that expansion's zones.
 SET @enable_rotz = 0;
 SET @enable_cop = 0;
