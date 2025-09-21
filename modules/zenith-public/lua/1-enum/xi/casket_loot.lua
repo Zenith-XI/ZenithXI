@@ -12,4272 +12,4637 @@ xi.casket_loot.casketItems =
 {
     [xi.zone.WEST_RONFAURE] =
     {
-        regionalItems = { 15834 }, -- Blind Ring
+        regionalItems = { xi.item.BLIND_RING },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  790, 4113 }, -- Potion +1
-            {  425, 4114 }, -- Potion +2
-            { 1040, 4128 }, -- Ether
-            {  760, 4129 }, -- Ether +1
-            {  420, 4130 }, -- Ether +2
-            {  600, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  750, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  660, 4300 }, -- Apple Au Lait
-            {  250, 4423 }, -- Apple Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1700,   505 }, -- Sheepskin
-            { 4500,   640 }, -- Copper Ore
-            { 2500,   641 }, -- Tin Ore
-            { 3450,   642 }, -- Zinc Ore
-            { 2000,   688 }, -- Arrowwood Log
-            { 1020,   698 }, -- Ash Log
-            { 4200,   656 }, -- Beastcoin
-            { 5000,   768 }, -- Flint Stone
-            { 1250,   818 }, -- Cotton Thread
-            { 1300,   833 }, -- Moko Grass
-            {  800,   840 }, -- Chocobo Feather
-            { 3600,   846 }, -- Insect Wing
-            { 3000,   912 }, -- Beehive Chip
-            {  700,   943 }, -- Poison Dust
-            { 2400,  1214 }, -- Handful of Stone Arrowheads x33
-            { 4900,  4112 }, -- Potion
-            { 3590,  4148 }, -- Antidote
-            { 1150,  4150 }, -- Eye Drops
-            { 1360,  4151 }, -- Echo Drops
-            { 2900,  4370 }, -- Honey
-            {  600, 12290 }, -- Maple Shield
-            {  495, 12440 }, -- Leather Bandana
-            {  450, 12449 }, -- Brass Cap
-            {  190, 12456 }, -- Hachimaki
-            {  530, 12608 }, -- Tunic
-            {  460, 12696 }, -- Leather Gloves
-            {  340, 12705 }, -- Brass Mittens
-            {  168, 12712 }, -- Tekko
-            {  310, 12736 }, -- Mitts
-            {  475, 12824 }, -- Leather Trousers
-            {  280, 12833 }, -- Brass Subligar
-            {  235, 12840 }, -- Sitabaki
-            {  422, 12864 }, -- Slacks
-            {  250, 12961 }, -- Brass Leggings
-            {  287, 12992 }, -- Solea
-            {  500, 13081 }, -- Leather Gorget
-            {  300, 16407 }, -- Brass Baghnakhs
-            {  120, 16530 }, -- Xiphos
-            {  320, 17050 }, -- Willow Wand
+            { xi.item.RABBIT_HIDE,                  3500 },
+            { xi.item.MAPLE_LOG,                    2500 },
+            { xi.item.HOLLY_LOG,                    1250 },
+            { xi.item.SHEEPSKIN,                    2500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          5000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,             500 },
+            { xi.item.ARROWWOOD_LOG,                2000 },
+            { xi.item.ASH_LOG,                      4000 },
+            { xi.item.BEASTCOIN,                    3000 },
+            { xi.item.FLINT_STONE,                  4000 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,        500 },
+            { xi.item.CLUMP_OF_MOKO_GRASS,          1500 },
+            { xi.item.CHOCOBO_FEATHER,               200 },
+            { xi.item.INSECT_WING,                  2500 },
+            { xi.item.BEEHIVE_CHIP,                 1500 },
+            { xi.item.PINCH_OF_POISON_DUST,          400 },
+            { xi.item.HANDFUL_OF_STONE_ARROWHEADS,  3000 },
+            { xi.item.POTION,                       1500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.POT_OF_HONEY,                 2000 },
+            { xi.item.MAPLE_SHIELD,                  150 },
+            { xi.item.LEATHER_BANDANA,               150 },
+            { xi.item.BRASS_CAP,                     150 },
+            { xi.item.HACHIMAKI,                     150 },
+            { xi.item.TUNIC,                         150 },
+            { xi.item.LEATHER_GLOVES,                150 },
+            { xi.item.BRASS_MITTENS,                 150 },
+            { xi.item.TEKKO,                         150 },
+            { xi.item.MITTS,                         150 },
+            { xi.item.LEATHER_TROUSERS,              150 },
+            { xi.item.BRASS_SUBLIGAR,                150 },
+            { xi.item.SITABAKI,                      150 },
+            { xi.item.SLACKS,                        150 },
+            { xi.item.LEATHER_HIGHBOOTS,             150 },
+            { xi.item.BRASS_LEGGINGS,                150 },
+            { xi.item.KYAHAN,                        150 },
+            { xi.item.SOLEA,                         150 },
+            { xi.item.LEATHER_GORGET,                150 },
+            { xi.item.BRASS_BAGHNAKHS,               150 },
+            { xi.item.XIPHOS,                        150 },
+            { xi.item.WILLOW_WAND,                   150 },
         }
     },
     [xi.zone.EAST_RONFAURE] =
     {
-        regionalItems = { 19157 }, -- Surviver
+        regionalItems = { xi.item.SURVIVER },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  790, 4113 }, -- Potion +1
-            {  425, 4114 }, -- Potion +2
-            { 1040, 4128 }, -- Ether
-            {  760, 4129 }, -- Ether +1
-            {  420, 4130 }, -- Ether +2
-            {  600, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  750, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  660, 4300 }, -- Apple Au Lait
-            {  250, 4423 }, -- Apple Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1700,   505 }, -- Sheepskin
-            { 4500,   640 }, -- Copper Ore
-            { 2500,   641 }, -- Tin Ore
-            { 3450,   642 }, -- Zinc Ore
-            { 2000,   688 }, -- Arrowwood Log
-            { 1020,   698 }, -- Ash Log
-            { 4200,   656 }, -- Beastcoin
-            { 5000,   768 }, -- Flint Stone
-            { 1250,   818 }, -- Cotton Thread
-            { 1300,   833 }, -- Moko Grass
-            {  800,   840 }, -- Chocobo Feather
-            { 3600,   846 }, -- Insect Wing
-            { 3000,   912 }, -- Beehive Chip
-            {  700,   943 }, -- Poison Dust
-            { 2400,  1214 }, -- Handful of Stone Arrowheads x33
-            { 4900,  4112 }, -- Potion
-            { 3590,  4148 }, -- Antidote
-            { 1150,  4150 }, -- Eye Drops
-            { 1360,  4151 }, -- Echo Drops
-            { 2900,  4370 }, -- Honey
-            {  600, 12290 }, -- Maple Shield
-            {  495, 12440 }, -- Leather Bandana
-            {  450, 12449 }, -- Brass Cap
-            {  190, 12456 }, -- Hachimaki
-            {  530, 12608 }, -- Tunic
-            {  460, 12696 }, -- Leather Gloves
-            {  340, 12705 }, -- Brass Mittens
-            {  168, 12712 }, -- Tekko
-            {  310, 12736 }, -- Mitts
-            {  475, 12824 }, -- Leather Trousers
-            {  280, 12833 }, -- Brass Subligar
-            {  235, 12840 }, -- Sitabaki
-            {  422, 12864 }, -- Slacks
-            {  250, 12961 }, -- Brass Leggings
-            {  287, 12992 }, -- Solea
-            {  500, 13081 }, -- Leather Gorget
-            {  300, 16407 }, -- Brass Baghnakhs
-            {  120, 16530 }, -- Xiphos
-            {  320, 17050 }, -- Willow Wand
+            { xi.item.SHEEPSKIN,                   1700 },
+            { xi.item.CHUNK_OF_COPPER_ORE,         4500 },
+            { xi.item.CHUNK_OF_TIN_ORE,            2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,           3450 },
+            { xi.item.ARROWWOOD_LOG,               2000 },
+            { xi.item.ASH_LOG,                     1020 },
+            { xi.item.BEASTCOIN,                   4200 },
+            { xi.item.FLINT_STONE,                 5000 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,      1250 },
+            { xi.item.CLUMP_OF_MOKO_GRASS,         1300 },
+            { xi.item.CHOCOBO_FEATHER,              800 },
+            { xi.item.INSECT_WING,                 3600 },
+            { xi.item.BEEHIVE_CHIP,                3000 },
+            { xi.item.PINCH_OF_POISON_DUST,         700 },
+            { xi.item.HANDFUL_OF_STONE_ARROWHEADS, 2400 },
+            { xi.item.POTION,                      4900 },
+            { xi.item.ANTIDOTE,                    3590 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1150 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1360 },
+            { xi.item.POT_OF_HONEY,                2900 },
+            { xi.item.MAPLE_SHIELD,                 600 },
+            { xi.item.LEATHER_BANDANA,              495 },
+            { xi.item.BRASS_CAP,                    450 },
+            { xi.item.HACHIMAKI,                    190 },
+            { xi.item.TUNIC,                        530 },
+            { xi.item.LEATHER_GLOVES,               460 },
+            { xi.item.BRASS_MITTENS,                340 },
+            { xi.item.TEKKO,                        168 },
+            { xi.item.MITTS,                        310 },
+            { xi.item.LEATHER_TROUSERS,             475 },
+            { xi.item.BRASS_SUBLIGAR,               280 },
+            { xi.item.SITABAKI,                     235 },
+            { xi.item.SLACKS,                       422 },
+            { xi.item.BRASS_LEGGINGS,               250 },
+            { xi.item.SOLEA,                        287 },
+            { xi.item.LEATHER_GORGET,               500 },
+            { xi.item.BRASS_BAGHNAKHS,              300 },
+            { xi.item.XIPHOS,                       120 },
+            { xi.item.WILLOW_WAND,                  320 },
         }
     },
     [xi.zone.LA_THEINE_PLATEAU] =
     {
-        regionalItems = { 15835 }, -- Desperado Ring
+        regionalItems = { xi.item.DESPERADO_RING },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  790, 4113 }, -- Potion +1
-            {  425, 4114 }, -- Potion +2
-            { 1040, 4128 }, -- Ether
-            {  760, 4129 }, -- Ether +1
-            {  420, 4130 }, -- Ether +2
-            {  600, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  750, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  240, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1700,   626 }, -- Black Pepper
-            { 2500,   641 }, -- Tin Ore
-            { 2000,   688 }, -- Arrowwood Log
-            { 1020,   727 }, -- Dogwood Log
-            { 4200,   750 }, -- Silver Beastcoin
-            { 5000,   768 }, -- Flint Stone
-            { 3600,   846 }, -- Insect Wing
-            { 1300,   893 }, -- Giant Femur
-            { 3000,   912 }, -- Beehive Chip
-            { 1400,   925 }, -- Giant Stinger
-            { 4300,   953 }, -- Treant Bulb
-            { 2200,  1215 }, -- Handful of Bone Arrowheads x33
-            { 4000,  1845 }, -- Red Moko Grass
-            { 4900,  4112 }, -- Potion
-            { 3750,  4128 }, -- Ether
-            {  595,  4148 }, -- Antidote
-            { 1150,  4151 }, -- Echo Drops
-            { 2100,  4227 }, -- Bronze Bolt Quiver
-            { 2060,  4509 }, -- Distilled Water
-            {  425, 12432 }, -- Faceguard
-            {  760, 12449 }, -- Brass Cap
-            {  590, 12473 }, -- Poet's Circlet
-            {  630, 12601 }, -- Linen Robe
-            {  765, 12705 }, -- Brass Mittens
-            {  465, 12710 }, -- Bone Mittens
-            {  460, 12720 }, -- Gloves
-            {  430, 12729 }, -- Linen Cuffs
-            {  275, 12816 }, -- Scale Cuisses
-            {  730, 12834 }, -- Bone Subligar
-            {  600, 12848 }, -- Brais
-            {  535, 12688 }, -- Scale Finger Gauntlets
-            {  375, 12857 }, -- Linen Slops
-            {  410, 12966 }, -- Bone Leggings
-            {  655, 12976 }, -- Gaiters
-            {  425, 12985 }, -- Holly Clogs
-            {  390, 16466 }, -- Knife
-            {  370, 16531 }, -- Brass Xiphos
-            {  380, 17096 }, -- Holly Pole
-            { 2320, 17316 }, -- Bomb Arm
+            { xi.item.HOLLY_LOG,                    2000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.RAM_SKIN,                     1250 },
+            { xi.item.BIRD_FEATHER,                 1500 },
+            { xi.item.PINCH_OF_BLACK_PEPPER,        1500 },
+            { xi.item.CHUNK_OF_TIN_ORE,             4000 },
+            { xi.item.ARROWWOOD_LOG,                2000 },
+            { xi.item.WILLOW_LOG,                   1000 },
+            { xi.item.SILVER_BEASTCOIN,             3000 },
+            { xi.item.FLINT_STONE,                  4000 },
+            { xi.item.INSECT_WING,                  2500 },
+            { xi.item.GIANT_FEMUR,                  1500 },
+            { xi.item.BEEHIVE_CHIP,                 3000 },
+            { xi.item.GIANT_STINGER,                1500 },
+            { xi.item.TREANT_BULB,                  2500 },
+            { xi.item.HANDFUL_OF_BONE_ARROWHEADS,   3000 },
+            { xi.item.CLUMP_OF_RED_MOKO_GRASS,       500 },
+            { xi.item.POTION,                       1500 },
+            { xi.item.ETHER,                        1200 },
+            { xi.item.ELIXIR,                         50 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.BRONZE_BOLT_QUIVER,           2000 },
+            { xi.item.BOMB_ARM,                     2500 },
+            { xi.item.FACEGUARD,                     150 },
+            { xi.item.BRASS_CAP,                     150 },
+            { xi.item.POETS_CIRCLET,                 150 },
+            { xi.item.SCALE_FINGER_GAUNTLETS,        150 },
+            { xi.item.BRASS_MITTENS,                 150 },
+            { xi.item.BONE_MITTENS,                  150 },
+            { xi.item.GLOVES,                        150 },
+            { xi.item.LINEN_CUFFS,                   150 },
+            { xi.item.SCALE_CUISSES,                 150 },
+            { xi.item.BONE_SUBLIGAR,                 150 },
+            { xi.item.BRAIS,                         150 },
+            { xi.item.LINEN_SLOPS,                   150 },
+            { xi.item.SCALE_GREAVES,                 150 },
+            { xi.item.BONE_LEGGINGS,                 150 },
+            { xi.item.GAITERS,                       150 },
+            { xi.item.HOLLY_CLOGS,                   150 },
+            { xi.item.KNIFE,                         150 },
+            { xi.item.BRASS_XIPHOS,                  150 },
+            { xi.item.HOLLY_POLE,                    150 },
+            { xi.item.WILLOW_WAND,                   150 },
         }
     },
     [xi.zone.VALKURM_DUNES] =
     {
-        regionalItems = { 16367 }, -- Phlegethon's Trousers
+        regionalItems = { xi.item.PHLEGETHONS_TROUSERS },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  450, 4202 }, -- Daedalus Wing
-            {  310, 4206 }, -- Catholicon
-            {  240, 4301 }, -- Pear Au Lait
-            {  660, 4425 }, -- Tomato Juice
+            { xi.item.POTION,                        900 },
+            { xi.item.POTION_P1,                     500 },
+            { xi.item.POTION_P2,                     300 },
+            { xi.item.ETHER,                         600 },
+            { xi.item.ETHER_P1,                      400 },
+            { xi.item.ETHER_P2,                      400 },
+            { xi.item.ELIXIR,                        400 },
+            { xi.item.ANTIDOTE,                     1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          1000 },
+            { xi.item.REMEDY,                        500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,         600 },
+            { xi.item.POT_OF_SILENT_OIL,             600 },
+            { xi.item.DAEDALUS_WING,                 400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,          400 },
+            { xi.item.FLASK_OF_PEAR_AU_LAIT,        1000 },
+            { xi.item.BOTTLE_OF_TOMATO_JUICE,       1000 },
         },
         items =
         {
-            -----------------------------------
-            -- { weight, itemId }
-            -----------------------------------
-            { 4600,   642 }, -- Zinc Ore
-            { 1250,   689 }, -- Lauan Log
-            {  600,   693 }, -- Walnut Log
-            { 3250,   736 }, -- Silver Ore
-            { 2900,   835 }, -- Flax Flower
-            { 4800,   847 }, -- Bird Feather
-            { 1600,   898 }, -- Chicken Bone
-            { 2020,   914 }, -- Mercury
-            { 5000,   936 }, -- Rock Salt
-            {  540,   947 }, -- Firesand
-            { 3540,  1108 }, -- Sulfur
-            { 4750,  1211 }, -- Handful of Bronze Bolt Heads x33
-            { 2900,  4113 }, -- Potion +1
-            { 2600,  4128 }, -- Ether
-            {  575,  4148 }, -- Antidote
-            { 3150,  4151 }, -- Echo Drops
-            { 1010,  4373 }, -- Woozyshroom
-            {  200, 16643 }, -- Battleaxe
-            {  520, 12455 }, -- Beetle Mask
-            {  240, 12583 }, -- Beetle Harness
-            {  680, 12711 }, -- Beetle Mittens
-            { 1200, 12835 }, -- Beetle Subligar
-            {  990, 12967 }, -- Beetle Leggings
-            {  880, 12865 }, -- Black Slacks
-            { 1530, 12966 }, -- Bone Leggings
-            { 1760, 12454 }, -- Bone Mask
-            { 1900, 12710 }, -- Bone Mittens
-            { 1870, 12834 }, -- Bone Subligar
-            {  310, 13584 }, -- Cotton Cape
-            {  595, 13588 }, -- Dhalmel Mantle
-            { 1580, 12985 }, -- Holly Clogs
-            {  275, 16473 }, -- Kukri
-            { 1680, 12729 }, -- Linen Cuffs
-            { 1460, 12857 }, -- Linen Slops
-            { 2620, 12697 }, -- Lizard Gloves
-            {  645, 12441 }, -- Lizard Helm
-            {  835, 12953 }, -- Lizard Ledelsens
-            {  610, 12825 }, -- Lizard Trousers
-            {  455, 12473 }, -- Poet's Circlet
-            {  745, 12993 }, -- Sandals
-            { 2165, 12737 }, -- White Mitts
+            { xi.item.LIZARD_SKIN,                  3500 },
+            { xi.item.SHEEPSKIN,                    2500 },
+            { xi.item.HANDFUL_OF_FISH_SCALES,       2500 },
+            { xi.item.CRAB_SHELL,                   2000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            1000 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            4000 },
+            { xi.item.LAUAN_LOG,                    3000 },
+            { xi.item.WALNUT_LOG,                   1000 },
+            { xi.item.CHUNK_OF_SILVER_ORE,          3000 },
+            { xi.item.FLAX_FLOWER,                  3000 },
+            { xi.item.BIRD_FEATHER,                 2000 },
+            { xi.item.CHICKEN_BONE,                 1500 },
+            { xi.item.VIAL_OF_MERCURY,              2000 },
+            { xi.item.CHUNK_OF_ROCK_SALT,           2000 },
+            { xi.item.JAR_OF_FIRESAND,               500 },
+            { xi.item.PINCH_OF_SULFUR,              4000 },
+            { xi.item.HANDFUL_OF_BRONZE_BOLT_HEADS, 3500 },
+            { xi.item.POTION_P1,                    1500 },
+            { xi.item.ETHER_P1,                     1000 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.WOOZYSHROOM,                  1500 },
+            { xi.item.BATTLEAXE,                     150 },
+            { xi.item.KUKRI,                         150 },
+            { xi.item.BONE_LEGGINGS,                 150 },
+            { xi.item.BONE_MASK,                     150 },
+            { xi.item.BONE_MITTENS,                  150 },
+            { xi.item.BONE_SUBLIGAR,                 150 },
+            { xi.item.BEETLE_LEGGINGS,               150 },
+            { xi.item.BEETLE_MASK,                   150 },
+            { xi.item.BEETLE_MITTENS,                150 },
+            { xi.item.BEETLE_SUBLIGAR,               150 },
+            { xi.item.COTTON_CAPE,                   150 },
+            { xi.item.DHALMEL_MANTLE,                150 },
+            { xi.item.LIZARD_GLOVES,                 150 },
+            { xi.item.LIZARD_HELM,                   150 },
+            { xi.item.LIZARD_LEDELSENS,              150 },
+            { xi.item.LIZARD_TROUSERS,               150 },
+            { xi.item.BLACK_SLACKS,                  150 },
+            { xi.item.SANDALS,                       150 },
+            { xi.item.WHITE_MITTS,                   150 },
+            { xi.item.YEW_WAND,                      150 },
         }
     },
     [xi.zone.JUGNER_FOREST] =
     {
-        regionalItems = { 15927 }, -- Pinwheel Belt
+        regionalItems = { xi.item.PINWHEEL_BELT },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1200, 4114 }, -- Potion +2
-            {  950, 4115 }, -- Potion +3
-            { 1000, 4116 }, -- Hi-Potion
-            { 1100, 4129 }, -- Ether +1
-            {  960, 4130 }, -- Ether +2
-            {  450, 4131 }, -- Ether +3
-            {  250, 4136 }, -- Super Ether
-            {  750, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  450, 4202 }, -- Daedalus Wing
-            {  310, 4206 }, -- Catholicon
-            {  240, 4302 }, -- Pamama Au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.POTION,                        900 },
+            { xi.item.POTION_P1,                     500 },
+            { xi.item.POTION_P2,                     300 },
+            { xi.item.ETHER,                         600 },
+            { xi.item.ETHER_P1,                      400 },
+            { xi.item.ETHER_P2,                      400 },
+            { xi.item.ELIXIR,                        400 },
+            { xi.item.ANTIDOTE,                     1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          1000 },
+            { xi.item.REMEDY,                        500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,         600 },
+            { xi.item.POT_OF_SILENT_OIL,             600 },
+            { xi.item.DAEDALUS_WING,                 400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,          400 },
+            { xi.item.FLASK_OF_PEAR_AU_LAIT,        1000 },
+            { xi.item.BOTTLE_OF_TOMATO_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 4600,   642 }, -- Zinc Ore
-            { 1250,   689 }, -- Lauan Log
-            {  600,   693 }, -- Walnut Log
-            { 3250,   736 }, -- Silver Ore
-            { 2900,   835 }, -- Flax Flower
-            { 4800,   847 }, -- Bird Feather
-            { 1600,   898 }, -- Chicken Bone
-            { 2020,   914 }, -- Mercury
-            { 5000,   936 }, -- Rock Salt
-            {  540,   947 }, -- Firesand
-            { 3540,  1108 }, -- Sulfur
-            { 4750,  1211 }, -- Handful of Bronze Bolt Heads x33
-            { 2900,  4113 }, -- Potion +1
-            { 2600,  4128 }, -- Ether
-            {  575,  4148 }, -- Antidote
-            { 3150,  4151 }, -- Echo Drops
-            { 1010,  4373 }, -- Woozyshroom
-            {  200, 16643 }, -- Battleaxe
-            {  520, 12455 }, -- Beetle Mask
-            {  240, 12583 }, -- Beetle Harness
-            {  680, 12711 }, -- Beetle Mittens
-            { 1200, 12835 }, -- Beetle Subligar
-            {  990, 12967 }, -- Beetle Leggings
-            {  880, 12865 }, -- Black Slacks
-            { 1530, 12966 }, -- Bone Leggings
-            { 1760, 12454 }, -- Bone Mask
-            { 1900, 12710 }, -- Bone Mittens
-            { 1870, 12834 }, -- Bone Subligar
-            {  310, 13584 }, -- Cotton Cape
-            {  595, 13588 }, -- Dhalmel Mantle
-            { 1580, 12985 }, -- Holly Clogs
-            {  275, 16473 }, -- Kukri
-            { 1680, 12729 }, -- Linen Cuffs
-            { 1460, 12857 }, -- Linen Slops
-            { 2620, 12697 }, -- Lizard Gloves
-            {  645, 12441 }, -- Lizard Helm
-            {  835, 12953 }, -- Lizard Ledelsens
-            {  610, 12825 }, -- Lizard Trousers
-            {  455, 12473 }, -- Poet's Circlet
-            {  745, 12993 }, -- Sandals
-            { 2165, 12737 }, -- White Mitts
+            { xi.item.YEW_LOG,                      4500 },
+            { xi.item.SHEEPSKIN,                    2000 },
+            { xi.item.DANCESHROOM,                  1500 },
+            { xi.item.TIGER_HIDE,                   1500 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            3500 },
+            { xi.item.LAUAN_LOG,                    3000 },
+            { xi.item.WALNUT_LOG,                   2000 },
+            { xi.item.CHUNK_OF_SILVER_ORE,          2500 },
+            { xi.item.FLAX_FLOWER,                  2500 },
+            { xi.item.BIRD_FEATHER,                 2000 },
+            { xi.item.CHICKEN_BONE,                 1500 },
+            { xi.item.VIAL_OF_MERCURY,              2000 },
+            { xi.item.CHUNK_OF_ROCK_SALT,           2000 },
+            { xi.item.JAR_OF_FIRESAND,               500 },
+            { xi.item.PINCH_OF_SULFUR,              2000 },
+            { xi.item.HANDFUL_OF_BRONZE_BOLT_HEADS, 3000 },
+            { xi.item.POTION_P1,                    1500 },
+            { xi.item.ETHER_P1,                     1000 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.WOOZYSHROOM,                  4000 },
+            { xi.item.BATTLEAXE,                     150 },
+            { xi.item.KUKRI,                         150 },
+            { xi.item.BONE_LEGGINGS,                 150 },
+            { xi.item.BONE_MASK,                     150 },
+            { xi.item.BONE_MITTENS,                  150 },
+            { xi.item.BONE_SUBLIGAR,                 150 },
+            { xi.item.BEETLE_LEGGINGS,               150 },
+            { xi.item.BEETLE_MASK,                   150 },
+            { xi.item.BEETLE_MITTENS,                150 },
+            { xi.item.BEETLE_SUBLIGAR,               150 },
+            { xi.item.COTTON_CAPE,                   150 },
+            { xi.item.DHALMEL_MANTLE,                150 },
+            { xi.item.LIZARD_GLOVES,                 150 },
+            { xi.item.LIZARD_HELM,                   150 },
+            { xi.item.LIZARD_LEDELSENS,              150 },
+            { xi.item.LIZARD_TROUSERS,               150 },
+            { xi.item.BLACK_SLACKS,                  150 },
+            { xi.item.SANDALS,                       150 },
+            { xi.item.WHITE_MITTS,                   150 },
+            { xi.item.YEW_WAND,                      150 },
         }
     },
     [xi.zone.BATALLIA_DOWNS] =
     {
-        regionalItems = { 18451 }, -- Mokusa
+        regionalItems = { xi.item.MOKUSA },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1200, 4114 }, -- Potion +2
-            {  950, 4115 }, -- Potion +3
-            { 1000, 4116 }, -- Hi-Potion
-            { 1100, 4129 }, -- Ether +1
-            {  960, 4130 }, -- Ether +2
-            {  450, 4131 }, -- Ether +3
-            {  250, 4136 }, -- Super Ether
-            {  750, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  450, 4202 }, -- Daedalus Wing
-            {  310, 4206 }, -- Catholicon
-            {  240, 4302 }, -- Pamama Au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   573 }, -- Vegetable Seeds
-            {  475,   636 }, -- Chamomile
-            { 2780,   643 }, -- Iron Ore
-            { 1940,   644 }, -- Mythril Ore
-            { 2700,   691 }, -- Maple Log
-            { 1060,   694 }, -- Chestnut Log
-            { 3500,   749 }, -- Mythril Beastcoin
-            { 1900,   820 }, -- Wool Thread
-            { 1150,   859 }, -- Ram Skin
-            { 1090,   895 }, -- Ram Horn
-            { 4600,   928 }, -- Bomb Ash
-            { 2650,   943 }, -- Poison Dust
-            { 3300,  1212 }, -- Handful of Mythril Bolt Heads x33
-            { 4900,  4113 }, -- Potion +1
-            { 3100,  4114 }, -- Potion +2
-            {  670,  4115 }, -- Potion +3
-            { 4800,  4129 }, -- Ether +1
-            { 3000,  4130 }, -- Ether +2
-            {  900,  4145 }, -- Elixer
-            {  120, 12300 }, -- Targe
-            {  320, 12433 }, -- Brass Mask
-            {  660, 12442 }, -- Studded Bandana
-            {  680, 12465 }, -- Cotton Headgear
-            {  520, 12474 }, -- Wool Hat
-            {  200, 12570 }, -- Studded Vest
-            {  450, 12689 }, -- Brass Finger Gauntlets
-            {  460, 12721 }, -- Cotton Gloves
-            {  390, 12817 }, -- Brass Cuisses
-            {  550, 12826 }, -- Studded Trousers
-            {  420, 12849 }, -- Cotton Brais
-            {  690, 12945 }, -- Brass Greaves
-            {  770, 12954 }, -- Studded Boots
-            {  510, 12977 }, -- Cotton Gaiters
-            {  625, 12986 }, -- Chestnut Sabots
-            {  310, 13085 }, -- Hemp Gorget
-            {  305, 13205 }, -- Silver Obi
-            {  430, 13328 }, -- Mythril Earring
-            {  235, 13446 }, -- Mythril Ring
-            {  525, 16467 }, -- Mythril Knife
-            {  505, 17097 }, -- Elm Pole
-            {  350, 17284 }, -- Chakram
+            { xi.item.TIGER_HIDE,                    2500 },
+            { xi.item.BLACK_TIGER_FANG,              4000 },
+            { xi.item.YEW_LOG,                       4000 },
+            { xi.item.BAG_OF_VEGETABLE_SEEDS,        2500 },
+            { xi.item.CHAMOMILE,                     2500 },
+            { xi.item.CHUNK_OF_IRON_ORE,             3000 },
+            { xi.item.CHUNK_OF_MYTHRIL_ORE,          1500 },
+            { xi.item.MAPLE_LOG,                     5000 },
+            { xi.item.CHESTNUT_LOG,                  2000 },
+            { xi.item.MYTHRIL_BEASTCOIN,             3000 },
+            { xi.item.SPOOL_OF_WOOL_THREAD,           500 },
+            { xi.item.RAM_SKIN,                      4000 },
+            { xi.item.RAM_HORN,                      2500 },
+            { xi.item.PINCH_OF_BOMB_ASH,             3000 },
+            { xi.item.PINCH_OF_POISON_DUST,           500 },
+            { xi.item.HANDFUL_OF_MYTHRIL_BOLT_HEADS, 3000 },
+            { xi.item.POTION_P1,                     1500 },
+            { xi.item.POTION_P2,                     1000 },
+            { xi.item.ETHER_P1,                      1200 },
+            { xi.item.ETHER_P2,                       500 },
+            { xi.item.TARGE,                          100 },
+            { xi.item.BRASS_MASK,                     100 },
+            { xi.item.STUDDED_BANDANA,                100 },
+            { xi.item.COTTON_HEADGEAR,                100 },
+            { xi.item.WOOL_HAT,                       100 },
+            { xi.item.BRASS_FINGER_GAUNTLETS,         100 },
+            { xi.item.STUDDED_GLOVES,                 100 },
+            { xi.item.COTTON_GLOVES,                  100 },
+            { xi.item.WOOL_CUFFS,                     100 },
+            { xi.item.BRASS_CUISSES,                  100 },
+            { xi.item.STUDDED_TROUSERS,               100 },
+            { xi.item.COTTON_BRAIS,                   100 },
+            { xi.item.BRASS_GREAVES,                  100 },
+            { xi.item.STUDDED_BOOTS,                  100 },
+            { xi.item.COTTON_GAITERS,                 100 },
+            { xi.item.CHESTNUT_SABOTS,                100 },
+            { xi.item.HEMP_GORGET,                    100 },
+            { xi.item.SILVER_OBI,                     100 },
+            { xi.item.MYTHRIL_EARRING,                100 },
+            { xi.item.MYTHRIL_RING,                   100 },
+            { xi.item.MYTHRIL_KNIFE,                  100 },
+            { xi.item.ELM_POLE,                       100 },
+            { xi.item.CHAKRAM,                        100 },
         }
     },
     [xi.zone.NORTH_GUSTABERG] =
     {
-        regionalItems = { 11312 }, -- Rambler's Cloak
+        regionalItems = { xi.item.RAMBLERS_CLOAK },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1700,   505 }, -- Sheepskin
-            { 4500,   640 }, -- Copper Ore
-            { 2500,   641 }, -- Tin Ore
-            { 3450,   642 }, -- Zinc Ore
-            { 2000,   688 }, -- Arrowwood Log
-            { 1020,   698 }, -- Ash Log
-            { 4200,   656 }, -- Beastcoin
-            { 5000,   768 }, -- Flint Stone
-            { 1250,   818 }, -- Cotton Thread
-            { 1300,   833 }, -- Moko Grass
-            {  800,   840 }, -- Chocobo Feather
-            { 3600,   846 }, -- Insect Wing
-            { 3000,   912 }, -- Beehive Chip
-            {  700,   943 }, -- Poison Dust
-            { 2400,  1214 }, -- Handful of Stone Arrowheads x33
-            { 4900,  4112 }, -- Potion
-            { 3590,  4148 }, -- Antidote
-            { 1150,  4150 }, -- Eye Drops
-            { 1360,  4151 }, -- Echo Drops
-            { 2900,  4370 }, -- Honey
-            {  600, 12290 }, -- Maple Shield
-            {  295, 12440 }, -- Leather Bandana
-            {  450, 12449 }, -- Brass Cap
-            {  290, 12456 }, -- Hachimaki
-            {  530, 12608 }, -- Tunic
-            {  460, 12696 }, -- Leather Gloves
-            {  340, 12705 }, -- Brass Mittens
-            {  168, 12712 }, -- Tekko
-            {  310, 12736 }, -- Mitts
-            {  475, 12824 }, -- Leather Trousers
-            {   80, 12833 }, -- Brass Subligar
-            {  235, 12840 }, -- Sitabaki
-            {  422, 12864 }, -- Slacks
-            {  135, 12952 }, -- Leather Highboots
-            {  250, 12961 }, -- Brass Leggings
-            {  255, 12968 }, -- Kyahan
-            {  287, 12992 }, -- Solea
-            {  500, 13081 }, -- Leather Gorget
-            {  300, 16407 }, -- Brass Baghnakhs
-            {  120, 16530 }, -- Xiphos
-            {  320, 17050 }, -- Willow Wand
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.GIANT_STINGER,                2500 },
+            { xi.item.CHUNK_OF_SILVER_ORE,          1250 },
+            { xi.item.SHEEPSKIN,                    2500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          5000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2500 },
+            { xi.item.ARROWWOOD_LOG,                2000 },
+            { xi.item.ASH_LOG,                      1000 },
+            { xi.item.BEASTCOIN,                    3000 },
+            { xi.item.FLINT_STONE,                  4000 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,        400 },
+            { xi.item.CLUMP_OF_MOKO_GRASS,          1500 },
+            { xi.item.CHOCOBO_FEATHER,               200 },
+            { xi.item.INSECT_WING,                  2500 },
+            { xi.item.BEEHIVE_CHIP,                 3000 },
+            { xi.item.PINCH_OF_POISON_DUST,         1000 },
+            { xi.item.HANDFUL_OF_STONE_ARROWHEADS,  3000 },
+            { xi.item.POTION,                       1500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.POT_OF_HONEY,                 2000 },
+            { xi.item.MAPLE_SHIELD,                  150 },
+            { xi.item.LEATHER_BANDANA,               150 },
+            { xi.item.BRASS_CAP,                     150 },
+            { xi.item.HACHIMAKI,                     150 },
+            { xi.item.TUNIC,                         150 },
+            { xi.item.LEATHER_GLOVES,                150 },
+            { xi.item.BRASS_MITTENS,                 150 },
+            { xi.item.TEKKO,                         150 },
+            { xi.item.MITTS,                         150 },
+            { xi.item.LEATHER_TROUSERS,              150 },
+            { xi.item.BRASS_SUBLIGAR,                150 },
+            { xi.item.SITABAKI,                      150 },
+            { xi.item.SLACKS,                        150 },
+            { xi.item.LEATHER_HIGHBOOTS,             150 },
+            { xi.item.BRASS_LEGGINGS,                150 },
+            { xi.item.KYAHAN,                        150 },
+            { xi.item.SOLEA,                         150 },
+            { xi.item.LEATHER_GORGET,                150 },
+            { xi.item.BRASS_BAGHNAKHS,               150 },
+            { xi.item.XIPHOS,                        150 },
+            { xi.item.WILLOW_WAND,                   150 },
         }
     },
     [xi.zone.SOUTH_GUSTABERG] =
     {
-        regionalItems = { 15926 }, -- Bronze Bandolier
+        regionalItems = { xi.item.BRONZE_BANDOLIER },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1700,   505 }, -- Sheepskin
-            { 4500,   640 }, -- Copper Ore
-            { 2500,   641 }, -- Tin Ore
-            { 3450,   642 }, -- Zinc Ore
-            { 2000,   688 }, -- Arrowwood Log
-            { 1020,   698 }, -- Ash Log
-            { 4200,   656 }, -- Beastcoin
-            { 5000,   768 }, -- Flint Stone
-            { 1250,   818 }, -- Cotton Thread
-            { 1300,   833 }, -- Moko Grass
-            {  800,   840 }, -- Chocobo Feather
-            { 3600,   846 }, -- Insect Wing
-            { 3000,   912 }, -- Beehive Chip
-            {  700,   943 }, -- Poison Dust
-            { 2400,  1214 }, -- Handful of Stone Arrowheads x33
-            { 4900,  4112 }, -- Potion
-            { 3590,  4148 }, -- Antidote
-            { 1150,  4150 }, -- Eye Drops
-            { 1360,  4151 }, -- Echo Drops
-            { 2900,  4370 }, -- Honey
-            {  600, 12290 }, -- Maple Shield
-            {  295, 12440 }, -- Leather Bandana
-            {  450, 12449 }, -- Brass Cap
-            {  290, 12456 }, -- Hachimaki
-            {  530, 12608 }, -- Tunic
-            {  460, 12696 }, -- Leather Gloves
-            {  340, 12705 }, -- Brass Mittens
-            {  168, 12712 }, -- Tekko
-            {  310, 12736 }, -- Mitts
-            {  475, 12824 }, -- Leather Trousers
-            {   80, 12833 }, -- Brass Subligar
-            {  235, 12840 }, -- Sitabaki
-            {  422, 12864 }, -- Slacks
-            {  135, 12952 }, -- Leather Highboots
-            {  250, 12961 }, -- Brass Leggings
-            {  255, 12968 }, -- Kyahan
-            {  287, 12992 }, -- Solea
-            {  500, 13081 }, -- Leather Gorget
-            {  300, 16407 }, -- Brass Baghnakhs
-            {  120, 16530 }, -- Xiphos
-            {  320, 17050 }, -- Willow Wand
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.GIANT_STINGER,                2500 },
+            { xi.item.CHUNK_OF_SILVER_ORE,          1250 },
+            { xi.item.SHEEPSKIN,                    2500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          5000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2500 },
+            { xi.item.ARROWWOOD_LOG,                2000 },
+            { xi.item.ASH_LOG,                      1000 },
+            { xi.item.BEASTCOIN,                    3000 },
+            { xi.item.FLINT_STONE,                  4000 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,        400 },
+            { xi.item.CLUMP_OF_MOKO_GRASS,          1500 },
+            { xi.item.CHOCOBO_FEATHER,               200 },
+            { xi.item.INSECT_WING,                  2500 },
+            { xi.item.BEEHIVE_CHIP,                 3000 },
+            { xi.item.PINCH_OF_POISON_DUST,         1000 },
+            { xi.item.HANDFUL_OF_STONE_ARROWHEADS,  3000 },
+            { xi.item.POTION,                       1500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.POT_OF_HONEY,                 2000 },
+            { xi.item.MAPLE_SHIELD,                  150 },
+            { xi.item.LEATHER_BANDANA,               150 },
+            { xi.item.BRASS_CAP,                     150 },
+            { xi.item.HACHIMAKI,                     150 },
+            { xi.item.TUNIC,                         150 },
+            { xi.item.LEATHER_GLOVES,                150 },
+            { xi.item.BRASS_MITTENS,                 150 },
+            { xi.item.TEKKO,                         150 },
+            { xi.item.MITTS,                         150 },
+            { xi.item.LEATHER_TROUSERS,              150 },
+            { xi.item.BRASS_SUBLIGAR,                150 },
+            { xi.item.SITABAKI,                      150 },
+            { xi.item.SLACKS,                        150 },
+            { xi.item.LEATHER_HIGHBOOTS,             150 },
+            { xi.item.BRASS_LEGGINGS,                150 },
+            { xi.item.KYAHAN,                        150 },
+            { xi.item.SOLEA,                         150 },
+            { xi.item.LEATHER_GORGET,                150 },
+            { xi.item.BRASS_BAGHNAKHS,               150 },
+            { xi.item.XIPHOS,                        150 },
+            { xi.item.WILLOW_WAND,                   150 },
         }
     },
     [xi.zone.KONSCHTAT_HIGHLANDS] =
     {
-        regionalItems = { 19223 }, -- Attar Of Roses
+        regionalItems = { xi.item.ATTAR_OF_ROSES },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  240, 4301 }, -- Pear Au Lait
-            {  660, 4425 }, -- Tomato Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2400,   626 }, -- Black Pepper
-            { 3100,   641 }, -- Tin Ore
-            { 3900,   688 }, -- Arrowwood Log
-            { 1200,   727 }, -- Dogwood Log
-            { 4200,   750 }, -- Silver Beastcoin
-            { 4900,   768 }, -- Flint Stone
-            { 4500,   846 }, -- Insect Wing
-            { 2200,   893 }, -- Giant Femur
-            { 2600,   912 }, -- Beehive Chip
-            { 3250,   925 }, -- Giant Stinger
-            { 5000,   953 }, -- Treant Bulb
-            { 4450,  1215 }, -- Handful of Bone Arrowheads x33
-            { 4650,  1845 }, -- Red Moko Grass
-            { 4750,  4112 }, -- Potion
-            { 4760,  4128 }, -- Ether
-            { 1260,  4145 }, -- Elixer
-            {  460,  4148 }, -- Antidote
-            { 1360,  4151 }, -- Echo Drops
-            { 2120,  4227 }, -- Bronze Bolt Quiver
-            { 1600,  4509 }, -- Distilled Water
-            {  650, 12432 }, -- Faceguard
-            {  620, 12449 }, -- Brass Cap
-            {  550, 12473 }, -- Poet's Circlet
-            {  630, 12601 }, -- Linen Robe
-            {  660, 12688 }, -- Scale Finger Gauntlets
-            {  540, 12705 }, -- Brass Mittens
-            {  340, 12710 }, -- Bone Mittens
-            {  730, 12720 }, -- Gloves
-            {  830, 12729 }, -- Linen Cuffs
-            {  715, 12816 }, -- Scale Cuisses
-            {  830, 12834 }, -- Bone Subligar
-            {  910, 12848 }, -- Brais
-            { 1100, 12857 }, -- Linen Slops
-            { 1250, 12966 }, -- Bone Leggings
-            {  530, 12976 }, -- Gaiters
-            {  345, 12985 }, -- Holly Clogs
-            {  210, 16466 }, -- Knife
-            {  455, 16531 }, -- Brass Xiphos
-            {  610, 17096 }, -- Holly Pole
-            { 1465, 17316 }, -- Bomb Arm
+            { xi.item.LOOP_OF_GLASS_FIBER,          2000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.RAM_SKIN,                     1250 },
+            { xi.item.BIRD_FEATHER,                 1500 },
+            { xi.item.PINCH_OF_BLACK_PEPPER,        1500 },
+            { xi.item.CHUNK_OF_TIN_ORE,             4000 },
+            { xi.item.ARROWWOOD_LOG,                2000 },
+            { xi.item.WILLOW_LOG,                   1000 },
+            { xi.item.SILVER_BEASTCOIN,             3000 },
+            { xi.item.FLINT_STONE,                  4000 },
+            { xi.item.INSECT_WING,                  2500 },
+            { xi.item.GIANT_FEMUR,                  1500 },
+            { xi.item.BEEHIVE_CHIP,                 3000 },
+            { xi.item.GIANT_STINGER,                1500 },
+            { xi.item.TREANT_BULB,                  2500 },
+            { xi.item.HANDFUL_OF_BONE_ARROWHEADS,   3000 },
+            { xi.item.CLUMP_OF_RED_MOKO_GRASS,       500 },
+            { xi.item.POTION,                       1500 },
+            { xi.item.ETHER,                        1200 },
+            { xi.item.ELIXIR,                         50 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.BRONZE_BOLT_QUIVER,           2000 },
+            { xi.item.BOMB_ARM,                     2500 },
+            { xi.item.FACEGUARD,                     150 },
+            { xi.item.BRASS_CAP,                     150 },
+            { xi.item.POETS_CIRCLET,                 150 },
+            { xi.item.SCALE_FINGER_GAUNTLETS,        150 },
+            { xi.item.BRASS_MITTENS,                 150 },
+            { xi.item.BONE_MITTENS,                  150 },
+            { xi.item.GLOVES,                        150 },
+            { xi.item.LINEN_CUFFS,                   150 },
+            { xi.item.SCALE_CUISSES,                 150 },
+            { xi.item.BONE_SUBLIGAR,                 150 },
+            { xi.item.BRAIS,                         150 },
+            { xi.item.LINEN_SLOPS,                   150 },
+            { xi.item.SCALE_GREAVES,                 150 },
+            { xi.item.BONE_LEGGINGS,                 150 },
+            { xi.item.GAITERS,                       150 },
+            { xi.item.HOLLY_CLOGS,                   150 },
+            { xi.item.KNIFE,                         150 },
+            { xi.item.BRASS_XIPHOS,                  150 },
+            { xi.item.HOLLY_POLE,                    150 },
+            { xi.item.WILLOW_WAND,                   150 },
         }
     },
     [xi.zone.PASHHOW_MARSHLANDS] =
     {
-        regionalItems = { 19222 }, -- Wurger
+        regionalItems = { xi.item.WURGER },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4114 }, -- Potion +2
-            {  740, 4115 }, -- Potion +3
-            {  700, 4116 }, -- Hi-Potion
-            {  800, 4129 }, -- Ether +1
-            {  430, 4130 }, -- Ether +2
-            {  200, 4131 }, -- Ether +3
-            {   50, 4136 }, -- Super Ether
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  250, 4302 }, -- Pamama Au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2400,   627 }, -- Maple Sugar
-            { 1700,   637 }, -- Slime Oil
-            { 3200,   643 }, -- Iron Ore
-            { 4320,   690 }, -- Elm Log
-            { 2050,   816 }, -- Silk Thread
-            { 2450,   835 }, -- Flax Flower
-            { 4050,   857 }, -- Dhalmel Hide
-            { 5000,   880 }, -- Bone Chip
-            { 3250,   897 }, -- Scorpion Claw
-            { 1670,   900 }, -- Fish Bones
-            { 3520,   913 }, -- Beeswax
-            { 4300,   943 }, -- Poison Dust
-            { 4690,  1211 }, -- Brz. Bolt Heads x33
-            { 4900,  4112 }, -- Potion
-            { 2400,  4114 }, -- Potion +2
-            { 4890,  4128 }, -- Ether
-            { 2350,  4129 }, -- Ether +1
-            { 1700,  4145 }, -- Elixir
-            { 2600,  4151 }, -- Echo Drops
-            { 3170,  4225 }, -- Iron Quiver
-            { 1540,  4447 }, -- Scream Fungus
-            {  670, 12424 }, -- Iron Mask
-            {  630, 12441 }, -- Lizard Helm
-            {  710, 12455 }, -- Beetle Mask
-            {  420, 12552 }, -- Chainmail
-            {  820, 12593 }, -- Cotton Doublet
-            {  310, 12680 }, -- Chain Mittens
-            {  520, 12697 }, -- Lizard Gloves
-            {  790, 12711 }, -- Beetle Mittens
-            {  900, 12721 }, -- Cotton Gloves
-            {  890, 12737 }, -- White Mitts
-            {  740, 12825 }, -- Lizard Trousers
-            {  650, 12849 }, -- Cotton Brais
-            {  760, 12865 }, -- Black Slacks
-            {  895, 12953 }, -- Lizard Ledelsens
-            { 1020, 12967 }, -- Beetle Leggings
-            { 1100, 12977 }, -- Cotton Gaiters
-            { 1200, 12993 }, -- Sandals
-            {  330, 16406 }, -- Baghnakhs
-            {  320, 16835 }, -- Spear
-            {  350, 17090 }, -- Elm Staff
+            { xi.item.CLUMP_OF_BOYAHDA_MOSS,        3000 },
+            { xi.item.CHUNK_OF_SILVER_ORE,          2500 },
+            { xi.item.MALBORO_VINE,                 2500 },
+            { xi.item.POT_OF_MAPLE_SUGAR,           2000 },
+            { xi.item.VIAL_OF_SLIME_OIL,            2500 },
+            { xi.item.CHUNK_OF_IRON_ORE,            1500 },
+            { xi.item.ELM_LOG,                      2000 },
+            { xi.item.SPOOL_OF_SILK_THREAD,         3000 },
+            { xi.item.FLAX_FLOWER,                  3000 },
+            { xi.item.DHALMEL_HIDE,                 1000 },
+            { xi.item.BONE_CHIP,                    3000 },
+            { xi.item.SCORPION_CLAW,                1500 },
+            { xi.item.SET_OF_FISH_BONES,            1500 },
+            { xi.item.LUMP_OF_BEESWAX,              3000 },
+            { xi.item.PINCH_OF_POISON_DUST,         2250 },
+            { xi.item.HANDFUL_OF_BRONZE_BOLT_HEADS, 3000 },
+            { xi.item.POTION,                       1500 },
+            { xi.item.POTION_P1,                    1000 },
+            { xi.item.ETHER,                        1200 },
+            { xi.item.ETHER_P1,                     1000 },
+            { xi.item.ELIXIR,                         50 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.IRON_QUIVER,                  2000 },
+            { xi.item.SCREAM_FUNGUS,                2500 },
+            { xi.item.IRON_MASK,                     150 },
+            { xi.item.LIZARD_HELM,                   150 },
+            { xi.item.BEETLE_MASK,                   150 },
+            { xi.item.COTTON_HEADGEAR,               150 },
+            { xi.item.CHAIN_MITTENS,                 150 },
+            { xi.item.LIZARD_GLOVES,                 150 },
+            { xi.item.BEETLE_MITTENS,                150 },
+            { xi.item.COTTON_GLOVES,                 150 },
+            { xi.item.WHITE_MITTS,                   150 },
+            { xi.item.LIZARD_TROUSERS,               150 },
+            { xi.item.COTTON_BRAIS,                  150 },
+            { xi.item.BLACK_SLACKS,                  150 },
+            { xi.item.LIZARD_LEDELSENS,              150 },
+            { xi.item.BEETLE_LEGGINGS,               150 },
+            { xi.item.COTTON_GAITERS,                150 },
+            { xi.item.SANDALS,                       150 },
+            { xi.item.GREAVES,                       150 },
+            { xi.item.BAGHNAKHS,                     150 },
+            { xi.item.SPEAR,                         150 },
+            { xi.item.ELM_STAFF,                     150 },
         }
     },
     [xi.zone.ROLANBERRY_FIELDS] =
     {
-        regionalItems = { 11401 }, -- Rambler's Gaiters
+        regionalItems = { xi.item.RAMBLERS_GAITERS },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4114 }, -- Potion +2
-            {  740, 4115 }, -- Potion +3
-            {  700, 4116 }, -- Hi-Potion
-            {  800, 4129 }, -- Ether +1
-            {  430, 4130 }, -- Ether +2
-            {  200, 4131 }, -- Ether +3
-            {   50, 4136 }, -- Super Ether
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  240, 4302 }, -- Pamama Au Lait
-            {  660, 4424 }, -- Melon Juice
-
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2400,   627 }, -- Maple Sugar
-            { 1700,   637 }, -- Slime Oil
-            { 3200,   643 }, -- Iron Ore
-            { 4320,   690 }, -- Elm Log
-            { 2050,   816 }, -- Silk Thread
-            { 2450,   835 }, -- Flax Flower
-            { 4050,   857 }, -- Dhalmel Hide
-            { 5000,   880 }, -- Bone Chip
-            { 3250,   897 }, -- Scorpion Claw
-            { 1670,   900 }, -- Fish Bones
-            { 3520,   913 }, -- Beeswax
-            { 4300,   943 }, -- Poison Dust
-            { 4690,  1211 }, -- Brz. Bolt Heads x33
-            { 4900,  4112 }, -- Potion
-            { 2400,  4114 }, -- Potion +2
-            { 4890,  4128 }, -- Ether
-            { 2350,  4129 }, -- Ether +1
-            { 1700,  4145 }, -- Elixir
-            { 2600,  4151 }, -- Echo Drops
-            { 3170,  4225 }, -- Iron Quiver
-            { 1540,  4447 }, -- Scream Fungus
-            {  670, 12424 }, -- Iron Mask
-            {  630, 12441 }, -- Lizard Helm
-            {  710, 12455 }, -- Beetle Mask
-            {  420, 12552 }, -- Chainmail
-            {  820, 12593 }, -- Cotton Doublet
-            {  310, 12680 }, -- Chain Mittens
-            {  520, 12697 }, -- Lizard Gloves
-            {  790, 12711 }, -- Beetle Mittens
-            {  900, 12721 }, -- Cotton Gloves
-            {  890, 12737 }, -- White Mitts
-            {  740, 12825 }, -- Lizard Trousers
-            {  650, 12849 }, -- Cotton Brais
-            {  760, 12865 }, -- Black Slacks
-            {  895, 12953 }, -- Lizard Ledelsens
-            { 1020, 12967 }, -- Beetle Leggings
-            { 1100, 12977 }, -- Cotton Gaiters
-            { 1200, 12993 }, -- Sandals
-            {  330, 16406 }, -- Baghnakhs
-            {  320, 16835 }, -- Spear
-            {  350, 17090 }, -- Elm Staff
+            { xi.item.CLUMP_OF_BOYAHDA_MOSS,        3500 },
+            { xi.item.CHUNK_OF_SILVER_ORE,          3000 },
+            { xi.item.MALBORO_VINE,                 3000 },
+            { xi.item.POT_OF_MAPLE_SUGAR,           2000 },
+            { xi.item.VIAL_OF_SLIME_OIL,            1500 },
+            { xi.item.CHUNK_OF_IRON_ORE,            1500 },
+            { xi.item.ELM_LOG,                      2000 },
+            { xi.item.SPOOL_OF_SILK_THREAD,         3750 },
+            { xi.item.FLAX_FLOWER,                  2500 },
+            { xi.item.DHALMEL_HIDE,                 1000 },
+            { xi.item.BONE_CHIP,                    3500 },
+            { xi.item.SCORPION_CLAW,                1500 },
+            { xi.item.SET_OF_FISH_BONES,            1500 },
+            { xi.item.LUMP_OF_BEESWAX,              3000 },
+            { xi.item.PINCH_OF_POISON_DUST,         1500 },
+            { xi.item.HANDFUL_OF_BRONZE_BOLT_HEADS, 3000 },
+            { xi.item.POTION,                       1500 },
+            { xi.item.POTION_P1,                    1000 },
+            { xi.item.ETHER,                        1200 },
+            { xi.item.ETHER_P1,                     1000 },
+            { xi.item.ELIXIR,                         50 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.IRON_QUIVER,                  2000 },
+            { xi.item.SCREAM_FUNGUS,                2000 },
+            { xi.item.IRON_MASK,                     150 },
+            { xi.item.LIZARD_HELM,                   150 },
+            { xi.item.BEETLE_MASK,                   150 },
+            { xi.item.COTTON_HEADGEAR,               150 },
+            { xi.item.CHAIN_MITTENS,                 150 },
+            { xi.item.LIZARD_GLOVES,                 150 },
+            { xi.item.BEETLE_MITTENS,                150 },
+            { xi.item.COTTON_GLOVES,                 150 },
+            { xi.item.WHITE_MITTS,                   150 },
+            { xi.item.LIZARD_TROUSERS,               150 },
+            { xi.item.COTTON_BRAIS,                  150 },
+            { xi.item.BLACK_SLACKS,                  150 },
+            { xi.item.LIZARD_LEDELSENS,              150 },
+            { xi.item.BEETLE_LEGGINGS,               150 },
+            { xi.item.COTTON_GAITERS,                150 },
+            { xi.item.SANDALS,                       150 },
+            { xi.item.GREAVES,                       150 },
+            { xi.item.BAGHNAKHS,                     150 },
+            { xi.item.SPEAR,                         150 },
+            { xi.item.ELM_STAFF,                     150 },
         }
     },
     [xi.zone.BEAUCEDINE_GLACIER] =
     {
-        regionalItems = { 16280 }, -- Haraldr's Muffler
+        regionalItems = { xi.item.HARALDRS_MUFFLER },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4118 }, -- Hi-Potion +2
-            {  740, 4119 }, -- Hi-Potion +3
-            {  600, 4120 }, -- X-Potion
-            { 1020, 4134 }, -- Hi-Ether +2
-            {  730, 4135 }, -- Hi-Ether +3
-            {  500, 4136 }, -- Super Ether
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  240, 4302 }, -- Pamama au Lait
-            {  640, 4424 }, -- Melon Juice
+            { xi.item.HI_POTION_P2,                 900 },
+            { xi.item.HI_POTION_P3,                 500 },
+            { xi.item.X_POTION,                     300 },
+            { xi.item.HI_ETHER_P2,                  700 },
+            { xi.item.HI_ETHER_P1,                  400 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1000 },
+            { xi.item.REMEDY,                       500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   575 }, -- Grain Seeds
-            { 1690,   612 }, -- Kazham Peppers
-            { 2480,   644 }, -- Mythril Ore
-            { 4150,   699 }, -- Oak Log
-            { 3600,   819 }, -- Linen Thread
-            { 1740,   845 }, -- Black C. Feather
-            { 2350,   914 }, -- Mercury
-            { 2600,  1217 }, -- Slv. Arrowheads
-            { 4950,  4113 }, -- Potion +1
-            { 1720,  4114 }, -- Potion +2
-            {  640,  4115 }, -- Potion +3
-            { 4750,  4128 }, -- Ether
-            { 1850,  4129 }, -- Ether +1
-            {  650,  4130 }, -- Ether +2
-            {  420,  4145 }, -- Elixir
-            {  660, 12450 }, -- Padded Cap
-            {  540, 12475 }, -- Velvet Hat
-            {  475, 12571 }, -- Cuir Bouilli
-            {  570, 12699 }, -- Cuir Gloves
-            {  690, 12706 }, -- Iron Mittens
-            { 1100, 12731 }, -- Velvet Cuffs
-            {  860, 12827 }, -- Cuir Trousers
-            {  720, 12836 }, -- Iron Subligar
-            {  490, 12859 }, -- Velvet Slops
-            { 1120, 12955 }, -- Cuir Highboots
-            {  390, 12987 }, -- Ebony Sabots
+            { xi.item.TIGER_COD,                    4000 },
+            { xi.item.DOLL_SHARD,                   2000 },
+            { xi.item.TIGER_HIDE,                   2000 },
+            { xi.item.FROST_TURNIP,                 3000 },
+            { xi.item.LOOP_OF_GLASS_FIBER,          3000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2000 },
+            { xi.item.GIANT_FEMUR,                  3000 },
+            { xi.item.WOLF_HIDE,                    2800 },
+            { xi.item.BAG_OF_GRAIN_SEEDS,           2000 },
+            { xi.item.BUNCH_OF_KAZHAM_PEPPERS,      2000 },
+            { xi.item.CHUNK_OF_MYTHRIL_ORE,         4000 },
+            { xi.item.OAK_LOG,                      3000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        2500 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,       1500 },
+            { xi.item.BLACK_CHOCOBO_FEATHER,        1500 },
+            { xi.item.VIAL_OF_MERCURY,              1500 },
+            { xi.item.HANDFUL_OF_SILVER_ARROWHEADS, 3000 },
+            { xi.item.POTION_P1,                    1500 },
+            { xi.item.POTION_P2,                    1000 },
+            { xi.item.POTION_P3,                     500 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.ETHER_P2,                     1000 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.IRON_VISOR,                    100 },
+            { xi.item.PADDED_CAP,                    100 },
+            { xi.item.CUIR_BANDANA,                  100 },
+            { xi.item.VELVET_HAT,                    100 },
+            { xi.item.IRON_FINGER_GAUNTLETS,         100 },
+            { xi.item.CUIR_GLOVES,                   100 },
+            { xi.item.IRON_MITTENS,                  100 },
+            { xi.item.VELVET_CUFFS,                  100 },
+            { xi.item.IRON_CUISSES,                  100 },
+            { xi.item.CUIR_TROUSERS,                 100 },
+            { xi.item.IRON_SUBLIGAR,                 100 },
+            { xi.item.VELVET_SLOPS,                  100 },
+            { xi.item.IRON_GREAVES,                  100 },
+            { xi.item.LEGGINGS,                      100 },
+            { xi.item.CUIR_HIGHBOOTS,                100 },
+            { xi.item.EBONY_SABOTS,                  100 },
+            { xi.item.HOLY_SWORD,                    100 },
+            { xi.item.MYTHRIL_CLAYMORE,              100 },
+            { xi.item.OAK_STAFF,                     100 },
         }
     },
     [xi.zone.XARCABARD] =
     {
-        regionalItems = { 15042, 17267 }, -- Gothic Gauntlets / Negoroshiki
+        regionalItems = { xi.item.GOTHIC_GAUNTLETS },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4118 }, -- Hi-Potion +2
-            {  740, 4119 }, -- Hi-Potion +3
-            {  600, 4120 }, -- X-Potion
-            { 1020, 4134 }, -- Hi-Ether +2
-            {  730, 4135 }, -- Hi-Ether +3
-            {  500, 4136 }, -- Super Ether
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  240, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.HI_POTION_P2,                 900 },
+            { xi.item.HI_POTION_P3,                 500 },
+            { xi.item.X_POTION,                     300 },
+            { xi.item.HI_ETHER_P2,                  700 },
+            { xi.item.HI_ETHER_P1,                  400 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1000 },
+            { xi.item.REMEDY,                       500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   575 }, -- Grain Seeds
-            { 2600,   612 }, -- Kazham Peppers
-            { 4200,   698 }, -- Ash Log
-            { 3100,   816 }, -- Silk Thread
-            { 2750,   923 }, -- Dryad Root
-            {  320,   932 }, -- Carbon Fiber
-            {  510,  1225 }, -- Gold Nugget
-            {  120,  1228 }, -- Dst. Nugget
-            { 4500,  4113 }, -- Potion +1
-            { 2300,  4114 }, -- Potion +2
-            { 1450,  4115 }, -- Potion +3
-            { 4100,  4128 }, -- Ether
-            { 2100,  4129 }, -- Ether +1
-            { 1420,  4130 }, -- Ether +2
-            {  640,  4145 }, -- Elixir
-            {  560, 12450 }, -- Padded Cap
-            {  790, 12837 }, -- Carapace Subligar
-            {  810, 13711 }, -- Carapace Mask
-            {  680, 13713 }, -- Carapace Mittens
-            {  725, 13715 }, -- Cpc. Leggings
-            {  120, 16412 }, -- Mythril Claws
-            {   95, 16558 }, -- Falchion
-            {  100, 16590 }, -- Greatsword
-            {  675, 16796 }, -- Mythril Zaghnal
-            {  450, 17062 }, -- Bone Rod
-            {  840, 17610 }, -- Bone Knife
-            {   80, 18207 }, -- Kheten
+            { xi.item.DEMON_HORN,                   1500 },
+            { xi.item.AHRIMAN_WING,                 1000 },
+            { xi.item.BOTTLE_OF_AHRIMAN_TEARS,      4000 },
+            { xi.item.FROST_TURNIP,                 3000 },
+            { xi.item.BAG_OF_GRAIN_SEEDS,           2500 },
+            { xi.item.BUNCH_OF_KAZHAM_PEPPERS,      1500 },
+            { xi.item.ASH_LOG,                      2000 },
+            { xi.item.SPOOL_OF_SILK_THREAD,         2500 },
+            { xi.item.DRYAD_ROOT,                   4000 },
+            { xi.item.LOOP_OF_CARBON_FIBER,         3000 },
+            { xi.item.GOLD_NUGGET,                  4000 },
+            { xi.item.DARKSTEEL_NUGGET,             4500 },
+            { xi.item.POTION_P1,                    2500 },
+            { xi.item.POTION_P2,                    1500 },
+            { xi.item.POTION_P3,                    1000 },
+            { xi.item.ETHER,                        2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.ETHER_P2,                      700 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.STICK_OF_VANILLA,             1500 },
+            { xi.item.MYTHRIL_BEASTCOIN,            2000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,       2000 },
+            { xi.item.WOOL_CAP,                      100 },
+            { xi.item.WOOL_BRACERS,                  100 },
+            { xi.item.WOOL_HOSE,                     100 },
+            { xi.item.WOOL_SOCKS,                    100 },
+            { xi.item.RAPTOR_HELM,                   100 },
+            { xi.item.RAPTOR_GLOVES,                 100 },
+            { xi.item.RAPTOR_TROUSERS,               100 },
+            { xi.item.RAPTOR_LEDELSENS,              100 },
+            { xi.item.CARAPACE_SUBLIGAR,             100 },
+            { xi.item.CARAPACE_MASK,                 100 },
+            { xi.item.CARAPACE_MITTENS,              100 },
+            { xi.item.CARAPACE_LEGGINGS,             100 },
+            { xi.item.MYTHRIL_CLAWS,                 100 },
+            { xi.item.FALCHION,                      100 },
+            { xi.item.GREATSWORD,                    100 },
+            { xi.item.MYTHRIL_ZAGHNAL,               100 },
+            { xi.item.BONE_ROD,                      100 },
+            { xi.item.BONE_KNIFE,                    100 },
+            { xi.item.KHETEN,                        100 },
+            { xi.item.NEGOROSHIKI,                   100 },
         }
     },
     [xi.zone.CAPE_TERIGGAN] =
     {
-        regionalItems = { 17965 }, -- Sirocco Axe
+        regionalItems = { xi.item.SIROCCO_AXE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4119 }, -- Hi-Potion +3
-            {  800, 4120 }, -- X-Potion
-            {  600, 4121 }, -- X-Potion +1
-            { 1040, 4135 }, -- Hi-Ether +3
-            {  790, 4136 }, -- Super Ether
-            {  590, 4137 }, -- Super Ether +1
-            {  420, 4144 }, -- Hi-Elixir
-            {  655, 4145 }, -- Elixir
-            {   60, 4149 }, -- Panacea
-            {  460, 4155 }, -- Remedy
-            {  790, 4202 }, -- Daedalus Wing
-            {  490, 4206 }, -- Catholicon
-            {  320, 4210 }, -- Lethe Water
-            {  225, 4255 }, -- Mana Powder
-            {  360, 4302 }, -- Pamama au Lait
-            {  540, 4424 }, -- Melon Juice
-            {  210, 5322 }, -- Healing Powder
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2320,   645 }, -- Darksteel Ore
-            { 1350,   702 }, -- Ebony Log
-            { 1290,   737 }, -- Gold Ore
-            {  525,   823 }, -- Gold Thread
-            {  190,   844 }, -- Phoenix Feather
-            {  780,  1443 }, -- Dried Mugwort
-            { 5000,  4116 }, -- Hi-Potion
-            { 4500,  4117 }, -- Hi-Potion +1
-            { 2500,  4120 }, -- X-Potion
-            {  500,  4121 }, -- X-Potion +1
-            { 4200,  4133 }, -- Hi-Ether +1
-            { 2100,  4141 }, -- Pro-Ether +1
-            { 1230,  5164 }, -- Ground Wasabi
-            { 1150, 12427 }, -- Bascinet
-            {  575, 12683 }, -- Darksteel Mufflers
-            {  680, 12740 }, -- Silk Mitts
-            {  740, 12811 }, -- Dst. Breeches
-            {  625, 12829 }, -- Beak Trousers
-            {  490, 12868 }, -- Silk Slacks
-            {  710, 12939 }, -- Dst. Sollerets
-            {  460, 12996 }, -- Silk Pumps
-            {  615, 13698 }, -- Beak Helm
-            {  540, 13700 }, -- Beak Gloves
-            {  470, 13702 }, -- Beak Ledelsens
+            { xi.item.SLICE_OF_COCKATRICE_MEAT,    3000 },
+            { xi.item.MANTICORE_HIDE,               2000 },
+            { xi.item.GIANT_BIRD_FEATHER,           2900 },
+            { xi.item.TURTLE_SHELL,                 1000 },
+            { xi.item.HANDFUL_OF_BAY_LEAVES,        3000 },
+            { xi.item.JAR_OF_GROUND_WASABI,         2000 },
+            { xi.item.DARKSTEEL_NUGGET,             3000 },
+            { xi.item.CHUNK_OF_DARKSTEEL_ORE,        750 },
+            { xi.item.OAK_LOG,                      2000 },
+            { xi.item.EBONY_LOG,                    1000 },
+            { xi.item.CHUNK_OF_GOLD_ORE,             750 },
+            { xi.item.GOLD_BEASTCOIN,               1000 },
+            { xi.item.SPIDER_WEB,                   2500 },
+            { xi.item.SPOOL_OF_GOLD_THREAD,         1000 },
+            { xi.item.COCKATRICE_SKIN,              2000 },
+            { xi.item.BUFFALO_HIDE,                 1000 },
+            { xi.item.WYVERN_SKULL,                 1500 },
+            { xi.item.PEARL,                        2000 },
+            { xi.item.PINCH_OF_BOMB_ASH,            2000 },
+            { xi.item.DOGWOOD_LOG,                  1000 },
+            { xi.item.DANCESHROOM,                  2000 },
+            { xi.item.GOLD_LOBSTER,                 2500 },
+            { xi.item.PHOENIX_FEATHER,                50 },
+            { xi.item.PINCH_OF_DRIED_MUGWORT,       1500 },
+            { xi.item.HI_POTION,                    1000 },
+            { xi.item.HI_POTION_P1,                  500 },
+            { xi.item.X_POTION,                     1000 },
+            { xi.item.X_POTION_P1,                   500 },
+            { xi.item.HI_ETHER_P1,                  1500 },
+            { xi.item.PRO_ETHER,                    1000 },
+            { xi.item.JUG_OF_QUADAV_BUG_BROTH,      2500 },
+            { xi.item.BASCINET,                       50 },
+            { xi.item.DARKSTEEL_MUFFLERS,             50 },
+            { xi.item.SILK_MITTS,                     50 },
+            { xi.item.DARKSTEEL_BREECHES,             50 },
+            { xi.item.BEAK_TROUSERS,                  50 },
+            { xi.item.SILK_SLACKS,                    50 },
+            { xi.item.DARKSTEEL_SOLLERETS,            50 },
+            { xi.item.SILK_PUMPS,                     50 },
+            { xi.item.BEAK_HELM,                      50 },
+            { xi.item.BEAK_GLOVES,                    50 },
+            { xi.item.BEAK_LEDELSENS,                 50 },
         }
     },
     [xi.zone.EASTERN_ALTEPA_DESERT] =
     {
-        regionalItems = { 16251 }, -- Casaba Melon Tank
+        regionalItems = { xi.item.CASABA_MELON_TANK },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4118 }, -- Hi-Potion +2
-            {  800, 4119 }, -- Hi-Potion +3
-            {  400, 4120 }, -- X-Potion
-            { 1040, 4134 }, -- Hi-Ether +2
-            {  700, 4135 }, -- Hi-Ether +3
-            {  410, 4136 }, -- Super Ether
-            {  600, 4145 }, -- Elixir
-            { 1450, 4148 }, -- Antidote
-            { 1550, 4150 }, -- Eye Drops
-            { 1650, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            {  820, 4164 }, -- Prism Powder
-            {  840, 4165 }, -- Silent Oil
-            {  600, 4202 }, -- Daedalus Wing
-            {  250, 4206 }, -- Catholicon
-            {  420, 4302 }, -- Pamama au Lait
-            {  720, 4424 }, -- Melon Juice
+            { xi.item.HI_POTION_P2,                 900 },
+            { xi.item.HI_POTION_P3,                 500 },
+            { xi.item.X_POTION,                     300 },
+            { xi.item.HI_ETHER_P2,                  700 },
+            { xi.item.HI_ETHER_P1,                  400 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1000 },
+            { xi.item.REMEDY,                       500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   575 }, -- Grain Seeds
-            { 1690,   612 }, -- Kazham Peppers
-            { 2480,   644 }, -- Mythril Ore
-            { 4150,   699 }, -- Oak Log
-            { 3600,   819 }, -- Linen Thread
-            { 1740,   845 }, -- Black C. Feather
-            { 2350,   914 }, -- Mercury
-            { 2600,  1217 }, -- Slv. Arrowheads
-            { 4950,  4113 }, -- Potion +1
-            { 1720,  4114 }, -- Potion +2
-            {  640,  4115 }, -- Potion +3
-            { 4750,  4128 }, -- Ether
-            { 1850,  4129 }, -- Ether +1
-            {  650,  4130 }, -- Ether +2
-            {  420,  4145 }, -- Elixir
-            {  660, 12450 }, -- Padded Cap
-            {  540, 12475 }, -- Velvet Hat
-            {  475, 12571 }, -- Cuir Bouilli
-            {  570, 12699 }, -- Cuir Gloves
-            {  690, 12706 }, -- Iron Mittens
-            { 1100, 12731 }, -- Velvet Cuffs
-            {  860, 12827 }, -- Cuir Trousers
-            {  720, 12836 }, -- Iron Subligar
-            {  490, 12859 }, -- Velvet Slops
-            { 1120, 12955 }, -- Cuir Highboots
-            {  390, 12987 }, -- Ebony Sabots
+            { xi.item.DHALMEL_HIDE,                 4000 },
+            { xi.item.LOCK_OF_MANTICORE_HAIR,       2000 },
+            { xi.item.SCORPION_SHELL,               2500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.LOOP_OF_GLASS_FIBER,          3000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            3000 },
+            { xi.item.GIANT_FEMUR,                  4000 },
+            { xi.item.WOLF_HIDE,                    2800 },
+            { xi.item.BAG_OF_GRAIN_SEEDS,           2000 },
+            { xi.item.BUNCH_OF_KAZHAM_PEPPERS,      2000 },
+            { xi.item.CHUNK_OF_MYTHRIL_ORE,         2500 },
+            { xi.item.OAK_LOG,                      1000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        2500 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,       1500 },
+            { xi.item.BLACK_CHOCOBO_FEATHER,        2500 },
+            { xi.item.VIAL_OF_MERCURY,              1500 },
+            { xi.item.HANDFUL_OF_SILVER_ARROWHEADS, 3000 },
+            { xi.item.POTION_P1,                    1500 },
+            { xi.item.POTION_P2,                    1000 },
+            { xi.item.POTION_P3,                     500 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.ETHER_P2,                     1000 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.IRON_VISOR,                    100 },
+            { xi.item.PADDED_CAP,                    100 },
+            { xi.item.CUIR_BANDANA,                  100 },
+            { xi.item.VELVET_HAT,                    100 },
+            { xi.item.IRON_FINGER_GAUNTLETS,         100 },
+            { xi.item.CUIR_GLOVES,                   100 },
+            { xi.item.IRON_MITTENS,                  100 },
+            { xi.item.VELVET_CUFFS,                  100 },
+            { xi.item.IRON_CUISSES,                  100 },
+            { xi.item.CUIR_TROUSERS,                 100 },
+            { xi.item.IRON_SUBLIGAR,                 100 },
+            { xi.item.VELVET_SLOPS,                  100 },
+            { xi.item.IRON_GREAVES,                  100 },
+            { xi.item.LEGGINGS,                      100 },
+            { xi.item.CUIR_HIGHBOOTS,                100 },
+            { xi.item.EBONY_SABOTS,                  100 },
+            { xi.item.HOLY_SWORD,                    100 },
+            { xi.item.MYTHRIL_CLAYMORE,              100 },
+            { xi.item.OAK_STAFF,                     100 },
         }
     },
     [xi.zone.QUICKSAND_CAVES] =
     {
-        regionalItems = { 10952 }, -- Tanner's Torque
+        regionalItems = { xi.item.TANNERS_TORQUE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1100, 4118 }, -- Hi-Potion +2
-            { 1000, 4119 }, -- Hi-Potion +3
-            {  800, 4120 }, -- X-Potion
-            {  600, 4121 }, -- X-Potion +1
-            { 1040, 4135 }, -- Hi-Ether +3
-            {  790, 4136 }, -- Super Ether
-            {  590, 4137 }, -- Super Ether +1
-            {  420, 4144 }, -- Hi-Elixir
-            {  655, 4145 }, -- Elixir
-            {   60, 4149 }, -- Panacea
-            {  460, 4155 }, -- Remedy
-            {  790, 4202 }, -- Daedalus Wing
-            {  490, 4206 }, -- Catholicon
-            {  320, 4210 }, -- Lethe Water
-            {  225, 4255 }, -- Mana Powder
-            {  360, 4302 }, -- Pamama au Lait
-            {  540, 4424 }, -- Melon Juice
-            {  210, 5322 }, -- Healing Powder
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2320,   645 }, -- Darksteel Ore
-            { 1350,   702 }, -- Ebony Log
-            { 1290,   737 }, -- Gold Ore
-            {  525,   823 }, -- Gold Thread
-            {  190,   844 }, -- Phoenix Feather
-            {  780,  1443 }, -- Dried Mugwort
-            { 5000,  4116 }, -- Hi-Potion
-            { 4500,  4117 }, -- Hi-Potion +1
-            { 2500,  4120 }, -- X-Potion
-            {  500,  4121 }, -- X-Potion +1
-            { 4200,  4133 }, -- Hi-Ether +1
-            { 2100,  4141 }, -- Pro-Ether +1
-            { 1230,  5164 }, -- Ground Wasabi
-            { 1150, 12427 }, -- Bascinet
-            {  575, 12683 }, -- Darksteel Mufflers
-            {  680, 12740 }, -- Silk Mitts
-            {  740, 12811 }, -- Dst. Breeches
-            {  625, 12829 }, -- Beak Trousers
-            {  490, 12868 }, -- Silk Slacks
-            {  710, 12939 }, -- Dst. Sollerets
-            {  460, 12996 }, -- Silk Pumps
-            {  615, 13698 }, -- Beak Helm
-            {  540, 13700 }, -- Beak Gloves
-            {  470, 13702 }, -- Beak Ledelsens
+            { xi.item.BAG_OF_CACTUS_STEMS,          3000 },
+            { xi.item.MANTICORE_FANG,               2000 },
+            { xi.item.SCORPION_CLAW,                2900 },
+            { xi.item.HIGH_QUALITY_SCORPION_SHELL,  1000 },
+            { xi.item.HANDFUL_OF_BAY_LEAVES,        3000 },
+            { xi.item.JAR_OF_GROUND_WASABI,         2000 },
+            { xi.item.DARKSTEEL_NUGGET,             3000 },
+            { xi.item.CHUNK_OF_DARKSTEEL_ORE,        750 },
+            { xi.item.OAK_LOG,                      2000 },
+            { xi.item.EBONY_LOG,                    1000 },
+            { xi.item.CHUNK_OF_GOLD_ORE,             750 },
+            { xi.item.GOLD_BEASTCOIN,               1000 },
+            { xi.item.SPIDER_WEB,                   2500 },
+            { xi.item.SPOOL_OF_GOLD_THREAD,         1000 },
+            { xi.item.COCKATRICE_SKIN,              2000 },
+            { xi.item.BUFFALO_HIDE,                 1000 },
+            { xi.item.WYVERN_SKULL,                 1500 },
+            { xi.item.BLACK_PEARL,                  2000 },
+            { xi.item.PINCH_OF_BOMB_ASH,            2000 },
+            { xi.item.DOGWOOD_LOG,                  1000 },
+            { xi.item.DANCESHROOM,                  2000 },
+            { xi.item.GOLD_LOBSTER,                 2500 },
+            { xi.item.PHOENIX_FEATHER,                50 },
+            { xi.item.PINCH_OF_DRIED_MUGWORT,       1500 },
+            { xi.item.HI_POTION,                    1000 },
+            { xi.item.HI_POTION_P1,                  500 },
+            { xi.item.X_POTION,                     1000 },
+            { xi.item.X_POTION_P1,                   500 },
+            { xi.item.HI_ETHER_P1,                  1500 },
+            { xi.item.PRO_ETHER,                    1000 },
+            { xi.item.JUG_OF_QUADAV_BUG_BROTH,      2500 },
+            { xi.item.BASCINET,                       50 },
+            { xi.item.DARKSTEEL_MUFFLERS,             50 },
+            { xi.item.SILK_MITTS,                     50 },
+            { xi.item.DARKSTEEL_BREECHES,             50 },
+            { xi.item.BEAK_TROUSERS,                  50 },
+            { xi.item.SILK_SLACKS,                    50 },
+            { xi.item.DARKSTEEL_SOLLERETS,            50 },
+            { xi.item.SILK_PUMPS,                     50 },
+            { xi.item.BEAK_HELM,                      50 },
+            { xi.item.BEAK_GLOVES,                    50 },
+            { xi.item.BEAK_LEDELSENS,                 50 },
         }
     },
     [xi.zone.WEST_SARUTABARUTA] =
     {
-        regionalItems = { 19221 }, -- Firefly
+        regionalItems = { xi.item.FIREFLY },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  790, 4113 }, -- Potion +1
-            {  425, 4114 }, -- Potion +2
-            { 1040, 4128 }, -- Ether
-            {  760, 4129 }, -- Ether +1
-            {  420, 4130 }, -- Ether +2
-            {  600, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  750, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  240, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1700,   505 }, -- Sheepskin
-            { 4500,   640 }, -- Copper Ore
-            { 2500,   641 }, -- Tin Ore
-            { 3450,   642 }, -- Zinc Ore
-            { 2000,   688 }, -- Arrowwood Log
-            { 1020,   698 }, -- Ash Log
-            { 4200,   656 }, -- Beastcoin
-            { 5000,   768 }, -- Flint Stone
-            { 1250,   818 }, -- Cotton Thread
-            { 1300,   833 }, -- Moko Grass
-            {  800,   840 }, -- Chocobo Feather
-            { 3600,   846 }, -- Insect Wing
-            { 3000,   912 }, -- Beehive Chip
-            {  700,   943 }, -- Poison Dust
-            { 2400,  1214 }, -- Handful of Stone Arrowheads x33
-            { 4900,  4112 }, -- Potion
-            { 3590,  4148 }, -- Antidote
-            { 1150,  4150 }, -- Eye Drops
-            { 1360,  4151 }, -- Echo Drops
-            { 2900,  4370 }, -- Honey
-            {  600, 12290 }, -- Maple Shield
-            {  295, 12440 }, -- Leather Bandana
-            {  450, 12449 }, -- Brass Cap
-            {  720, 12456 }, -- Hachimaki
-            {  530, 12608 }, -- Tunic
-            {  460, 12696 }, -- Leather Gloves
-            {  340, 12705 }, -- Brass Mittens
-            {  640, 12712 }, -- Tekko
-            {  310, 12736 }, -- Mitts
-            {  475, 12824 }, -- Leather Trousers
-            {   80, 12833 }, -- Brass Subligar
-            {  890, 12840 }, -- Sitabaki
-            {  422, 12864 }, -- Slacks
-            {  135, 12952 }, -- Leather Highboots
-            {  250, 12961 }, -- Brass Leggings
-            {  700, 12968 }, -- Kyahan
-            {  287, 12992 }, -- Solea
-            {  500, 13081 }, -- Leather Gorget
-            {  300, 16407 }, -- Brass Baghnakhs
-            {  120, 16530 }, -- Xiphos
-            {  320, 17050 }, -- Willow Wand
+            { xi.item.BALL_OF_SARUTA_COTTON,       4000 },
+            { xi.item.SHEEP_TOOTH,                 2500 },
+            { xi.item.SPOOL_OF_SILK_THREAD,        1250 },
+            { xi.item.SHEEPSKIN,                   1500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          500 },
+            { xi.item.CHUNK_OF_TIN_ORE,             500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            500 },
+            { xi.item.ARROWWOOD_LOG,               2000 },
+            { xi.item.ASH_LOG,                     2000 },
+            { xi.item.BEASTCOIN,                   3000 },
+            { xi.item.FLINT_STONE,                 4000 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,      3500 },
+            { xi.item.CLUMP_OF_MOKO_GRASS,         3000 },
+            { xi.item.CHOCOBO_FEATHER,              200 },
+            { xi.item.INSECT_WING,                 2500 },
+            { xi.item.BEEHIVE_CHIP,                3000 },
+            { xi.item.PINCH_OF_POISON_DUST,         400 },
+            { xi.item.HANDFUL_OF_STONE_ARROWHEADS, 3000 },
+            { xi.item.POTION,                      1500 },
+            { xi.item.ANTIDOTE,                    1500 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          500 },
+            { xi.item.POT_OF_HONEY,                5000 },
+            { xi.item.MAPLE_SHIELD,                 150 },
+            { xi.item.LEATHER_BANDANA,              150 },
+            { xi.item.BRASS_CAP,                    150 },
+            { xi.item.HACHIMAKI,                    150 },
+            { xi.item.TUNIC,                        150 },
+            { xi.item.LEATHER_GLOVES,               150 },
+            { xi.item.BRASS_MITTENS,                150 },
+            { xi.item.TEKKO,                        150 },
+            { xi.item.MITTS,                        150 },
+            { xi.item.LEATHER_TROUSERS,             150 },
+            { xi.item.BRASS_SUBLIGAR,               150 },
+            { xi.item.SITABAKI,                     150 },
+            { xi.item.SLACKS,                       150 },
+            { xi.item.LEATHER_HIGHBOOTS,            150 },
+            { xi.item.BRASS_LEGGINGS,               150 },
+            { xi.item.KYAHAN,                       150 },
+            { xi.item.SOLEA,                        150 },
+            { xi.item.LEATHER_GORGET,               150 },
+            { xi.item.BRASS_BAGHNAKHS,              150 },
+            { xi.item.XIPHOS,                       150 },
+            { xi.item.WILLOW_WAND,                  150 },
         }
     },
     [xi.zone.EAST_SARUTABARUTA] =
     {
-        regionalItems = { 16279 }, -- Pile Chain
+        regionalItems = { xi.item.PILE_CHAIN },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  790, 4113 }, -- Potion +1
-            {  425, 4114 }, -- Potion +2
-            { 1040, 4128 }, -- Ether
-            {  760, 4129 }, -- Ether +1
-            {  420, 4130 }, -- Ether +2
-            {  600, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  750, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  240, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1700,   505 }, -- Sheepskin
-            { 4500,   640 }, -- Copper Ore
-            { 2500,   641 }, -- Tin Ore
-            { 3450,   642 }, -- Zinc Ore
-            { 2000,   688 }, -- Arrowwood Log
-            { 1020,   698 }, -- Ash Log
-            { 4200,   656 }, -- Beastcoin
-            { 5000,   768 }, -- Flint Stone
-            { 1250,   818 }, -- Cotton Thread
-            { 1300,   833 }, -- Moko Grass
-            {  800,   840 }, -- Chocobo Feather
-            { 3600,   846 }, -- Insect Wing
-            { 3000,   912 }, -- Beehive Chip
-            {  700,   943 }, -- Poison Dust
-            { 2400,  1214 }, -- Handful of Stone Arrowheads x33
-            { 4900,  4112 }, -- Potion
-            { 3590,  4148 }, -- Antidote
-            { 1150,  4150 }, -- Eye Drops
-            { 1360,  4151 }, -- Echo Drops
-            { 2900,  4370 }, -- Honey
-            {  600, 12290 }, -- Maple Shield
-            {  295, 12440 }, -- Leather Bandana
-            {  450, 12449 }, -- Brass Cap
-            {  720, 12456 }, -- Hachimaki
-            {  530, 12608 }, -- Tunic
-            {  460, 12696 }, -- Leather Gloves
-            {  340, 12705 }, -- Brass Mittens
-            {  640, 12712 }, -- Tekko
-            {  310, 12736 }, -- Mitts
-            {  475, 12824 }, -- Leather Trousers
-            {   80, 12833 }, -- Brass Subligar
-            {  890, 12840 }, -- Sitabaki
-            {  422, 12864 }, -- Slacks
-            {  135, 12952 }, -- Leather Highboots
-            {  250, 12961 }, -- Brass Leggings
-            {  700, 12968 }, -- Kyahan
-            {  287, 12992 }, -- Solea
-            {  500, 13081 }, -- Leather Gorget
-            {  300, 16407 }, -- Brass Baghnakhs
-            {  120, 16530 }, -- Xiphos
-            {  320, 17050 }, -- Willow Wand
+            { xi.item.BALL_OF_SARUTA_COTTON,       4000 },
+            { xi.item.SHEEP_TOOTH,                 2500 },
+            { xi.item.SPOOL_OF_SILK_THREAD,        1250 },
+            { xi.item.SHEEPSKIN,                   1500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          500 },
+            { xi.item.CHUNK_OF_TIN_ORE,             500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            500 },
+            { xi.item.ARROWWOOD_LOG,               2000 },
+            { xi.item.ASH_LOG,                     2000 },
+            { xi.item.BEASTCOIN,                   3000 },
+            { xi.item.FLINT_STONE,                 4000 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,      3500 },
+            { xi.item.CLUMP_OF_MOKO_GRASS,         3000 },
+            { xi.item.CHOCOBO_FEATHER,              200 },
+            { xi.item.INSECT_WING,                 2500 },
+            { xi.item.BEEHIVE_CHIP,                3000 },
+            { xi.item.PINCH_OF_POISON_DUST,         400 },
+            { xi.item.HANDFUL_OF_STONE_ARROWHEADS, 3000 },
+            { xi.item.POTION,                      1500 },
+            { xi.item.ANTIDOTE,                    1500 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          500 },
+            { xi.item.POT_OF_HONEY,                5000 },
+            { xi.item.MAPLE_SHIELD,                 150 },
+            { xi.item.LEATHER_BANDANA,              150 },
+            { xi.item.BRASS_CAP,                    150 },
+            { xi.item.HACHIMAKI,                    150 },
+            { xi.item.TUNIC,                        150 },
+            { xi.item.LEATHER_GLOVES,               150 },
+            { xi.item.BRASS_MITTENS,                150 },
+            { xi.item.TEKKO,                        150 },
+            { xi.item.MITTS,                        150 },
+            { xi.item.LEATHER_TROUSERS,             150 },
+            { xi.item.BRASS_SUBLIGAR,               150 },
+            { xi.item.SITABAKI,                     150 },
+            { xi.item.SLACKS,                       150 },
+            { xi.item.LEATHER_HIGHBOOTS,            150 },
+            { xi.item.BRASS_LEGGINGS,               150 },
+            { xi.item.KYAHAN,                       150 },
+            { xi.item.SOLEA,                        150 },
+            { xi.item.LEATHER_GORGET,               150 },
+            { xi.item.BRASS_BAGHNAKHS,              150 },
+            { xi.item.XIPHOS,                       150 },
+            { xi.item.WILLOW_WAND,                  150 },
         }
     },
     [xi.zone.TAHRONGI_CANYON] =
     {
-        regionalItems = { 16007 }, -- Protect Earring
+        regionalItems = { xi.item.PROTECT_EARRING },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  790, 4113 }, -- Potion +1
-            {  425, 4114 }, -- Potion +2
-            { 1040, 4128 }, -- Ether
-            {  760, 4129 }, -- Ether +1
-            {  420, 4130 }, -- Ether +2
-            {  600, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  750, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  240, 4301 }, -- Pear au Lait
-            {  660, 4425 }, -- Tomato Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1700,   626 }, -- Black Pepper
-            { 2500,   641 }, -- Tin Ore
-            { 2000,   688 }, -- Arrowwood Log
-            { 1020,   727 }, -- Dogwood Log
-            { 4200,   750 }, -- Silver Beastcoin
-            { 5000,   768 }, -- Flint Stone
-            { 3600,   846 }, -- Insect Wing
-            { 1300,   893 }, -- Giant Femur
-            { 3000,   912 }, -- Beehive Chip
-            { 1400,   925 }, -- Giant Stinger
-            { 4300,   953 }, -- Treant Bulb
-            { 2200,  1215 }, -- Handful of Bone Arrowheads x33
-            { 4000,  1845 }, -- Red Moko Grass
-            { 4900,  4112 }, -- Potion
-            { 3600,  4113 }, -- Potion +1
-            { 3750,  4128 }, -- Ether
-            {  595,  4148 }, -- Antidote
-            { 1150,  4151 }, -- Echo Drops
-            { 2100,  4227 }, -- Bronze Bolt Quiver
-            { 2060,  4509 }, -- Distilled Water
-            {  425, 12432 }, -- Faceguard
-            {  760, 12449 }, -- Brass Cap
-            {  590, 12473 }, -- Poet's Circlet
-            {  630, 12601 }, -- Linen Robe
-            {  765, 12705 }, -- Brass Mittens
-            {  465, 12710 }, -- Bone Mittens
-            {  460, 12720 }, -- Gloves
-            {  430, 12729 }, -- Linen Cuffs
-            {  275, 12816 }, -- Scale Cuisses
-            {  730, 12834 }, -- Bone Subligar
-            {  600, 12848 }, -- Brais
-            {  535, 12688 }, -- Scale Finger Gauntlets
-            {  375, 12857 }, -- Linen Slops
-            {  410, 12966 }, -- Bone Leggings
-            {  655, 12976 }, -- Gaiters
-            {  425, 12985 }, -- Holly Clogs
-            {  390, 16466 }, -- Knife
-            {  370, 16531 }, -- Brass Xiphos
-            {  380, 17096 }, -- Holly Pole
-            { 2320, 17316 }, -- Bomb Arm
+            { xi.item.BALL_OF_SARUTA_COTTON,       3500 },
+            { xi.item.WILD_ONION,                  2000 },
+            { xi.item.DHALMEL_HIDE,                1250 },
+            { xi.item.SPOOL_OF_SILK_THREAD,        1500 },
+            { xi.item.PINCH_OF_BLACK_PEPPER,       2000 },
+            { xi.item.CHUNK_OF_TIN_ORE,            1000 },
+            { xi.item.ARROWWOOD_LOG,               2000 },
+            { xi.item.WILLOW_LOG,                  1000 },
+            { xi.item.SILVER_BEASTCOIN,            3000 },
+            { xi.item.FLINT_STONE,                 2000 },
+            { xi.item.INSECT_WING,                 2500 },
+            { xi.item.GIANT_FEMUR,                 4000 },
+            { xi.item.BEEHIVE_CHIP,                3000 },
+            { xi.item.GIANT_STINGER,               1500 },
+            { xi.item.TREANT_BULB,                 2500 },
+            { xi.item.HANDFUL_OF_BONE_ARROWHEADS,  3000 },
+            { xi.item.CLUMP_OF_RED_MOKO_GRASS,     2000 },
+            { xi.item.POTION,                      1500 },
+            { xi.item.ETHER,                       1200 },
+            { xi.item.ELIXIR,                        50 },
+            { xi.item.ANTIDOTE,                    1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          500 },
+            { xi.item.BRONZE_BOLT_QUIVER,          2000 },
+            { xi.item.BOMB_ARM,                    2500 },
+            { xi.item.FACEGUARD,                    150 },
+            { xi.item.BRASS_CAP,                    150 },
+            { xi.item.POETS_CIRCLET,                150 },
+            { xi.item.SCALE_FINGER_GAUNTLETS,       150 },
+            { xi.item.BRASS_MITTENS,                150 },
+            { xi.item.BONE_MITTENS,                 150 },
+            { xi.item.GLOVES,                       150 },
+            { xi.item.LINEN_CUFFS,                  150 },
+            { xi.item.SCALE_CUISSES,                150 },
+            { xi.item.BONE_SUBLIGAR,                150 },
+            { xi.item.BRAIS,                        150 },
+            { xi.item.LINEN_SLOPS,                  150 },
+            { xi.item.SCALE_GREAVES,                150 },
+            { xi.item.BONE_LEGGINGS,                150 },
+            { xi.item.GAITERS,                      150 },
+            { xi.item.HOLLY_CLOGS,                  150 },
+            { xi.item.KNIFE,                        150 },
+            { xi.item.BRASS_XIPHOS,                 150 },
+            { xi.item.HOLLY_POLE,                   150 },
+            { xi.item.WILLOW_WAND,                  150 },
         }
     },
     [xi.zone.BUBURIMU_PENINSULA] =
     {
-        regionalItems = { 18599 }, -- Pestle
+        regionalItems = { xi.item.PESTLE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  790, 4113 }, -- Potion +1
-            {  425, 4114 }, -- Potion +2
-            { 1040, 4128 }, -- Ether
-            {  760, 4129 }, -- Ether +1
-            {  420, 4130 }, -- Ether +2
-            {  600, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  750, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  240, 4301 }, -- Pear au Lait
-            {  660, 4425 }, -- Tomato Juice
+            { xi.item.POTION,                        900 },
+            { xi.item.POTION_P1,                     500 },
+            { xi.item.POTION_P2,                     300 },
+            { xi.item.ETHER,                         600 },
+            { xi.item.ETHER_P1,                      400 },
+            { xi.item.ETHER_P2,                      400 },
+            { xi.item.ELIXIR,                        400 },
+            { xi.item.ANTIDOTE,                     1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          1000 },
+            { xi.item.REMEDY,                        500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,         600 },
+            { xi.item.POT_OF_SILENT_OIL,             600 },
+            { xi.item.DAEDALUS_WING,                 400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,          400 },
+            { xi.item.FLASK_OF_PEAR_AU_LAIT,        1000 },
+            { xi.item.BOTTLE_OF_TOMATO_JUICE,       1000 }
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 4600,   642 }, -- Zinc Ore
-            { 1250,   689 }, -- Lauan Log
-            {  600,   693 }, -- Walnut Log
-            { 3250,   736 }, -- Silver Ore
-            { 2900,   835 }, -- Flax Flower
-            { 4800,   847 }, -- Bird Feather
-            { 1600,   898 }, -- Chicken Bone
-            { 2020,   914 }, -- Mercury
-            { 5000,   936 }, -- Rock Salt
-            {  540,   947 }, -- Firesand
-            { 3540,  1108 }, -- Sulfur
-            { 4750,  1211 }, -- Handful of Bronze Bolt Heads x33
-            { 2900,  4113 }, -- Potion +1
-            { 2600,  4128 }, -- Ether
-            {  575,  4148 }, -- Antidote
-            { 3150,  4151 }, -- Echo Drops
-            { 1010,  4373 }, -- Woozyshroom
-            {  645, 12441 }, -- Lizard Helm
-            { 1760, 12454 }, -- Bone Mask
-            { 1400, 12455 }, -- Beetle Mask
-            { 1390, 12473 }, -- Poet's Circlet
-            { 1900, 12697 }, -- Lizard Gloves
-            { 1700, 12710 }, -- Bone Mittens
-            {  390, 12711 }, -- Beetle Mittens
-            { 1200, 12729 }, -- Linen Cuffs
-            {  910, 12737 }, -- White Mitts
-            { 1600, 12825 }, -- Lizard Trousers
-            { 1430, 12834 }, -- Bone Subligar
-            {  790, 12835 }, -- Beetle Subligar
-            { 1060, 12857 }, -- Linen Slops
-            {  920, 12865 }, -- Black Slacks
-            { 1250, 12953 }, -- Lizard Ledelsens
-            { 1010, 12966 }, -- Bone Leggings
-            {  475, 12967 }, -- Beetle Leggings
-            { 1600, 12985 }, -- Holly Clogs
-            { 1320, 12993 }, -- Sandals
-            {  610, 13584 }, -- Cotton Cape
-            {  405, 13588 }, -- Dhalmel Mantle
-            {  350, 16473 }, -- Kukri
-            {  345, 16643 }, -- Battleaxe
+            { xi.item.DHALMEL_HIDE,                 2500 },
+            { xi.item.SPOOL_OF_SILK_THREAD,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       3000 },
+            { xi.item.CRAB_SHELL,                   3000 },
+            { xi.item.WILD_ONION,                   2000 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2500 },
+            { xi.item.LAUAN_LOG,                    3000 },
+            { xi.item.WALNUT_LOG,                   1000 },
+            { xi.item.CHUNK_OF_SILVER_ORE,          1000 },
+            { xi.item.FLAX_FLOWER,                  3000 },
+            { xi.item.BIRD_FEATHER,                 2000 },
+            { xi.item.CHICKEN_BONE,                 3000 },
+            { xi.item.VIAL_OF_MERCURY,              2000 },
+            { xi.item.CHUNK_OF_ROCK_SALT,           2000 },
+            { xi.item.JAR_OF_FIRESAND,               500 },
+            { xi.item.PINCH_OF_SULFUR,              3000 },
+            { xi.item.HANDFUL_OF_BRONZE_BOLT_HEADS, 3500 },
+            { xi.item.POTION_P1,                    1500 },
+            { xi.item.ETHER_P1,                     1000 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.WOOZYSHROOM,                  3000 },
+            { xi.item.BATTLEAXE,                     150 },
+            { xi.item.KUKRI,                         150 },
+            { xi.item.BONE_LEGGINGS,                 150 },
+            { xi.item.BONE_MASK,                     150 },
+            { xi.item.BONE_MITTENS,                  150 },
+            { xi.item.BONE_SUBLIGAR,                 150 },
+            { xi.item.BEETLE_LEGGINGS,               150 },
+            { xi.item.BEETLE_MASK,                   150 },
+            { xi.item.BEETLE_MITTENS,                150 },
+            { xi.item.BEETLE_SUBLIGAR,               150 },
+            { xi.item.COTTON_CAPE,                   150 },
+            { xi.item.DHALMEL_MANTLE,                150 },
+            { xi.item.LIZARD_GLOVES,                 150 },
+            { xi.item.LIZARD_HELM,                   150 },
+            { xi.item.LIZARD_LEDELSENS,              150 },
+            { xi.item.LIZARD_TROUSERS,               150 },
+            { xi.item.BLACK_SLACKS,                  150 },
+            { xi.item.SANDALS,                       150 },
+            { xi.item.WHITE_MITTS,                   150 },
+            { xi.item.YEW_WAND,                      150 },
         }
     },
     [xi.zone.MERIPHATAUD_MOUNTAINS] =
     {
-        regionalItems = { 18503 }, -- Mammut
+        regionalItems = { xi.item.MAMMUT },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4114 }, -- Potion +2
-            {  740, 4115 }, -- Potion +3
-            {  700, 4116 }, -- Hi-Potion
-            {  800, 4129 }, -- Ether +1
-            {  430, 4130 }, -- Ether +2
-            {  200, 4131 }, -- Ether +3
-            {   50, 4136 }, -- Super Ether
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2400,   627 }, -- Maple Sugar
-            { 1700,   637 }, -- Slime Oil
-            { 3200,   643 }, -- Iron Ore
-            { 4320,   690 }, -- Elm Log
-            { 2050,   816 }, -- Silk Thread
-            { 2450,   835 }, -- Flax Flower
-            { 4050,   857 }, -- Dhalmel Hide
-            { 5000,   880 }, -- Bone Chip
-            { 3250,   897 }, -- Scorpion Claw
-            { 1670,   900 }, -- Fish Bones
-            { 3520,   913 }, -- Beeswax
-            { 4300,   943 }, -- Poison Dust
-            { 4690,  1211 }, -- Brz. Bolt Heads x33
-            { 4900,  4112 }, -- Potion
-            { 2400,  4114 }, -- Potion +2
-            { 4890,  4128 }, -- Ether
-            { 2350,  4129 }, -- Ether +1
-            { 1700,  4145 }, -- Elixir
-            { 2600,  4151 }, -- Echo Drops
-            { 3170,  4225 }, -- Iron Quiver
-            { 1540,  4447 }, -- Scream Fungus
-            {  670, 12424 }, -- Iron Mask
-            {  630, 12441 }, -- Lizard Helm
-            {  710, 12455 }, -- Beetle Mask
-            {  420, 12552 }, -- Chainmail
-            {  820, 12593 }, -- Cotton Doublet
-            {  310, 12680 }, -- Chain Mittens
-            {  520, 12697 }, -- Lizard Gloves
-            {  790, 12711 }, -- Beetle Mittens
-            {  900, 12721 }, -- Cotton Gloves
-            {  890, 12737 }, -- White Mitts
-            {  740, 12825 }, -- Lizard Trousers
-            {  650, 12849 }, -- Cotton Brais
-            {  760, 12865 }, -- Black Slacks
-            {  895, 12953 }, -- Lizard Ledelsens
-            { 1020, 12967 }, -- Beetle Leggings
-            { 1100, 12977 }, -- Cotton Gaiters
-            { 1200, 12993 }, -- Sandals
-            {  330, 16406 }, -- Baghnakhs
-            {  320, 16835 }, -- Spear
-            {  350, 17090 }, -- Elm Staff
+            { xi.item.BEETLE_SHELL,                 4000 },
+            { xi.item.WILD_ONION,                   2000 },
+            { xi.item.COEURL_HIDE,                  2000 },
+            { xi.item.POT_OF_MAPLE_SUGAR,           2000 },
+            { xi.item.VIAL_OF_SLIME_OIL,            1000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2000 },
+            { xi.item.ELM_LOG,                      2000 },
+            { xi.item.SPOOL_OF_SILK_THREAD,         2500 },
+            { xi.item.FLAX_FLOWER,                  3000 },
+            { xi.item.DHALMEL_HIDE,                 1250 },
+            { xi.item.BONE_CHIP,                    3500 },
+            { xi.item.SCORPION_CLAW,                3000 },
+            { xi.item.SET_OF_FISH_BONES,            2000 },
+            { xi.item.LUMP_OF_BEESWAX,              2500 },
+            { xi.item.PINCH_OF_POISON_DUST,         1500 },
+            { xi.item.HANDFUL_OF_BRONZE_BOLT_HEADS, 3000 },
+            { xi.item.POTION,                       1500 },
+            { xi.item.POTION_P1,                    1000 },
+            { xi.item.ETHER,                        1200 },
+            { xi.item.ETHER_P1,                     1000 },
+            { xi.item.ELIXIR,                         50 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.IRON_QUIVER,                  2000 },
+            { xi.item.SCREAM_FUNGUS,                2500 },
+            { xi.item.IRON_MASK,                     150 },
+            { xi.item.LIZARD_HELM,                   150 },
+            { xi.item.BEETLE_MASK,                   150 },
+            { xi.item.COTTON_HEADGEAR,               150 },
+            { xi.item.CHAIN_MITTENS,                 150 },
+            { xi.item.LIZARD_GLOVES,                 150 },
+            { xi.item.BEETLE_MITTENS,                150 },
+            { xi.item.COTTON_GLOVES,                 150 },
+            { xi.item.WHITE_MITTS,                   150 },
+            { xi.item.LIZARD_TROUSERS,               150 },
+            { xi.item.COTTON_BRAIS,                  150 },
+            { xi.item.BLACK_SLACKS,                  150 },
+            { xi.item.LIZARD_LEDELSENS,              150 },
+            { xi.item.BEETLE_LEGGINGS,               150 },
+            { xi.item.COTTON_GAITERS,                150 },
+            { xi.item.SANDALS,                       150 },
+            { xi.item.GREAVES,                       150 },
+            { xi.item.BAGHNAKHS,                     150 },
+            { xi.item.SPEAR,                         150 },
+            { xi.item.ELM_STAFF,                     150 },
         }
     },
     [xi.zone.SAUROMUGUE_CHAMPAIGN] =
     {
-        regionalItems = { 16368 }, -- Herder's Subligar
+        regionalItems = { xi.item.HERDERS_SUBLIGAR },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4114 }, -- Potion +2
-            {  740, 4115 }, -- Potion +3
-            {  700, 4116 }, -- Hi-Potion
-            {  800, 4129 }, -- Ether +1
-            {  430, 4130 }, -- Ether +2
-            {  200, 4131 }, -- Ether +3
-            {   50, 4136 }, -- Super Ether
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   573 }, -- Vegetable Seeds
-            {  475,   636 }, -- Chamomile
-            { 2780,   643 }, -- Iron Ore
-            { 1940,   644 }, -- Mythril Ore
-            { 2700,   691 }, -- Maple Log
-            { 1060,   694 }, -- Chestnut Log
-            { 3500,   749 }, -- Mythril Beastcoin
-            { 1900,   820 }, -- Wool Thread
-            { 1150,   859 }, -- Ram Skin
-            { 1090,   895 }, -- Ram Horn
-            { 4600,   928 }, -- Bomb Ash
-            { 2650,   943 }, -- Poison Dust
-            { 3300,  1212 }, -- Handful of Mythril Bolt Heads x33
-            { 4900,  4113 }, -- Potion +1
-            { 3100,  4114 }, -- Potion +2
-            {  670,  4115 }, -- Potion +3
-            { 4800,  4129 }, -- Ether +1
-            { 3000,  4130 }, -- Ether +2
-            {  900,  4145 }, -- Elixer
-            {  120, 12300 }, -- Targe
-            {  320, 12433 }, -- Brass Mask
-            {  660, 12442 }, -- Studded Bandana
-            {  680, 12465 }, -- Cotton Headgear
-            {  520, 12474 }, -- Wool Hat
-            {  200, 12570 }, -- Studded Vest
-            {  450, 12689 }, -- Brass Finger Gauntlets
-            {  460, 12721 }, -- Cotton Gloves
-            {  390, 12817 }, -- Brass Cuisses
-            {  550, 12826 }, -- Studded Trousers
-            {  420, 12849 }, -- Cotton Brais
-            {  690, 12945 }, -- Brass Greaves
-            {  770, 12954 }, -- Studded Boots
-            {  510, 12977 }, -- Cotton Gaiters
-            {  625, 12986 }, -- Chestnut Sabots
-            {  310, 13085 }, -- Hemp Gorget
-            {  305, 13205 }, -- Silver Obi
-            {  430, 13328 }, -- Mythril Earring
-            {  235, 13446 }, -- Mythril Ring
-            {  525, 16467 }, -- Mythril Knife
-            {  505, 17097 }, -- Elm Pole
-            {  350, 17284 }, -- Chakram
+            { xi.item.SLICE_OF_COEURL_MEAT,          3500 },
+            { xi.item.SLICE_OF_COCKATRICE_MEAT,      4000 },
+            { xi.item.BEETLE_JAW,                    4000 },
+            { xi.item.BAG_OF_VEGETABLE_SEEDS,        2500 },
+            { xi.item.CHAMOMILE,                     2500 },
+            { xi.item.CHUNK_OF_IRON_ORE,             3000 },
+            { xi.item.CHUNK_OF_MYTHRIL_ORE,          1500 },
+            { xi.item.MAPLE_LOG,                     3000 },
+            { xi.item.CHESTNUT_LOG,                  1500 },
+            { xi.item.MYTHRIL_BEASTCOIN,             3000 },
+            { xi.item.SPOOL_OF_WOOL_THREAD,          1000 },
+            { xi.item.RAM_SKIN,                      4000 },
+            { xi.item.RAM_HORN,                      3500 },
+            { xi.item.PINCH_OF_BOMB_ASH,             3000 },
+            { xi.item.PINCH_OF_POISON_DUST,           500 },
+            { xi.item.HANDFUL_OF_MYTHRIL_BOLT_HEADS, 3000 },
+            { xi.item.POTION_P1,                     1500 },
+            { xi.item.POTION_P2,                     1000 },
+            { xi.item.ETHER_P1,                      1200 },
+            { xi.item.ETHER_P2,                       500 },
+            { xi.item.TARGE,                          100 },
+            { xi.item.BRASS_MASK,                     100 },
+            { xi.item.STUDDED_BANDANA,                100 },
+            { xi.item.COTTON_HEADGEAR,                100 },
+            { xi.item.WOOL_HAT,                       100 },
+            { xi.item.BRASS_FINGER_GAUNTLETS,         100 },
+            { xi.item.STUDDED_GLOVES,                 100 },
+            { xi.item.COTTON_GLOVES,                  100 },
+            { xi.item.WOOL_CUFFS,                     100 },
+            { xi.item.BRASS_CUISSES,                  100 },
+            { xi.item.STUDDED_TROUSERS,               100 },
+            { xi.item.COTTON_BRAIS,                   100 },
+            { xi.item.BRASS_GREAVES,                  100 },
+            { xi.item.STUDDED_BOOTS,                  100 },
+            { xi.item.COTTON_GAITERS,                 100 },
+            { xi.item.CHESTNUT_SABOTS,                100 },
+            { xi.item.HEMP_GORGET,                    100 },
+            { xi.item.SILVER_OBI,                     100 },
+            { xi.item.MYTHRIL_EARRING,                100 },
+            { xi.item.MYTHRIL_RING,                   100 },
+            { xi.item.MYTHRIL_KNIFE,                  100 },
+            { xi.item.ELM_POLE,                       100 },
+            { xi.item.CHAKRAM,                        100 },
         }
     },
     [xi.zone.THE_SANCTUARY_OF_ZITAH] =
     {
-        regionalItems = { 18075 }, -- Rossignol
+        regionalItems = { xi.item.ROSSIGNOL },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4118 }, -- Hi-Potion +2
-            {  800, 4119 }, -- Hi-Potion +3
-            {  400, 4120 }, -- X-Potion
-            { 1040, 4134 }, -- Hi-Ether +2
-            {  700, 4135 }, -- Hi-Ether +3
-            {  410, 4136 }, -- Super Ether
-            {  600, 4145 }, -- Elixir
-            { 1450, 4148 }, -- Antidote
-            { 1550, 4150 }, -- Eye Drops
-            { 1650, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            {  820, 4164 }, -- Prism Powder
-            {  840, 4165 }, -- Silent Oil
-            {  600, 4202 }, -- Daedalus Wing
-            {  250, 4206 }, -- Catholicon
-            {  420, 4302 }, -- Pamama au Lait
-            {  720, 4424 }, -- Melon Juice
+            { xi.item.HI_POTION_P2,                 900 },
+            { xi.item.HI_POTION_P3,                 500 },
+            { xi.item.X_POTION,                     300 },
+            { xi.item.HI_ETHER_P2,                  700 },
+            { xi.item.HI_ETHER_P1,                  400 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1000 },
+            { xi.item.REMEDY,                       500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   575 }, -- Grain Seeds
-            { 1690,   612 }, -- Kazham Peppers
-            { 2480,   644 }, -- Mythril Ore
-            { 4150,   699 }, -- Oak Log
-            { 3600,   819 }, -- Linen Thread
-            { 1740,   845 }, -- Black C. Feather
-            { 2350,   914 }, -- Mercury
-            { 2600,  1217 }, -- Slv. Arrowheads
-            { 4950,  4113 }, -- Potion +1
-            { 1720,  4114 }, -- Potion +2
-            {  640,  4115 }, -- Potion +3
-            { 4750,  4128 }, -- Ether
-            { 1850,  4129 }, -- Ether +1
-            {  650,  4130 }, -- Ether +2
-            {  420,  4145 }, -- Elixir
-            {  660, 12450 }, -- Padded Cap
-            {  540, 12475 }, -- Velvet Hat
-            {  475, 12571 }, -- Cuir Bouilli
-            {  570, 12699 }, -- Cuir Gloves
-            {  690, 12706 }, -- Iron Mittens
-            { 1100, 12731 }, -- Velvet Cuffs
-            {  860, 12827 }, -- Cuir Trousers
-            {  720, 12836 }, -- Iron Subligar
-            {  490, 12859 }, -- Velvet Slops
-            { 1120, 12955 }, -- Cuir Highboots
-            {  390, 12987 }, -- Ebony Sabots
+            { xi.item.REVIVAL_TREE_ROOT,            4000 },
+            { xi.item.DANCESHROOM,                  2000 },
+            { xi.item.SLICE_OF_COEURL_MEAT,         2500 },
+            { xi.item.CLUMP_OF_BOYAHDA_MOSS,        3000 },
+            { xi.item.LOOP_OF_GLASS_FIBER,          3000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2000 },
+            { xi.item.GIANT_FEMUR,                  4000 },
+            { xi.item.WOLF_HIDE,                    2800 },
+            { xi.item.BAG_OF_GRAIN_SEEDS,           2000 },
+            { xi.item.BUNCH_OF_KAZHAM_PEPPERS,      2000 },
+            { xi.item.CHUNK_OF_MYTHRIL_ORE,         1500 },
+            { xi.item.OAK_LOG,                      4000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        2500 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,       1500 },
+            { xi.item.BLACK_CHOCOBO_FEATHER,        1500 },
+            { xi.item.VIAL_OF_MERCURY,              1500 },
+            { xi.item.HANDFUL_OF_SILVER_ARROWHEADS, 3000 },
+            { xi.item.POTION_P1,                    1500 },
+            { xi.item.POTION_P2,                    1000 },
+            { xi.item.POTION_P3,                     500 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.ETHER_P2,                     1000 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.IRON_VISOR,                    100 },
+            { xi.item.PADDED_CAP,                    100 },
+            { xi.item.CUIR_BANDANA,                  100 },
+            { xi.item.VELVET_HAT,                    100 },
+            { xi.item.IRON_FINGER_GAUNTLETS,         100 },
+            { xi.item.CUIR_GLOVES,                   100 },
+            { xi.item.IRON_MITTENS,                  100 },
+            { xi.item.VELVET_CUFFS,                  100 },
+            { xi.item.IRON_CUISSES,                  100 },
+            { xi.item.CUIR_TROUSERS,                 100 },
+            { xi.item.IRON_SUBLIGAR,                 100 },
+            { xi.item.VELVET_SLOPS,                  100 },
+            { xi.item.IRON_GREAVES,                  100 },
+            { xi.item.LEGGINGS,                      100 },
+            { xi.item.CUIR_HIGHBOOTS,                100 },
+            { xi.item.EBONY_SABOTS,                  100 },
+            { xi.item.HOLY_SWORD,                    100 },
+            { xi.item.MYTHRIL_CLAYMORE,              100 },
+            { xi.item.OAK_STAFF,                     100 },
         }
     },
     [xi.zone.ROMAEVE] =
     {
-        regionalItems = { 11486 }, -- Diana Corona
+        regionalItems = { xi.item.DIANA_CORONA },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4119 }, -- Hi-Potion +3
-            {  800, 4120 }, -- X-Potion
-            {  600, 4121 }, -- X-Potion +1
-            { 1040, 4135 }, -- Hi-Ether +3
-            {  790, 4136 }, -- Super Ether
-            {  590, 4137 }, -- Super Ether +1
-            {  420, 4144 }, -- Hi-Elixir
-            {  655, 4145 }, -- Elixir
-            {   60, 4149 }, -- Panacea
-            {  460, 4155 }, -- Remedy
-            {  790, 4202 }, -- Daedalus Wing
-            {  490, 4206 }, -- Catholicon
-            {  320, 4210 }, -- Lethe Water
-            {  225, 4255 }, -- Mana Powder
-            {  360, 4302 }, -- Pamama au Lait
-            {  540, 4424 }, -- Melon Juice
-            {  210, 5322 }, -- Healing Powder
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2320,   645 }, -- Darksteel Ore
-            { 1350,   702 }, -- Ebony Log
-            { 1290,   737 }, -- Gold Ore
-            {  525,   823 }, -- Gold Thread
-            {  190,   844 }, -- Phoenix Feather
-            {  780,  1443 }, -- Dried Mugwort
-            { 5000,  4116 }, -- Hi-Potion
-            { 4500,  4117 }, -- Hi-Potion +1
-            { 2500,  4120 }, -- X-Potion
-            {  500,  4121 }, -- X-Potion +1
-            { 4200,  4133 }, -- Hi-Ether +1
-            { 2100,  4141 }, -- Pro-Ether +1
-            { 1230,  5164 }, -- Ground Wasabi
-            { 1150, 12427 }, -- Bascinet
-            {  575, 12683 }, -- Darksteel Mufflers
-            {  680, 12740 }, -- Silk Mitts
-            {  740, 12811 }, -- Dst. Breeches
-            {  625, 12829 }, -- Beak Trousers
-            {  490, 12868 }, -- Silk Slacks
-            {  710, 12939 }, -- Dst. Sollerets
-            {  460, 12996 }, -- Silk Pumps
-            {  615, 13698 }, -- Beak Helm
-            {  540, 13700 }, -- Beak Gloves
-            {  470, 13702 }, -- Beak Ledelsens
+            { xi.item.VIAL_OF_SLIME_OIL,            3000 },
+            { xi.item.GOLEM_SHARD,                  2000 },
+            { xi.item.MYTHRIL_NUGGET,               2900 },
+            { xi.item.PETRIFIED_LOG,                1000 },
+            { xi.item.HANDFUL_OF_BAY_LEAVES,        3000 },
+            { xi.item.JAR_OF_GROUND_WASABI,         2000 },
+            { xi.item.DARKSTEEL_NUGGET,             3000 },
+            { xi.item.CHUNK_OF_DARKSTEEL_ORE,        750 },
+            { xi.item.OAK_LOG,                      2000 },
+            { xi.item.EBONY_LOG,                    1000 },
+            { xi.item.CHUNK_OF_GOLD_ORE,             750 },
+            { xi.item.GOLD_BEASTCOIN,               1000 },
+            { xi.item.SPIDER_WEB,                   2500 },
+            { xi.item.SPOOL_OF_GOLD_THREAD,         1000 },
+            { xi.item.COCKATRICE_SKIN,              2000 },
+            { xi.item.BUFFALO_HIDE,                 1000 },
+            { xi.item.WYVERN_SKULL,                 1500 },
+            { xi.item.BLACK_PEARL,                  2000 },
+            { xi.item.PINCH_OF_BOMB_ASH,            2000 },
+            { xi.item.DOGWOOD_LOG,                  1000 },
+            { xi.item.DANCESHROOM,                  2000 },
+            { xi.item.GOLD_LOBSTER,                 2500 },
+            { xi.item.PHOENIX_FEATHER,                50 },
+            { xi.item.PINCH_OF_DRIED_MUGWORT,       1500 },
+            { xi.item.HI_POTION,                    1000 },
+            { xi.item.HI_POTION_P1,                  500 },
+            { xi.item.X_POTION,                     1000 },
+            { xi.item.X_POTION_P1,                   500 },
+            { xi.item.HI_ETHER_P1,                  1500 },
+            { xi.item.PRO_ETHER,                    1000 },
+            { xi.item.JUG_OF_QUADAV_BUG_BROTH,      2500 },
+            { xi.item.BASCINET,                       50 },
+            { xi.item.DARKSTEEL_MUFFLERS,             50 },
+            { xi.item.SILK_MITTS,                     50 },
+            { xi.item.DARKSTEEL_BREECHES,             50 },
+            { xi.item.BEAK_TROUSERS,                  50 },
+            { xi.item.SILK_SLACKS,                    50 },
+            { xi.item.DARKSTEEL_SOLLERETS,            50 },
+            { xi.item.SILK_PUMPS,                     50 },
+            { xi.item.BEAK_HELM,                      50 },
+            { xi.item.BEAK_GLOVES,                    50 },
+            { xi.item.BEAK_LEDELSENS,                 50 },
         }
     },
     [xi.zone.YUHTUNGA_JUNGLE] =
     {
-        regionalItems = { 17760 }, -- Buccaneer's Scimitar
+        regionalItems = { xi.item.BUCCANEERS_SCIMITAR },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4114 }, -- Potion +2
-            {  740, 4115 }, -- Potion +3
-            {  700, 4116 }, -- Hi-Potion
-            {  800, 4129 }, -- Ether +1
-            {  430, 4130 }, -- Ether +2
-            {  200, 4131 }, -- Ether +3
-            {   50, 4136 }, -- Super Ether
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2750,   574 }, -- Fruit Seeds
-            { 3600,   633 }, -- Olive Oil
-            { 3250,   651 }, -- Iron Ingot
-            { 1200,   653 }, -- Mythril Ingot
-            { 1420,   691 }, -- Maple Log
-            {  760,   822 }, -- Silver Thread
-            { 1350,   943 }, -- Poison Dust
-            { 2700,  1212 }, -- Mtl. Bolt Heads x33
-            { 4800,  4114 }, -- Potion +2
-            { 3200,  4115 }, -- Potion +3
-            { 5000,  4129 }, -- Ether +1
-            { 3800,  4130 }, -- Ether +2
-            {  460, 12458 }, -- Soil Hachimaki
-            {  740, 12698 }, -- Studded Gloves
-            {  530, 12714 }, -- Soil Tekko
-            {  360, 12730 }, -- Wool Cuffs
-            {  290, 12826 }, -- Studded Trousers
-            { 1200, 12842 }, -- Soil Sitabaki
-            {  400, 12858 }, -- Wool Slops
-            {  200, 12954 }, -- Studded Boots
-            {  190, 12970 }, -- Soil Kyahan
-            {  390, 12986 }, -- Chestnut Sabots
+            { xi.item.BAG_OF_TREE_CUTTINGS,          2500 },
+            { xi.item.PUFFBALL,                      4000 },
+            { xi.item.MALBORO_VINE,                  4000 },
+            { xi.item.COEURL_WHISKER,                3500 },
+            { xi.item.BAG_OF_FRUIT_SEEDS,            2500 },
+            { xi.item.FLASK_OF_OLIVE_OIL,            2500 },
+            { xi.item.IRON_INGOT,                     900 },
+            { xi.item.MYTHRIL_INGOT,                  900 },
+            { xi.item.MAPLE_LOG,                     3000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,        2000 },
+            { xi.item.PINCH_OF_POISON_DUST,          1600 },
+            { xi.item.HANDFUL_OF_MYTHRIL_BOLT_HEADS, 3500 },
+            { xi.item.POTION_P2,                     2000 },
+            { xi.item.POTION_P3,                     1000 },
+            { xi.item.ETHER_P1,                      1000 },
+            { xi.item.ETHER_P2,                       800 },
+            { xi.item.MYTHRIL_BEASTCOIN,             3000 },
+            { xi.item.LOOP_OF_GLASS_FIBER,           3000 },
+            { xi.item.BEETLE_JAW,                    3000 },
+            { xi.item.STICK_OF_VANILLA,              3000 },
+            { xi.item.OAK_SHIELD,                     100 },
+            { xi.item.MYTHRIL_KNIFE,                  100 },
+            { xi.item.GLADIUS,                        100 },
+            { xi.item.CLAWS,                          100 },
+            { xi.item.MAUL,                           100 },
+            { xi.item.CHAKRAM,                        100 },
+            { xi.item.SILVER_BELT,                    100 },
+            { xi.item.BRASS_MASK,                     100 },
+            { xi.item.BRASS_FINGER_GAUNTLETS,         100 },
+            { xi.item.BRASS_CUISSES,                  100 },
+            { xi.item.BRASS_GREAVES,                  100 },
+            { xi.item.STUDDED_BANDANA,                100 },
+            { xi.item.SOIL_HACHIMAKI,                 100 },
+            { xi.item.WOOL_HAT,                       100 },
+            { xi.item.STUDDED_GLOVES,                 100 },
+            { xi.item.SOIL_TEKKO,                     100 },
+            { xi.item.WOOL_CUFFS,                     100 },
+            { xi.item.STUDDED_TROUSERS,               100 },
+            { xi.item.SOIL_SITABAKI,                  100 },
+            { xi.item.WOOL_SLOPS,                     100 },
+            { xi.item.STUDDED_BOOTS,                  100 },
+            { xi.item.SOIL_KYAHAN,                    100 },
+            { xi.item.CHESTNUT_SABOTS,                100 },
         }
     },
     [xi.zone.YHOATOR_JUNGLE] =
     {
-        regionalItems = { 18953 }, -- Beluga
+        regionalItems = { xi.item.BELUGA },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4117 }, -- Hi-Potion +1
-            {  700, 4118 }, -- Hi-Potion +2
-            {  230, 4119 }, -- Hi-Potion +3
-            { 1020, 4133 }, -- Hi-Ether +1
-            {  800, 4134 }, -- Hi-Ether +2
-            {  240, 4135 }, -- Hi-Ether +3
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.HI_POTION_P2,                 900 },
+            { xi.item.HI_POTION_P3,                 500 },
+            { xi.item.X_POTION,                     300 },
+            { xi.item.HI_ETHER_P2,                  700 },
+            { xi.item.HI_ETHER_P1,                  400 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1000 },
+            { xi.item.REMEDY,                       500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   575 }, -- Grain Seeds
-            { 2100,   612 }, -- Kazham Peppers
-            { 2300,   644 }, -- Mythril Ore
-            { 3800,   699 }, -- Oak Log
-            { 1700,   819 }, -- Linen Thread
-            {  320,   845 }, -- Black C. Feather
-            { 2750,   914 }, -- Mercury
-            { 2200,  1217 }, -- Slv. Arrowheads x33
-            { 4900,  4114 }, -- Potion +2
-            { 1600,  4115 }, -- Potion +3
-            {  630,  4119 }, -- Hi-Potion +3
-            { 4800,  4129 }, -- Ether +1
-            { 3690,  4130 }, -- Ether +2
-            {  720, 12443 }, -- Cuir Bandana
-            {  610, 12450 }, -- Padded Cap
-            {  530, 12458 }, -- Soil Hachimaki
-            {  715, 12475 }, -- Velvet Hat
-            {  505, 12571 }, -- Cuir Bouilli
-            {  415, 12603 }, -- Velvet Robe
-            {  625, 12699 }, -- Cuir Gloves
-            {  735, 12706 }, -- Iron Mittens
-            {  410, 12731 }, -- Velvet Cuffs
-            {  710, 12827 }, -- Cuir Trousers
-            {  900, 12836 }, -- Iron Subligar
-            {  470, 12859 }, -- Velvet Slops
-            {  865, 12955 }, -- Cuir Highboots
-            {  645, 12962 }, -- Leggings
-            {  230, 12987 }, -- Ebony Sabots
+            { xi.item.ROSEWOOD_LOG,                 3000 },
+            { xi.item.MALBORO_VINE,                 2500 },
+            { xi.item.COEURL_HIDE,                  2500 },
+            { xi.item.CORAL_FUNGUS,                 3500 },
+            { xi.item.LOOP_OF_GLASS_FIBER,          3000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2000 },
+            { xi.item.GIANT_FEMUR,                  3000 },
+            { xi.item.WOLF_HIDE,                    2800 },
+            { xi.item.BAG_OF_GRAIN_SEEDS,           2000 },
+            { xi.item.BUNCH_OF_KAZHAM_PEPPERS,      2000 },
+            { xi.item.CHUNK_OF_MYTHRIL_ORE,         3000 },
+            { xi.item.OAK_LOG,                      3000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        2500 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,       2000 },
+            { xi.item.BLACK_CHOCOBO_FEATHER,        1500 },
+            { xi.item.VIAL_OF_MERCURY,              1500 },
+            { xi.item.HANDFUL_OF_SILVER_ARROWHEADS, 3000 },
+            { xi.item.POTION_P1,                    1500 },
+            { xi.item.POTION_P2,                    1000 },
+            { xi.item.POTION_P3,                     500 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.ETHER_P2,                     1000 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.IRON_VISOR,                    100 },
+            { xi.item.PADDED_CAP,                    100 },
+            { xi.item.CUIR_BANDANA,                  100 },
+            { xi.item.VELVET_HAT,                    100 },
+            { xi.item.IRON_FINGER_GAUNTLETS,         100 },
+            { xi.item.CUIR_GLOVES,                   100 },
+            { xi.item.IRON_MITTENS,                  100 },
+            { xi.item.VELVET_CUFFS,                  100 },
+            { xi.item.IRON_CUISSES,                  100 },
+            { xi.item.CUIR_TROUSERS,                 100 },
+            { xi.item.IRON_SUBLIGAR,                 100 },
+            { xi.item.VELVET_SLOPS,                  100 },
+            { xi.item.IRON_GREAVES,                  100 },
+            { xi.item.LEGGINGS,                      100 },
+            { xi.item.CUIR_HIGHBOOTS,                100 },
+            { xi.item.EBONY_SABOTS,                  100 },
+            { xi.item.HOLY_SWORD,                    100 },
+            { xi.item.MYTHRIL_CLAYMORE,              100 },
+            { xi.item.OAK_STAFF,                     100 },
         }
     },
     [xi.zone.WESTERN_ALTEPA_DESERT] =
     {
-        regionalItems = { 19114 }, -- Galkan Dagger
+        regionalItems = { xi.item.GALKAN_DAGGER },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4117 }, -- Hi-Potion +1
-            {  700, 4118 }, -- Hi-Potion +2
-            {  230, 4119 }, -- Hi-Potion +3
-            { 1020, 4133 }, -- Hi-Ether +1
-            {  800, 4134 }, -- Hi-Ether +2
-            {  240, 4135 }, -- Hi-Ether +3
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.HI_POTION_P2,                 900 },
+            { xi.item.HI_POTION_P3,                 500 },
+            { xi.item.X_POTION,                     300 },
+            { xi.item.HI_ETHER_P2,                  700 },
+            { xi.item.HI_ETHER_P1,                  400 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1000 },
+            { xi.item.REMEDY,                       500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   575 }, -- Grain Seeds
-            { 2600,   612 }, -- Kazham Peppers
-            { 4200,   698 }, -- Ash Log
-            { 3100,   816 }, -- Silk Thread
-            { 2750,   923 }, -- Dryad Root
-            {  320,   932 }, -- Carbon Fiber
-            {  510,  1225 }, -- Gold Nugget
-            {  120,  1228 }, -- Dst. Nugget
-            { 4500,  4113 }, -- Potion +1
-            { 2300,  4114 }, -- Potion +2
-            { 1450,  4115 }, -- Potion +3
-            { 4100,  4128 }, -- Ether
-            { 2100,  4129 }, -- Ether +1
-            { 1420,  4130 }, -- Ether +2
-            {  640,  4145 }, -- Elixir
-            {  560, 12450 }, -- Padded Cap
-            {  790, 12837 }, -- Carapace Subligar
-            {  810, 13711 }, -- Carapace Mask
-            {  680, 13713 }, -- Carapace Mittens
-            {  725, 13715 }, -- Cpc. Leggings
-            {  120, 16412 }, -- Mythril Claws
-            {   95, 16558 }, -- Falchion
-            {  100, 16590 }, -- Greatsword
-            {  675, 16796 }, -- Mythril Zaghnal
-            {  450, 17062 }, -- Bone Rod
-            {  840, 17610 }, -- Bone Knife
-            {   80, 18207 }, -- Kheten
+            { xi.item.MANTICORE_HIDE,               1500 },
+            { xi.item.SCORPION_CLAW,                4000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            3000 },
+            { xi.item.BLACK_CHOCOBO_FEATHER,        2500 },
+            { xi.item.BAG_OF_GRAIN_SEEDS,           2000 },
+            { xi.item.BUNCH_OF_KAZHAM_PEPPERS,      2000 },
+            { xi.item.ASH_LOG,                      1500 },
+            { xi.item.SPOOL_OF_SILK_THREAD,         2500 },
+            { xi.item.DRYAD_ROOT,                   3500 },
+            { xi.item.LOOP_OF_CARBON_FIBER,         2500 },
+            { xi.item.GOLD_NUGGET,                  4000 },
+            { xi.item.DARKSTEEL_NUGGET,             4500 },
+            { xi.item.POTION_P1,                    2500 },
+            { xi.item.POTION_P2,                    1500 },
+            { xi.item.POTION_P3,                    1000 },
+            { xi.item.ETHER,                        2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.ETHER_P2,                      700 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.STICK_OF_VANILLA,             1500 },
+            { xi.item.MYTHRIL_BEASTCOIN,            2000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,       2000 },
+            { xi.item.WOOL_CAP,                      100 },
+            { xi.item.WOOL_BRACERS,                  100 },
+            { xi.item.WOOL_HOSE,                     100 },
+            { xi.item.WOOL_SOCKS,                    100 },
+            { xi.item.RAPTOR_HELM,                   100 },
+            { xi.item.RAPTOR_GLOVES,                 100 },
+            { xi.item.RAPTOR_TROUSERS,               100 },
+            { xi.item.RAPTOR_LEDELSENS,              100 },
+            { xi.item.CARAPACE_SUBLIGAR,             100 },
+            { xi.item.CARAPACE_MASK,                 100 },
+            { xi.item.CARAPACE_MITTENS,              100 },
+            { xi.item.CARAPACE_LEGGINGS,             100 },
+            { xi.item.MYTHRIL_CLAWS,                 100 },
+            { xi.item.FALCHION,                      100 },
+            { xi.item.GREATSWORD,                    100 },
+            { xi.item.MYTHRIL_ZAGHNAL,               100 },
+            { xi.item.BONE_ROD,                      100 },
+            { xi.item.BONE_KNIFE,                    100 },
+            { xi.item.KHETEN,                        100 },
+            { xi.item.NEGOROSHIKI,                   100 },
         }
     },
     [xi.zone.QUFIM_ISLAND] =
     {
-        regionalItems = { 18762 }, -- Custodes
+        regionalItems = { xi.item.CUSTODES },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4117 }, -- Hi-Potion +1
-            {  700, 4118 }, -- Hi-Potion +2
-            {  230, 4119 }, -- Hi-Potion +3
-            { 1020, 4133 }, -- Hi-Ether +1
-            {  800, 4134 }, -- Hi-Ether +2
-            {  240, 4135 }, -- Hi-Ether +3
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   573 }, -- Vegetable Seeds
-            {  475,   636 }, -- Chamomile
-            { 2780,   643 }, -- Iron Ore
-            { 1940,   644 }, -- Mythril Ore
-            { 2700,   691 }, -- Maple Log
-            { 1060,   694 }, -- Chestnut Log
-            { 3500,   749 }, -- Mythril Beastcoin
-            { 1900,   820 }, -- Wool Thread
-            { 1150,   859 }, -- Ram Skin
-            { 1090,   895 }, -- Ram Horn
-            { 4600,   928 }, -- Bomb Ash
-            { 2650,   943 }, -- Poison Dust
-            { 3300,  1212 }, -- Handful of Mythril Bolt Heads x33
-            { 4900,  4113 }, -- Potion +1
-            { 3100,  4114 }, -- Potion +2
-            {  670,  4115 }, -- Potion +3
-            { 4800,  4129 }, -- Ether +1
-            { 3000,  4130 }, -- Ether +2
-            {  900,  4145 }, -- Elixer
-            {  120, 12300 }, -- Targe
-            {  320, 12433 }, -- Brass Mask
-            {  660, 12442 }, -- Studded Bandana
-            {  680, 12465 }, -- Cotton Headgear
-            {  520, 12474 }, -- Wool Hat
-            {  200, 12570 }, -- Studded Vest
-            {  450, 12689 }, -- Brass Finger Gauntlets
-            {  460, 12721 }, -- Cotton Gloves
-            {  390, 12817 }, -- Brass Cuisses
-            {  550, 12826 }, -- Studded Trousers
-            {  420, 12849 }, -- Cotton Brais
-            {  690, 12945 }, -- Brass Greaves
-            {  770, 12954 }, -- Studded Boots
-            {  510, 12977 }, -- Cotton Gaiters
-            {  625, 12986 }, -- Chestnut Sabots
-            {  310, 13085 }, -- Hemp Gorget
-            {  305, 13205 }, -- Silver Obi
-            {  430, 13328 }, -- Mythril Earring
-            {  235, 13446 }, -- Mythril Ring
-            {  525, 16467 }, -- Mythril Knife
-            {  505, 17097 }, -- Elm Pole
-            {  350, 17284 }, -- Chakram
+            { xi.item.SHALL_SHELL,                   2000 },
+            { xi.item.SLICE_OF_LAND_CRAB_MEAT,       3500 },
+            { xi.item.YELLOW_GLOBE,                  4000 },
+            { xi.item.BAG_OF_VEGETABLE_SEEDS,        2500 },
+            { xi.item.CHAMOMILE,                     2500 },
+            { xi.item.CHUNK_OF_IRON_ORE,             3000 },
+            { xi.item.CHUNK_OF_MYTHRIL_ORE,          2000 },
+            { xi.item.MAPLE_LOG,                     5000 },
+            { xi.item.CHESTNUT_LOG,                  1000 },
+            { xi.item.MYTHRIL_BEASTCOIN,             3000 },
+            { xi.item.SPOOL_OF_WOOL_THREAD,           500 },
+            { xi.item.RAM_SKIN,                      4000 },
+            { xi.item.RAM_HORN,                      2500 },
+            { xi.item.PINCH_OF_BOMB_ASH,             4000 },
+            { xi.item.PINCH_OF_POISON_DUST,          1000 },
+            { xi.item.HANDFUL_OF_MYTHRIL_BOLT_HEADS, 3000 },
+            { xi.item.POTION_P1,                     1500 },
+            { xi.item.POTION_P2,                     1000 },
+            { xi.item.ETHER_P1,                      1200 },
+            { xi.item.ETHER_P2,                       500 },
+            { xi.item.TARGE,                          100 },
+            { xi.item.BRASS_MASK,                     100 },
+            { xi.item.STUDDED_BANDANA,                100 },
+            { xi.item.COTTON_HEADGEAR,                100 },
+            { xi.item.WOOL_HAT,                       100 },
+            { xi.item.BRASS_FINGER_GAUNTLETS,         100 },
+            { xi.item.STUDDED_GLOVES,                 100 },
+            { xi.item.COTTON_GLOVES,                  100 },
+            { xi.item.WOOL_CUFFS,                     100 },
+            { xi.item.BRASS_CUISSES,                  100 },
+            { xi.item.STUDDED_TROUSERS,               100 },
+            { xi.item.COTTON_BRAIS,                   100 },
+            { xi.item.BRASS_GREAVES,                  100 },
+            { xi.item.STUDDED_BOOTS,                  100 },
+            { xi.item.COTTON_GAITERS,                 100 },
+            { xi.item.CHESTNUT_SABOTS,                100 },
+            { xi.item.HEMP_GORGET,                    100 },
+            { xi.item.SILVER_OBI,                     100 },
+            { xi.item.MYTHRIL_EARRING,                100 },
+            { xi.item.MYTHRIL_RING,                   100 },
+            { xi.item.MYTHRIL_KNIFE,                  100 },
+            { xi.item.ELM_POLE,                       100 },
+            { xi.item.CHAKRAM,                        100 },
         }
     },
     [xi.zone.BEHEMOTHS_DOMINION] =
     {
-        regionalItems = { 11402 }, -- Gothic Sabatons
+        regionalItems = { xi.item.GOTHIC_SABATONS },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1100, 4118 }, -- Hi-Potion +2
-            { 1000, 4119 }, -- Hi-Potion +3
-            {  800, 4120 }, -- X-Potion
-            {  600, 4121 }, -- X-Potion +1
-            { 1040, 4135 }, -- Hi-Ether +3
-            {  790, 4136 }, -- Super Ether
-            {  590, 4137 }, -- Super Ether +1
-            {  420, 4144 }, -- Hi-Elixir
-            {  655, 4145 }, -- Elixir
-            {   60, 4149 }, -- Panacea
-            {  460, 4155 }, -- Remedy
-            {  790, 4202 }, -- Daedalus Wing
-            {  490, 4206 }, -- Catholicon
-            {  320, 4210 }, -- Lethe Water
-            {  225, 4255 }, -- Mana Powder
-            {  360, 4302 }, -- Pamama au Lait
-            {  540, 4424 }, -- Melon Juice
-            {  210, 5322 }, -- Healing Powder
+            { xi.item.HI_POTION_P2,                 900 },
+            { xi.item.HI_POTION_P3,                 500 },
+            { xi.item.X_POTION,                     300 },
+            { xi.item.HI_ETHER_P2,                  700 },
+            { xi.item.HI_ETHER_P1,                  400 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1000 },
+            { xi.item.REMEDY,                       500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,   575 }, -- Grain Seeds
-            { 2100,   612 }, -- Kazham Peppers
-            { 2300,   644 }, -- Mythril Ore
-            { 3800,   699 }, -- Oak Log
-            { 1700,   819 }, -- Linen Thread
-            {  320,   845 }, -- Black C. Feather
-            { 2750,   914 }, -- Mercury
-            { 2200,  1217 }, -- Slv. Arrowheads x33
-            { 4900,  4114 }, -- Potion +2
-            { 1600,  4115 }, -- Potion +3
-            {  630,  4119 }, -- Hi-Potion +3
-            { 4800,  4129 }, -- Ether +1
-            { 3690,  4130 }, -- Ether +2
-            {  720, 12443 }, -- Cuir Bandana
-            {  610, 12450 }, -- Padded Cap
-            {  530, 12458 }, -- Soil Hachimaki
-            {  715, 12475 }, -- Velvet Hat
-            {  505, 12571 }, -- Cuir Bouilli
-            {  415, 12603 }, -- Velvet Robe
-            {  625, 12699 }, -- Cuir Gloves
-            {  735, 12706 }, -- Iron Mittens
-            {  410, 12731 }, -- Velvet Cuffs
-            {  710, 12827 }, -- Cuir Trousers
-            {  900, 12836 }, -- Iron Subligar
-            {  470, 12859 }, -- Velvet Slops
-            {  865, 12955 }, -- Cuir Highboots
-            {  645, 12962 }, -- Leggings
-            {  230, 12987 }, -- Ebony Sabots
+            { xi.item.DARKSTEEL_NUGGET,             3500 },
+            { xi.item.DOLL_SHARD,                   2000 },
+            { xi.item.COEURL_HIDE,                  2500 },
+            { xi.item.BAG_OF_SEMOLINA,              3000 },
+            { xi.item.LOOP_OF_GLASS_FIBER,          3000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2000 },
+            { xi.item.GIANT_FEMUR,                  3000 },
+            { xi.item.WOLF_HIDE,                    2800 },
+            { xi.item.BAG_OF_GRAIN_SEEDS,           2000 },
+            { xi.item.BUNCH_OF_KAZHAM_PEPPERS,      2000 },
+            { xi.item.CHUNK_OF_MYTHRIL_ORE,         3000 },
+            { xi.item.OAK_LOG,                      3000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        2500 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,       2000 },
+            { xi.item.BLACK_CHOCOBO_FEATHER,        2000 },
+            { xi.item.VIAL_OF_MERCURY,              1500 },
+            { xi.item.HANDFUL_OF_SILVER_ARROWHEADS, 3000 },
+            { xi.item.POTION_P1,                    1500 },
+            { xi.item.POTION_P2,                    1000 },
+            { xi.item.POTION_P3,                     500 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.ETHER_P2,                     1000 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.IRON_VISOR,                    100 },
+            { xi.item.PADDED_CAP,                    100 },
+            { xi.item.CUIR_BANDANA,                  100 },
+            { xi.item.VELVET_HAT,                    100 },
+            { xi.item.IRON_FINGER_GAUNTLETS,         100 },
+            { xi.item.CUIR_GLOVES,                   100 },
+            { xi.item.IRON_MITTENS,                  100 },
+            { xi.item.VELVET_CUFFS,                  100 },
+            { xi.item.IRON_CUISSES,                  100 },
+            { xi.item.CUIR_TROUSERS,                 100 },
+            { xi.item.IRON_SUBLIGAR,                 100 },
+            { xi.item.VELVET_SLOPS,                  100 },
+            { xi.item.IRON_GREAVES,                  100 },
+            { xi.item.LEGGINGS,                      100 },
+            { xi.item.CUIR_HIGHBOOTS,                100 },
+            { xi.item.EBONY_SABOTS,                  100 },
+            { xi.item.HOLY_SWORD,                    100 },
+            { xi.item.MYTHRIL_CLAYMORE,              100 },
+            { xi.item.OAK_STAFF,                     100 },
         }
     },
     [xi.zone.VALLEY_OF_SORROWS] =
     {
-        regionalItems = { 18867 }, -- Daedalus Hammer
+        regionalItems = { xi.item.DAEDALUS_HAMMER },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1100, 4118 }, -- Hi-Potion +2
-            { 1000, 4119 }, -- Hi-Potion +3
-            {  800, 4120 }, -- X-Potion
-            {  600, 4121 }, -- X-Potion +1
-            { 1040, 4135 }, -- Hi-Ether +3
-            {  790, 4136 }, -- Super Ether
-            {  590, 4137 }, -- Super Ether +1
-            {  420, 4144 }, -- Hi-Elixir
-            {  655, 4145 }, -- Elixir
-            {   60, 4149 }, -- Panacea
-            {  460, 4155 }, -- Remedy
-            {  790, 4202 }, -- Daedalus Wing
-            {  490, 4206 }, -- Catholicon
-            {  320, 4210 }, -- Lethe Water
-            {  225, 4255 }, -- Mana Powder
-            {  360, 4302 }, -- Pamama au Lait
-            {  540, 4424 }, -- Melon Juice
-            {  210, 5322 }, -- Healing Powder
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2320,   645 }, -- Darksteel Ore
-            { 1350,   702 }, -- Ebony Log
-            { 1290,   737 }, -- Gold Ore
-            {  525,   823 }, -- Gold Thread
-            {  190,   844 }, -- Phoenix Feather
-            {  780,  1443 }, -- Dried Mugwort
-            { 5000,  4116 }, -- Hi-Potion
-            { 4500,  4117 }, -- Hi-Potion +1
-            { 2500,  4120 }, -- X-Potion
-            {  500,  4121 }, -- X-Potion +1
-            { 4200,  4133 }, -- Hi-Ether +1
-            { 2100,  4141 }, -- Pro-Ether +1
-            { 1230,  5164 }, -- Ground Wasabi
-            { 1150, 12427 }, -- Bascinet
-            {  575, 12683 }, -- Darksteel Mufflers
-            {  680, 12740 }, -- Silk Mitts
-            {  740, 12811 }, -- Dst. Breeches
-            {  625, 12829 }, -- Beak Trousers
-            {  490, 12868 }, -- Silk Slacks
-            {  710, 12939 }, -- Dst. Sollerets
-            {  460, 12996 }, -- Silk Pumps
-            {  615, 13698 }, -- Beak Helm
-            {  540, 13700 }, -- Beak Gloves
-            {  470, 13702 }, -- Beak Ledelsens
+            { xi.item.RAPTOR_SKIN,                     3000 },
+            { xi.item.MANTICORE_HIDE,                  2000 },
+            { xi.item.FLAX_FLOWER,                     2900 },
+            { xi.item.ADAMAN_NUGGET,                   1000 },
+            { xi.item.BLOCK_OF_STONE_CHEESE,           3000 },
+            { xi.item.JAR_OF_GROUND_WASABI,            2000 },
+            { xi.item.HANDFUL_OF_IRON_SAND,            3000 },
+            { xi.item.CHUNK_OF_DARKSTEEL_ORE,           750 },
+            { xi.item.ROSEWOOD_LOG,                    2000 },
+            { xi.item.EBONY_LOG,                       1000 },
+            { xi.item.CHUNK_OF_GOLD_ORE,                750 },
+            { xi.item.GOLD_BEASTCOIN,                  1000 },
+            { xi.item.GIANT_BIRD_PLUME,                2500 },
+            { xi.item.SPOOL_OF_GOLD_THREAD,            1000 },
+            { xi.item.TIGER_HIDE,                      2000 },
+            { xi.item.COEURL_HIDE,                     1000 },
+            { xi.item.HIGH_QUALITY_CRAB_SHELL,         1500 },
+            { xi.item.TURTLE_SHELL,                    2000 },
+            { xi.item.COEURL_WHISKER,                  2000 },
+            { xi.item.FOREST_CARP,                     2000 },
+            { xi.item.REISHI_MUSHROOM,                 1000 },
+            { xi.item.PHOENIX_FEATHER,                   50 },
+            { xi.item.PINCH_OF_DRIED_MUGWORT,          1500 },
+            { xi.item.HANDFUL_OF_DARKSTEEL_BOLT_HEADS, 2500 },
+            { xi.item.HI_POTION,                       1000 },
+            { xi.item.HI_POTION_P1,                     500 },
+            { xi.item.X_POTION,                        1000 },
+            { xi.item.X_POTION_P1,                      500 },
+            { xi.item.HI_ETHER_P1,                     1500 },
+            { xi.item.PRO_ETHER,                       1000 },
+            { xi.item.JUG_OF_CLEAR_BLOOD_BROTH,        2500 },
+            { xi.item.BASCINET,                          50 },
+            { xi.item.DARKSTEEL_MUFFLERS,                50 },
+            { xi.item.SILK_MITTS,                        50 },
+            { xi.item.DARKSTEEL_BREECHES,                50 },
+            { xi.item.BEAK_TROUSERS,                     50 },
+            { xi.item.SILK_SLACKS,                       50 },
+            { xi.item.DARKSTEEL_SOLLERETS,               50 },
+            { xi.item.SILK_PUMPS,                        50 },
+            { xi.item.BEAK_HELM,                         50 },
+            { xi.item.BEAK_GLOVES,                       50 },
+            { xi.item.BEAK_LEDELSENS,                    50 },
         }
     },
     [xi.zone.RUAUN_GARDENS] =
     {
-        regionalItems = { 16284 }, -- Caract Choker
+        regionalItems = { xi.item.CARACT_CHOKER },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1100, 4118 }, -- Hi-Potion +2
-            { 1000, 4119 }, -- Hi-Potion +3
-            {  800, 4120 }, -- X-Potion
-            {  600, 4121 }, -- X-Potion +1
-            { 1040, 4135 }, -- Hi-Ether +3
-            {  790, 4136 }, -- Super Ether
-            {  590, 4137 }, -- Super Ether +1
-            {  420, 4144 }, -- Hi-Elixir
-            {  655, 4145 }, -- Elixir
-            {   60, 4149 }, -- Panacea
-            {  460, 4155 }, -- Remedy
-            {  790, 4202 }, -- Daedalus Wing
-            {  490, 4206 }, -- Catholicon
-            {  320, 4210 }, -- Lethe Water
-            {  225, 4255 }, -- Mana Powder
-            {  360, 4302 }, -- Pamama au Lait
-            {  540, 4424 }, -- Melon Juice
-            {  210, 5322 }, -- Healing Powder
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2700,   646 }, -- Adaman Ore
-            {  310,   739 }, -- Orichalcum Ore
-            {  580,   821 }, -- Rainbow Thread
-            { 4700,  1222 }, -- Yagudo Fltchg.
-            { 3100,  1962 }, -- Plt. Arrowheads
-            { 1050,  2459 }, -- Minium
-            { 2100,  2532 }, -- Teak Log
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 2500,  4123 }, -- X-Potion +3
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 2200,  4143 }, -- Pro-Ether +3
-            { 2400,  5662 }, -- Dragon Fruit
-            { 1250, 12309 }, -- Ritter Shield
-            {  645, 12324 }, -- Tower Shield
-            {  400, 13087 }, -- Jeweled Collar
-            {  655, 13185 }, -- Muscle Belt
-            {  320, 13212 }, -- Tarutaru Sash
-            {  680, 13587 }, -- Rainbow Cape
-            {  780, 13595 }, -- Coeurl Mantle
-            {  220, 15890 }, -- Marid Belt
-            {  695, 16128 }, -- Wivre Hairpin
-            {  725, 16265 }, -- Wivre Gorget
+            { xi.item.FLAX_FLOWER,                    3200 },
+            { xi.item.RED_ROCK,                        275 },
+            { xi.item.BLUE_ROCK,                       275 },
+            { xi.item.YELLOW_ROCK,                     275 },
+            { xi.item.GREEN_ROCK,                      275 },
+            { xi.item.TRANSLUCENT_ROCK,                275 },
+            { xi.item.PURPLE_ROCK,                     275 },
+            { xi.item.BLACK_ROCK,                      275 },
+            { xi.item.WHITE_ROCK,                      275 },
+            { xi.item.FIRE_CLUSTER,                    275 },
+            { xi.item.ICE_CLUSTER,                     275 },
+            { xi.item.WIND_CLUSTER,                    275 },
+            { xi.item.EARTH_CLUSTER,                   275 },
+            { xi.item.LIGHTNING_CLUSTER,               275 },
+            { xi.item.WATER_CLUSTER,                   275 },
+            { xi.item.LIGHT_CLUSTER,                   275 },
+            { xi.item.DARK_CLUSTER,                    275 },
+            { xi.item.DOLL_SHARD,                     1000 },
+            { xi.item.BUNCH_OF_BUBURIMU_GRAPES,       3000 },
+            { xi.item.BAG_OF_SEMOLINA,                2000 },
+            { xi.item.PLATINUM_NUGGET,                 750 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,         250 },
+            { xi.item.ELM_LOG,                        2000 },
+            { xi.item.EBONY_LOG,                      1000 },
+            { xi.item.PLATINUM_BEASTCOIN,              500 },
+            { xi.item.BAG_OF_YAGUDO_FLETCHINGS,       1500 },
+            { xi.item.GIANT_BIRD_PLUME,               2000 },
+            { xi.item.HANDFUL_OF_IRON_SAND,           2500 },
+            { xi.item.RAPTOR_SKIN,                    2500 },
+            { xi.item.WYVERN_SKIN,                    1000 },
+            { xi.item.HANDFUL_OF_PLATINUM_ARROWHEADS, 1500 },
+            { xi.item.SHALL_SHELL,                    2000 },
+            { xi.item.GOLD_NUGGET,                    2000 },
+            { xi.item.BLACK_PEARL,                    1000 },
+            { xi.item.FOREST_CARP,                    2800 },
+            { xi.item.GRIMMONITE,                     2000 },
+            { xi.item.PINCH_OF_MINIUM,                  50 },
+            { xi.item.PINCH_OF_PARALYSIS_DUST,        1500 },
+            { xi.item.HI_POTION,                      1500 },
+            { xi.item.HI_POTION_P1,                    500 },
+            { xi.item.X_POTION,                       1000 },
+            { xi.item.X_POTION_P1,                     500 },
+            { xi.item.HI_ETHER_P1,                    1500 },
+            { xi.item.PRO_ETHER,                      1000 },
+            { xi.item.JUG_OF_FISH_OIL_BROTH,          2500 },
+            { xi.item.ANGON,                          1000 },
+            { xi.item.VIAL_OF_DRAGON_BLOOD,            500 },
+            { xi.item.PHILOSOPHERS_STONE,               50 },
         }
     },
     [xi.zone.THE_BOYAHDA_TREE] =
     {
-        regionalItems = { 11038, 10948 }, -- Dragonkin Earring | Carver's Torque
+        regionalItems = { xi.item.DRAGONKIN_EARRING, xi.item.CARVERS_TORQUE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            {   10, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  390,   657 }, -- Tama-Hagane
-            {  745,   876 }, -- Manta Skin
-            {  250,   887 }, -- Coral Fragment
-            { 3700,   919 }, -- Boyahda Moss
-            { 4500,  1163 }, -- Manticore Hair
-            { 1025,  1446 }, -- Lacquer Tree Log
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4200,  4120 }, -- X-Potion
-            { 3500,  4121 }, -- X-Potion +1
-            { 3000,  4122 }, -- X-Potion +2
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 2700,  4143 }, -- Pro-Ether +3
-            {  600,  4155 }, -- Remedy
-            { 1200,  4173 }, -- Hi-Reraiser
-            {  900,  4174 }, -- Vile Elixir
-            { 1200,  4291 }, -- Sandfish
-            { 1700,  4447 }, -- Scream Fungus
-            {  650,  5866 }, -- Toolbag (Moku)
-            { 1050,  5871 }, -- Ruszor Quiver
-            { 2050, 17881 }, -- Deepbed Soil
-            { 1020, 17884 }, -- Sun Water
-            {  500, 17898 }, -- C. Grass. Broth
-            {  400, 17899 }, -- Svg. Mole Broth
+            { xi.item.DERFLAND_PEAR,                3500 },
+            { xi.item.SPIDER_WEB,                   2000 },
+            { xi.item.PIECE_OF_CRAWLER_COCOON,      3000 },
+            { xi.item.BAG_OF_TREE_SAPLINGS,          500 },
+            { xi.item.BOX_OF_TARUTARU_RICE,         3000 },
+            { xi.item.PERSIKOS,                     2000 },
+            { xi.item.DARKSTEEL_NUGGET,             3000 },
+            { xi.item.LUMP_OF_TAMA_HAGANE,          1000 },
+            { xi.item.CHESTNUT_LOG,                 2000 },
+            { xi.item.LACQUER_TREE_LOG,             1000 },
+            { xi.item.GOLD_NUGGET,                  3000 },
+            { xi.item.GOLD_BEASTCOIN,               1000 },
+            { xi.item.MANTA_SKIN,                   2500 },
+            { xi.item.CORAL_FRAGMENT,               1000 },
+            { xi.item.CLUMP_OF_BOYAHDA_MOSS,        3000 },
+            { xi.item.LOCK_OF_MANTICORE_HAIR,       2000 },
+            { xi.item.CATOBLEPAS_HIDE,              1000 },
+            { xi.item.TAURUS_HORN,                  1500 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        1500 },
+            { xi.item.TOOLBAG_SHIHEI,                500 },
+            { xi.item.SANDFISH,                      500 },
+            { xi.item.SCREAM_FUNGUS,                2000 },
+            { xi.item.SLICE_OF_DRAGON_MEAT,           50 },
+            { xi.item.DEMON_QUIVER,                  500 },
+            { xi.item.HI_POTION_P1,                 1000 },
+            { xi.item.X_POTION,                     1000 },
+            { xi.item.X_POTION_P1,                   500 },
+            { xi.item.HI_ETHER_P1,                  1500 },
+            { xi.item.PRO_ETHER,                    1000 },
+            { xi.item.REMEDY,                        400 },
+            { xi.item.JUG_OF_SEEDBED_SOIL,          3000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,        500 },
+            { xi.item.DRAGON_HEART,                   50 },
         }
     },
     [xi.zone.MIDDLE_DELKFUTTS_TOWER] =
     {
-        regionalItems = { 651 }, -- Iron Ingot
+        regionalItems = { xi.item.REBEL_EARRING },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4114 }, -- Potion +2
-            {  740, 4115 }, -- Potion +3
-            {  700, 4116 }, -- Hi-Potion
-            {  800, 4129 }, -- Ether +1
-            {  430, 4130 }, -- Ether +2
-            {  200, 4131 }, -- Ether +3
-            {   50, 4136 }, -- Super Ether
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2750,   574 }, -- Fruit Seeds
-            { 3600,   633 }, -- Olive Oil
-            { 3250,   651 }, -- Iron Ingot
-            { 1200,   653 }, -- Mythril Ingot
-            { 1420,   691 }, -- Maple Log
-            {  760,   822 }, -- Silver Thread
-            { 1350,   943 }, -- Poison Dust
-            { 2700,  1212 }, -- Mtl. Bolt Heads x33
-            { 4800,  4114 }, -- Potion +2
-            { 3200,  4115 }, -- Potion +3
-            { 5000,  4129 }, -- Ether +1
-            { 3800,  4130 }, -- Ether +2
-            {  460, 12458 }, -- Soil Hachimaki
-            {  740, 12698 }, -- Studded Gloves
-            {  530, 12714 }, -- Soil Tekko
-            {  360, 12730 }, -- Wool Cuffs
-            {  290, 12826 }, -- Studded Trousers
-            { 1200, 12842 }, -- Soil Sitabaki
-            {  400, 12858 }, -- Wool Slops
-            {  200, 12954 }, -- Studded Boots
-            {  190, 12970 }, -- Soil Kyahan
-            {  390, 12986 }, -- Chestnut Sabots
+            { xi.item.LOOP_OF_CARBON_FIBER,          2500 },
+            { xi.item.VIAL_OF_BEASTMAN_BLOOD,        3500 },
+            { xi.item.MAGIC_POT_SHARD,               3500 },
+            { xi.item.SPOOL_OF_WOOL_THREAD,          2500 },
+            { xi.item.BAG_OF_FRUIT_SEEDS,            2500 },
+            { xi.item.FLASK_OF_OLIVE_OIL,            2500 },
+            { xi.item.IRON_INGOT,                     750 },
+            { xi.item.MYTHRIL_INGOT,                  750 },
+            { xi.item.MAPLE_LOG,                     3000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,        2000 },
+            { xi.item.PINCH_OF_POISON_DUST,          2900 },
+            { xi.item.HANDFUL_OF_MYTHRIL_BOLT_HEADS, 3500 },
+            { xi.item.POTION_P2,                     2000 },
+            { xi.item.POTION_P3,                     1500 },
+            { xi.item.ETHER_P1,                      1500 },
+            { xi.item.ETHER_P2,                       800 },
+            { xi.item.MYTHRIL_BEASTCOIN,             3000 },
+            { xi.item.LOOP_OF_GLASS_FIBER,           3000 },
+            { xi.item.BEETLE_JAW,                    3000 },
+            { xi.item.STICK_OF_VANILLA,              3000 },
+            { xi.item.OAK_SHIELD,                     100 },
+            { xi.item.MYTHRIL_KNIFE,                  100 },
+            { xi.item.GLADIUS,                        100 },
+            { xi.item.CLAWS,                          100 },
+            { xi.item.MAUL,                           100 },
+            { xi.item.CHAKRAM,                        100 },
+            { xi.item.SILVER_BELT,                    100 },
+            { xi.item.BRASS_MASK,                     100 },
+            { xi.item.BRASS_FINGER_GAUNTLETS,         100 },
+            { xi.item.BRASS_CUISSES,                  100 },
+            { xi.item.BRASS_GREAVES,                  100 },
+            { xi.item.STUDDED_BANDANA,                100 },
+            { xi.item.SOIL_HACHIMAKI,                 100 },
+            { xi.item.WOOL_HAT,                       100 },
+            { xi.item.STUDDED_GLOVES,                 100 },
+            { xi.item.SOIL_TEKKO,                     100 },
+            { xi.item.WOOL_CUFFS,                     100 },
+            { xi.item.STUDDED_TROUSERS,               100 },
+            { xi.item.SOIL_SITABAKI,                  100 },
+            { xi.item.WOOL_SLOPS,                     100 },
+            { xi.item.STUDDED_BOOTS,                  100 },
+            { xi.item.SOIL_KYAHAN,                    100 },
+            { xi.item.CHESTNUT_SABOTS,                100 },
         }
     },
     [xi.zone.UPPER_DELKFUTTS_TOWER] =
     {
-        regionalItems = { 19779 }, -- Potestas Bomblet
+        regionalItems = { xi.item.POTESTAS_BOMBLET },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4114 }, -- Potion +2
-            {  740, 4115 }, -- Potion +3
-            {  700, 4116 }, -- Hi-Potion
-            {  800, 4129 }, -- Ether +1
-            {  430, 4130 }, -- Ether +2
-            {  200, 4131 }, -- Ether +3
-            {   50, 4136 }, -- Super Ether
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1000 },
+            { xi.item.REMEDY,                       500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  700,   702 }, -- Ebony Log
-            {  100,   844 }, -- Phoenix Feather
-            { 2000,  4117 }, -- Hi-Potion +1
-            { 1900,  4133 }, -- Hi-Ether +1
-            {  600,  4141 }, -- Pro-Ether +1
-            {  440, 12996 }, -- Silk Pumps
+            { xi.item.PINCH_OF_BOMB_ASH,               3000 },
+            { xi.item.CHUNK_OF_SILVER_ORE,             2000 },
+            { xi.item.GIGAS_NECKLACE,                  2900 },
+            { xi.item.AHRIMAN_WING,                    1000 },
+            { xi.item.BLOCK_OF_STONE_CHEESE,           3000 },
+            { xi.item.JAR_OF_GROUND_WASABI,            2000 },
+            { xi.item.HANDFUL_OF_IRON_SAND,            3000 },
+            { xi.item.CHUNK_OF_DARKSTEEL_ORE,           750 },
+            { xi.item.ROSEWOOD_LOG,                    2000 },
+            { xi.item.EBONY_LOG,                       1000 },
+            { xi.item.CHUNK_OF_GOLD_ORE,                750 },
+            { xi.item.GOLD_BEASTCOIN,                  1000 },
+            { xi.item.GIANT_BIRD_PLUME,                2500 },
+            { xi.item.SPOOL_OF_GOLD_THREAD,            1000 },
+            { xi.item.TIGER_HIDE,                      2000 },
+            { xi.item.COEURL_HIDE,                     1000 },
+            { xi.item.HIGH_QUALITY_CRAB_SHELL,         1500 },
+            { xi.item.TURTLE_SHELL,                    2000 },
+            { xi.item.COEURL_WHISKER,                  2000 },
+            { xi.item.FOREST_CARP,                     2000 },
+            { xi.item.REISHI_MUSHROOM,                 1000 },
+            { xi.item.PHOENIX_FEATHER,                   50 },
+            { xi.item.PINCH_OF_DRIED_MUGWORT,          1500 },
+            { xi.item.HANDFUL_OF_DARKSTEEL_BOLT_HEADS, 2500 },
+            { xi.item.HI_POTION,                       1000 },
+            { xi.item.HI_POTION_P1,                     500 },
+            { xi.item.X_POTION,                        1000 },
+            { xi.item.X_POTION_P1,                      500 },
+            { xi.item.HI_ETHER_P1,                     1500 },
+            { xi.item.PRO_ETHER,                       1000 },
+            { xi.item.JUG_OF_CLEAR_BLOOD_BROTH,        2500 },
+            { xi.item.BASCINET,                          50 },
+            { xi.item.DARKSTEEL_MUFFLERS,                50 },
+            { xi.item.SILK_MITTS,                        50 },
+            { xi.item.DARKSTEEL_BREECHES,                50 },
+            { xi.item.BEAK_TROUSERS,                     50 },
+            { xi.item.SILK_SLACKS,                       50 },
+            { xi.item.DARKSTEEL_SOLLERETS,               50 },
+            { xi.item.SILK_PUMPS,                        50 },
+            { xi.item.BEAK_HELM,                         50 },
+            { xi.item.BEAK_GLOVES,                       50 },
+            { xi.item.BEAK_LEDELSENS,                    50 }
         }
     },
     [xi.zone.TEMPLE_OF_UGGALEPIH] =
     {
-        regionalItems = { 10953 }, -- Boneworker's Torque
+        regionalItems = { xi.item.BONEWORKERS_TORQUE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4117 }, -- Hi-Potion +1
-            {  700, 4118 }, -- Hi-Potion +2
-            {  230, 4119 }, -- Hi-Potion +3
-            { 1020, 4133 }, -- Hi-Ether +1
-            {  800, 4134 }, -- Hi-Ether +2
-            {  240, 4135 }, -- Hi-Ether +3
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  660, 4424 }, -- Melon Juice
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1400,   645 }, -- Darksteel Ore
-            { 2580,   702 }, -- Ebony Log
-            {  700,   737 }, -- Gold Ore
-            {  690,   823 }, -- Gold Thread
-            {  450,   844 }, -- Phoenix Feather
-            { 3500,  1122 }, -- Wyvern Skin
-            { 2700,  1213 }, -- Dst. Bolt Heads x33
-            { 5000,  4117 }, -- Hi-Potion +1
-            { 4200,  4121 }, -- X-Potion +1
-            { 4900,  4133 }, -- Hi-Ether +1
-            { 4000,  4141 }, -- Pro-Ether +1
-            {  900,  4449 }, -- Reishi Mushroom
-            { 1200,  5164 }, -- Ground Wasabi
-            {  560, 12427 }, -- Bascinet
-            {  350, 12811 }, -- Dst. Breeches
-            {  540, 12939 }, -- Dst. Sollerets
-            {  610, 12996 }, -- Silk Pumps
+            { xi.item.PIECE_OF_CRAWLER_COCOON,         3000 },
+            { xi.item.MAGIC_POT_SHARD,                 2000 },
+            { xi.item.TONBERRY_LANTERN,                2900 },
+            { xi.item.CLUMP_OF_RED_MOKO_GRASS,         1000 },
+            { xi.item.BLOCK_OF_STONE_CHEESE,           3000 },
+            { xi.item.JAR_OF_GROUND_WASABI,            2000 },
+            { xi.item.HANDFUL_OF_IRON_SAND,            3000 },
+            { xi.item.CHUNK_OF_DARKSTEEL_ORE,           750 },
+            { xi.item.ROSEWOOD_LOG,                    2000 },
+            { xi.item.EBONY_LOG,                       1000 },
+            { xi.item.CHUNK_OF_GOLD_ORE,                750 },
+            { xi.item.GOLD_BEASTCOIN,                  1000 },
+            { xi.item.GIANT_BIRD_PLUME,                2500 },
+            { xi.item.SPOOL_OF_GOLD_THREAD,            1000 },
+            { xi.item.TIGER_HIDE,                      2000 },
+            { xi.item.COEURL_HIDE,                     1000 },
+            { xi.item.HIGH_QUALITY_CRAB_SHELL,         1500 },
+            { xi.item.TURTLE_SHELL,                    2000 },
+            { xi.item.COEURL_WHISKER,                  2000 },
+            { xi.item.FOREST_CARP,                     2000 },
+            { xi.item.REISHI_MUSHROOM,                 1000 },
+            { xi.item.PHOENIX_FEATHER,                   50 },
+            { xi.item.PINCH_OF_DRIED_MUGWORT,          1500 },
+            { xi.item.HANDFUL_OF_DARKSTEEL_BOLT_HEADS, 2500 },
+            { xi.item.HI_POTION,                       1000 },
+            { xi.item.HI_POTION_P1,                     500 },
+            { xi.item.X_POTION,                        1000 },
+            { xi.item.X_POTION_P1,                      500 },
+            { xi.item.HI_ETHER_P1,                     1500 },
+            { xi.item.PRO_ETHER,                       1000 },
+            { xi.item.JUG_OF_CLEAR_BLOOD_BROTH,        2500 },
+            { xi.item.BASCINET,                          50 },
+            { xi.item.DARKSTEEL_MUFFLERS,                50 },
+            { xi.item.SILK_MITTS,                        50 },
+            { xi.item.DARKSTEEL_BREECHES,                50 },
+            { xi.item.BEAK_TROUSERS,                     50 },
+            { xi.item.SILK_SLACKS,                       50 },
+            { xi.item.DARKSTEEL_SOLLERETS,               50 },
+            { xi.item.SILK_PUMPS,                        50 },
+            { xi.item.BEAK_HELM,                         50 },
+            { xi.item.BEAK_GLOVES,                       50 },
+            { xi.item.BEAK_LEDELSENS,                    50 }
         }
     },
     [xi.zone.DEN_OF_RANCOR] =
     {
-        regionalItems = { 10950, 10991 }, -- Goldsm. Torque | Rancorous Mantle
+        regionalItems = { xi.item.GOLDSMITHS_TORQUE, xi.item.RANCOROUS_MANTLE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1100, 4118 }, -- Hi-Potion +2
-            { 1000, 4119 }, -- Hi-Potion +3
-            {  800, 4120 }, -- X-Potion
-            {  600, 4121 }, -- X-Potion +1
-            { 1040, 4135 }, -- Hi-Ether +3
-            {  790, 4136 }, -- Super Ether
-            {  590, 4137 }, -- Super Ether +1
-            {  420, 4144 }, -- Hi-Elixir
-            {  655, 4145 }, -- Elixir
-            {   60, 4149 }, -- Panacea
-            {  460, 4155 }, -- Remedy
-            {  790, 4202 }, -- Daedalus Wing
-            {  490, 4206 }, -- Catholicon
-            {  320, 4210 }, -- Lethe Water
-            {  225, 4255 }, -- Mana Powder
-            {  360, 4302 }, -- Pamama au Lait
-            {  540, 4424 }, -- Melon Juice
-            {  210, 5322 }, -- Healing Powder
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2700,   646 }, -- Adaman Ore
-            {  310,   739 }, -- Orichalcum Ore
-            {  580,   821 }, -- Rainbow Thread
-            { 4250,  1122 }, -- Wyvern Skin
-            { 4700,  1222 }, -- Yagudo Fltchg
-            { 3100,  1962 }, -- Plt. Arrowheads
-            { 1050,  2459 }, -- Minium
-            { 2100,  2532 }, -- Teak Log
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 2500,  4123 }, -- X-Potion +3
-            { 4900,  4133 }, -- Hi-Ether +1
-            { 3600,  4134 }, -- Hi-Ether +2
-            { 2120,  4135 }, -- Hi-Ether +3
-            { 1700,  4143 }, -- Pro-Ether +3
-            { 2400,  5662 }, -- Dragon Fruit
-            { 1250, 12309 }, -- Ritter Shield
-            {  645, 12324 }, -- Tower Shield
-            {  400, 13087 }, -- Jeweled Collar
-            {  655, 13185 }, -- Muscle Belt
-            {  320, 13212 }, -- Tarutaru Sash
-            {  680, 13587 }, -- Rainbow Cape
-            {  780, 13595 }, -- Coeurl Mantle
-            {  220, 15890 }, -- Marid Belt
-            {  695, 16128 }, -- Wivre Hairpin
+            { xi.item.SPOOL_OF_LINEN_THREAD,          3000 },
+            { xi.item.UNDEAD_SKIN,                    2000 },
+            { xi.item.TONBERRY_LANTERN,               2650 },
+            { xi.item.BOTTLE_OF_AVATAR_BLOOD,         1000 },
+            { xi.item.BUNCH_OF_BUBURIMU_GRAPES,       3000 },
+            { xi.item.BAG_OF_SEMOLINA,                2000 },
+            { xi.item.PLATINUM_NUGGET,                1250 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,         250 },
+            { xi.item.ELM_LOG,                        2000 },
+            { xi.item.EBONY_LOG,                      1000 },
+            { xi.item.PLATINUM_BEASTCOIN,              500 },
+            { xi.item.BAG_OF_YAGUDO_FLETCHINGS,       1500 },
+            { xi.item.GIANT_BIRD_PLUME,               2000 },
+            { xi.item.HANDFUL_OF_IRON_SAND,           2000 },
+            { xi.item.RAPTOR_SKIN,                    2500 },
+            { xi.item.WYVERN_SKIN,                    1000 },
+            { xi.item.HANDFUL_OF_PLATINUM_ARROWHEADS, 1500 },
+            { xi.item.SHALL_SHELL,                    2000 },
+            { xi.item.GOLD_NUGGET,                    2000 },
+            { xi.item.BLACK_PEARL,                    1000 },
+            { xi.item.FOREST_CARP,                    2500 },
+            { xi.item.GRIMMONITE,                     2000 },
+            { xi.item.PINCH_OF_MINIUM,                  50 },
+            { xi.item.PINCH_OF_PARALYSIS_DUST,        1500 },
+            { xi.item.HI_POTION,                      1250 },
+            { xi.item.HI_POTION_P1,                    500 },
+            { xi.item.X_POTION,                       1000 },
+            { xi.item.X_POTION_P1,                     500 },
+            { xi.item.HI_ETHER_P1,                    1500 },
+            { xi.item.PRO_ETHER,                      1000 },
+            { xi.item.JUG_OF_FISH_OIL_BROTH,          2500 },
+            { xi.item.ANGON,                          1000 },
+            { xi.item.VIAL_OF_DRAGON_BLOOD,            500 },
+            { xi.item.PHILOSOPHERS_STONE,               50 },
         }
     },
     [xi.zone.RANGUEMONT_PASS] =
     {
-        regionalItems = { 11575 }, -- Grapevine Cape
+        regionalItems = { xi.item.GRAPEVINE_CAPE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  790, 4113 }, -- Potion +1
-            {  425, 4114 }, -- Potion +2
-            { 1040, 4128 }, -- Ether
-            {  760, 4129 }, -- Ether +1
-            {  420, 4130 }, -- Ether +2
-            {  600, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  750, 4151 }, -- Echo Drops
-            {  350, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  240, 4301 }, -- Pear au Lait
-            {  660, 4425 }, -- Tomato Juice
+            { xi.item.POTION,                        900 },
+            { xi.item.POTION_P1,                     500 },
+            { xi.item.POTION_P2,                     300 },
+            { xi.item.ETHER,                         700 },
+            { xi.item.ETHER_P1,                      400 },
+            { xi.item.ETHER_P2,                      300 },
+            { xi.item.ELIXIR,                        400 },
+            { xi.item.ANTIDOTE,                     1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          1000 },
+            { xi.item.REMEDY,                        500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,         600 },
+            { xi.item.POT_OF_SILENT_OIL,             600 },
+            { xi.item.DAEDALUS_WING,                 400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,          400 },
+            { xi.item.FLASK_OF_PEAR_AU_LAIT,        1000 },
+            { xi.item.BOTTLE_OF_TOMATO_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4200,  4120 }, -- X-Potion
-            { 3500,  4121 }, -- X-Potion +1
-            { 3000,  4122 }, -- X-Potion +2
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 2700,  4143 }, -- Pro-Ether +3
-            {  600,  4155 }, -- Remedy
-            {  500, 17898 }, -- C. Grass. Broth
+            { xi.item.TIGER_HIDE,                   1500 },
+            { xi.item.LEATHER_POUCH,                2000 },
+            { xi.item.BRONZE_INGOT,                 2500 },
+            { xi.item.VIAL_OF_SLIME_OIL,            3000 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3500 },
+            { xi.item.CHUNK_OF_TIN_ORE,             3000 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2500 },
+            { xi.item.YEW_LOG,                      2000 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         3000 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         }
     },
     [xi.zone.BOSTAUNIEUX_OUBLIETTE] =
     {
-        regionalItems = { 11920 }, -- Melaco Mittens
+        regionalItems = { xi.item.MELACO_MITTENS },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1270,   737 }, -- Gold Ore
-            { 1550,   739 }, -- Orichalcum Ore
-            {  745,   748 }, -- Gold Beastcoin
-            {  625,   769 }, -- Red Rock
-            {  325,   821 }, -- Rainbow Thread
-            {  425,   844 }, -- Phoenix Feather
-            {  720,  1213 }, -- Dst. Bolt Heads
-            {  830,  2459 }, -- Minium
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 1700,  4144 }, -- Hi-Elixir
-            {  750,  4155 }, -- Remedy
-            { 2100,  4173 }, -- Hi-Reraiser
-            {  630,  5662 }, -- Dragon Fruit
-            { 1050,  5821 }, -- Fsn. Bolt Quiver
-            {   80, 13929 }, -- Errant Hat
-            {   75, 14078 }, -- Errant Cuffs
-            {   30, 14380 }, -- Errant Hpl.
-            {  110, 16520 }, -- Verdun
+            { xi.item.VIAL_OF_SLIME_OIL,               3000 },
+            { xi.item.VIAL_OF_BEASTMAN_BLOOD,          2250 },
+            { xi.item.REVIVAL_TREE_ROOT,               2900 },
+            { xi.item.WYVERN_WING,                      500 },
+            { xi.item.YAGUDO_CHERRY,                   3000 },
+            { xi.item.STICK_OF_VANILLA,                2500 },
+            { xi.item.STEEL_NUGGET,                    3000 },
+            { xi.item.DARKSTEEL_NUGGET,                1000 },
+            { xi.item.MAHOGANY_LOG,                    2000 },
+            { xi.item.LACQUER_TREE_LOG,                 500 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,          250 },
+            { xi.item.GOLD_BEASTCOIN,                  1000 },
+            { xi.item.CHUNK_OF_GOLD_ORE,                750 },
+            { xi.item.WOLF_HIDE,                       3000 },
+            { xi.item.CATOBLEPAS_HIDE,                 1500 },
+            { xi.item.SPOOL_OF_RAINBOW_THREAD,          500 },
+            { xi.item.SPOOL_OF_BLOODTHREAD,            1500 },
+            { xi.item.SPIDER_WEB,                      1750 },
+            { xi.item.PINCH_OF_MINIUM,                  250 },
+            { xi.item.HANDFUL_OF_DARKSTEEL_BOLT_HEADS, 1500 },
+            { xi.item.MOAT_CARP,                       3000 },
+            { xi.item.THREE_EYED_FISH,                 2000 },
+            { xi.item.PHOENIX_FEATHER,                   50 },
+            { xi.item.SPRIG_OF_MISTLETOE,              1500 },
+            { xi.item.HI_POTION_P2,                    1000 },
+            { xi.item.HI_ETHER_P1,                     1000 },
+            { xi.item.HI_ETHER_P2,                      500 },
+            { xi.item.REMEDY,                           500 },
+            { xi.item.RERAISER,                         250 },
+            { xi.item.STEEL_BULLET_POUCH,              1500 },
+            { xi.item.JUG_OF_SCARLET_SAP,              3000 },
+            { xi.item.PUFFBALL,                        1500 },
+            { xi.item.FOUR_LEAF_MANDRAGORA_BUD,        1500 },
+            { xi.item.PHILOSOPHERS_STONE,                50 },
         }
     },
     [xi.zone.TORAIMARAI_CANAL] =
     {
-        regionalItems = { 11576 }, -- Bond Cape
+        regionalItems = { xi.item.BOND_CAPE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1270,   737 }, -- Gold Ore
-            { 1550,   739 }, -- Orichalcum Ore
-            {  745,   748 }, -- Gold Beastcoin
-            {  625,   769 }, -- Red Rock
-            {  325,   821 }, -- Rainbow Thread
-            {  425,   844 }, -- Phoenix Feather
-            {  720,  1213 }, -- Dst. Bolt Heads
-            {  830,  2459 }, -- Minium
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 1700,  4144 }, -- Hi-Elixir
-            {  750,  4155 }, -- Remedy
-            { 2100,  4173 }, -- Hi-Reraiser
-            {  630,  5662 }, -- Dragon Fruit
-            { 1050,  5821 }, -- Fsn. Bolt Quiver
-            {   80, 13929 }, -- Errant Hat
-            {   75, 14078 }, -- Errant Cuffs
-            {   30, 14380 }, -- Errant Hpl.
-            {  110, 16520 }, -- Verdun
+            { xi.item.DEATHBALL,                       3000 },
+            { xi.item.KITRON,                          1500 },
+            { xi.item.VIAL_OF_BEASTMAN_BLOOD,          2900 },
+            { xi.item.HANDFUL_OF_CLOT_PLASMA,           750 },
+            { xi.item.YAGUDO_CHERRY,                   3000 },
+            { xi.item.STICK_OF_VANILLA,                2500 },
+            { xi.item.STEEL_NUGGET,                    3000 },
+            { xi.item.DARKSTEEL_NUGGET,                1000 },
+            { xi.item.MAHOGANY_LOG,                    2000 },
+            { xi.item.LACQUER_TREE_LOG,                 750 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,          250 },
+            { xi.item.GOLD_BEASTCOIN,                  1000 },
+            { xi.item.CHUNK_OF_GOLD_ORE,                750 },
+            { xi.item.WOLF_HIDE,                       3000 },
+            { xi.item.CATOBLEPAS_HIDE,                 2000 },
+            { xi.item.SPOOL_OF_RAINBOW_THREAD,          500 },
+            { xi.item.SPOOL_OF_BLOODTHREAD,            2000 },
+            { xi.item.SPIDER_WEB,                      2000 },
+            { xi.item.PINCH_OF_MINIUM,                  250 },
+            { xi.item.HANDFUL_OF_DARKSTEEL_BOLT_HEADS, 1500 },
+            { xi.item.MOAT_CARP,                       2500 },
+            { xi.item.THREE_EYED_FISH,                 2000 },
+            { xi.item.PHOENIX_FEATHER,                   50 },
+            { xi.item.SPRIG_OF_MISTLETOE,              1500 },
+            { xi.item.HI_POTION_P2,                    1000 },
+            { xi.item.HI_ETHER_P1,                     1000 },
+            { xi.item.HI_ETHER_P2,                      500 },
+            { xi.item.REMEDY,                           500 },
+            { xi.item.RERAISER,                         250 },
+            { xi.item.STEEL_BULLET_POUCH,              2000 },
+            { xi.item.JUG_OF_SCARLET_SAP,              2500 },
+            { xi.item.PUFFBALL,                        1500 },
+            { xi.item.FOUR_LEAF_MANDRAGORA_BUD,        1000 },
+            { xi.item.PHILOSOPHERS_STONE,                50 },
         }
     },
     [xi.zone.ZERUHN_MINES] =
     {
-        regionalItems = { 11677 }, -- Prouesse Ring
+        regionalItems = { xi.item.PROUESSE_RING },
         tempsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                        900 },
+            { xi.item.POTION_P1,                     500 },
+            { xi.item.POTION_P2,                     300 },
+            { xi.item.ETHER,                         700 },
+            { xi.item.ETHER_P1,                      400 },
+            { xi.item.ETHER_P2,                      300 },
+            { xi.item.ELIXIR,                        400 },
+            { xi.item.ANTIDOTE,                     1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          1000 },
+            { xi.item.REMEDY,                        500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,         600 },
+            { xi.item.POT_OF_SILENT_OIL,             600 },
+            { xi.item.DAEDALUS_WING,                 400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,          400 },
+            { xi.item.FLASK_OF_PEAR_AU_LAIT,        1000 },
+            { xi.item.BOTTLE_OF_TOMATO_JUICE,       1000 },
         },
+        -- No foes high enough to trigger this
         tempsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.POTION,                        900 },
+            { xi.item.POTION_P1,                     500 },
+            { xi.item.POTION_P2,                     300 },
+            { xi.item.ETHER,                         700 },
+            { xi.item.ETHER_P1,                      400 },
+            { xi.item.ETHER_P2,                      300 },
+            { xi.item.ELIXIR,                        400 },
+            { xi.item.ANTIDOTE,                     1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          1000 },
+            { xi.item.REMEDY,                        500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,         600 },
+            { xi.item.POT_OF_SILENT_OIL,             600 },
+            { xi.item.DAEDALUS_WING,                 400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,          400 },
+            { xi.item.FLASK_OF_PEAR_AU_LAIT,        1000 },
+            { xi.item.BOTTLE_OF_TOMATO_JUICE,       1000 },
         },
         itemsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3760,   505 }, -- Sheepskin
-            { 3450,   626 }, -- Black Pepper
-            { 4790,   656 }, -- Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 4820,  4114 }, -- Potion +2
-            { 4650,  4115 }, -- Potion +3
-            { 4840,  4129 }, -- Ether +1
-            { 4320,  4130 }, -- Ether +2
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
+            { xi.item.BRASS_INGOT,                   750 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2000 },
+            { xi.item.SCREAM_FUNGUS,                2000 },
+            { xi.item.COBALT_JELLYFISH,             4000 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          4000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2750 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            3000 },
+            { xi.item.YEW_LOG,                      2000 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         },
+        -- No foes high enough to trigger this
         itemsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3760,   505 }, -- Sheepskin
-            { 3450,   626 }, -- Black Pepper
-            {  480,   679 }, -- Aluminum Ingot
-            { 1560,   714 }, -- Holly Lumber
-            {  780,   727 }, -- Dogwood Log
-            { 2750,   750 }, -- Silver Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 1290,  1981 }, -- Skull Locust
-            { 4830,  4117 }, -- Hi-Potion +1
-            { 4690,  4118 }, -- Hi-Potion +2
-            { 3650,  4119 }, -- Hi-Potion +3
-            { 2700,  4121 }, -- X-Potion +1
-            { 1500,  4123 }, -- X-Potion +3
-            { 3880,  4133 }, -- Hi-Ether +1
-            { 3410,  4134 }, -- Hi-Ether +2
-            { 2640,  4135 }, -- Hi-Ether +3
-            { 1430,  4141 }, -- Pro-Ether +1
-            {  920,  4143 }, -- Pro-Ether +3
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
-            {  680,  5819 }, -- Antlion Quiver
-            {  105, 12469 }, -- War Beret
-            {  210, 12725 }, -- War Gloves
-            {   80, 12853 }, -- War Brais
-            {   55, 12981 }, -- War Boots
-            {   95, 13212 }, -- Tarutaru Sash
-            {   25, 13467 }, -- Dragon Ring
-            { 3810, 17316 }, -- Bomb Arm
-            { 1070, 17894 }, -- Vermihumus
+            { xi.item.BRASS_INGOT,                   750 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2000 },
+            { xi.item.SCREAM_FUNGUS,                2000 },
+            { xi.item.COBALT_JELLYFISH,             4000 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          4000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2750 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            3000 },
+            { xi.item.YEW_LOG,                      2000 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         }
     },
     [xi.zone.KORROLOKA_TUNNEL] =
     {
-        regionalItems = { 11039 }, -- Brachyura Earring
+        regionalItems = { xi.item.BRACHYURA_EARRING },
         tempsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                        900 },
+            { xi.item.POTION_P1,                     500 },
+            { xi.item.POTION_P2,                     300 },
+            { xi.item.ETHER,                         700 },
+            { xi.item.ETHER_P1,                      400 },
+            { xi.item.ETHER_P2,                      300 },
+            { xi.item.ELIXIR,                        400 },
+            { xi.item.ANTIDOTE,                     1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          1000 },
+            { xi.item.REMEDY,                        500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,         600 },
+            { xi.item.POT_OF_SILENT_OIL,             600 },
+            { xi.item.DAEDALUS_WING,                 400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,          400 },
+            { xi.item.FLASK_OF_PEAR_AU_LAIT,        1000 },
+            { xi.item.BOTTLE_OF_TOMATO_JUICE,       1000 },
         },
+        -- No foes high enough to trigger this
         tempsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.POTION,                        900 },
+            { xi.item.POTION_P1,                     500 },
+            { xi.item.POTION_P2,                     300 },
+            { xi.item.ETHER,                         700 },
+            { xi.item.ETHER_P1,                      400 },
+            { xi.item.ETHER_P2,                      300 },
+            { xi.item.ELIXIR,                        400 },
+            { xi.item.ANTIDOTE,                     1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          1000 },
+            { xi.item.REMEDY,                        500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,         600 },
+            { xi.item.POT_OF_SILENT_OIL,             600 },
+            { xi.item.DAEDALUS_WING,                 400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,          400 },
+            { xi.item.FLASK_OF_PEAR_AU_LAIT,        1000 },
+            { xi.item.BOTTLE_OF_TOMATO_JUICE,       1000 },
         },
         itemsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1450,   835 }, -- Flax Flower
-            {  800,   898 }, -- Chicken Bone
-            { 2630,  1155 }, -- Iron Sand
-            { 4790,   656 }, -- Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 4820,  4114 }, -- Potion +2
-            { 4650,  4115 }, -- Potion +3
-            { 4840,  4129 }, -- Ether +1
-            { 4320,  4130 }, -- Ether +2
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
+            { xi.item.MYTHRIL_NUGGET,               2500 },
+            { xi.item.NEBIMONITE,                   2000 },
+            { xi.item.CRAB_SHELL,                   2000 },
+            { xi.item.SLEEPSHROOM,                  3000 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            3000 },
+            { xi.item.YEW_LOG,                      2000 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         3000 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         },
+        -- No foes high enough to trigger this
         itemsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  870,   746 }, -- Platinum Ingot
-            {  430,   835 }, -- Flax Flower
-            {  790,   898 }, -- Chicken Bone
-            { 2400,  1155 }, -- Iron Sand
-            { 2750,   750 }, -- Silver Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            {  390,   838 }, -- Spider Web
-            { 3500,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4700,  4121 }, -- X-Potion +1
-            {  600,  4123 }, -- X-Potion +3
-            { 4900,  4141 }, -- Pro-Ether +1
-            { 2700,  4145 }, -- Elixir
-            { 1650,  4155 }, -- Remedy
-            { 1450,  4449 }, -- Reishi Mushroom
-            {  120, 12880 }, -- Ogre Trousers
-            {  110, 13704 }, -- Ogre Mask
+            { xi.item.MYTHRIL_NUGGET,               2500 },
+            { xi.item.NEBIMONITE,                   2000 },
+            { xi.item.CRAB_SHELL,                   2000 },
+            { xi.item.SLEEPSHROOM,                  3000 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            3000 },
+            { xi.item.YEW_LOG,                      2000 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         3000 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         }
     },
     [xi.zone.KUFTAL_TUNNEL] =
     {
-        regionalItems = { 18816 }, -- Wizzan Grip
+        regionalItems = { xi.item.WIZZAN_GRIP },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  610,   657 }, -- Tama-Hagane
-            {  590,   685 }, -- Khroma Ore
-            {  730,   876 }, -- Manta Skin
-            { 1640,   919 }, -- Boyahda Moss
-            { 1390,   838 }, -- Spider Web
-            { 4500,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 1490,  1446 }, -- Lacquer Tree Log
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 3700,  4123 }, -- X-Potion +3
-            { 4900,  4134 }, -- Hi-Ether +2
-            { 2900,  4143 }, -- Pro-Ether +3
-            { 1900,  4155 }, -- Remedy
-            {  980,  4173 }, -- Hi-Reraiser
-            {  670,  4174 }, -- Vile Elixir
-            {  320,  4175 }, -- Vile Elixir +1
-            { 1760,  4291 }, -- Sandfish
-            {  500,  4447 }, -- Scream Fungus
-            {  630,  5866 }, -- Toolbag (Moku)
-            {  420,  5872 }, -- D.A. Bolt Quiver
+            { xi.item.SLICE_OF_LAND_CRAB_MEAT,      3000 },
+            { xi.item.SPIDER_WEB,                   1750 },
+            { xi.item.SILVER_NUGGET,                4000 },
+            { xi.item.WYVERN_SKIN,                   750 },
+            { xi.item.BOX_OF_TARUTARU_RICE,         3000 },
+            { xi.item.PERSIKOS,                     1500 },
+            { xi.item.DARKSTEEL_NUGGET,             2500 },
+            { xi.item.LUMP_OF_TAMA_HAGANE,           750 },
+            { xi.item.CHESTNUT_LOG,                 2500 },
+            { xi.item.LACQUER_TREE_LOG,              750 },
+            { xi.item.GOLD_NUGGET,                  2500 },
+            { xi.item.GOLD_BEASTCOIN,               1000 },
+            { xi.item.MANTA_SKIN,                   2500 },
+            { xi.item.CORAL_FRAGMENT,                750 },
+            { xi.item.CLUMP_OF_BOYAHDA_MOSS,        2000 },
+            { xi.item.LOCK_OF_MANTICORE_HAIR,       2000 },
+            { xi.item.CATOBLEPAS_HIDE,              1000 },
+            { xi.item.TAURUS_HORN,                  2000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        1500 },
+            { xi.item.TOOLBAG_SHIHEI,                500 },
+            { xi.item.SANDFISH,                     2000 },
+            { xi.item.SCREAM_FUNGUS,                2000 },
+            { xi.item.SLICE_OF_DRAGON_MEAT,           50 },
+            { xi.item.DEMON_QUIVER,                  500 },
+            { xi.item.HI_POTION_P1,                 1000 },
+            { xi.item.X_POTION,                     1000 },
+            { xi.item.X_POTION_P1,                   500 },
+            { xi.item.HI_ETHER_P1,                  1500 },
+            { xi.item.PRO_ETHER,                    1000 },
+            { xi.item.REMEDY,                        400 },
+            { xi.item.JUG_OF_SEEDBED_SOIL,          3000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,        750 },
+            { xi.item.DRAGON_HEART,                   50 },
         }
     },
     [xi.zone.SEA_SERPENT_GROTTO] =
     {
-        regionalItems = { 19780 }, -- Mana Ampulla
+        regionalItems = { xi.item.MANA_AMPULLA },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4117 }, -- Hi-Potion +1
-            {  700, 4118 }, -- Hi-Potion +2
-            {  230, 4119 }, -- Hi-Potion +3
-            { 1020, 4133 }, -- Hi-Ether +1
-            {  800, 4134 }, -- Hi-Ether +2
-            {  240, 4135 }, -- Hi-Ether +3
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  620, 4424 }, -- Melon Juice
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  230,   645 }, -- Darksteel Ore
-            {  850,   702 }, -- Ebony Log
-            {  560,   737 }, -- Gold Ore
-            {  520,   823 }, -- Gold Thread
-            {  840,   843 }, -- G. Bird Plume
-            { 1250,   844 }, -- Phoenix Feather
-            { 2500,  1155 }, -- Iron Sand
-            { 1900,  1213 }, -- Dst. Bolt Heads
-            { 2100,  1443 }, -- Dried Mugwort
-            { 5000,  4117 }, -- Hi-Potion +1
-            { 4400,  4120 }, -- X-Potion
-            {  600,  4121 }, -- X-Potion +1
-            { 4800,  4133 }, -- Hi-Ether +1
-            {  790,  4141 }, -- Pro-Ether +1
-            {  310,  4449 }, -- Reishi Mushroom
-            {  430,  5164 }, -- Ground Wasabi
-            {  440, 12427 }, -- Bascinet
-            {  365, 12683 }, -- Darksteel Mufflers
-            {  295, 12811 }, -- Dst. Breeches
-            {  345, 12868 }, -- Silk Slacks
-            {  290, 12996 }, -- Silk Pumps
-            {  525, 13702 }, -- Beak Ledelsens
+            { xi.item.SILVER_BEASTCOIN,                3000 },
+            { xi.item.SHALL_SHELL,                     2500 },
+            { xi.item.MYTHRIL_BEASTCOIN,               2000 },
+            { xi.item.BLACK_PEARL,                     1000 },
+            { xi.item.BLOCK_OF_STONE_CHEESE,           3000 },
+            { xi.item.JAR_OF_GROUND_WASABI,            2000 },
+            { xi.item.HANDFUL_OF_IRON_SAND,            3000 },
+            { xi.item.CHUNK_OF_DARKSTEEL_ORE,           750 },
+            { xi.item.ROSEWOOD_LOG,                    2000 },
+            { xi.item.EBONY_LOG,                       1000 },
+            { xi.item.CHUNK_OF_GOLD_ORE,                750 },
+            { xi.item.GOLD_BEASTCOIN,                  1000 },
+            { xi.item.GIANT_BIRD_PLUME,                2500 },
+            { xi.item.SPOOL_OF_GOLD_THREAD,            1000 },
+            { xi.item.TIGER_HIDE,                      2000 },
+            { xi.item.COEURL_HIDE,                     1400 },
+            { xi.item.HIGH_QUALITY_CRAB_SHELL,         1500 },
+            { xi.item.TURTLE_SHELL,                    2000 },
+            { xi.item.COEURL_WHISKER,                  2000 },
+            { xi.item.FOREST_CARP,                     2000 },
+            { xi.item.REISHI_MUSHROOM,                 1000 },
+            { xi.item.PHOENIX_FEATHER,                   50 },
+            { xi.item.PINCH_OF_DRIED_MUGWORT,          1500 },
+            { xi.item.HANDFUL_OF_DARKSTEEL_BOLT_HEADS, 2500 },
+            { xi.item.HI_POTION,                       1000 },
+            { xi.item.HI_POTION_P1,                     500 },
+            { xi.item.X_POTION,                        1000 },
+            { xi.item.X_POTION_P1,                      500 },
+            { xi.item.HI_ETHER_P1,                     1500 },
+            { xi.item.PRO_ETHER,                       1000 },
+            { xi.item.JUG_OF_CLEAR_BLOOD_BROTH,        2500 },
+            { xi.item.BASCINET,                          50 },
+            { xi.item.DARKSTEEL_MUFFLERS,                50 },
+            { xi.item.SILK_MITTS,                        50 },
+            { xi.item.DARKSTEEL_BREECHES,                50 },
+            { xi.item.BEAK_TROUSERS,                     50 },
+            { xi.item.SILK_SLACKS,                       50 },
+            { xi.item.DARKSTEEL_SOLLERETS,               50 },
+            { xi.item.SILK_PUMPS,                        50 },
+            { xi.item.BEAK_HELM,                         50 },
+            { xi.item.BEAK_GLOVES,                       50 },
+            { xi.item.BEAK_LEDELSENS,                    50 },
         }
     },
     [xi.zone.VELUGANNON_PALACE] =
     {
-        regionalItems = { 13467, 10954 }, -- Dragon Ring | Alchemist's Torque
+        regionalItems = { xi.item.ALCHEMISTS_TORQUE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2000, 4119 }, -- Hi-Potion +3
-            { 1500, 4120 }, -- X-Potion
-            {  800, 4121 }, -- X-Potion +1
-            { 1900, 4135 }, -- Hi-Ether +3
-            {  600, 4136 }, -- Super Ether
-            {  420, 4137 }, -- Super Ether +1
-            {  540, 4144 }, -- Hi-Elixir
-            { 1300, 4145 }, -- Elixir
-            {   60, 4149 }, -- Panacea
-            {  980, 4155 }, -- Remedy
-            { 1670, 4202 }, -- Daedalus Wing
-            {  670, 4206 }, -- Catholicon
-            {  760, 4210 }, -- Lethe Water
-            {  680, 4255 }, -- Mana Powder
-            {  450, 4302 }, -- Pamama au Lait
-            {  765, 4424 }, -- Melon Juice
-            {  340, 5322 }, -- Healing Powder
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3760,   505 }, -- Sheepskin
-            { 3450,   626 }, -- Black Pepper
-            {  480,   679 }, -- Aluminum Ingot
-            { 1560,   714 }, -- Holly Lumber
-            {  780,   727 }, -- Dogwood Log
-            { 2750,   750 }, -- Silver Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 1290,  1981 }, -- Skull Locust
-            { 4830,  4117 }, -- Hi-Potion +1
-            { 4690,  4118 }, -- Hi-Potion +2
-            { 3650,  4119 }, -- Hi-Potion +3
-            { 2700,  4121 }, -- X-Potion +1
-            { 1500,  4123 }, -- X-Potion +3
-            { 3880,  4133 }, -- Hi-Ether +1
-            { 3410,  4134 }, -- Hi-Ether +2
-            { 2640,  4135 }, -- Hi-Ether +3
-            { 1430,  4141 }, -- Pro-Ether +1
-            {  920,  4143 }, -- Pro-Ether +3
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
-            {  680,  5819 }, -- Antlion Quiver
-            {  105, 12469 }, -- War Beret
-            {  210, 12725 }, -- War Gloves
-            {   80, 12853 }, -- War Brais
-            {   55, 12981 }, -- War Boots
-            { 3810, 17316 }, -- Bomb Arm
-            { 1070, 17894 }, -- Vermihumus
+            { xi.item.LOOP_OF_GLASS_FIBER,          3500 },
+            { xi.item.DOLL_SHARD,                   2000 },
+            { xi.item.TAURUS_WING,                  2500 },
+            { xi.item.BOTTLE_OF_MOVALPOLOS_WATER,   2500 },
+            { xi.item.BOX_OF_TARUTARU_RICE,         3000 },
+            { xi.item.PERSIKOS,                     1500 },
+            { xi.item.DARKSTEEL_NUGGET,             2750 },
+            { xi.item.LUMP_OF_TAMA_HAGANE,           750 },
+            { xi.item.CHESTNUT_LOG,                 2000 },
+            { xi.item.LACQUER_TREE_LOG,              750 },
+            { xi.item.GOLD_NUGGET,                  3000 },
+            { xi.item.GOLD_BEASTCOIN,               1000 },
+            { xi.item.MANTA_SKIN,                   2500 },
+            { xi.item.CORAL_FRAGMENT,                750 },
+            { xi.item.CLUMP_OF_BOYAHDA_MOSS,        2000 },
+            { xi.item.LOCK_OF_MANTICORE_HAIR,       2000 },
+            { xi.item.CATOBLEPAS_HIDE,              1000 },
+            { xi.item.TAURUS_HORN,                  2000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        1500 },
+            { xi.item.TOOLBAG_SHIHEI,                500 },
+            { xi.item.SANDFISH,                      750 },
+            { xi.item.SCREAM_FUNGUS,                2000 },
+            { xi.item.SLICE_OF_DRAGON_MEAT,           50 },
+            { xi.item.DEMON_QUIVER,                  500 },
+            { xi.item.HI_POTION_P1,                 1000 },
+            { xi.item.X_POTION,                     1000 },
+            { xi.item.X_POTION_P1,                   500 },
+            { xi.item.HI_ETHER_P1,                  1500 },
+            { xi.item.PRO_ETHER,                    1000 },
+            { xi.item.REMEDY,                        400 },
+            { xi.item.JUG_OF_SEEDBED_SOIL,          3000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,        750 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,        50 },
         }
     },
     [xi.zone.THE_SHRINE_OF_RUAVITAU] =
     {
-        regionalItems = { 11040, 10951 }, -- Terminus Earring | Weaver's Torque
+        regionalItems = { xi.item.TERMINUS_EARRING, xi.item.WEAVERS_TORQUE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  390,   657 }, -- Tama-Hagane
-            {  745,   876 }, -- Manta Skin
-            {  250,   887 }, -- Coral Fragment
-            { 3700,   919 }, -- Boyahda Moss
-            { 4500,  1163 }, -- Manticore Hair
-            { 1025,  1446 }, -- Lacquer Tree Log
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4200,  4120 }, -- X-Potion
-            { 3500,  4121 }, -- X-Potion +1
-            { 3000,  4122 }, -- X-Potion +2
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 2700,  4143 }, -- Pro-Ether +3
-            {  600,  4155 }, -- Remedy
-            { 1200,  4173 }, -- Hi-Reraiser
-            {  900,  4174 }, -- Vile Elixir
-            { 1200,  4291 }, -- Sandfish
-            { 1700,  4447 }, -- Scream Fungus
-            {  650,  5866 }, -- Toolbag (Moku)
-            { 1050,  5871 }, -- Ruszor Quiver
-            { 2050, 17881 }, -- Deepbed Soil
-            { 1020, 17884 }, -- Sun Water
-            {  500, 17898 }, -- C. Grass. Broth
-            {  400, 17899 }, -- Svg. Mole Broth
+            { xi.item.LOOP_OF_GLASS_FIBER,          3500 },
+            { xi.item.DOLL_SHARD,                   2000 },
+            { xi.item.TAURUS_WING,                  2500 },
+            { xi.item.BOTTLE_OF_MOVALPOLOS_WATER,   2500 },
+            { xi.item.BOX_OF_TARUTARU_RICE,         3000 },
+            { xi.item.PERSIKOS,                     1500 },
+            { xi.item.DARKSTEEL_NUGGET,             2750 },
+            { xi.item.LUMP_OF_TAMA_HAGANE,           750 },
+            { xi.item.CHESTNUT_LOG,                 2000 },
+            { xi.item.LACQUER_TREE_LOG,              750 },
+            { xi.item.GOLD_NUGGET,                  3000 },
+            { xi.item.GOLD_BEASTCOIN,               1000 },
+            { xi.item.MANTA_SKIN,                   2500 },
+            { xi.item.CORAL_FRAGMENT,                750 },
+            { xi.item.CLUMP_OF_BOYAHDA_MOSS,        2000 },
+            { xi.item.LOCK_OF_MANTICORE_HAIR,       2000 },
+            { xi.item.CATOBLEPAS_HIDE,              1000 },
+            { xi.item.TAURUS_HORN,                  2000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        1500 },
+            { xi.item.TOOLBAG_SHIHEI,                500 },
+            { xi.item.SANDFISH,                      750 },
+            { xi.item.SCREAM_FUNGUS,                2000 },
+            { xi.item.SLICE_OF_DRAGON_MEAT,           50 },
+            { xi.item.DEMON_QUIVER,                  500 },
+            { xi.item.HI_POTION_P1,                 1000 },
+            { xi.item.X_POTION,                     1000 },
+            { xi.item.X_POTION_P1,                   500 },
+            { xi.item.HI_ETHER_P1,                  1500 },
+            { xi.item.PRO_ETHER,                    1000 },
+            { xi.item.REMEDY,                        400 },
+            { xi.item.JUG_OF_SEEDBED_SOIL,          3000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,        750 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,        50 },
         }
     },
     [xi.zone.LOWER_DELKFUTTS_TOWER] =
     {
-        regionalItems = { 11043 }, -- Giant's Earring
+        regionalItems = { xi.item.GIANTS_EARRING },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4117 }, -- Hi-Potion +1
-            {  700, 4118 }, -- Hi-Potion +2
-            {  230, 4119 }, -- Hi-Potion +3
-            { 1020, 4133 }, -- Hi-Ether +1
-            {  800, 4134 }, -- Hi-Ether +2
-            {  240, 4135 }, -- Hi-Ether +3
-            {  900, 4145 }, -- Elixir
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  220, 4206 }, -- Catholicon
-            {  430, 4302 }, -- Pamama au Lait
-            {  620, 4424 }, -- Melon Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2750,   574 }, -- Fruit Seeds
-            { 3600,   633 }, -- Olive Oil
-            { 3250,   651 }, -- Iron Ingot
-            { 1200,   653 }, -- Mythril Ingot
-            { 1420,   691 }, -- Maple Log
-            {  760,   822 }, -- Silver Thread
-            { 1350,   943 }, -- Poison Dust
-            { 2700,  1212 }, -- Mtl. Bolt Heads x33
-            { 4800,  4114 }, -- Potion +2
-            { 3200,  4115 }, -- Potion +3
-            { 5000,  4129 }, -- Ether +1
-            { 3800,  4130 }, -- Ether +2
-            {  460, 12458 }, -- Soil Hachimaki
-            {  740, 12698 }, -- Studded Gloves
-            {  530, 12714 }, -- Soil Tekko
-            {  360, 12730 }, -- Wool Cuffs
-            {  290, 12826 }, -- Studded Trousers
-            { 1200, 12842 }, -- Soil Sitabaki
-            {  400, 12858 }, -- Wool Slops
-            {  200, 12954 }, -- Studded Boots
-            {  190, 12970 }, -- Soil Kyahan
-            {  390, 12986 }, -- Chestnut Sabots
+            { xi.item.LOOP_OF_CARBON_FIBER,          2500 },
+            { xi.item.VIAL_OF_BEASTMAN_BLOOD,        3500 },
+            { xi.item.MAGIC_POT_SHARD,               3500 },
+            { xi.item.SPOOL_OF_WOOL_THREAD,          2500 },
+            { xi.item.BAG_OF_FRUIT_SEEDS,            2500 },
+            { xi.item.FLASK_OF_OLIVE_OIL,            2500 },
+            { xi.item.IRON_INGOT,                     750 },
+            { xi.item.MYTHRIL_INGOT,                  750 },
+            { xi.item.MAPLE_LOG,                     3000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,        2000 },
+            { xi.item.PINCH_OF_POISON_DUST,          2900 },
+            { xi.item.HANDFUL_OF_MYTHRIL_BOLT_HEADS, 3500 },
+            { xi.item.POTION_P2,                     2000 },
+            { xi.item.POTION_P3,                     1500 },
+            { xi.item.ETHER_P1,                      1500 },
+            { xi.item.ETHER_P2,                       800 },
+            { xi.item.MYTHRIL_BEASTCOIN,             3000 },
+            { xi.item.LOOP_OF_GLASS_FIBER,           3000 },
+            { xi.item.BEETLE_JAW,                    3000 },
+            { xi.item.STICK_OF_VANILLA,              3000 },
+            { xi.item.OAK_SHIELD,                     100 },
+            { xi.item.MYTHRIL_KNIFE,                  100 },
+            { xi.item.GLADIUS,                        100 },
+            { xi.item.CLAWS,                          100 },
+            { xi.item.MAUL,                           100 },
+            { xi.item.CHAKRAM,                        100 },
+            { xi.item.SILVER_BELT,                    100 },
+            { xi.item.BRASS_MASK,                     100 },
+            { xi.item.BRASS_FINGER_GAUNTLETS,         100 },
+            { xi.item.BRASS_CUISSES,                  100 },
+            { xi.item.BRASS_GREAVES,                  100 },
+            { xi.item.STUDDED_BANDANA,                100 },
+            { xi.item.SOIL_HACHIMAKI,                 100 },
+            { xi.item.WOOL_HAT,                       100 },
+            { xi.item.STUDDED_GLOVES,                 100 },
+            { xi.item.SOIL_TEKKO,                     100 },
+            { xi.item.WOOL_CUFFS,                     100 },
+            { xi.item.STUDDED_TROUSERS,               100 },
+            { xi.item.SOIL_SITABAKI,                  100 },
+            { xi.item.WOOL_SLOPS,                     100 },
+            { xi.item.STUDDED_BOOTS,                  100 },
+            { xi.item.SOIL_KYAHAN,                    100 },
+            { xi.item.CHESTNUT_SABOTS,                100 },
         }
     },
     [xi.zone.KING_RANPERRES_TOMB] =
     {
-        regionalItems = { 10924 }, -- Chocobo Torque
+        regionalItems = { xi.item.CHOCOBO_TORQUE },
         tempsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                        900 },
+            { xi.item.POTION_P1,                     500 },
+            { xi.item.POTION_P2,                     300 },
+            { xi.item.ETHER,                         700 },
+            { xi.item.ETHER_P1,                      400 },
+            { xi.item.ETHER_P2,                      300 },
+            { xi.item.ELIXIR,                        400 },
+            { xi.item.ANTIDOTE,                     1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,           1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          1000 },
+            { xi.item.REMEDY,                        500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,         600 },
+            { xi.item.POT_OF_SILENT_OIL,             600 },
+            { xi.item.DAEDALUS_WING,                 400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,          400 },
+            { xi.item.FLASK_OF_PEAR_AU_LAIT,        1000 },
+            { xi.item.BOTTLE_OF_TOMATO_JUICE,       1000 },
         },
         tempsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         itemsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3760,   505 }, -- Sheepskin
-            { 3450,   626 }, -- Black Pepper
-            {  800,   898 }, -- Chicken Bone
-            { 1560,   714 }, -- Holly Lumber
-            { 4790,   656 }, -- Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 4820,  4114 }, -- Potion +2
-            { 4650,  4115 }, -- Potion +3
-            { 4840,  4129 }, -- Ether +1
-            { 4320,  4130 }, -- Ether +2
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
+            { xi.item.ELM_LOG,                      1500 },
+            { xi.item.WOLF_HIDE,                    2000 },
+            { xi.item.WILLOW_LOG,                   3000 },
+            { xi.item.LIZARD_SKIN,                  3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             3000 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2500 },
+            { xi.item.YEW_LOG,                      2000 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         },
         itemsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3760,   505 }, -- Sheepskin
-            { 3450,   626 }, -- Black Pepper
-            {  480,   679 }, -- Aluminum Ingot
-            { 1560,   714 }, -- Holly Lumber
-            {  780,   727 }, -- Dogwood Log
-            { 2750,   750 }, -- Silver Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 1290,  1981 }, -- Skull Locust
-            { 4830,  4117 }, -- Hi-Potion +1
-            { 4690,  4118 }, -- Hi-Potion +2
-            { 3650,  4119 }, -- Hi-Potion +3
-            { 2700,  4121 }, -- X-Potion +1
-            { 1500,  4123 }, -- X-Potion +3
-            { 3880,  4133 }, -- Hi-Ether +1
-            { 3410,  4134 }, -- Hi-Ether +2
-            { 2640,  4135 }, -- Hi-Ether +3
-            { 1430,  4141 }, -- Pro-Ether +1
-            {  920,  4143 }, -- Pro-Ether +3
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
-            {  680,  5819 }, -- Antlion Quiver
-            {  105, 12469 }, -- War Beret
-            {  210, 12725 }, -- War Gloves
-            {   80, 12853 }, -- War Brais
-            {   55, 12981 }, -- War Boots
-            { 3810, 17316 }, -- Bomb Arm
+            { xi.item.DANCESHROOM,                  3000 },
+            { xi.item.HANDFUL_OF_STEEL_SCALES,      2000 },
+            { xi.item.SPOOL_OF_WOOL_THREAD,         3000 },
+            { xi.item.WOLF_HIDE,                    2500 },
+            { xi.item.BOX_OF_TARUTARU_RICE,         3000 },
+            { xi.item.PERSIKOS,                     1500 },
+            { xi.item.DARKSTEEL_NUGGET,             2750 },
+            { xi.item.LUMP_OF_TAMA_HAGANE,           750 },
+            { xi.item.CHESTNUT_LOG,                 2000 },
+            { xi.item.LACQUER_TREE_LOG,              750 },
+            { xi.item.GOLD_NUGGET,                  3000 },
+            { xi.item.GOLD_BEASTCOIN,               1000 },
+            { xi.item.MANTA_SKIN,                   2500 },
+            { xi.item.CORAL_FRAGMENT,                750 },
+            { xi.item.CLUMP_OF_BOYAHDA_MOSS,        2000 },
+            { xi.item.LOCK_OF_MANTICORE_HAIR,       2000 },
+            { xi.item.CATOBLEPAS_HIDE,              1000 },
+            { xi.item.TAURUS_HORN,                  2000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        1500 },
+            { xi.item.TOOLBAG_SHIHEI,                500 },
+            { xi.item.SANDFISH,                      750 },
+            { xi.item.SCREAM_FUNGUS,                2000 },
+            { xi.item.SLICE_OF_DRAGON_MEAT,           50 },
+            { xi.item.DEMON_QUIVER,                  500 },
+            { xi.item.HI_POTION_P1,                 1000 },
+            { xi.item.X_POTION,                     1000 },
+            { xi.item.X_POTION_P1,                   500 },
+            { xi.item.HI_ETHER_P1,                  1500 },
+            { xi.item.PRO_ETHER,                    1000 },
+            { xi.item.REMEDY,                        400 },
+            { xi.item.JUG_OF_SEEDBED_SOIL,          3000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,        750 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,        50 },
         }
     },
     [xi.zone.DANGRUF_WADI] =
     {
-        regionalItems = { 11769 }, -- Field Rope
+        regionalItems = { xi.item.FIELD_ROPE },
         tempsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
+        -- No foes high enough to trigger this
         tempsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         itemsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1450,   835 }, -- Flax Flower
-            {  800,   898 }, -- Chicken Bone
-            { 2630,  1155 }, -- Iron Sand
-            { 4790,   656 }, -- Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 4820,  4114 }, -- Potion +2
-            { 4650,  4115 }, -- Potion +3
-            { 4840,  4129 }, -- Ether +1
-            { 4320,  4130 }, -- Ether +2
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
+            { xi.item.IRON_NUGGET,                 3500 },
+            { xi.item.FLINT_STONE,                 2000 },
+            { xi.item.HANDFUL_OF_IRON_SAND,        3500 },
+            { xi.item.SPRIG_OF_SAGE,               3000 },
+            { xi.item.CHUNK_OF_COPPER_ORE,         3500 },
+            { xi.item.CHUNK_OF_TIN_ORE,            2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,           1500 },
+            { xi.item.YEW_LOG,                     1500 },
+            { xi.item.WALNUT_LOG,                  2500 },
+            { xi.item.SMOKED_SALMON,               3000 },
+            { xi.item.SHEEPSKIN,                   3000 },
+            { xi.item.SILVER_BEASTCOIN,            2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,        2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,      2500 },
+            { xi.item.GIANT_FEMUR,                 2500 },
+            { xi.item.ANTIDOTE,                    1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,  3000 },
+            { xi.item.POTION_P1,                   2000 },
+            { xi.item.ETHER_P1,                    1200 },
+            { xi.item.CHESTNUT_CLUB,                100 },
+            { xi.item.SCYTHE,                       100 },
+            { xi.item.GREATAXE,                     100 },
+            { xi.item.LONGSWORD,                    100 },
+            { xi.item.KNIFE,                        100 },
+            { xi.item.BAGHNAKHS,                    100 },
+            { xi.item.SPEAR,                        100 },
+            { xi.item.ELM_STAFF,                    100 },
+            { xi.item.BONE_MASK,                    100 },
+            { xi.item.BONE_MITTENS,                 100 },
+            { xi.item.BONE_SUBLIGAR,                100 },
+            { xi.item.BONE_LEGGINGS,                100 },
+            { xi.item.LIZARD_HELM,                  100 },
+            { xi.item.LIZARD_GLOVES,                100 },
+            { xi.item.LIZARD_TROUSERS,              100 },
+            { xi.item.LIZARD_LEDELSENS,             100 },
+            { xi.item.POETS_CIRCLET,                100 },
+            { xi.item.LINEN_CUFFS,                  100 },
+            { xi.item.LINEN_SLOPS,                  100 },
+            { xi.item.HOLLY_CLOGS,                  100 },
+            { xi.item.WHITE_MITTS,                  100 },
+            { xi.item.BLACK_SLACKS,                 100 },
+            { xi.item.SANDALS,                      100 },
         },
+        -- No foes high enough to trigger this
         itemsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2700,   646 }, -- Adaman Ore
-            {  920,   653 }, -- Mythril Ingot
-            { 2100,   690 }, -- Elm Log
-            { 1540,   694 }, -- Chestnut Log
-            { 2160,   749 }, -- Mtl. Beastcoin
-            { 1760,   940 }, -- Revival Root
-            { 2300,   943 }, -- Poison Dust
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 2500,  4123 }, -- X-Potion +3
-            { 4900,  4133 }, -- Hi-Ether +1
-            { 3600,  4134 }, -- Hi-Ether +2
-            { 2120,  4135 }, -- Hi-Ether +3
-            {  795,  4155 }, -- Remedy
-            {  245, 12437 }, -- Gavial Mask
+            { xi.item.IRON_NUGGET,                 3500 },
+            { xi.item.FLINT_STONE,                 2000 },
+            { xi.item.HANDFUL_OF_IRON_SAND,        3500 },
+            { xi.item.SPRIG_OF_SAGE,               3000 },
+            { xi.item.CHUNK_OF_COPPER_ORE,         3500 },
+            { xi.item.CHUNK_OF_TIN_ORE,            2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,           1500 },
+            { xi.item.YEW_LOG,                     1500 },
+            { xi.item.WALNUT_LOG,                  2500 },
+            { xi.item.SMOKED_SALMON,               3000 },
+            { xi.item.SHEEPSKIN,                   3000 },
+            { xi.item.SILVER_BEASTCOIN,            2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,        2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,      2500 },
+            { xi.item.GIANT_FEMUR,                 2500 },
+            { xi.item.ANTIDOTE,                    1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,          500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,  3000 },
+            { xi.item.POTION_P1,                   2000 },
+            { xi.item.ETHER_P1,                    1200 },
+            { xi.item.CHESTNUT_CLUB,                100 },
+            { xi.item.SCYTHE,                       100 },
+            { xi.item.GREATAXE,                     100 },
+            { xi.item.LONGSWORD,                    100 },
+            { xi.item.KNIFE,                        100 },
+            { xi.item.BAGHNAKHS,                    100 },
+            { xi.item.SPEAR,                        100 },
+            { xi.item.ELM_STAFF,                    100 },
+            { xi.item.BONE_MASK,                    100 },
+            { xi.item.BONE_MITTENS,                 100 },
+            { xi.item.BONE_SUBLIGAR,                100 },
+            { xi.item.BONE_LEGGINGS,                100 },
+            { xi.item.LIZARD_HELM,                  100 },
+            { xi.item.LIZARD_GLOVES,                100 },
+            { xi.item.LIZARD_TROUSERS,              100 },
+            { xi.item.LIZARD_LEDELSENS,             100 },
+            { xi.item.POETS_CIRCLET,                100 },
+            { xi.item.LINEN_CUFFS,                  100 },
+            { xi.item.LINEN_SLOPS,                  100 },
+            { xi.item.HOLLY_CLOGS,                  100 },
+            { xi.item.WHITE_MITTS,                  100 },
+            { xi.item.BLACK_SLACKS,                 100 },
+            { xi.item.SANDALS,                      100 },
         }
     },
     [xi.zone.INNER_HORUTOTO_RUINS] =
     {
-        regionalItems = { 18624 }, -- Numen Staff
+        regionalItems = { xi.item.NUMEN_STAFF },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3760,   505 }, -- Sheepskin
-            { 3450,   626 }, -- Black Pepper
-            {  480,   679 }, -- Aluminum Ingot
-            { 1560,   714 }, -- Holly Lumber
-            {  780,   727 }, -- Dogwood Log
-            { 2750,   750 }, -- Silver Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 1290,  1981 }, -- Skull Locust
-            { 4830,  4117 }, -- Hi-Potion +1
-            { 4690,  4118 }, -- Hi-Potion +2
-            { 3650,  4119 }, -- Hi-Potion +3
-            { 2700,  4121 }, -- X-Potion +1
-            { 1500,  4123 }, -- X-Potion +3
-            { 3880,  4133 }, -- Hi-Ether +1
-            { 3410,  4134 }, -- Hi-Ether +2
-            { 2640,  4135 }, -- Hi-Ether +3
-            { 1430,  4141 }, -- Pro-Ether +1
-            {  920,  4143 }, -- Pro-Ether +3
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
-            {  680,  5819 }, -- Antlion Quiver
-            {  105, 12469 }, -- War Beret
-            {  210, 12725 }, -- War Gloves
-            {   80, 12853 }, -- War Brais
-            {   55, 12981 }, -- War Boots
-            { 3810, 17316 }, -- Bomb Arm
+            { xi.item.SCREAM_FUNGUS,                2000 },
+            { xi.item.PINCH_OF_BOMB_ASH,            2500 },
+            { xi.item.CLUMP_OF_SHEEP_WOOL,          3000 },
+            { xi.item.BEETLE_SHELL,                 3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2000 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2000 },
+            { xi.item.YEW_LOG,                      2000 },
+            { xi.item.WALNUT_LOG,                   2000 },
+            { xi.item.SMOKED_SALMON,                3500 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       3000 },
+            { xi.item.GIANT_FEMUR,                  3000 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         }
     },
     [xi.zone.ORDELLES_CAVES] =
     {
-        regionalItems = { 11767 }, -- Chocobo Rope
+        regionalItems = { xi.item.CHOCOBO_ROPE },
         tempsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
+        -- No foes high enough to trigger this
         tempsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         itemsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1450,  835 }, -- Flax Flower
-            {  800,  898 }, -- Chicken Bone
-            { 2630, 1155 }, -- Iron Sand
-            { 4790,  656 }, -- Beastcoin
-            { 4600,  818 }, -- Cotton Thread
-            { 5000,  852 }, -- Lizard Skin
-            { 4990,  880 }, -- Bone Chip
-            { 2650,  893 }, -- Giant Femur
-            { 1730,  912 }, -- Beehive Chip
-            { 1450,  925 }, -- Giant Stinger
-            { 1060, 1225 }, -- Gold Nugget
-            { 3610, 1845 }, -- Red Moko Grass
-            { 4820, 4114 }, -- Potion +2
-            { 4650, 4115 }, -- Potion +3
-            { 4840, 4129 }, -- Ether +1
-            { 4320, 4130 }, -- Ether +2
-            {  510, 4145 }, -- Elixir
-            { 2430, 4370 }, -- Honey
+            { xi.item.ELM_LOG,                      1500 },
+            { xi.item.PINCH_OF_BOMB_ASH,            3000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2000 },
+            { xi.item.CLUMP_OF_GAUSEBIT_WILDGRASS,  3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2000 },
+            { xi.item.YEW_LOG,                      2500 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             3000 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         },
+        -- No foes high enough to trigger this
         itemsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  425,   702 }, -- Ebony Log
-            {  870,   746 }, -- Platinum Ingot
-            {  430,   835 }, -- Flax Flower
-            {  790,   898 }, -- Chicken Bone
-            { 2400,   857 }, -- Dhalmel Hide
-            { 2750,   750 }, -- Silver Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            {  390,   838 }, -- Spider Web
-            { 3500,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            {  365,   913 }, -- Beeswax
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            {  210,  1229 }, -- Adaman Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4700,  4121 }, -- X-Potion +1
-            {  600,  4123 }, -- X-Potion +3
-            { 4900,  4141 }, -- Pro-Ether +1
-            { 2700,  4145 }, -- Elixir
-            { 1650,  4155 }, -- Remedy
-            { 1450,  4449 }, -- Reishi Mushroom
-            {  795,  5416 }, -- Stl. Bull. Pouch
-            {  120, 12880 }, -- Ogre Trousers
-            {  425, 13587 }, -- Rainbow Cape
-            {  110, 13704 }, -- Ogre Mask
-            {  215, 13706 }, -- Ogre Gloves
-            {  150, 13708 }, -- Ogre Ledelsens
+            { xi.item.ELM_LOG,                      1500 },
+            { xi.item.PINCH_OF_BOMB_ASH,            3000 },
+            { xi.item.CHUNK_OF_IRON_ORE,            2000 },
+            { xi.item.CLUMP_OF_GAUSEBIT_WILDGRASS,  3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2000 },
+            { xi.item.YEW_LOG,                      2500 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             3000 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         }
     },
     [xi.zone.OUTER_HORUTOTO_RUINS] =
     {
-        regionalItems = { 10925 }, -- Fisher's Torque
+        regionalItems = { xi.item.FISHERS_TORQUE },
         tempsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
+        -- No foes high enough to trigger this
         tempsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.POTION,                  900 },
+            { xi.item.POTION_P1,               500 },
+            { xi.item.POTION_P2,               300 },
+            { xi.item.ETHER,                   700 },
+            { xi.item.ETHER_P1,                400 },
+            { xi.item.ETHER_P2,                300 },
+            { xi.item.ELIXIR,                  400 },
+            { xi.item.ANTIDOTE,               1000 },
+            { xi.item.FLASK_OF_EYE_DROPS,     1000 },
+            { xi.item.FLASK_OF_ECHO_DROPS,    1000 },
+            { xi.item.REMEDY,                  500 },
+            { xi.item.PINCH_OF_PRISM_POWDER,   600 },
+            { xi.item.POT_OF_SILENT_OIL,       600 },
+            { xi.item.DAEDALUS_WING,           400 },
+            { xi.item.FLASK_OF_APPLE_AU_LAIT, 1000 },
+            { xi.item.BOTTLE_OF_APPLE_JUICE,  1000 },
         },
         itemsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3760,  505 }, -- Sheepskin
-            { 3450,  626 }, -- Black Pepper
-            { 4790,  656 }, -- Beastcoin
-            { 4600,  818 }, -- Cotton Thread
-            { 5000,  852 }, -- Lizard Skin
-            { 4990,  880 }, -- Bone Chip
-            { 2650,  893 }, -- Giant Femur
-            { 1730,  912 }, -- Beehive Chip
-            { 1450,  925 }, -- Giant Stinger
-            { 1060, 1225 }, -- Gold Nugget
-            { 3610, 1845 }, -- Red Moko Grass
-            { 4820, 4114 }, -- Potion +2
-            { 4650, 4115 }, -- Potion +3
-            { 4840, 4129 }, -- Ether +1
-            { 4320, 4130 }, -- Ether +2
-            {  510, 4145 }, -- Elixir
-            { 2430, 4370 }, -- Honey
+            { xi.item.OGRE_PUMPKIN,                 2500 },
+            { xi.item.SQUARE_OF_COTTON_CLOTH,       2500 },
+            { xi.item.BONE_CHIP,                    3000 },
+            { xi.item.CLUMP_OF_GAUSEBIT_WILDGRASS,  3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2000 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2000 },
+            { xi.item.YEW_LOG,                      2000 },
+            { xi.item.WALNUT_LOG,                   2000 },
+            { xi.item.SMOKED_SALMON,                3500 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       3000 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         },
+        -- No foes high enough to trigger this
         itemsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3760,   505 }, -- Sheepskin
-            { 3450,   626 }, -- Black Pepper
-            {  480,   679 }, -- Aluminum Ingot
-            { 1560,   714 }, -- Holly Lumber
-            {  780,   727 }, -- Dogwood Log
-            { 2750,   750 }, -- Silver Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 1290,  1981 }, -- Skull Locust
-            { 4830,  4117 }, -- Hi-Potion +1
-            { 4690,  4118 }, -- Hi-Potion +2
-            { 3650,  4119 }, -- Hi-Potion +3
-            { 2700,  4121 }, -- X-Potion +1
-            { 1500,  4123 }, -- X-Potion +3
-            { 3880,  4133 }, -- Hi-Ether +1
-            { 3410,  4134 }, -- Hi-Ether +2
-            { 2640,  4135 }, -- Hi-Ether +3
-            { 1430,  4141 }, -- Pro-Ether +1
-            {  920,  4143 }, -- Pro-Ether +3
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
-            {  680,  5819 }, -- Antlion Quiver
-            {  105, 12469 }, -- War Beret
-            {  210, 12725 }, -- War Gloves
-            {   80, 12853 }, -- War Brais
-            {   55, 12981 }, -- War Boots
-            {   95, 13212 }, -- Tarutaru Sash
-            {   25, 13467 }, -- Dragon Ring
-            { 3810, 17316 }, -- Bomb Arm
-            { 1070, 17894 }, -- Vermihumus
+            { xi.item.OGRE_PUMPKIN,                 2500 },
+            { xi.item.SQUARE_OF_COTTON_CLOTH,       2500 },
+            { xi.item.BONE_CHIP,                    3000 },
+            { xi.item.CLUMP_OF_GAUSEBIT_WILDGRASS,  3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2000 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2000 },
+            { xi.item.YEW_LOG,                      2000 },
+            { xi.item.WALNUT_LOG,                   2000 },
+            { xi.item.SMOKED_SALMON,                3500 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             2500 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       3000 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         }
     },
     [xi.zone.THE_ELDIEME_NECROPOLIS] =
     {
-        regionalItems = { 18812 }, -- Ossa Grip
+        regionalItems = { xi.item.OSSA_GRIP },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P1,                 800 },
+            { xi.item.HI_POTION_P2,                 500 },
+            { xi.item.HI_POTION_P3,                 300 },
+            { xi.item.HI_ETHER_P1,                  600 },
+            { xi.item.HI_ETHER_P2,                  400 },
+            { xi.item.HI_ETHER_P3,                  300 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3000,   574 }, -- Fruit Seeds
-            { 1760,   633 }, -- Olive Oil
-            {  390,   646 }, -- Adaman Ore
-            { 2650,   694 }, -- Chestnut Log
-            { 3150,   749 }, -- Mtl. Beastcoin
-            { 3200,   859 }, -- Ram Skin
-            { 2570,   895 }, -- Ram Horn
-            {  765,   943 }, -- Poison Dust
-            { 5000,  4117 }, -- Hi-Potion +1
-            { 2700,  4119 }, -- Hi-Potion +3
-            { 1050,  4121 }, -- X-Potion +1
-            {  450,  4123 }, -- X-Potion +3
-            { 4900,  4143 }, -- Pro-Ether +3
-            {  650,  4144 }, -- Hi-Elixir
-            {  230, 12437 }, -- Gavial Mask
-            {  210, 12693 }, -- Gavial Fng. Gnt.
-            {  110, 16396 }, -- Koenigs Knuckles
-            {   90, 17364 }, -- Cythara Anglica
-            { 2570, 17898 }, -- C. Grass. Broth
-            { 3100, 18259 }, -- Angon
+            { xi.item.REVIVAL_TREE_ROOT,            3000 },
+            { xi.item.SPRIG_OF_MISTLETOE,           2500 },
+            { xi.item.VIAL_OF_FIEND_BLOOD,          2500 },
+            { xi.item.SCREAM_FUNGUS,                1500 },
+            { xi.item.BAG_OF_FRUIT_SEEDS,           2000 },
+            { xi.item.GARDENIA_SEED,                3000 },
+            { xi.item.STEEL_NUGGET,                 4000 },
+            { xi.item.WILLOW_LOG,                   2500 },
+            { xi.item.CHESTNUT_LOG,                 3000 },
+            { xi.item.MYTHRIL_BEASTCOIN,            2500 },
+            { xi.item.SPOOL_OF_WOOL_THREAD,         3000 },
+            { xi.item.RAM_SKIN,                     3000 },
+            { xi.item.RAM_HORN,                     2500 },
+            { xi.item.PINCH_OF_BOMB_ASH,            2500 },
+            { xi.item.PINCH_OF_VENOM_DUST,          1500 },
+            { xi.item.HOLY_BOLT_QUIVER,             2000 },
+            { xi.item.HI_POTION_P2,                 1500 },
+            { xi.item.HI_POTION_P3,                 1000 },
+            { xi.item.HI_ETHER_P2,                  1000 },
+            { xi.item.HI_ETHER_P3,                   500 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.JUG_OF_COLD_CARRION_BROTH,    2900 },
+            { xi.item.WOOL_CAP,                      100 },
+            { xi.item.WOOL_BRACERS,                  100 },
+            { xi.item.WOOL_HOSE,                     100 },
+            { xi.item.WOOL_SOCKS,                    100 },
+            { xi.item.RAPTOR_HELM,                   100 },
+            { xi.item.RAPTOR_GLOVES,                 100 },
+            { xi.item.RAPTOR_TROUSERS,               100 },
+            { xi.item.RAPTOR_LEDELSENS,              100 },
+            { xi.item.CARAPACE_SUBLIGAR,             100 },
+            { xi.item.CARAPACE_MASK,                 100 },
+            { xi.item.CARAPACE_MITTENS,              100 },
+            { xi.item.CARAPACE_LEGGINGS,             100 },
+            { xi.item.MYTHRIL_CLAWS,                 100 },
+            { xi.item.FALCHION,                      100 },
+            { xi.item.GREATSWORD,                    100 },
+            { xi.item.MYTHRIL_ZAGHNAL,               100 },
+            { xi.item.BONE_ROD,                      100 },
+            { xi.item.BONE_KNIFE,                    100 },
+            { xi.item.KHETEN,                        100 },
+            { xi.item.NEGOROSHIKI,                   100 },
         }
     },
     [xi.zone.GUSGEN_MINES] =
     {
-        regionalItems = { 10926 }, -- Field Torque
+        regionalItems = { xi.item.FIELD_TORQUE },
         tempsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
+        -- No foes high enough to trigger this
         tempsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         itemsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1450,   835 }, -- Flax Flower
-            {  800,   898 }, -- Chicken Bone
-            { 2630,  1155 }, -- Iron Sand
-            { 4790,   656 }, -- Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 4820,  4114 }, -- Potion +2
-            { 4650,  4115 }, -- Potion +3
-            { 4840,  4129 }, -- Ether +1
-            { 4320,  4130 }, -- Ether +2
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
+            { xi.item.VIAL_OF_SLIME_OIL,            1500 },
+            { xi.item.FLINT_STONE,                  3000 },
+            { xi.item.BONE_CHIP,                    2000 },
+            { xi.item.BRASS_NUGGET,                 3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2000 },
+            { xi.item.YEW_LOG,                      2500 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             3000 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         },
+        -- No foes high enough to trigger this
         itemsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  425,   702 }, -- Ebony Log
-            {  870,   746 }, -- Platinum Ingot
-            {  430,   835 }, -- Flax Flower
-            {  790,   898 }, -- Chicken Bone
-            { 2400,   857 }, -- Dhalmel Hide
-            { 2750,   750 }, -- Silver Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            {  390,   838 }, -- Spider Web
-            { 3500,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            {  365,   913 }, -- Beeswax
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            {  210,  1229 }, -- Adaman Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4700,  4121 }, -- X-Potion +1
-            {  600,  4123 }, -- X-Potion +3
-            { 4900,  4141 }, -- Pro-Ether +1
-            { 2700,  4145 }, -- Elixir
-            { 1650,  4155 }, -- Remedy
-            { 1450,  4449 }, -- Reishi Mushroom
-            {  795,  5416 }, -- Stl. Bull. Pouch
-            {  235, 12821 }, -- Gavial Cuisses
-            {  120, 12880 }, -- Ogre Trousers
-            {  425, 13587 }, -- Rainbow Cape
-            {  110, 13704 }, -- Ogre Mask
-            {  215, 13706 }, -- Ogre Gloves
-            {  150, 13708 }, -- Ogre Ledelsens
+            { xi.item.VIAL_OF_SLIME_OIL,            1500 },
+            { xi.item.FLINT_STONE,                  3000 },
+            { xi.item.BONE_CHIP,                    2000 },
+            { xi.item.BRASS_NUGGET,                 3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2000 },
+            { xi.item.YEW_LOG,                      2500 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             3000 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         }
     },
     [xi.zone.CRAWLERS_NEST] =
     {
-        regionalItems = { 11823 }, -- Cocoon Band
+        regionalItems = { xi.item.COCOON_BAND },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P1,                 800 },
+            { xi.item.HI_POTION_P2,                 500 },
+            { xi.item.HI_POTION_P3,                 300 },
+            { xi.item.HI_ETHER_P1,                  600 },
+            { xi.item.HI_ETHER_P2,                  400 },
+            { xi.item.HI_ETHER_P3,                  300 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 3000,   574 }, -- Fruit Seeds
-            { 1760,   633 }, -- Olive Oil
-            {  390,   646 }, -- Adaman Ore
-            { 2650,   694 }, -- Chestnut Log
-            { 3150,   749 }, -- Mtl. Beastcoin
-            { 3200,   859 }, -- Ram Skin
-            { 2570,   895 }, -- Ram Horn
-            {  765,   943 }, -- Poison Dust
-            { 5000,  4117 }, -- Hi-Potion +1
-            { 2700,  4119 }, -- Hi-Potion +3
-            { 1050,  4121 }, -- X-Potion +1
-            {  450,  4123 }, -- X-Potion +3
-            { 4900,  4143 }, -- Pro-Ether +3
-            {  650,  4144 }, -- Hi-Elixir
-            {  230, 12437 }, -- Gavial Mask
-            {  210, 12693 }, -- Gavial Fng. Gnt.
-            {  110, 16396 }, -- Koenigs Knuckles
-            {   90, 17364 }, -- Cythara Anglica
-            { 2570, 17898 }, -- C. Grass. Broth
-            { 3100, 18259 }, -- Angon
+            { xi.item.PIECE_OF_CRAWLER_COCOON,      3500 },
+            { xi.item.LUMP_OF_BEESWAX,              1500 },
+            { xi.item.ROLANBERRY,                   3000 },
+            { xi.item.SERVING_OF_ROYAL_JELLY,       1500 },
+            { xi.item.BAG_OF_FRUIT_SEEDS,           2000 },
+            { xi.item.GARDENIA_SEED,                3000 },
+            { xi.item.STEEL_NUGGET,                 4000 },
+            { xi.item.WILLOW_LOG,                   2500 },
+            { xi.item.CHESTNUT_LOG,                 3000 },
+            { xi.item.MYTHRIL_BEASTCOIN,            2500 },
+            { xi.item.SPOOL_OF_WOOL_THREAD,         3000 },
+            { xi.item.RAM_SKIN,                     3000 },
+            { xi.item.RAM_HORN,                     2500 },
+            { xi.item.PINCH_OF_BOMB_ASH,            2500 },
+            { xi.item.PINCH_OF_VENOM_DUST,          1500 },
+            { xi.item.HOLY_BOLT_QUIVER,             2000 },
+            { xi.item.HI_POTION_P2,                 1500 },
+            { xi.item.HI_POTION_P3,                 1000 },
+            { xi.item.HI_ETHER_P2,                  1000 },
+            { xi.item.HI_ETHER_P3,                   500 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.JUG_OF_COLD_CARRION_BROTH,    2900 },
+            { xi.item.WOOL_CAP,                      100 },
+            { xi.item.WOOL_BRACERS,                  100 },
+            { xi.item.WOOL_HOSE,                     100 },
+            { xi.item.WOOL_SOCKS,                    100 },
+            { xi.item.RAPTOR_HELM,                   100 },
+            { xi.item.RAPTOR_GLOVES,                 100 },
+            { xi.item.RAPTOR_TROUSERS,               100 },
+            { xi.item.RAPTOR_LEDELSENS,              100 },
+            { xi.item.CARAPACE_SUBLIGAR,             100 },
+            { xi.item.CARAPACE_MASK,                 100 },
+            { xi.item.CARAPACE_MITTENS,              100 },
+            { xi.item.CARAPACE_LEGGINGS,             100 },
+            { xi.item.MYTHRIL_CLAWS,                 100 },
+            { xi.item.FALCHION,                      100 },
+            { xi.item.GREATSWORD,                    100 },
+            { xi.item.MYTHRIL_ZAGHNAL,               100 },
+            { xi.item.BONE_ROD,                      100 },
+            { xi.item.BONE_KNIFE,                    100 },
+            { xi.item.KHETEN,                        100 },
+            { xi.item.NEGOROSHIKI,                   100 },
         }
     },
     [xi.zone.MAZE_OF_SHAKHRAMI] =
     {
-        regionalItems = { 11768 }, -- Fisher's Rope
+        regionalItems = { xi.item.FISHERS_ROPE },
         tempsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1060, 4112 }, -- Potion
-            {  740, 4113 }, -- Potion +1
-            {  700, 4114 }, -- Potion +2
-            {  800, 4128 }, -- Ether
-            {  430, 4129 }, -- Ether +1
-            {   50, 4130 }, -- Ether +2
-            {  900, 4145 }, -- Elixer
-            {  820, 4148 }, -- Antidote
-            {  730, 4150 }, -- Eye Drops
-            {  850, 4151 }, -- Echo Drops
-            {  650, 4155 }, -- Remedy
-            { 1020, 4164 }, -- Prism Powder
-            {  940, 4165 }, -- Silent Oil
-            {  420, 4202 }, -- Daedalus Wing
-            {  250, 4300 }, -- Apple Au Lait
-            {  660, 4423 }, -- Apple Juice
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
+        -- No foes high enough to trigger this
         tempsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.POTION_P2,                    900 },
+            { xi.item.POTION_P3,                    500 },
+            { xi.item.HI_POTION,                    300 },
+            { xi.item.ETHER_P1,                     700 },
+            { xi.item.ETHER_P2,                     400 },
+            { xi.item.ETHER_P3,                     300 },
+            { xi.item.SUPER_ETHER,                  200 },
+            { xi.item.ELIXIR,                       400 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_EYE_DROPS,          1200 },
+            { xi.item.FLASK_OF_ECHO_DROPS,         1200 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         itemsLow =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 1450,   835 }, -- Flax Flower
-            {  800,   898 }, -- Chicken Bone
-            { 2630,  1155 }, -- Iron Sand
-            { 4790,   656 }, -- Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            { 5000,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 4820,  4114 }, -- Potion +2
-            { 4650,  4115 }, -- Potion +3
-            { 4840,  4129 }, -- Ether +1
-            { 4320,  4130 }, -- Ether +2
-            {  510,  4145 }, -- Elixir
-            { 2430,  4370 }, -- Honey
+            { xi.item.SCORPION_SHELL,               1500 },
+            { xi.item.PIECE_OF_CRAWLER_COCOON,      3000 },
+            { xi.item.BONE_CHIP,                    2000 },
+            { xi.item.BAT_FANG,                     3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2000 },
+            { xi.item.YEW_LOG,                      2500 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             3000 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         },
         itemsHi =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  425,   702 }, -- Ebony Log
-            {  870,   746 }, -- Platinum Ingot
-            {  430,   835 }, -- Flax Flower
-            {  790,   898 }, -- Chicken Bone
-            { 2400,   857 }, -- Dhalmel Hide
-            { 2750,   750 }, -- Silver Beastcoin
-            { 4600,   818 }, -- Cotton Thread
-            {  390,   838 }, -- Spider Web
-            { 3500,   852 }, -- Lizard Skin
-            { 4990,   880 }, -- Bone Chip
-            { 2650,   893 }, -- Giant Femur
-            { 1730,   912 }, -- Beehive Chip
-            {  365,   913 }, -- Beeswax
-            { 1450,   925 }, -- Giant Stinger
-            { 1060,  1225 }, -- Gold Nugget
-            {  210,  1229 }, -- Adaman Nugget
-            { 3610,  1845 }, -- Red Moko Grass
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4700,  4121 }, -- X-Potion +1
-            {  600,  4123 }, -- X-Potion +3
-            { 4900,  4141 }, -- Pro-Ether +1
-            { 2700,  4145 }, -- Elixir
-            { 1650,  4155 }, -- Remedy
-            { 1450,  4449 }, -- Reishi Mushroom
-            {  795,  5416 }, -- Stl. Bull. Pouch
-            {  235, 12821 }, -- Gavial Cuisses
-            {  120, 12880 }, -- Ogre Trousers
-            {  425, 13587 }, -- Rainbow Cape
-            {  110, 13704 }, -- Ogre Mask
-            {  215, 13706 }, -- Ogre Gloves
-            {  150, 13708 }, -- Ogre Ledelsens
+            { xi.item.SCORPION_SHELL,               1500 },
+            { xi.item.PIECE_OF_CRAWLER_COCOON,      3000 },
+            { xi.item.BONE_CHIP,                    2000 },
+            { xi.item.BAT_FANG,                     3500 },
+            { xi.item.CHUNK_OF_COPPER_ORE,          3000 },
+            { xi.item.CHUNK_OF_TIN_ORE,             2500 },
+            { xi.item.CHUNK_OF_ZINC_ORE,            2000 },
+            { xi.item.YEW_LOG,                      2500 },
+            { xi.item.WALNUT_LOG,                   3000 },
+            { xi.item.SMOKED_SALMON,                3000 },
+            { xi.item.SHEEPSKIN,                    3000 },
+            { xi.item.SILVER_BEASTCOIN,             3000 },
+            { xi.item.BLOCK_OF_ANIMAL_GLUE,         2500 },
+            { xi.item.SPOOL_OF_COTTON_THREAD,       2500 },
+            { xi.item.GIANT_FEMUR,                  2500 },
+            { xi.item.ANTIDOTE,                     1500 },
+            { xi.item.FLASK_OF_ECHO_DROPS,           500 },
+            { xi.item.HANDFUL_OF_IRON_ARROWHEADS,   3000 },
+            { xi.item.POTION_P1,                    2000 },
+            { xi.item.ETHER_P1,                     1200 },
+            { xi.item.CHESTNUT_CLUB,                 100 },
+            { xi.item.SCYTHE,                        100 },
+            { xi.item.GREATAXE,                      100 },
+            { xi.item.LONGSWORD,                     100 },
+            { xi.item.KNIFE,                         100 },
+            { xi.item.BAGHNAKHS,                     100 },
+            { xi.item.SPEAR,                         100 },
+            { xi.item.ELM_STAFF,                     100 },
+            { xi.item.BONE_MASK,                     100 },
+            { xi.item.BONE_MITTENS,                  100 },
+            { xi.item.BONE_SUBLIGAR,                 100 },
+            { xi.item.BONE_LEGGINGS,                 100 },
+            { xi.item.LIZARD_HELM,                   100 },
+            { xi.item.LIZARD_GLOVES,                 100 },
+            { xi.item.LIZARD_TROUSERS,               100 },
+            { xi.item.LIZARD_LEDELSENS,              100 },
+            { xi.item.POETS_CIRCLET,                 100 },
+            { xi.item.LINEN_CUFFS,                   100 },
+            { xi.item.LINEN_SLOPS,                   100 },
+            { xi.item.HOLLY_CLOGS,                   100 },
+            { xi.item.WHITE_MITTS,                   100 },
+            { xi.item.BLACK_SLACKS,                  100 },
+            { xi.item.SANDALS,                       100 },
         }
     },
     [xi.zone.GARLAIGE_CITADEL] =
     {
-        regionalItems = { 18784 }, -- Metasoma Katars
+        regionalItems = { xi.item.METASOMA_KATARS },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P1,                 800 },
+            { xi.item.HI_POTION_P2,                 500 },
+            { xi.item.HI_POTION_P3,                 300 },
+            { xi.item.HI_ETHER_P1,                  600 },
+            { xi.item.HI_ETHER_P2,                  400 },
+            { xi.item.HI_ETHER_P3,                  300 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ANTIDOTE,                    1200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                       700 },
+            { xi.item.PINCH_OF_PRISM_POWDER,        600 },
+            { xi.item.POT_OF_SILENT_OIL,            600 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,         400 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_MELON_JUICE,       1000 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  640,   633 }, -- Olive Oil
-            {  510,   646 }, -- Adaman Ore
-            {  410,   653 }, -- Mythril Ingot
-            {  670,   690 }, -- Elm Log
-            {  325,   691 }, -- Maple Log
-            { 2980,   749 }, -- Mtl. Beastcoin
-            { 3650,   750 }, -- Silver Beastcoin
-            { 2430,   820 }, -- Wool Thread
-            { 3200,   859 }, -- Ram Skin
-            { 2570,   895 }, -- Ram Horn
-            {  765,   943 }, -- Poison Dust
-            { 5000,  4117 }, -- Hi-Potion +1
-            { 2700,  4119 }, -- Hi-Potion +3
-            { 1050,  4121 }, -- X-Potion +1
-            {  450,  4123 }, -- X-Potion +3
-            { 4900,  4143 }, -- Pro-Ether +3
-            {  650,  4144 }, -- Hi-Elixir
-            {  230, 12437 }, -- Gavial Mask
-            {  210, 12693 }, -- Gavial Fng. Gnt.
-            {  110, 16396 }, -- Koenigs Knuckles
-            {   90, 17364 }, -- Cythara Anglica
-            { 2570, 17898 }, -- C. Grass. Broth
-            { 3100, 18259 }, -- Angon
+            { xi.item.BAT_WING,                     3000 },
+            { xi.item.VIAL_OF_SLIME_OIL,            2500 },
+            { xi.item.WALNUT_LOG,                   2500 },
+            { xi.item.UNDEAD_SKIN,                  1500 },
+            { xi.item.BAG_OF_FRUIT_SEEDS,           2000 },
+            { xi.item.GARDENIA_SEED,                3000 },
+            { xi.item.STEEL_NUGGET,                 4000 },
+            { xi.item.WILLOW_LOG,                   2500 },
+            { xi.item.CHESTNUT_LOG,                 3000 },
+            { xi.item.MYTHRIL_BEASTCOIN,            2500 },
+            { xi.item.SPOOL_OF_WOOL_THREAD,         3000 },
+            { xi.item.RAM_SKIN,                     3000 },
+            { xi.item.RAM_HORN,                     2500 },
+            { xi.item.PINCH_OF_BOMB_ASH,            2500 },
+            { xi.item.PINCH_OF_VENOM_DUST,          1500 },
+            { xi.item.HOLY_BOLT_QUIVER,             2000 },
+            { xi.item.HI_POTION_P2,                 1500 },
+            { xi.item.HI_POTION_P3,                 1000 },
+            { xi.item.HI_ETHER_P2,                  1000 },
+            { xi.item.HI_ETHER_P3,                   500 },
+            { xi.item.ELIXIR,                        100 },
+            { xi.item.JUG_OF_COLD_CARRION_BROTH,    2900 },
+            { xi.item.WOOL_CAP,                      100 },
+            { xi.item.WOOL_BRACERS,                  100 },
+            { xi.item.WOOL_HOSE,                     100 },
+            { xi.item.WOOL_SOCKS,                    100 },
+            { xi.item.RAPTOR_HELM,                   100 },
+            { xi.item.RAPTOR_GLOVES,                 100 },
+            { xi.item.RAPTOR_TROUSERS,               100 },
+            { xi.item.RAPTOR_LEDELSENS,              100 },
+            { xi.item.CARAPACE_SUBLIGAR,             100 },
+            { xi.item.CARAPACE_MASK,                 100 },
+            { xi.item.CARAPACE_MITTENS,              100 },
+            { xi.item.CARAPACE_LEGGINGS,             100 },
+            { xi.item.MYTHRIL_CLAWS,                 100 },
+            { xi.item.FALCHION,                      100 },
+            { xi.item.GREATSWORD,                    100 },
+            { xi.item.MYTHRIL_ZAGHNAL,               100 },
+            { xi.item.BONE_ROD,                      100 },
+            { xi.item.BONE_KNIFE,                    100 },
+            { xi.item.KHETEN,                        100 },
+            { xi.item.NEGOROSHIKI,                   100 },
         }
     },
     [xi.zone.FEIYIN] =
     {
-        regionalItems = { 16202 }, -- Dagda's Shield
+        regionalItems = { xi.item.DAGDAS_SHIELD },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  760,   645 }, -- Darksteel Ore
-            {  365,   646 }, -- Adaman Ore
-            {  490,   739 }, -- Orichalcum Ore
-            { 2680,   748 }, -- Gold Beastcoin
-            {  230,   773 }, -- Translucent Rock
-            {  570,   775 }, -- Black Rock
-            {  600,   776 }, -- White Rock
-            {  780,   821 }, -- Rainbow Thread
-            { 1480,   823 }, -- Gold Thread
-            { 3600,  1222 }, -- Yagudo Fltchg.
-            { 1460,  1962 }, -- Plt. Arrowheads
-            {  430,  2459 }, -- Minium
-            { 0000,  2761 }, -- Feyweald Log
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4750,  4123 }, -- X-Potion +3
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 4250,  4143 }, -- Pro-Ether +3
-            { 2500,  4144 }, -- Hi-Elixir
-            { 1500,  4155 }, -- Remedy
-            {  700,  4173 }, -- Hi-Reraiser
-            {  845,  5821 }, -- Fsn. Bolt Quiver
-            {  120, 13929 }, -- Errant Hat
-            {   90, 14078 }, -- Errant Cuffs
-            {   85, 14182 }, -- Errant Pigaches
-            {   75, 14301 }, -- Errant Slops
-            {  230, 16520 }, -- Verdun
-            { 1000, 17896 }, -- Gob. Bug Broth
-            { 2150, 18258 }, -- Thr. Tomahawk
+            { xi.item.BAT_WING,                       3000 },
+            { xi.item.GOLEM_SHARD,                    2000 },
+            { xi.item.TREANT_BULB,                    2900 },
+            { xi.item.AHRIMAN_WING,                    750 },
+            { xi.item.HANDFUL_OF_BAY_LEAVES,          3000 },
+            { xi.item.SLICE_OF_COEURL_MEAT,           2000 },
+            { xi.item.DARKSTEEL_NUGGET,               2000 },
+            { xi.item.ADAMAN_NUGGET,                   750 },
+            { xi.item.OAK_LOG,                        2000 },
+            { xi.item.MAHOGANY_LOG,                   1000 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,         250 },
+            { xi.item.GOLD_BEASTCOIN,                 1000 },
+            { xi.item.CHUNK_OF_SILVER_ORE,            2000 },
+            { xi.item.DHALMEL_HIDE,                   3000 },
+            { xi.item.MANTICORE_HIDE,                 1000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,          500 },
+            { xi.item.SPOOL_OF_GOLD_THREAD,            750 },
+            { xi.item.BAG_OF_YAGUDO_FLETCHINGS,       2000 },
+            { xi.item.WYVERN_SKULL,                    750 },
+            { xi.item.HANDFUL_OF_PLATINUM_ARROWHEADS, 1500 },
+            { xi.item.FOREST_CARP,                    2750 },
+            { xi.item.GUGRU_TUNA,                     1750 },
+            { xi.item.PINCH_OF_MINIUM,                  50 },
+            { xi.item.PERSIKOS,                       1000 },
+            { xi.item.HI_POTION_P2,                   1000 },
+            { xi.item.HI_ETHER_P1,                    1000 },
+            { xi.item.HI_ETHER_P2,                     500 },
+            { xi.item.REMEDY,                          500 },
+            { xi.item.RERAISER,                        250 },
+            { xi.item.STEEL_BULLET_POUCH,             2000 },
+            { xi.item.JUG_OF_LIVELY_MOLE_BROTH,       2500 },
+            { xi.item.RED_ROCK,                        250 },
+            { xi.item.BLUE_ROCK,                       250 },
+            { xi.item.YELLOW_ROCK,                     250 },
+            { xi.item.GREEN_ROCK,                      250 },
+            { xi.item.TRANSLUCENT_ROCK,                250 },
+            { xi.item.PURPLE_ROCK,                     250 },
+            { xi.item.BLACK_ROCK,                      250 },
+            { xi.item.WHITE_ROCK,                      250 },
+            { xi.item.BONE_CHIP,                      2500 },
+            { xi.item.DRAGON_HEART,                     50 },
         }
     },
     [xi.zone.IFRITS_CAULDRON] =
     {
-        regionalItems = { 10949 }, -- Smithy's Torque
+        regionalItems = { xi.item.SMITHYS_TORQUE },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            { 2700,   646 }, -- Adaman Ore
-            {  310,   739 }, -- Orichalcum Ore
-            {  580,   821 }, -- Rainbow Thread
-            { 4700,  1222 }, -- Yagudo Fltchg.
-            { 1540,   838 }, -- Spider Web
-            { 1700,   843 }, -- G. Bird Plume
-            { 2050,  1155 }, -- Iron Sand
-            { 3670,  1222 }, -- Yagudo Fltchg.
-            { 3100,  1962 }, -- Plt. Arrowheads
-            { 1050,  2459 }, -- Minium
-            { 2100,  2532 }, -- Teak Log
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 2500,  4123 }, -- X-Potion +3
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 2200,  4143 }, -- Pro-Ether +3
-            { 2400,  5662 }, -- Dragon Fruit
-            { 1250, 12309 }, -- Ritter Shield
-            {  320, 13212 }, -- Tarutaru Sash
-            {  680, 13587 }, -- Rainbow Cape
-            {  780, 13595 }, -- Coeurl Mantle
-            {  220, 15890 }, -- Marid Belt
-            {  695, 16128 }, -- Wivre Hairpin
-            {  725, 16265 }, -- Wivre Gorget
+            { xi.item.SILVER_NUGGET,                  3000 },
+            { xi.item.BUNCH_OF_WILD_PAMAMAS,          2000 },
+            { xi.item.MYTHRIL_NUGGET,                 2500 },
+            { xi.item.HANDFUL_OF_WYVERN_SCALES,       1000 },
+            { xi.item.BUNCH_OF_BUBURIMU_GRAPES,       3000 },
+            { xi.item.BAG_OF_SEMOLINA,                2000 },
+            { xi.item.ADAMAN_NUGGET,                  1250 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,         250 },
+            { xi.item.ELM_LOG,                        2000 },
+            { xi.item.EBONY_LOG,                      1000 },
+            { xi.item.PLATINUM_BEASTCOIN,              500 },
+            { xi.item.BAG_OF_YAGUDO_FLETCHINGS,       1500 },
+            { xi.item.GIANT_BIRD_PLUME,               2000 },
+            { xi.item.HANDFUL_OF_IRON_SAND,           2150 },
+            { xi.item.RAPTOR_SKIN,                    2500 },
+            { xi.item.WYVERN_SKIN,                    1000 },
+            { xi.item.HANDFUL_OF_PLATINUM_ARROWHEADS, 1500 },
+            { xi.item.SHALL_SHELL,                    2000 },
+            { xi.item.SPIDER_WEB,                     2000 },
+            { xi.item.BLACK_PEARL,                    1000 },
+            { xi.item.FOREST_CARP,                    2500 },
+            { xi.item.GRIMMONITE,                     2000 },
+            { xi.item.PINCH_OF_MINIUM,                  50 },
+            { xi.item.PINCH_OF_PARALYSIS_DUST,        1500 },
+            { xi.item.HI_POTION,                      1250 },
+            { xi.item.HI_POTION_P1,                    500 },
+            { xi.item.X_POTION,                       1000 },
+            { xi.item.X_POTION_P1,                     500 },
+            { xi.item.HI_ETHER_P1,                    1500 },
+            { xi.item.PRO_ETHER,                      1000 },
+            { xi.item.JUG_OF_FISH_OIL_BROTH,          2500 },
+            { xi.item.ANGON,                          1000 },
+            { xi.item.VIAL_OF_DRAGON_BLOOD,            500 },
+            { xi.item.PHILOSOPHERS_STONE,               50 },
         }
     },
     [xi.zone.GUSTAV_TUNNEL] =
     {
-        regionalItems = { 10955, 11041 }, -- Culinarian's Torque | Liminus Earring
+        regionalItems = { xi.item.CULINARIANS_TORQUE, xi.item.LIMINUS_EARRING },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1200 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1200 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  390,   657 }, -- Tama-Hagane
-            {  745,   876 }, -- Manta Skin
-            {  250,   887 }, -- Coral Fragment
-            { 4500,  1163 }, -- Manticore Hair
-            { 1025,  1446 }, -- Lacquer Tree Log
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4200,  4120 }, -- X-Potion
-            { 3500,  4121 }, -- X-Potion +1
-            { 3000,  4122 }, -- X-Potion +2
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 2700,  4143 }, -- Pro-Ether +3
-            {  600,  4155 }, -- Remedy
-            { 1200,  4173 }, -- Hi-Reraiser
-            {  900,  4174 }, -- Vile Elixir
-            { 1200,  4291 }, -- Sandfish
-            { 1700,  4447 }, -- Scream Fungus
-            {  650,  5866 }, -- Toolbag (Moku)
-            { 1050,  5871 }, -- Ruszor Quiver
-            { 2050, 17881 }, -- Deepbed Soil
-            { 1020, 17884 }, -- Sun Water
-            {  500, 17898 }, -- C. Grass. Broth
-            {  400, 17899 }, -- Svg. Mole Broth
+            { xi.item.REVIVAL_TREE_ROOT,            3000 },
+            { xi.item.SCORPION_CLAW,                2000 },
+            { xi.item.STEEL_NUGGET,                 3000 },
+            { xi.item.HANDFUL_OF_WYVERN_SCALES,     1000 },
+            { xi.item.BOX_OF_TARUTARU_RICE,         3000 },
+            { xi.item.PERSIKOS,                     1500 },
+            { xi.item.DARKSTEEL_NUGGET,             3000 },
+            { xi.item.LUMP_OF_TAMA_HAGANE,          1000 },
+            { xi.item.CHESTNUT_LOG,                 2000 },
+            { xi.item.LACQUER_TREE_LOG,              750 },
+            { xi.item.GOLD_NUGGET,                  2500 },
+            { xi.item.GOLD_BEASTCOIN,               1000 },
+            { xi.item.MANTA_SKIN,                   2500 },
+            { xi.item.CORAL_FRAGMENT,               1000 },
+            { xi.item.CLUMP_OF_BOYAHDA_MOSS,        2500 },
+            { xi.item.LOCK_OF_MANTICORE_HAIR,       2000 },
+            { xi.item.CATOBLEPAS_HIDE,              1000 },
+            { xi.item.TAURUS_HORN,                  2000 },
+            { xi.item.SPOOL_OF_LINEN_THREAD,        2000 },
+            { xi.item.TOOLBAG_SHIHEI,                500 },
+            { xi.item.SANDFISH,                      750 },
+            { xi.item.SCREAM_FUNGUS,                2500 },
+            { xi.item.SLICE_OF_DRAGON_MEAT,           50 },
+            { xi.item.DEMON_QUIVER,                  500 },
+            { xi.item.HI_POTION_P1,                 1000 },
+            { xi.item.X_POTION,                     1000 },
+            { xi.item.X_POTION_P1,                   500 },
+            { xi.item.HI_ETHER_P1,                  1500 },
+            { xi.item.PRO_ETHER,                    1000 },
+            { xi.item.REMEDY,                        400 },
+            { xi.item.JUG_OF_SEEDBED_SOIL,          3000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,        500 },
+            { xi.item.DRAGON_HEART,                   50 },
         }
     },
     [xi.zone.LABYRINTH_OF_ONZOZO] =
     {
-        regionalItems = { 18817 }, -- Furtive Grip
+        regionalItems = { xi.item.FURTIVE_GRIP },
         temps =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  900, 4202 }, -- Daedalus Wing
-            {  500, 4206 }, -- Catholicon
-            {  300, 4255 }, -- Mana Powder
-            {  450, 5322 }, -- Healing Powder
-            {  320, 5393 }, -- Monarch's Drink
-            {  650, 5394 }, -- Gnostic's Drink
-            {  430, 5395 }, -- Cleric's Drink
-            { 1000, 5433 }, -- Dusty Elixir
-            {  690, 5439 }, -- Vicar's Drink
-            {  250, 5440 }, -- Dusty Wing
-            { 2000, 5824 }, -- Lucid Potion I
-            { 1900, 5825 }, -- Lucid Potion II
-            { 1200, 5826 }, -- Lucid Potion III
-            {  730, 5832 }, -- Healing Mist
-            {  420, 5833 }, -- Mana Mist
-            { 1010, 5834 }, -- Lucid Wings I
-            {  875, 5835 }, -- Healing Salve I
-            {  210, 5836 }, -- Healing Salve II
-            {  920, 5837 }, -- Clear Salve I
-            {  190, 5838 }, -- Clear Salve II
-            {  310, 5839 }, -- Stalwart's Tonic
-            {  205, 5840 }, -- Stalwart's Gambir
-            {  410, 5841 }, -- Ascetic's Tonic
-            {  305, 5842 }, -- Ascetic's Gambir
-            {  310, 5843 }, -- Champion's Tonic
-            {  200, 5845 }, -- Fanatic's Tonic
+            { xi.item.HI_POTION_P3,                 900 },
+            { xi.item.X_POTION,                     400 },
+            { xi.item.X_POTION_P1,                  300 },
+            { xi.item.HI_ETHER_P3,                  800 },
+            { xi.item.SUPER_ETHER,                  300 },
+            { xi.item.SUPER_ETHER_P1,               200 },
+            { xi.item.HI_ELIXIR,                    200 },
+            { xi.item.ELIXIR,                       200 },
+            { xi.item.FLASK_OF_PANACEA,            1000 },
+            { xi.item.REMEDY,                      1200 },
+            { xi.item.DAEDALUS_WING,                400 },
+            { xi.item.BOTTLE_OF_CATHOLICON,        1000 },
+            { xi.item.BOTTLE_OF_LETHE_WATER,        500 },
+            { xi.item.PINCH_OF_MANA_POWDER,         300 },
+            { xi.item.FLASK_OF_PAMAMA_AU_LAIT,     1000 },
+            { xi.item.BOTTLE_OF_YAGUDO_DRINK,      1000 },
+            { xi.item.FLASK_OF_HEALING_POWDER,      300 },
         },
         items =
         {
-        -----------------------------------
-        -- { weight, itemId }
-        -----------------------------------
-            {  720,  1213 }, -- Dst. Bolt Heads
-            { 1020,  1443 }, -- Dried Mugwort
-            {  430,  2459 }, -- Minium
-            { 2200,  2761 }, -- Feyweald Log
-            { 5000,  4119 }, -- Hi-Potion +3
-            { 4750,  4123 }, -- X-Potion +3
-            { 4900,  4135 }, -- Hi-Ether +3
-            { 4250,  4143 }, -- Pro-Ether +3
-            { 2500,  4144 }, -- Hi-Elixir
-            { 1500,  4155 }, -- Remedy
-            {  700,  4173 }, -- Hi-Reraiser
-            {  640,  4449 }, -- Reishi Mushroom
+            { xi.item.BAT_FANG,                       3000 },
+            { xi.item.RAM_SKIN,                       2000 },
+            { xi.item.GIANT_FEMUR,                    2900 },
+            { xi.item.HANDFUL_OF_WYVERN_SCALES,        750 },
+            { xi.item.HANDFUL_OF_BAY_LEAVES,          3000 },
+            { xi.item.SLICE_OF_COEURL_MEAT,           2000 },
+            { xi.item.DARKSTEEL_NUGGET,               1750 },
+            { xi.item.ADAMAN_NUGGET,                   750 },
+            { xi.item.OAK_LOG,                        2000 },
+            { xi.item.MAHOGANY_LOG,                   1000 },
+            { xi.item.CHUNK_OF_ORICHALCUM_ORE,         250 },
+            { xi.item.GOLD_BEASTCOIN,                 1000 },
+            { xi.item.CHUNK_OF_SILVER_ORE,            2000 },
+            { xi.item.DHALMEL_HIDE,                   3000 },
+            { xi.item.MANTICORE_HIDE,                 1000 },
+            { xi.item.SPOOL_OF_SILVER_THREAD,          500 },
+            { xi.item.SPOOL_OF_GOLD_THREAD,            750 },
+            { xi.item.BAG_OF_YAGUDO_FLETCHINGS,       2000 },
+            { xi.item.WYVERN_SKULL,                    750 },
+            { xi.item.HANDFUL_OF_PLATINUM_ARROWHEADS, 1500 },
+            { xi.item.FOREST_CARP,                    2750 },
+            { xi.item.GUGRU_TUNA,                     1750 },
+            { xi.item.PINCH_OF_MINIUM,                  50 },
+            { xi.item.PERSIKOS,                       1250 },
+            { xi.item.HI_POTION_P2,                   1000 },
+            { xi.item.HI_ETHER_P1,                    1000 },
+            { xi.item.HI_ETHER_P2,                     500 },
+            { xi.item.REMEDY,                          500 },
+            { xi.item.RERAISER,                        250 },
+            { xi.item.STEEL_BULLET_POUCH,             2000 },
+            { xi.item.JUG_OF_LIVELY_MOLE_BROTH,       2500 },
+            { xi.item.RED_ROCK,                        250 },
+            { xi.item.BLUE_ROCK,                       250 },
+            { xi.item.YELLOW_ROCK,                     250 },
+            { xi.item.GREEN_ROCK,                      250 },
+            { xi.item.TRANSLUCENT_ROCK,                250 },
+            { xi.item.PURPLE_ROCK,                     250 },
+            { xi.item.BLACK_ROCK,                      250 },
+            { xi.item.WHITE_ROCK,                      250 },
+            { xi.item.BONE_CHIP,                      2500 },
+            { xi.item.DRAGON_HEART,                     50 },
         },
     },
 }
