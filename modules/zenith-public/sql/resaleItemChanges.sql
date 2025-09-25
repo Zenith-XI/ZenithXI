@@ -6,4 +6,5 @@
 -----------------------------------
 
 UPDATE item_basic
-SET BaseSell = CEILING(BaseSell * 0.90); -- Reduce all item base sell prices by 10%
+SET BaseSell = CEILING(BaseSell * 0.90) -- Reduce all item base sell prices by 10%
+WHERE BaseSell > 0;
