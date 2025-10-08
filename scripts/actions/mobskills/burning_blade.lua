@@ -1,26 +1,29 @@
 -----------------------------------
 -- Burning Blade
---
--- Description: Deals fire elemental damage. Damage varies with TP.
--- Type: Physical
--- Utsusemi/Blink absorb: 1 Shadow?
--- Range: Melee
+-- Family: Humanoid Sword Weaponskill
+-- Description: Deals Fire damage. Damage varies with TP.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
-    mob:messageBasic(xi.msg.basic.READIES_WS, 0, 33)
+    -- mob:messageBasic(xi.msg.basic.READIES_WS, 0, 33) -- TODO: Is this needed?
     return 0
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 3
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.FIRE, 1, xi.mobskills.magicalTpBonus.DMG_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.NUMSHADOWS_1)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 3.0, 3.0, 3.0 } -- TODO: Capture fTPs
+    params.element    = xi.element.FIRE
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.NUMSHADOWS_1, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+    end
 
     return damage
 end

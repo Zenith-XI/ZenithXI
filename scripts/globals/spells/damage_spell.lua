@@ -588,7 +588,7 @@ xi.spells.damage.calculateDayAndWeather = function(caster, spellElement, alwaysA
 end
 
 -- Magic Attack Bonus VS Magic Defense Bonus
-xi.spells.damage.calculateMagicBonusDiff = function(caster, target, spellId, skillType, spellElement)
+xi.spells.damage.calculateMagicBonusDiff = function(caster, target, spellId, skillType, spellElement, bonusMATT)
     local magicBonusDiff = 1 -- The variable we want to calculate
     local casterJob      = caster:getMainJob()
     local mab            = caster:getMod(xi.mod.MATT) + cardinalChantBonus(caster, target, xi.direction.EAST, spellId, skillType)
@@ -687,6 +687,25 @@ xi.spells.damage.calculateMagicCriticalMultiplier = function(caster)
     end
 
     return 1
+end
+
+-- Calculate: Target Breath Damage Adjustment (TBDA)
+-- Referred to on item as "Breath Damage Taken -%", "Damage Taken -%" (Ex. Defending Ring).
+xi.spells.damage.calculateTBDA = function(target, spellElement)
+    local targetBreathDamageAdjustment = 1
+
+    -- The values set for this modifiers are base 10000.
+    -- -2500 in item_mods.sql means -25% damage recived.
+    -- 2500 would mean 25% ADDITIONAL damage taken.
+    -- The effects of the "Shell" spells are also included in this step. The effect also aplies a negative value.
+    local globalDamageTaken   = target:getMod(xi.mod.DMG) / 10000                               -- Mod is base 10000
+    local breathDamageTaken   = target:getMod(xi.mod.DMGBREATH) / 10000                         -- Mod is base 10000
+    local uBreathDamageTaken  = target:getMod(xi.mod.UDMGBREATH) / 10000                        -- Mod is base 10000
+    local combinedDamageTaken = utils.clamp(breathDamageTaken + globalDamageTaken, -0.5, 0.5)   -- The combination of regular "Damage Taken" and "Breath Damage Taken" caps at 50%. There is no BDTII known as of yet.
+
+    targetBreathDamageAdjustment = utils.clamp(1 + combinedDamageTaken + uBreathDamageTaken, 0, 2) -- Uncapped breath damage modifier. Cap is 100% both ways.
+
+    return targetBreathDamageAdjustment
 end
 
 -- Divine seal applies its own multiplier to healing spells when used against undead.
@@ -1130,7 +1149,7 @@ xi.spells.damage.useDamageSpell = function(caster, target, spell)
     local additionalResistTier      = xi.spells.damage.calculateAdditionalResistTier(caster, target, spellElement)
     local sdt                       = xi.combat.damage.magicalElementSDT(target, spellElement)
     local dayAndWeather             = xi.spells.damage.calculateDayAndWeather(caster, spellElement, forceDayWeatherBonus)
-    local magicBonusDiff            = xi.spells.damage.calculateMagicBonusDiff(caster, target, spellId, skillType, spellElement)
+    local magicBonusDiff            = xi.spells.damage.calculateMagicBonusDiff(caster, target, spellId, skillType, spellElement, 0)
     local criticalDamageMultiplier  = xi.spells.damage.calculateMagicCriticalMultiplier(caster)
     local divineSealMultiplier      = xi.spells.damage.calculateDivineSealMultiplier(caster, target, skillType)
     local divineEmblemMultiplier    = xi.spells.damage.calculateDivineEmblemMultiplier(caster, skillType)

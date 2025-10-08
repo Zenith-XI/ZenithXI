@@ -1,8 +1,7 @@
 -----------------------------------
---  Death Ray
---
---  Description: Deals dark damage to an enemy.
---  Type: Magical (Dark)
+-- Death Ray
+-- Family: Hecteyes
+-- Description: Deals Dark damage to an enemy.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -12,12 +11,18 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getMainLvl() * 4.5
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl()
+    params.fTP        = { 3.0, 3.75, 4.50 }
+    params.element    = xi.element.DARK
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
+    end
 
     return damage
 end

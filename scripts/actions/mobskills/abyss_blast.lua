@@ -1,11 +1,7 @@
 -----------------------------------
---  Abyss Blast
---
---  Description: Blasts a single target with dark energy. Additional effect: Blind
---  Type: Magical
---  Utsusemi/Blink absorb: Ignores shadows
---  Range: Unknown
---  Notes: Blinds target
+-- Abyss Blast
+-- Family: Doomed
+-- Description: Blasts a single target with dark energy. Additional Effect: Blind
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -15,15 +11,22 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local ftp      = 2.5
-    local power    = 15
-    local duration = 120
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.DARK, ftp, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 2.50, 3.50, 4.50 }
+    params.element    = xi.element.DARK
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BLINDNESS, power, 0, duration)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
+
+        local power    = 20
+        local duration = 120
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BLINDNESS, power, 0, duration)
+    end
 
     return damage
 end

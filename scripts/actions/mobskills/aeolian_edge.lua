@@ -1,5 +1,7 @@
 -----------------------------------
 -- Aeolian Edge
+-- Family: Humanoid Dagger Weaponskill
+-- Description: Deals Wind damage to enemies in range.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -10,15 +12,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local numhits = 3
-    local accmod  = 1
-    local ftp     = 2
-    local info    = xi.mobskills.mobPhysicalMove(mob, target, skill, numhits, accmod, ftp, xi.mobskills.physicalTpBonus.ACC_VARIES, 1, 2, 3)
-    local dmg     = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.PHYSICAL, xi.damageType.SLASHING, info.hitslanded)
+    local params = {}
 
-    target:takeDamage(dmg, mob, xi.attackType.PHYSICAL, xi.damageType.SLASHING)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 2.00, 3.00, 4.50 } -- TODO: Capture fTPs
+    params.element    = xi.element.WIND
 
-    return dmg
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WIND, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WIND)
+    end
+
+    return damage
 end
 
 return mobskillObject

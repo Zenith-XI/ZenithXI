@@ -1,11 +1,8 @@
 -----------------------------------
---  Cyclonic Torrent
---
---  Description: Area of Effect damage plus Mute to those in range.
---  Type: Enfeebling
---  Utsusemi/Blink absorb: Wipes Shadows
---  Range: 20' radial
---  Notes: Only used by Urd, Verthandi, and Carabosse.
+-- Cyclonic Torrent
+-- Family: Pixies
+-- Description: Deals Wind damage to targets in range. Additional Effect: Mute
+-- Notes: Used by Urd, Verthandi, and Carabosse.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -15,16 +12,23 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local numhits = 1
-    local accmod = 1
-    local ftp    = 2.5
-    local info = xi.mobskills.mobPhysicalMove(mob, target, skill, numhits, accmod, ftp, xi.mobskills.physicalTpBonus.NO_EFFECT)
-    local dmg = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.PHYSICAL, xi.damageType.BLUNT, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
-    target:takeDamage(dmg, mob, xi.attackType.PHYSICAL, xi.damageType.BLUNT)
+    local params = {}
 
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.MUTE, 1, 0, 60)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 3.0, 3.0, 3.0 } -- TODO: Capture fTPs
+    params.element    = xi.element.WIND
 
-    return dmg
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WIND, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WIND)
+
+        -- TODO: Capture duration
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.MUTE, 1, 0, 60)
+    end
+
+    return damage
 end
 
 return mobskillObject

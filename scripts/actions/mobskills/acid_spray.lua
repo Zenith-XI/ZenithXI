@@ -1,6 +1,7 @@
 -----------------------------------
 -- Acid Spray
--- Deals Water damage to targets in a fan-shaped area of effect. Additional effect: Poison
+-- Family: Spider
+-- Description: Deals Water damage to a target. Additional Effect: Poison
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -10,14 +11,22 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 3
-    local power  = mob:getMainLvl() / 3.5
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.WATER, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 1.00, 1.00, 1.00 }
+    params.element    = xi.element.WATER
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.POISON, power, 3, 120)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
+
+        local power = math.floor(mob:getMainLvl() / 10 * 2)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.POISON, power, 3, 60)
+    end
 
     return damage
 end

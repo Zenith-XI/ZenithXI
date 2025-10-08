@@ -1,7 +1,7 @@
 -----------------------------------
 -- Diffusion Ray
--- Family: Chariots
--- Description: Deals damage to enemies within a fan-shaped area originating from the caster.
+-- Family: Chariot
+-- Description: Deals Light damage to enemies within a fan-shaped area originating from the caster.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,20 +13,20 @@ end
 mobskillObject.onMobWeaponSkill = function(target, mob, skill, action)
     local params = {}
 
-    params.percentMultipier = 0.20
-    params.damageCap        = 500
-    params.bonusDamage      = 0
-    params.mAccuracyBonus   = { 0, 0, 0 }
-    params.resistStat       = xi.mod.MND
+    params.baseDamage       = mob:getMainLvl() + 2
+    params.fTP              = { 5, 5, 5 }
     params.element          = xi.element.LIGHT
-    params.attackType       = xi.attackType.BREATH
-    params.damageType       = xi.damageType.LIGHT
-    params.shadowBehavior   = xi.mobskills.shadowBehavior.IGNORE_SHADOWS
+    params.dStatMultiplier  = 1.5
 
-    local info = xi.mobskills.mobBreathMove(mob, target, skill, action, params)
+    -- TODO: Pulled from JP Wiki. Need captures to confirm.
+    params.dStatAttackerMod = xi.mod.MND
+    params.dStatDefenderMod = xi.mod.MND
 
-    if xi.mobskills.processDamage(mob, target, skill, action, info) then
-        target:takeDamage(info.damage, mob, info.attackType, info.damageType)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.LIGHT, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.LIGHT)
     end
 
     return info.damage

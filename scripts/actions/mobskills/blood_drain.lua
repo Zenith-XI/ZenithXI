@@ -1,7 +1,7 @@
 -----------------------------------
 -- Blood Drain
--- Steals an enemy's HP. Ineffective against undead.
--- TODO: Needs 1.5 + dINT calc
+-- Family: Giant Bats
+-- Description: Steals an enemy's HP. Ineffective against undead.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -11,18 +11,26 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getMainLvl() + 2
-    local shadow = xi.mobskills.shadowBehavior.NUMSHADOWS_1
+    local params = {}
 
-    -- Asanbosam uses a modified blood drain that ignores shadows
-    if mob:getPool() == xi.mobPool.ASANBOSAM then
-        shadow = xi.mobskills.shadowBehavior.IGNORE_SHADOWS
+    params.baseDamage      = mob:getMainLvl() + 2
+    params.fTP             = { 1.5, 1.5, 1.5 }
+    params.element         = xi.element.DARK
+    params.dStatMultiplier = 1
+
+    local shadowBehavior   = xi.mobskills.shadowBehavior.NUMSHADOWS_1
+
+    -- Asanbosam (Pool ID 256) uses a modified Blood Drain that ignores shadows
+    if mob:getPool() == xi.mobPools.ASANBOSAM then
+        shadowBehavior = xi.mobskills.shadowBehavior.IGNORE_SHADOWS
     end
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.NO_EFFECT, 0)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, shadow)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, shadowBehavior, info.hitsLanded)
 
-    skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.HP, damage))
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        skill:setMsg(xi.mobskills.mobDrainMove(mob, target, xi.mobskills.drainType.HP, damage))
+    end
 
     return damage
 end

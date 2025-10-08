@@ -1,12 +1,7 @@
 -----------------------------------
--- Erratic Flutter
--- Family: Wamoura
--- Description: Deals Fire damage to enemies in range. Grants the effect of Haste.
--- Notes:
---  Wamoura version also deals Fire damage to targets around the wamoura.
---  While it does not overwrite most forms of Slowga, Slow II, Slow II TP moves,
---  Erratic Flutter does overwrite Hojo: Ni, Hojo: Ichi, and Slow.
---  Player Blue magic version is wind element instead of fire.
+-- Acheron Flame
+-- Family: Cerberus
+-- Description: Deals severe Fire damage to enemies within an area of effect. Additional Effect: Burn
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -18,18 +13,20 @@ end
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
     local params = {}
 
-    params.baseDamage = mob:getMainLvl() + 2
-    params.fTP        = { 2.75, 2.75, 2.75 }
-    params.element    = xi.element.FIRE
+    params.baseDamage      = mob:getMainLvl() + 2
+    params.fTP             = { 12.50, 12.50, 12.50 } -- TODO: Captures fTPs
+    params.element         = xi.element.FIRE
+    params.dStatMultiplier = 1
 
     local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
     local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
 
     if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
         target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
-    end
 
-    xi.mobskills.mobBuffMove(mob, xi.effect.HASTE, 4500, 0, 180)
+        local power = 30 -- TODO: Capture power/duration
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BURN, power, 3, 60)
+    end
 
     return damage
 end

@@ -1109,7 +1109,7 @@ INSERT INTO `mob_skills` VALUES (1081,743,'frypan',1,0.0,10.0,2000,1500,4,0,0,0,
 INSERT INTO `mob_skills` VALUES (1082,744,'smokebomb',4,0.0,10.0,2000,1500,4,0,0,0,0,0,0);
 INSERT INTO `mob_skills` VALUES (1083,745,'smokebomb',0,0.0,10.0,2000,1500,1,0,0,0,0,0,0); -- fail
 INSERT INTO `mob_skills` VALUES (1084,746,'crispy_candle',4,0.0,10.0,2000,1500,4,0,0,0,0,0,0);
-INSERT INTO `mob_skills` VALUES (1085,747,'crispy_candle',0,0.0,10.0,2000,1500,1,0,0,0,0,0,0); -- fail
+INSERT INTO `mob_skills` VALUES (1085,747,'crispy_candle_self',0,0.0,10.0,2000,1500,1,0,0,0,0,0,0); -- fail
 INSERT INTO `mob_skills` VALUES (1086,748,'paralysis_shower',4,0.0,10.0,2000,1500,4,0,0,0,0,0,0);
 INSERT INTO `mob_skills` VALUES (1087,749,'paralysis_shower',0,0.0,10.0,2000,1500,1,0,0,0,0,0,0); -- fail
 INSERT INTO `mob_skills` VALUES (1088,334,'goblin_rush',0,0.0,7.0,2000,1500,4,0,0,1,0,0,0);

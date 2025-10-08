@@ -1,6 +1,7 @@
 -----------------------------------
 -- Empty Salvation
--- Damages all targets in range with the salvation of emptiness. Additional effect: Dispels 3 effects
+-- Family: Promathia
+-- Description: Damages all targets in range with the salvation of emptiness. Additional Effect: Dispels 3 effects
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -10,10 +11,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.DARK, 2, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_3)
+    local params = {}
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 2, 2, 2 } -- TODO: Capture fTPs
+    params.element    = xi.element.DARK
+    -- TODO: Capture shadowBehavior
+    -- TODO: There are two entries for this skill with different animations.
+    -- Check to see if there are any differences between them.
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_3, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
 
     -- Dispel 3 status effects
     for i = 1, 3 do

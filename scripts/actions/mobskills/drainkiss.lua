@@ -1,9 +1,7 @@
 -----------------------------------
 -- Drainkiss
--- Deals dark damage to a single target. Additional effect: Drain
--- Type: Magical
--- Utsusemi/Blink absorb: 1 shadow
--- Range: Melee
+-- Family: Leeches
+-- Deals Dark damage to a single target. Additional Effect: HP Drain
 -- Notes: If used against undead, it will simply do damage and not drain HP.
 -----------------------------------
 ---@type TMobSkill
@@ -14,12 +12,18 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 3
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_1)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 1.00, 1.25, 1.50 }
+    params.element    = xi.element.DARK
 
-    skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.HP, damage))
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_1, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        skill:setMsg(xi.mobskills.mobDrainMove(mob, target, xi.mobskills.drainType.HP, damage))
+    end
 
     return damage
 end

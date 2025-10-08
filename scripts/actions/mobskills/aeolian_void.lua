@@ -1,7 +1,7 @@
 -----------------------------------
 -- Aeolian Void
--- Family: Sand Worm
--- Description: Deals conal AoE Wind damage to targets in front of mob. Additional Effect: Blind, Silence
+-- Family: Sandworm
+-- Description: Deals Wind damage to enemies in front of mob. Additional Effect: Blind, Silence
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,13 +13,19 @@ end
 mobskillObject.onMobWeaponSkill = function(target, mob, skill, action)
     local damage = mob:getWeaponDmg() * 2
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.WIND, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WIND, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 2.00, 2.00, 2.00 }
+    params.element    = xi.element.WIND
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WIND)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WIND, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
 
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SILENCE, 1, 0, 180)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BLINDNESS, 50, 0, 180)
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WIND)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SILENCE, 1, 0, 180)
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BLINDNESS, 50, 0, 180)
+    end
 
     return damage
 end

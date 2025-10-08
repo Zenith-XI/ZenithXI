@@ -1,7 +1,8 @@
 -----------------------------------
---  Goblin Dice
---  Description: Deals thunder damage.
---  Type: Magical (Water)
+-- Goblin Dice (Damage)
+-- Family: Goblins
+-- Description: Deals Thunder damage.
+-- Notes: Used by Goblins in Dynamis.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -11,12 +12,18 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 6
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.THUNDER, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.THUNDER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 6, 6, 6 } -- TODO: Capture fTPs
+    params.element    = xi.element.THUNDER
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.THUNDER)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.THUNDER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.THUNDER)
+    end
 
     return damage
 end

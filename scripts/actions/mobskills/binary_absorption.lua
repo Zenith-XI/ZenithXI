@@ -1,9 +1,7 @@
 -----------------------------------
 -- Binary Absorption
--- Deals elemental damage to the target. Additional effect: Drain.
--- Type: Magical
--- Utsusemi/Blink absorb: 1 Shadows
--- Range: Melee
+-- Family: Thinker
+-- Description: Drains HP
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,12 +11,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() * 3.5, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.NO_EFFECT, 0)
-    local dmg = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_1)
+    local params = {}
 
-    skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.HP, dmg))
+    params.baseDamage   = mob:getMainLvl()
+    params.fTP          = { 3.5, 3.5, 3.5 }
+    params.element      = xi.element.DARK
 
-    return dmg
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_1, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        skill:setMsg(xi.mobskills.mobDrainMove(mob, target, xi.mobskills.drainType.HP, damage))
+    end
+
+    return damage
 end
 
 return mobskillObject

@@ -1,7 +1,7 @@
 -----------------------------------
---  Blazing Bound
---  Description: Deals fire damage to an enemy.
---  Type: Magical (Fire)
+-- Blazing Bound
+-- Family: Limules
+-- Description: Deals Fire damage to target. Additional Effect: Burn
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -11,12 +11,23 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 3
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.FIRE, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage   = mob:getMainLvl() + 2
+    params.fTP          = { 3.00, 3.00, 3.00 } -- TODO: Capture fTPs
+    params.element      = xi.element.FIRE
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+
+        -- TODO: Capture power/durations/ if it scales on level/tp
+        -- xi.mobskills.mobBuffMove(mob, xi.effect.DEFENSE_BOOST, 25, 0, 120) -- Need power/duration data
+        -- xi.mobskills.mobBuffMove(mob, xi.effect.MAGIC_DEF_BOOST, 25, 0, 120) -- Need power/duration data
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BURN, 26, 3, 120)
+    end
 
     return damage
 end

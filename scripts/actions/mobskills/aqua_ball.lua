@@ -1,6 +1,7 @@
 -----------------------------------
 -- Aqua Ball
--- Deals Water damage in a splash area of effect. Additional effect: STR Down
+-- Family: Pugils
+-- Description: Deals Water damage in a splash area of effect. Additional Effect: STR Down
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -10,16 +11,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage   = mob:getWeaponDmg() * 3
-    local power    = 20
-    local tick     = 3
-    local duration = power * tick
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.WATER, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 2.00, 2.50, 3.00 }
+    params.element    = xi.element.WATER
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.STR_DOWN, power, tick, duration)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.STR_DOWN, 10, 9, 180)
+    end
 
     return damage
 end

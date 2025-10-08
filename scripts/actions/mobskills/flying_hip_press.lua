@@ -1,9 +1,8 @@
 -----------------------------------
---  Flying Hip Press
---  Description: Deals Wind damage to enemies within area of effect.
---  Type: Magical
---  Utsusemi/Blink absorb: Ignores shadows
---  Range: 15' radial
+-- Flying Hip Press
+-- Family: Bugbears
+-- Description: Deals Wind damage to enemies within area of effect.
+-- Note: Mobskill is NOT a breath attack like the BLU spell is.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,20 +12,26 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local fTP = 2.0
+    local params = {}
+
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 2.0, 2.0, 3.0 }
+    params.element    = xi.element.WIND
 
     if mob:getPool() == xi.mobPool.BUGBOY then
-        fTP = 7.0
+        params.fTP = 7.0
     end
 
     if mob:getPool() == xi.mobPool.BUGBEAR_MATMAN then
-        fTP = 10.0
+        params.fTP = 10.0
     end
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.WIND, fTP, xi.mobskills.magicalTpBonus.NO_EFFECT, 0)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WIND, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WIND, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WIND)
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WIND)
+    end
 
     return damage
 end

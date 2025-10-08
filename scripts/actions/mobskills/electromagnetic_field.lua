@@ -1,7 +1,8 @@
 -----------------------------------
 -- Electromagnetic Field
--- Description: Deals thunder damage.
--- Type: Magical (Thunder)
+-- Family: Spheroids
+-- Description: Deals Thunder damage to targets in range of mob.
+-- Notes: Used by Warders in COP Mission 6-1.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -11,10 +12,18 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.THUNDER, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.THUNDER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    local params = {}
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.THUNDER)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 1, 1, 1 } -- TODO: Capture fTP scaling.
+    params.element    = xi.element.THUNDER
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.THUNDER, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.THUNDER)
+    end
 
     return damage
 end

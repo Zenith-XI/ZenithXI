@@ -1,7 +1,7 @@
 -----------------------------------
 -- Cyclone Wing
---
--- Description: Deals darkness damage to enemies within a very wide area of effect. Additional effect: Sleep
+-- Family: Wyrm (Vrtra)
+-- Description: Deals darkness damage to enemies within a very wide area of effect. Additional Effect: Sleep
 -- Type: Magical
 -- Utsusemi/Blink absorb: Wipes shadows
 -- Range: 30' radial.
@@ -22,10 +22,17 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.DARK, 4, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    local params = {}
+
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 4, 4, 4 }
+    params.element    = xi.element.DARK
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
 
     target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
+
     xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SLEEP_I, 1, 0, 60)
 
     return damage

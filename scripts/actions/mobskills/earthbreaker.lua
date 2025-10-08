@@ -1,9 +1,7 @@
 -----------------------------------
 -- Earthbreaker
--- Description: Deals Earth damage to enemies within area of effect. Additional effect: Stun
--- Type: Magical
--- Utsusemi/Blink absorb: Wipes shadows
--- Range: 15' radial
+-- Family: Scorpions
+-- Description: Deals Earth damage to enemies within area of effect. Additional Effect: Stun
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,11 +11,21 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.EARTH, 4, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    local params = {}
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.STUN, 1, 0, 10)
+    params.baseDamage      = mob:getMainLvl() + 2
+    params.fTP             = { 1.0, 1.0, 1.0 }
+    params.element         = xi.element.EARTH
+    params.dStatMultiplier = 1
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.STUN, 1, 0, 8)
+    end
 
     return damage
 end

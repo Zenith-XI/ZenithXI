@@ -1,30 +1,25 @@
 -----------------------------------
--- Bomb Toss - Suicide
--- Family: Goblins
--- Description: Bomb toss back fires, killing the mob as well as dealing Fire damage around it based on it's remaining HP.
+-- Crispy Candle (Self)
+-- Family: Moblin
+-- Description: Crispy Candle backfires, dealing Fire damage to mob.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
-    -- Notorious monsters and mobs in Dynamis shouldn't explode.
-    if
-        mob:isMobType(xi.mobType.NOTORIOUS) or
-        mob:isInDynamis()
-    then
-        return 1
-    end
-
     return 0
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
     local params = {}
 
-    params.baseDamage = skill:getMobHP() / 3
-    params.fTP        = { 1, 1, 1 }
-    params.element    = xi.element.FIRE
-    -- TODO: Capture primary target/target type. (This will determine if this skill always goes off or if it can be canceled by outranging like normal bomb toss.)
+    params.baseDamage         = mob:getMainLvl() + 2
+    params.fTP                = { 3.5, 3.5, 3.5 }
+    params.element            = xi.element.FIRE
+    params.dStatMultiplier    = 1
+    params.resistTierOverride = 0.25 -- 1/4 Resist
+    -- Jimmayus spreadsheet stats Crispy Candle backfire is a 1/4 resist.
+    -- https://docs.google.com/spreadsheets/d/1YBoveP-weMdidrirY-vPDzHyxbEI2ryECINlfCnFkLI/edit?pli=1&gid=57955395#gid=57955395&range=A1102
 
     local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
     local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
@@ -33,13 +28,7 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
         target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
     end
 
-    mob:setHP(0)
-
     return damage
-end
-
-mobskillObject.onMobSkillFinalize = function(mob, skill)
-    mob:setHP(0)
 end
 
 return mobskillObject

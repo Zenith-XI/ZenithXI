@@ -1,5 +1,7 @@
 -----------------------------------
---  Auroral Uppercut
+-- Auroral Uppercut
+-- Famiy: Prish
+-- Description: Deals Light damage to target.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -8,11 +10,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
     return 0
 end
 
-mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.LIGHT, 2, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.LIGHT, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.LIGHT)
+mobskillObject.onMobWeaponSkill = function(target, mob, skill)
+    local params = {}
+
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 1, 1, 1 } -- TODO: Capture fTPs
+    params.element    = xi.element.LIGHT
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.LIGHT, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.LIGHT)
+    end
 
     return damage
 end
