@@ -249,7 +249,7 @@ UPDATE `mob_groups` SET `minLevel` = 58, `maxLevel` = 60 WHERE `zoneid` = 29 AND
 -- RIVERNE_SITE_A01 (Zone 30)
 -----------------------------------
 -- Out of Era
-UPDATE `mob_groups` SET `minLevel` = 46, `maxLevel` = 49 WHERE `zoneid` = 29 AND `name` = 'Darner';
+UPDATE `mob_groups` SET `minLevel` = 46, `maxLevel` = 49 WHERE `zoneid` = 30 AND `name` = 'Darner';
 
 -- DYNAMIS_VALKURM (Zone 39)
 -----------------------------------
@@ -712,7 +712,7 @@ UPDATE `mob_groups` SET `respawntime`= 330 WHERE `zoneid` = 68 AND `name` IN (
 
 -- CAEDARVA_MIRE (Zone 79)
 -----------------------------------
-UPDATE `mob_groups` SET `minLevel` = 66, `maxLevel` = 65 WHERE `zoneid` = 79 AND `name` = 'Marsh_Murre'; -- *64-68
+UPDATE `mob_groups` SET `minLevel` = 66, `maxLevel` = 68 WHERE `zoneid` = 79 AND `name` = 'Marsh_Murre'; -- *64-68
 UPDATE `mob_groups` SET `minLevel` = 66, `maxLevel` = 68 WHERE `zoneid` = 79 AND `name` = 'Orderly_Imp'; -- *63-68
 UPDATE `mob_groups` SET `minLevel` = 75, `maxLevel` = 77 WHERE `zoneid` = 79 AND `name` = 'Jnun'; -- *72-77
 UPDATE `mob_groups` SET `minLevel` = 78, `maxLevel` = 80 WHERE `zoneid` = 79 AND `name` = 'Spongilla_Fly'; -- *78-79
@@ -876,7 +876,7 @@ UPDATE `mob_groups` SET `minLevel` = 22, `maxLevel` = 25 WHERE `zoneid` = 104 AN
 -----------------------------------
 UPDATE `mob_groups` SET `minLevel` = 22, `maxLevel` = 24 WHERE `zoneid` = 105 AND `name` = 'Stalking_Sapling'; -- *20-24
 UPDATE `mob_groups` SET `minLevel` = 23, `maxLevel` = 26 WHERE `zoneid` = 105 AND `name` = 'May_Fly'; -- *22-26
-UPDATE `mob_groups` SET `minLevel` = 24, `maxLevel` = 26 WHERE `zoneid` = 105 AND `name` = 'Goblin_Bounty_Hunter'; -- *30-26
+UPDATE `mob_groups` SET `minLevel` = 24, `maxLevel` = 26 WHERE `zoneid` = 105 AND `name` = 'Goblin_Bounty_Hunter'; -- *20-26
 UPDATE `mob_groups` SET `minLevel` = 27, `maxLevel` = 30 WHERE `zoneid` = 105 AND `name` IN ( -- *26-30
     'Goblin_Mugger',
     'Goblin_Leecher',
@@ -2028,7 +2028,7 @@ UPDATE `mob_groups` SET `respawntime`= 960 WHERE `zoneid` = 160 AND `name` IN (
     'Succubus_Bats',
     'Tormentor',
     'Puck',
-    'Bullbeggar'
+    'Bullbeggar',
     'Cutlass_Scorpion',
     'Million_Eyes',
     'Mousse'
@@ -3266,13 +3266,13 @@ UPDATE `mob_groups` SET `respawntime`= 330 WHERE `zoneid` = 197 AND `name` = 'Ru
 -----------------------------------
 UPDATE `mob_groups` SET `minLevel` = 16, `maxLevel` = 19 WHERE `zoneid` = 198 AND `name` = 'Stink_Bats'; -- *15-18
 UPDATE `mob_groups` SET `minLevel` = 17, `maxLevel` = 20 WHERE `zoneid` = 198 AND `name` IN ( -- *16-18
-    'Goblin_Ambusher'
+    'Goblin_Ambusher',
     'Goblin_Tinkerer',
     'Goblin_Butcher'
 );
 UPDATE `mob_groups` SET `minLevel` = 23, `maxLevel` = 26 WHERE `zoneid` = 198 AND `name` = 'Ghoul_war'; -- *22-26
 UPDATE `mob_groups` SET `minLevel` = 23, `maxLevel` = 26 WHERE `zoneid` = 198 AND `name` IN ( -- *22-26
-    'Goblin_Mugger'
+    'Goblin_Mugger',
     'Goblin_Leecher',
     'Goblin_Gambler'
 );
@@ -3442,7 +3442,7 @@ UPDATE `mob_groups` SET `minLevel` = 64, `maxLevel` = 67 WHERE `zoneid` = 205 AN
 UPDATE `mob_groups` SET `minLevel` = 65, `maxLevel` = 68 WHERE `zoneid` = 205 AND `name` = 'Volcanic_Gas'; -- *62-68
 UPDATE `mob_groups` SET `minLevel` = 66, `maxLevel` = 69 WHERE `zoneid` = 205 AND `name` = 'Dodomeki'; -- *63-69
 UPDATE `mob_groups` SET `minLevel` = 67, `maxLevel` = 70 WHERE `zoneid` = 205 AND `name` IN ( -- *66-69
-    'Goblin_Bandit'
+    'Goblin_Bandit',
     'Goblin_Shepherd',
     'Goblin_Alchemist',
     'Goblin_Mercenary'
@@ -3477,7 +3477,7 @@ UPDATE `mob_groups` SET `minLevel` = 53, `maxLevel` = 56 WHERE `zoneid` = 208 AN
 UPDATE `mob_groups` SET `minLevel` = 55, `maxLevel` = 58 WHERE `zoneid` = 208 AND `name` = 'Helm_Beetle'; -- *51-58
 UPDATE `mob_groups` SET `minLevel` = 56, `maxLevel` = 59 WHERE `zoneid` = 208 AND `name` = 'Sand_Eater'; -- *51-59
 UPDATE `mob_groups` SET `minLevel` = 56, `maxLevel` = 59 WHERE `zoneid` = 208 AND `name` IN ( -- *52-59
-    'Antican_Hastatus'
+    'Antican_Hastatus',
     'Antican_Princeps',
     'Antican_Signifer',
     'Sabotender_Bailaor'
@@ -3487,7 +3487,7 @@ UPDATE `mob_groups` SET `minLevel` = 66, `maxLevel` = 69 WHERE `zoneid` = 208 AN
 UPDATE `mob_groups` SET `minLevel` = 67, `maxLevel` = 70 WHERE `zoneid` = 208 AND `name` = 'Girtab'; -- *62-65
 UPDATE `mob_groups` SET `minLevel` = 67, `maxLevel` = 70 WHERE `zoneid` = 208 AND `name` = 'Spelunking_Sabotender'; -- *62-68
 UPDATE `mob_groups` SET `minLevel` = 68, `maxLevel` = 72 WHERE `zoneid` = 208 AND `name` IN ( -- *62-72
-    'Antican_Hastatus'
+    'Antican_Hastatus',
     'Antican_Princeps',
     'Antican_Signifer',
     'Sabotender_Bailaor'
@@ -3497,7 +3497,7 @@ UPDATE `mob_groups` SET `minLevel` = 59, `maxLevel` = 61 WHERE `zoneid` = 208 AN
 UPDATE `mob_groups` SET `minLevel` = 70, `maxLevel` = 72 WHERE `zoneid` = 208 AND `name` = 'Diamond_Daig'; -- *70-70
 UPDATE `mob_groups` SET `minLevel` = 75, `maxLevel` = 75 WHERE `zoneid` = 208 AND `name` = 'Ancient_Vessel'; -- *72-72 (ZM12)
 UPDATE `mob_groups` SET `minLevel` = 75, `maxLevel` = 77 WHERE `zoneid` = 208 AND `name` = 'Antican_Consul'; -- *75-75
-UPDATE `mob_groups` SET `minLevel` = 81, `maxLevel` = 83 WHERE `zoneid` = 208 AND `name` = 'Sabotender_Bailarina'; -- *81-81
+UPDATE `mob_groups` SET `minLevel` = 83, `maxLevel` = 84 WHERE `zoneid` = 208 AND `name` = 'Sabotender_Bailarina'; -- *81-81
 
 -- GUSTAV_TUNNEL (Zone 212)
 -----------------------------------
@@ -3544,21 +3544,21 @@ UPDATE `mob_groups` SET `respawntime`= 330 WHERE `zoneid` = 212 AND `name` = 'Py
 -----------------------------------
 UPDATE `mob_groups` SET `minLevel` = 48, `maxLevel` = 51 WHERE `zoneid` = 213 AND `name` = 'Labyrinth_Leech'; -- *45-48
 UPDATE `mob_groups` SET `minLevel` = 49, `maxLevel` = 52 WHERE `zoneid` = 213 AND `name` IN ( -- *46-49 (Cockatrice are 50-53)
-    'Goblin_Poacher'
+    'Goblin_Poacher',
     'Goblin_Robber',
     'Goblin_Reaper',
     'Goblin_Trader'
 );
 UPDATE `mob_groups` SET `minLevel` = 53, `maxLevel` = 56 WHERE `zoneid` = 213 AND `name` = 'Mushussu'; -- *51-57
 UPDATE `mob_groups` SET `minLevel` = 55, `maxLevel` = 58 WHERE `zoneid` = 213 AND `name` IN ( -- *51-58
-    'Goblin_Miner'
+    'Goblin_Miner',
     'Goblin_Bouncer',
     'Goblin_Hunter',
     'Goblin_Enchanter'
 );
 UPDATE `mob_groups` SET `minLevel` = 56, `maxLevel` = 59 WHERE `zoneid` = 213 AND `name` = 'Flying_Manta'; -- *55-59
 UPDATE `mob_groups` SET `minLevel` = 69, `maxLevel` = 72 WHERE `zoneid` = 213 AND `name` IN ( -- *66-69 (Torama are 70-73)
-    'Goblin_Alchemist'
+    'Goblin_Alchemist',
     'Goblin_Bandit',
     'Goblin_Shepherd',
     'Goblin_Mercenary'
@@ -3571,8 +3571,8 @@ UPDATE `mob_groups` SET `minLevel` = 83, `maxLevel` = 85 WHERE `zoneid` = 213 AN
 UPDATE `mob_groups` SET `minLevel` = 83, `maxLevel` = 85 WHERE `zoneid` = 213 AND `name` = 'Boribaba';
 
 -- Revert to Era dungeon respawn times.
-UPDATE `mob_groups` SET `respawntime`= 840 WHERE `zoneid` = 212 AND `name` = 'Labyrinth_Leech';
-UPDATE `mob_groups` SET `respawntime`= 960 WHERE `zoneid` = 212 AND `name` IN (
+UPDATE `mob_groups` SET `respawntime`= 840 WHERE `zoneid` = 213 AND `name` = 'Labyrinth_Leech';
+UPDATE `mob_groups` SET `respawntime`= 960 WHERE `zoneid` = 213 AND `name` IN (
     'Goblin_Poacher',
     'Goblin_Robber',
     'Goblin_Reaper',
@@ -3596,8 +3596,8 @@ UPDATE `mob_groups` SET `respawntime`= 960 WHERE `zoneid` = 212 AND `name` IN (
     'Wyvern'
 );
 -- Custom respawn changes.
-UPDATE `mob_groups` SET `respawntime`= 330 WHERE `zoneid` = 212 AND `name` = 'Babaulas';
-UPDATE `mob_groups` SET `respawntime`= 330 WHERE `zoneid` = 212 AND `name` = 'Boribaba';
+UPDATE `mob_groups` SET `respawntime`= 330 WHERE `zoneid` = 213 AND `name` = 'Babaulas';
+UPDATE `mob_groups` SET `respawntime`= 330 WHERE `zoneid` = 213 AND `name` = 'Boribaba';
 
 -- ABYSSEA_ATTOHWA (Zone 215)
 -----------------------------------
@@ -3635,11 +3635,11 @@ UPDATE `mob_groups` SET `respawntime`= 330 WHERE `zoneid` = 212 AND `name` = 'Bo
 -----------------------------------
 -- TODO
 
--- YORCIA_WEALD (Zone 262)
+-- FORET_DE_HENNETIEL (Zone 262)
 -----------------------------------
 -- TODO
 
--- FORET_DE_HENNETIEL (Zone 261)
+-- YORCIA_WEALD (Zone 263)
 -----------------------------------
 -- TODO
 
