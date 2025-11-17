@@ -10,7 +10,7 @@ local m = Module:new('mob_reposition_template')
 
 local mobList =
 {
-    ['Locus_bright_Rarab'] =
+    ['Locus_Bight_Rarab'] =
     {
         limit = 0,
     },
