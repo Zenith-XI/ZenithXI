@@ -172,7 +172,10 @@ local function createStandardNMOverrides(nmList)
         local respawnTimeCalc = math.random(0, 6) * (respawnWindowLengthDuration * 60) + (respawnHours * 3600)
 
         -- Zone initialization override
-        m:addOverride(fmt('xi.zones.{}.Zone.onInitialize', zoneName),
+        -- ensure path exists for multi-mapserver setups
+        local zoneInitPath = fmt('xi.zones.{}.Zone.onInitialize', zoneName)
+        xi.module.ensureTable(zoneInitPath)
+        m:addOverride(zoneInitPath,
         function(zone)
             super(zone)
             local mob = zone:queryEntitiesByName(mobName)[1]
@@ -183,8 +186,9 @@ local function createStandardNMOverrides(nmList)
         end)
 
         -- onMobDespawn override
-        xi.module.ensureTable(fmt('xi.zones.{}.mobs.{}.onMobDespawn', zoneName, mobName))
-        m:addOverride(fmt('xi.zones.{}.mobs.{}.onMobDespawn', zoneName, mobName),
+        local mobDespawnPath = fmt('xi.zones.{}.mobs.{}.onMobDespawn', zoneName, mobName)
+        xi.module.ensureTable(mobDespawnPath)
+        m:addOverride(mobDespawnPath,
         function(mob)
             super(mob)
             setAndPersistRespawnTime(mob, respawnTimeCalc)

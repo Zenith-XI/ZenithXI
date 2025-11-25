@@ -36,7 +36,8 @@
 #
 # Live example:
 
-LQS/cpp
+## disabled until upstream can be fixed for prepared sql statements
+#LQS/cpp
 LQS/lib
 LQS/commands
 
