@@ -29,7 +29,6 @@
 
 #include "entities/charentity.h"
 #include "packets/entity_update.h"
-#include "packets/event.h"
 #include "utils/zoneutils.h"
 #include "zone.h"
 
@@ -52,7 +51,11 @@ void Transport_Ship::setVisible(bool visible) const
 
 void Transport_Ship::animateSetup(uint8 animationID, vanadiel_time::time_point horizonTime) const
 {
-    this->npc->animation = animationID;
+    if (animationID > 0)
+    {
+        this->npc->animation = animationID;
+    }
+
     this->npc->SetLocalVar("TransportTimestamp", earth_time::vanadiel_timestamp(vanadiel_time::to_earth_time(horizonTime)));
 }
 
@@ -69,6 +72,11 @@ void TransportZone_Town::updateShip() const
 
 void TransportZone_Town::openDoor(bool sendPacket) const
 {
+    if (!this->npcDoor)
+    {
+        return;
+    }
+
     this->npcDoor->animation = ANIMATION_OPEN_DOOR;
 
     if (sendPacket)
@@ -79,6 +87,11 @@ void TransportZone_Town::openDoor(bool sendPacket) const
 
 void TransportZone_Town::closeDoor(bool sendPacket) const
 {
+    if (!this->npcDoor)
+    {
+        return;
+    }
+
     this->npcDoor->animation = ANIMATION_CLOSE_DOOR;
 
     if (sendPacket)
@@ -89,7 +102,7 @@ void TransportZone_Town::closeDoor(bool sendPacket) const
 
 void TransportZone_Town::depart() const
 {
-    this->ship.dock.zone->TransportDepart(this->ship.npc->loc.boundary, this->ship.npc->loc.prevzone);
+    this->ship.dock.zone->TransportDepart(this->ship.npc->loc.boundary, this->ship.npc->loc.prevzone, this->ship.transportId);
 }
 
 void Elevator_t::openDoor(CNpcEntity* npc) const
@@ -125,12 +138,15 @@ void CTransportHandler::InitializeTransport(IPP mapIPP)
                                  "FROM transport "
                                  "LEFT JOIN zone_settings ON ((transport >> 12) & 0xFFF) = zoneid "
                                  "WHERE IF(? <> 0, ? = zoneip AND ? = zoneport, TRUE)",
-                                 mapIPP.getIP(), mapIPP.getIPString(), mapIPP.getPort());
+                                 mapIPP.getIP(),
+                                 mapIPP.getIPString(),
+                                 mapIPP.getPort());
     FOR_DB_MULTIPLE_RESULTS(rset)
     {
         TransportZone_Town zoneTown;
 
-        zoneTown.ship.dock.zone = zoneutils::GetZone((rset->get<uint32>("transport") >> 12) & 0x0FFF);
+        zoneTown.ship.transportId = rset->get<uint8>("id");
+        zoneTown.ship.dock.zone   = zoneutils::GetZone((rset->get<uint32>("transport") >> 12) & 0x0FFF);
 
         zoneTown.ship.dock.p.x        = rset->get<float>("dock_x");
         zoneTown.ship.dock.p.y        = rset->get<float>("dock_y");
@@ -139,11 +155,17 @@ void CTransportHandler::InitializeTransport(IPP mapIPP)
         zoneTown.ship.dock.boundary   = rset->get<uint16>("boundary");
         zoneTown.ship.dock.prevzone   = rset->get<uint8>("zone");
 
-        zoneTown.npcDoor  = zoneutils::GetEntity(rset->get<uint32>("door"), TYPE_NPC);
+        auto npcDoorId   = rset->get<uint32>("door");
+        zoneTown.npcDoor = nullptr;
+        if (npcDoorId > 0)
+        {
+            zoneTown.npcDoor = zoneutils::GetEntity(npcDoorId, TYPE_NPC);
+        }
+
         zoneTown.ship.npc = zoneutils::GetEntity(rset->get<uint32>("transport"), TYPE_SHIP);
         if (!zoneTown.ship.npc)
         {
-            ShowErrorFmt("Transport {}: transport not found", rset->get<uint8>("id"));
+            ShowErrorFmt("Transport {}: transport not found", zoneTown.ship.transportId);
             continue;
         }
 
@@ -160,21 +182,21 @@ void CTransportHandler::InitializeTransport(IPP mapIPP)
         zoneTown.ship.setVisible(false);
         zoneTown.closeDoor(false);
 
-        if (zoneTown.npcDoor == nullptr)
+        if (npcDoorId > 0 && zoneTown.npcDoor == nullptr)
         {
-            ShowErrorFmt("Transport {}: door not found", rset->get<uint8>("id"));
+            ShowErrorFmt("Transport {}: door not found", zoneTown.ship.transportId);
             continue;
         }
 
         if (zoneTown.ship.timeArriveDock < xi::vanadiel_clock::minutes(10))
         {
-            ShowErrorFmt("Transport {}: time_anim_arrive must be > 10", rset->get<uint8>("id"));
+            ShowErrorFmt("Transport {}: time_anim_arrive must be > 10", zoneTown.ship.transportId);
             continue;
         }
 
         if (zoneTown.ship.timeInterval < zoneTown.ship.timeVoyageStart)
         {
-            ShowErrorFmt("Transport {}: time_interval must be > time_anim_arrive + time_waiting + time_anim_depart", rset->get<uint8>("id"));
+            ShowErrorFmt("Transport {}: time_interval must be > time_anim_arrive + time_waiting + time_anim_depart", zoneTown.ship.transportId);
             continue;
         }
 
@@ -185,15 +207,21 @@ void CTransportHandler::InitializeTransport(IPP mapIPP)
                             "FROM transport LEFT JOIN "
                             "zone_settings ON zone = zoneid WHERE "
                             "IF(? <> 0, ? = zoneip AND ? = zoneport, TRUE)",
-                            mapIPP.getIP(), mapIPP.getIPString(), mapIPP.getPort());
+                            mapIPP.getIP(),
+                            mapIPP.getIPString(),
+                            mapIPP.getPort());
     FOR_DB_MULTIPLE_RESULTS(rset)
     {
         TransportZone_Voyage voyageZone{};
 
+        auto voyageZoneId     = rset->get<uint16>("zone");
         voyageZone.voyageZone = nullptr;
-        voyageZone.voyageZone = zoneutils::GetZone(rset->get<uint16>("zone"));
+        if (voyageZoneId > 0)
+        {
+            voyageZone.voyageZone = zoneutils::GetZone(voyageZoneId);
+        }
 
-        if (voyageZone.voyageZone != nullptr && voyageZone.voyageZone->GetID() > 0)
+        if (voyageZone.voyageZone != nullptr)
         {
             voyageZone.timeOffset   = xi::vanadiel_clock::minutes(rset->get<uint32>("time_offset"));
             voyageZone.timeInterval = xi::vanadiel_clock::minutes(rset->get<uint32>("time_interval"));
@@ -206,7 +234,7 @@ void CTransportHandler::InitializeTransport(IPP mapIPP)
 
             voyageZoneList.emplace_back(voyageZone);
         }
-        else
+        else if (voyageZoneId > 0)
         {
             ShowErrorFmt("TransportZone {}: zone not found", rset->get<uint16>("zone"));
         }
@@ -319,7 +347,7 @@ void CTransportHandler::TransportTimer()
 
         if (zoneIterator->state == STATE_TRANSPORTZONE_VOYAGE)
         {
-            // Zone them out 10 Van minutes before the boat reaches the dock
+            // Zone them out 10 Vana minutes before the boat reaches the dock
             if (shipTimerOffset < zoneIterator->timeVoyageStart && shipTimerOffset > zoneIterator->timeArriveDock - xi::vanadiel_clock::minutes(10))
             {
                 zoneIterator->state = STATE_TRANSPORTZONE_EVICT;
@@ -327,7 +355,7 @@ void CTransportHandler::TransportTimer()
         }
         else if (zoneIterator->state == STATE_TRANSPORTZONE_EVICT)
         {
-            zoneIterator->voyageZone->TransportDepart(0, zoneIterator->voyageZone->GetID());
+            zoneIterator->voyageZone->TransportDepart(0, zoneIterator->voyageZone->GetID(), 0);
             zoneIterator->state = STATE_TRANSPORTZONE_WAIT;
         }
         else if (zoneIterator->state == STATE_TRANSPORTZONE_WAIT)

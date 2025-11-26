@@ -17,6 +17,7 @@ entity.spawnPoints =
 
 entity.onMobInitialize = function(mob)
     mob:setMobMod(xi.mobMod.AUTO_SPIKES, 1)
+    mob:setMobMod(xi.mobMod.DETECTION, bit.bor(xi.detects.MAGIC, xi.detects.SCENT)) -- TODO: Verify scent tracking on retail.
     mob:addImmunity(xi.immunity.BIND)
     mob:addImmunity(xi.immunity.DARK_SLEEP)
     mob:addImmunity(xi.immunity.LIGHT_SLEEP)
@@ -42,7 +43,8 @@ entity.onSpikesDamage = function(mob, target, damage)
     params.includemab = false
     dmg = addBonusesAbility(mob, xi.element.THUNDER, target, dmg, params)
     dmg = dmg * applyResistanceAddEffect(mob, target, xi.element.THUNDER, 0)
-    dmg = dmg * xi.spells.damage.calculateNukeAbsorbOrNullify(target, xi.element.THUNDER)
+    dmg = math.floor(dmg * xi.spells.damage.calculateAbsorption(target, xi.element.THUNDER, true))
+    dmg = math.floor(dmg * xi.spells.damage.calculateNullification(target, xi.element.THUNDER, true, false))
     dmg = finalMagicNonSpellAdjustments(mob, target, xi.element.THUNDER, dmg)
 
     if dmg < 0 then

@@ -25,6 +25,7 @@
 #include "battleentity.h"
 #include <unordered_map>
 
+enum MSGBASIC_ID : uint16_t;
 // forward declaration
 class CMobSpellContainer;
 class CMobSpellList;
@@ -135,12 +136,13 @@ public:
     void              TapDeaggroTime(); // call CMobController->TapDeaggroTime if PAI->GetController() is a CMobController, otherwise do nothing.
 
     bool CanLink(position_t* pos, int16 superLink = 0);
+    bool ShouldForceLink();
 
     bool CanDropGil();    // mob has gil to drop
     bool CanStealGil();   // can steal gil from mob
     void ResetGilPurse(); // reset total gil held
     auto GetEligibleSeals() -> std::vector<uint16>;
-    auto GetEligibleGeodes() -> std::vector<uint16>;
+    auto GetEligibleGeodes() const -> std::vector<uint16>;
 
     void  setMobMod(uint16 type, int16 value);
     int16 getMobMod(uint16 type);

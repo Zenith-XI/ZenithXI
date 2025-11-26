@@ -35,10 +35,12 @@
 
 namespace
 {
-    auto getZMQEndpointString() -> std::string
-    {
-        return fmt::format("tcp://{}:{}", settings::get<std::string>("network.ZMQ_IP"), settings::get<uint16>("network.ZMQ_PORT"));
-    }
+
+auto getZMQEndpointString() -> std::string
+{
+    return fmt::format("tcp://{}:{}", settings::get<std::string>("network.ZMQ_IP"), settings::get<uint16>("network.ZMQ_PORT"));
+}
+
 } // namespace
 
 IPCServer::IPCServer(WorldEngine& worldServer)
@@ -426,7 +428,17 @@ void IPCServer::handleMessage_ChatMessageTell(const IPP& ipp, const ipc::ChatMes
 {
     TracyZoneScoped;
 
-    rerouteMessageToCharName(message.recipientName, message);
+    const auto charIPP = getIPPForCharName(message.recipientName);
+    if (!charIPP)
+    {
+        sendMessage(ipp, ipc::MessageStandard{
+                             .recipientId = message.senderId,
+                             .message     = MsgStd::TellNotReceivedOffline,
+                         });
+        return;
+    }
+
+    sendMessage(charIPP.value(), message);
 }
 
 void IPCServer::handleMessage_ChatMessageParty(const IPP& ipp, const ipc::ChatMessageParty& message)

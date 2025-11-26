@@ -25,7 +25,7 @@
 #include "common/cbasetypes.h"
 #include "common/mmo.h"
 #include "common/timer.h"
-#include "packets/message_basic.h"
+#include "packets/basic.h"
 
 #include <map>
 #include <memory>
@@ -267,7 +267,7 @@ public:
     virtual void Spawn();
     virtual void FadeOut();
 
-    virtual const std::string& getName();       // Internal name of entity
+    virtual const std::string& getName() const; // Internal name of entity
     virtual const std::string& getPacketName(); // Name of entity sent to the client
 
     uint16        getZone() const; // Current zone

@@ -57,7 +57,8 @@ enum PETID
     PETID_CHOCOBO            = 74,
     PETID_LUOPAN             = 75,
     PETID_SIREN              = 76,
-    MAX_PETID                = 77,
+    // BST Jug pets exist in the gaps of this enum
+    MAX_PETID = 78,
 };
 
 struct Pet_t
@@ -207,30 +208,32 @@ class CPetEntity;
 
 namespace petutils
 {
-    void LoadPetList();
-    void FreePetList();
 
-    void  SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone);
-    void  SpawnMobPet(CBattleEntity* PMaster, uint32 PetID);
-    void  DetachPet(CBattleEntity* PMaster);
-    void  DespawnPet(CBattleEntity* PMaster);
-    void  AttackTarget(CBattleEntity* PMaster, CBattleEntity* PTarget);
-    void  RetreatToMaster(CBattleEntity* PMaster);
-    int16 PerpetuationCost(uint32 id, uint8 level);
-    void  Familiar(CBattleEntity* PPet);
-    void  LoadPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone);
+void LoadPetList();
+void FreePetList();
 
-    void CalculateAvatarStats(CBattleEntity* PMaster, CPetEntity* PPet);
-    void CalculateWyvernStats(CBattleEntity* PMaster, CPetEntity* PPet);
-    void CalculateJugPetStats(CBattleEntity* PMaster, CPetEntity* PPet);
-    void CalculateAutomatonStats(CBattleEntity* PMaster, CBattleEntity* PPet);
-    void CalculateLuopanStats(CBattleEntity* PMaster, CPetEntity* PPet);
-    void FinalizePetStatistics(CBattleEntity* PMaster, CPetEntity* PPet);
+void  SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone);
+void  SpawnMobPet(CBattleEntity* PMaster, uint32 PetID);
+void  DetachPet(CBattleEntity* PMaster);
+void  DespawnPet(CBattleEntity* PMaster);
+void  AttackTarget(CBattleEntity* PMaster, CBattleEntity* PTarget);
+void  RetreatToMaster(CBattleEntity* PMaster);
+int16 PerpetuationCost(uint32 id, uint8 level);
+void  ExtendCharm(CBattleEntity* PPet, uint16 minSeconds, uint16 maxSeconds);
+void  LoadPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone);
 
-    void SetupPetWithMaster(CBattleEntity* PMaster, CPetEntity* PPet);
+void CalculateAvatarStats(CBattleEntity* PMaster, CPetEntity* PPet);
+void CalculateWyvernStats(CBattleEntity* PMaster, CPetEntity* PPet);
+void CalculateJugPetStats(CBattleEntity* PMaster, CPetEntity* PPet);
+void CalculateAutomatonStats(CBattleEntity* PMaster, CBattleEntity* PPet);
+void CalculateLuopanStats(CBattleEntity* PMaster, CPetEntity* PPet);
+void FinalizePetStatistics(CBattleEntity* PMaster, CPetEntity* PPet);
 
-    bool CheckPetModType(CBattleEntity* PPet, PetModType petmod);
-    bool IsTandemActive(CBattleEntity* PAttacker);
+void SetupPetWithMaster(CBattleEntity* PMaster, CPetEntity* PPet);
 
-    Pet_t* GetPetInfo(uint32 PetID);
+bool CheckPetModType(CBattleEntity* PPet, PetModType petmod);
+bool IsTandemActive(CBattleEntity* PAttacker);
+
+Pet_t* GetPetInfo(uint32 PetID);
+
 }; // namespace petutils

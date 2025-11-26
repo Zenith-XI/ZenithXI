@@ -10,8 +10,10 @@ local CBaseEntity = {}
 ---@param p1 integer?
 ---@param p2 integer?
 ---@param p3 integer?
+---@param showName boolean?
+---@param turn boolean?
 ---@return nil
-function CBaseEntity:showText(mob, messageID, p0, p1, p2, p3)
+function CBaseEntity:showText(mob, messageID, p0, p1, p2, p3, showName, turn)
 end
 
 ---@param PLuaBaseEntity CBaseEntity
@@ -718,6 +720,11 @@ end
 
 ---@nodiscard
 ---@return integer
+function CBaseEntity:getPreviousZoneLineID()
+end
+
+---@nodiscard
+---@return integer
 function CBaseEntity:getCurrentRegion()
 end
 
@@ -1403,6 +1410,11 @@ end
 function CBaseEntity:setWallhack(enable)
 end
 
+---@param isFrozen boolean
+---@return nil
+function CBaseEntity:setFreezeFlag(isFrozen)
+end
+
 ---@nodiscard
 ---@return boolean
 function CBaseEntity:isJailed()
@@ -1524,7 +1536,7 @@ end
 ---@param jobID integer
 ---@param level integer
 ---@return nil
-function CBaseEntity:addJobTraits(jobID, level)
+function CBaseEntity:addWyvernJobTraits(jobID, level)
 end
 
 ---@nodiscard
@@ -2292,11 +2304,9 @@ function CBaseEntity:delLearnedAbility(abilityID)
 end
 
 ---@param spellID integer
----@param silentLog boolean?
----@param save boolean?
----@param sendUpdate boolean?
+---@param arg0 table?
 ---@return nil
-function CBaseEntity:addSpell(spellID, silentLog, save, sendUpdate)
+function CBaseEntity:addSpell(spellID, arg0)
 end
 
 ---@nodiscard
@@ -2312,8 +2322,9 @@ function CBaseEntity:canLearnSpell(spellID)
 end
 
 ---@param spellID integer
+---@param arg0 table?
 ---@return nil
-function CBaseEntity:delSpell(spellID)
+function CBaseEntity:delSpell(spellID, arg0)
 end
 
 ---@return nil
@@ -2427,11 +2438,6 @@ end
 
 ---@return nil
 function CBaseEntity:disableLevelSync()
-end
-
----@nodiscard
----@return boolean
-function CBaseEntity:isLevelSync()
 end
 
 ---@nodiscard
@@ -3177,8 +3183,9 @@ function CBaseEntity:getStat(statId, optSlot)
 end
 
 ---@nodiscard
+---@param maybeAttackNumber integer?
 ---@return integer
-function CBaseEntity:getACC()
+function CBaseEntity:getACC(maybeAttackNumber)
 end
 
 ---@nodiscard
@@ -3229,12 +3236,6 @@ end
 ---@param damageType integer?
 ---@return integer
 function CBaseEntity:rangedDmgTaken(damage, damageType)
-end
-
----@nodiscard
----@param damage number
----@return integer
-function CBaseEntity:breathDmgTaken(damage)
 end
 
 ---@param damage number
@@ -3340,13 +3341,12 @@ end
 function CBaseEntity:takeWeaponskillDamage(attacker, damage, atkType, dmgType, slot, primary, tpMultiplier, bonusTP, targetTPMultiplier)
 end
 
----@nodiscard
 ---@param caster CBaseEntity
 ---@param spell CSpell
 ---@param damage integer
 ---@param atkType integer
 ---@param dmgType integer
----@return integer
+---@return nil
 function CBaseEntity:takeSpellDamage(caster, spell, damage, atkType, dmgType)
 end
 
@@ -3422,11 +3422,6 @@ end
 ---@param value integer?
 ---@return nil
 function CBaseEntity:setTrustTPSkillSettings(trigger, select, value)
-end
-
----@nodiscard
----@return boolean
-function CBaseEntity:hasValidJugPetItem()
 end
 
 ---@nodiscard
@@ -3963,8 +3958,9 @@ end
 ---@param skillID integer
 ---@param PLuaBaseEntity CBaseEntity?
 ---@param castTimeOverride number?
+---@param ignoreDistance boolean?
 ---@return nil
-function CBaseEntity:useMobAbility(skillID, PLuaBaseEntity, castTimeOverride)
+function CBaseEntity:useMobAbility(skillID, PLuaBaseEntity, castTimeOverride, ignoreDistance)
 end
 
 ---@return nil

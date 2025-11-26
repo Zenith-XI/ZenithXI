@@ -23,12 +23,13 @@
 
 #include "common/logging.h"
 
-MapSocket::MapSocket(asio::io_context& io_context, const uint16 port, const ReceiveFn& onReceiveFn)
+MapSocket::MapSocket(asio::io_context& io_context, const uint16 port, ReceiveFn onReceiveFn)
 : port_(port)
 , io_context_(io_context)
 , socket_(io_context)
+, buffer_{}
 , isRunning(true)
-, onReceiveFn_(onReceiveFn)
+, onReceiveFn_(std::move(onReceiveFn))
 {
     TracyZoneScoped;
 
@@ -56,8 +57,7 @@ void MapSocket::startReceive()
     TracyZoneScoped;
 
     socket_.async_receive_from(
-        asio::buffer(buffer_), remote_endpoint_,
-        [this](const std::error_code& ec, std::size_t bytes_recvd)
+        asio::buffer(buffer_), remote_endpoint_, [this](const std::error_code& ec, std::size_t bytes_recvd)
         {
             // NOTE: ASIO returns the address in host byte order, but we store it in network byte order,
             //     : so we convert it back.
@@ -105,16 +105,16 @@ void MapSocket::send(const IPP& ipp, std::span<uint8> buffer)
     const auto ip       = ntohl(ipp.getIP());
     const auto endpoint = asio::ip::udp::endpoint(asio::ip::address_v4(ip), ipp.getPort());
 
-    // clang-format off
-    socket_.async_send_to(asio::buffer(buffer), endpoint,
-    [](const std::error_code& ec, std::size_t /*bytes_sent*/)
-    {
-        if (ec)
+    socket_.async_send_to(
+        asio::buffer(buffer),
+        endpoint,
+        [](const std::error_code& ec, std::size_t /*bytes_sent*/)
         {
-            ShowErrorFmt("Error sending data: {}", ec.message());
-        }
-    });
-    // clang-format on
+            if (ec)
+            {
+                ShowErrorFmt("Error sending data: {}", ec.message());
+            }
+        });
 
     // This will only be called in the middle of a doSocketsFor() call, so we don't
     // need to enqueue more work when we're done here.

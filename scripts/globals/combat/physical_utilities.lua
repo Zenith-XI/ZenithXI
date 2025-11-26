@@ -113,7 +113,31 @@ xi.combat.physical.calculateAttackDamage = function(actor, target, slot, physica
 
     if isH2H then
         local naturalH2hDamage = math.floor(actor:getSkillLevel(xi.skill.HAND_TO_HAND) * 0.11) + 3
-        if physicalAttackType == xi.physicalAttackType.KICK then
+
+        if actor:isMob() then
+            local mobH2HPenalty = 1
+            local regionID      = actor:getCurrentRegion()
+            local fSTR          = xi.combat.physical.calculateMeleeStatFactor(actor, target)
+
+            if regionID <= xi.region.LIMBUS then
+                mobH2HPenalty = 0.425 -- Vanilla - COP
+            else
+                mobH2HPenalty = 0.65
+            end
+
+            baseDamage = actor:getWeaponDmg() + bonusBasePhysicalDamage
+
+            if physicalAttackType == xi.physicalAttackType.KICK then
+                local kickPenalty = 2 / 3 -- Per Jimmy, kicks get a second penalty, then fSTR is added
+                local kickDamage  = actor:getMod(xi.mod.KICK_DMG)
+
+                -- Per Jimmy, kick damage penalty for mobs can only be damage * h2h penalty * kickpenalty + fstr
+                -- The math doesn't work in any other way, which is strange given fSTR is before the penalty on non-kicks
+                baseDamage = (baseDamage + kickDamage) * mobH2HPenalty * kickPenalty + fSTR
+            else
+                baseDamage = (baseDamage + fSTR) * mobH2HPenalty
+            end
+        elseif physicalAttackType == xi.physicalAttackType.KICK then
             baseDamage = naturalH2hDamage + actor:getMod(xi.mod.KICK_DMG) + bonusBasePhysicalDamage + xi.combat.physical.calculateMeleeStatFactor(actor, target)
         else
             baseDamage = naturalH2hDamage + actor:getWeaponDmg() + bonusBasePhysicalDamage + xi.combat.physical.calculateMeleeStatFactor(actor, target)
@@ -183,7 +207,7 @@ xi.combat.physical.calculateAttackDamage = function(actor, target, slot, physica
             effect and
             power < 30
         then
-            local jpBonus = actor:getJobPointLevel(xi.jp.RESTRAINT) * 2
+            local jpBonus = actor:getJobPointLevel(xi.jp.RESTRAINT_EFFECT) * 2
 
             -- Convert weapon delay and divide
             -- Pull remainder of previous hit's value from Effect Sub Power
@@ -191,10 +215,10 @@ xi.combat.physical.calculateAttackDamage = function(actor, target, slot, physica
             local remainder     = effect:getSubPower() / 100
 
             -- Calculate bonuses from Enhances Restraint, Job Point upgrades, and remainder from previous hit
-            boostPerRound = remainder + boostPerRound * (1 + actor:getMod(xi.Mod.ENHANCES_RESTRAINT) / 100) * (1 + jpBonus / 100)
+            boostPerRound = remainder + boostPerRound * (1 + actor:getMod(xi.mod.ENHANCES_RESTRAINT) / 100) * (1 + jpBonus / 100)
 
             -- Calculate new remainder and multiply by 100 so significant digits aren't lost
-            remainder     = math.floor((1 - (math.ceil(boostPerRound) - boostPerRound)) * 100)
+            remainder     = math.floor((1 - math.ceil(boostPerRound) - boostPerRound) * 100)
             boostPerRound = math.floor(boostPerRound)
 
             -- Cap total power to +30% WSD
@@ -409,7 +433,7 @@ xi.combat.physical.calculateFTPBonus = function(actor)
             wsElementalProperties[scProp2][elementChecked] == 1 or
             wsElementalProperties[scProp3][elementChecked] == 1
         then
-            fTPBonus = fTPBonus + actor:getMod(xi.combat.element.getElementalFTPModifier(elementChecked)) / 256
+            fTPBonus = fTPBonus + actor:getMod(xi.data.element.getElementalFTPModifier(elementChecked)) / 256
 
             if dayElement == elementChecked then
                 fTPBonus = fTPBonus + actor:getMod(xi.mod.DAY_FTP_BONUS) / 256
@@ -420,6 +444,76 @@ xi.combat.physical.calculateFTPBonus = function(actor)
     fTPBonus = fTPBonus + actor:getMod(xi.mod.ANY_FTP_BONUS) / 256
 
     return fTPBonus
+end
+
+---@param wRatio number
+---@param pDifFinalCap number
+xi.combat.physical.wRatioCapPC = function(wRatio, pDifFinalCap)
+    local pDifUpperCap = 0
+    local pDifLowerCap = 0
+
+    -- pDIF upper cap.
+    if wRatio < 0.5 then
+        pDifUpperCap = wRatio + 0.5
+    elseif wRatio < 0.7 then
+        pDifUpperCap = 1
+    elseif wRatio < 1.2 then
+        pDifUpperCap = wRatio + 0.3
+    elseif wRatio < 1.5 then
+        pDifUpperCap = wRatio + wRatio * 0.25
+    else
+        pDifUpperCap = math.min(wRatio + 0.375, pDifFinalCap)
+    end
+
+    -- pDIF lower cap.
+    if wRatio < 0.38 then
+        pDifLowerCap = 0
+    elseif wRatio < 1.25 then
+        pDifLowerCap = wRatio * 1176 / 1024 - 448 / 1024
+    elseif wRatio < 1.51 then
+        pDifLowerCap = 1
+    elseif wRatio < 2.44 then
+        pDifLowerCap = wRatio * 1176 / 1024 - 775 / 1024
+    else
+        pDifLowerCap = wRatio - 0.375
+    end
+
+    return pDifLowerCap, pDifUpperCap
+end
+
+-- wRatio cap for non-PCs
+---@param wRatio number
+---@param pDifFinalCap number
+xi.combat.physical.wRatioCapOthers = function(wRatio, pDifFinalCap)
+    local pDifUpperCap = 0
+    local pDifLowerCap = 0
+
+    -- see https://www.ffxiah.com/forum/topic/58479/monster-pdif-curves-and-other-info/
+    -- pDIF upper cap.
+    if wRatio < 0.55 then
+        pDifUpperCap = 0.6 + 760 / 1024 * wRatio
+    elseif wRatio <= 0.8 then
+        pDifUpperCap = 1
+    elseif wRatio < 1.2 then
+        pDifUpperCap = 1 + 1127 / 1024 * (wRatio - 0.8)
+    elseif wRatio < 1.5 then
+        pDifUpperCap = 1474 / 1024 + 1105 / 1024 * (wRatio - 1235 / 1024)
+    else
+        pDifUpperCap = math.min(1803 / 1024 + 1070 / 1024 * (wRatio - 1.5), pDifFinalCap)
+    end
+
+    -- pDIF lower cap.
+    if wRatio <= 0.4 then
+        pDifLowerCap = 0.25
+    elseif wRatio < 1.35 then
+        pDifLowerCap = 0.25 + (827 / 1024) * (wRatio - 0.4)
+    elseif wRatio <= 1.60 then
+        pDifLowerCap = 1
+    else
+        pDifLowerCap = 1 + (1120 / 1024) * (wRatio - 1.59)
+    end
+
+    return pDifLowerCap, pDifUpperCap
 end
 
 -- WARNING: This function is used in src/utils/battleutils.cpp "GetDamageRatio" function.
@@ -458,13 +552,14 @@ xi.combat.physical.calculateMeleePDIF = function(actor, target, weaponType, wsAt
     end
 
     -- TODO: it is unknown if ws attack mod and flourish bonus are additive or multiplicative
+    -- TODO: do flourish and attack mods come before or after food?
     actorAttack = math.max(1, math.floor(actor:getStat(xi.mod.ATT, weaponSlot) * wsAttackMod * flourishBonus))
 
     -- Target Defense Modifiers.
     if tpIgnoresDefense then
         local ignoreDefenseFactor = 1 - tpFactor
 
-        targetDefense = math.floor(targetDefense * ignoreDefenseFactor)
+        targetDefense = math.max(1, math.floor(targetDefense * ignoreDefenseFactor))
     end
 
     if isCannonball then
@@ -514,42 +609,40 @@ xi.combat.physical.calculateMeleePDIF = function(actor, target, weaponType, wsAt
     local damageLimitPercent = 1 + actor:getMod(xi.mod.DAMAGE_LIMITP) / 100
     local pDifFinalCap       = (xi.combat.physical.pDifWeaponCapTable[weaponType][2] + damageLimitPlus) * damageLimitPercent + (isCritical and 1 or 0)
 
-    -- https://www.bg-wiki.com/ffxi/PDIF#Average_Melee_pDIF(qRatio)
-    -- This is also known as "pDIF spike"
-    if wRatio > 0.5 and wRatio < 1.5 then -- 0.5 and 1.5 are 0% chance
-        local sRatio = (0.5 - math.abs(wRatio - 1)) * 1.2
+    if actor:isPC() then
+        -- https://www.bg-wiki.com/ffxi/PDIF#Average_Melee_pDIF(qRatio)
+        -- This is also known as "pDIF spike"
+        if wRatio > 0.5 and wRatio < 1.5 then -- 0.5 and 1.5 are 0% chance
+            local sRatio = (0.5 - math.abs(wRatio - 1)) * 1.2
 
-        sRatio = utils.clamp(sRatio, 0, 1 / 3) -- 1/3 (one-third), not 0.33
+            sRatio = utils.clamp(sRatio, 0, 1 / 3) -- 1/3 (one-third), not 0.33
 
-        if math.random() <= sRatio then
+            if math.random(1, 10000) / 10000 <= sRatio then
+                return 1.0
+            end
+        end
+
+        pDifLowerCap, pDifUpperCap = xi.combat.physical.wRatioCapPC(wRatio, pDifFinalCap)
+    else -- Mobs and pets, unconfirmed if pets use this same formula
+        -- https://www.ffxiah.com/forum/topic/58479/monster-pdif-curves-and-other-info/#3751498
+        -- This is also known as "pDIF spike"
+        local sRatio = 0
+
+        if wRatio > 0.0 and wRatio < 0.75 then
+            sRatio = -5 / 9 + (10 / 9) * wRatio
+        elseif wRatio <= 1.3 then
+            sRatio = 0.3
+        else
+            sRatio = 5 / 3 - (270 / 256) * wRatio
+        end
+
+        sRatio = utils.clamp(sRatio, 0, 0.3)
+
+        if math.random(1, 10000) / 10000 <= sRatio then
             return 1.0
         end
-    end
 
-    -- pDIF upper cap.
-    if wRatio < 0.5 then
-        pDifUpperCap = wRatio + 0.5
-    elseif wRatio < 0.7 then
-        pDifUpperCap = 1
-    elseif wRatio < 1.2 then
-        pDifUpperCap = wRatio + 0.3
-    elseif wRatio < 1.5 then
-        pDifUpperCap = wRatio + wRatio * 0.25
-    else
-        pDifUpperCap = math.min(wRatio + 0.375, pDifFinalCap)
-    end
-
-    -- pDIF lower cap.
-    if wRatio < 0.38 then
-        pDifLowerCap = 0
-    elseif wRatio < 1.25 then
-        pDifLowerCap = wRatio * 1176 / 1024 - 448 / 1024
-    elseif wRatio < 1.51 then
-        pDifLowerCap = 1
-    elseif wRatio < 2.44 then
-        pDifLowerCap = wRatio * 1176 / 1024 - 775 / 1024
-    else
-        pDifLowerCap = wRatio - 0.375
+        pDifLowerCap, pDifUpperCap = xi.combat.physical.wRatioCapOthers(wRatio, pDifFinalCap)
     end
 
     -- Apply level correction to UL/LL
@@ -601,7 +694,11 @@ xi.combat.physical.calculateRangedPDIF = function(actor, target, weaponType, wsA
     local targetDefense   = math.max(1, target:getStat(xi.mod.DEF))
     local flourishBonus   = 1
     local firstCap        = xi.combat.physical.pDifWeaponCapTable[weaponType][1]
-    local distancePenalty = xi.combat.ranged.attackDistancePenalty(actor, target)
+    local distancePenalty = 0
+
+    if not actor:isMob() then
+        distancePenalty = xi.combat.ranged.attackDistancePenalty(actor, target)
+    end
 
     -- Actor Weaponskill Specific Attack modifiers.
     -- TODO: verify this actually works on ranged WS
