@@ -65,25 +65,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check for restricted path changes
-        if: steps.check.outputs.should_continue == 'true'
-        shell: bash
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@2f7c5bfce28377bc069a65ba478de0a74aa0ca32
+
+      - name: Check restricted path changes
         run: |
-          #git fetch origin ${{ github.base_ref }}
-
-          # due to the way github actions works internally, we can't use "git diff" with ".." directly on "github.sha"
-          # but we want to use ".." so we don't consider changed files from other PRs since this source diverged
-          # Wacky but it works: origin/${{ github.event.pull_request.base.ref }} is the HEAD of the target, so this checks tip-to-tip with the source and target
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}.. | paste -sd "," -)
-
-          echo "Changed files:"
-          echo "$CHANGED_FILES" | sed 's/,/\n/g'
-
-          # Fail if any file is outside allowed directory
-          if echo "$CHANGED_FILES" | sed 's/,/\n/g' | grep -qvE '^modules/zenith-public/'; then
+          echo "Changed files: ${{ steps.changed-files.outputs.all_changed_files }}"
+          # convert space-delimited list to newline separated
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file"
+          done | grep -qvE '^modules/zenith-public/' && {
             echo "🚫 Changes to restricted paths detected! Only files inside modules/zenith-public/ are allowed."
             exit 1
-          fi
+          }
 
           echo "✅ No restricted changes."
           echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
