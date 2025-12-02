@@ -72,7 +72,7 @@ jobs:
           git fetch origin ${{ github.base_ref }}
 
           # Get changed files (comma-separated for easy env export)
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}..${{ github.sha }} | paste -sd "," -)
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...${{ github.event.pull_request.head.sha }} | paste -sd "," -)
 
           echo "Changed files:"
           echo "$CHANGED_FILES" | sed 's/,/\n/g'
