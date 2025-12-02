@@ -65,23 +65,38 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@2f7c5bfce28377bc069a65ba478de0a74aa0ca32
-        with:
-          base_sha: ${{ github.event.pull_request.base.ref }}
-          sha: ${{ github.sha }}
+      - name: Fetch fork branch
+        if: steps.check.outputs.should_continue == 'true'
+        run: |
+          # Add the fork as a remote, since we are using "pull_request_targets" instead of "pull_request"... the simplest thing to do is simply to fetch the fork directly
+          git remote add fork ${{ github.event.pull_request.head.repo.clone_url }}
+
+          # Fetch the fork's branch
+          git fetch fork ${{ github.event.pull_request.head.ref }}
+
+          echo "Fork: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "Branch: ${{ github.event.pull_request.head.ref }}"
+          echo "Commit: ${{ github.event.pull_request.head.sha }}"
 
       - name: Check restricted path changes
+        if: steps.check.outputs.should_continue == 'true'
         run: |
-          echo "Changed files: ${{ steps.changed-files.outputs.all_changed_files }}"
-          # convert space-delimited list to newline separated
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file"
-          done | grep -qvE '^modules/zenith-public/' && {
+          # Compare base branch with fork's branch
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          echo "Comparing $BASE_SHA...$HEAD_SHA"
+          # Get changed files (comma-separated for easy env export)
+          CHANGED_FILES=$(git diff --name-only "$BASE_SHA..$HEAD_SHA" | paste -sd "," -)
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES" | tr ',' '\n'
+
+          # Fail if any file is outside allowed directory
+          if echo "$CHANGED_FILES" | tr ',' '\n' | grep -qvE '^modules/zenith-public/'; then
             echo "🚫 Changes to restricted paths detected! Only files inside modules/zenith-public/ are allowed."
             exit 1
-          }
+          fi
 
           echo "✅ No restricted changes."
           echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
