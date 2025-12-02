@@ -54,15 +54,12 @@ jobs:
         if: steps.check.outputs.should_continue == 'true'
         shell: bash
         run: |
-          git fetch origin ${{ github.base_ref }}
+          #git fetch origin ${{ github.base_ref }}
 
           # due to the way github actions works internally, we can't use "git diff" with ".." directly on "github.sha"
-          # but we want to use ".." so we don't consider changed files from other, thus we get this to compare with
-          # SOURCE_PARENT == actual source branch HEAD (parent of internal merge commit)
-          SOURCE_PARENT=$(git rev-parse ${{ github.sha }}^1)
-
-          # Get changed files (comma-separated for easy env export)
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}..$SOURCE_PARENT | paste -sd "," -)
+          # but we want to use ".." so we don't consider changed files from other PRs since this source diverged
+          # Wacky but it works: origin/${{ github.event.pull_request.base.ref }} is the HEAD of the target, so this checks tip-to-tip with the source and target
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}.. | paste -sd "," -)
 
           echo "Changed files:"
           echo "$CHANGED_FILES" | sed 's/,/\n/g'
