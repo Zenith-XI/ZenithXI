@@ -1,0 +1,32 @@
+This patch allows Lua modules to hook the player:addGil function
+by calling xi.player.onPlayerAddGil() as a notification before
+executing the default C++ implementation.
+
+Modules can use this hook to implement custom behavior such as
+tracking, bonuses, or rate modifications. The original addGil
+always proceeds after the notification.
+
+Example module usage:
+    xi.player = xi.player or {}
+    xi.player.onPlayerAddGil = function(player, amount)
+        -- Custom logic here (notification only, addGil always proceeds)
+    end
+---
+diff --git a/src/map/lua/lua_baseentity.cpp b/src/map/lua/lua_baseentity.cpp
+index 892a89d968..f6d310a953 100644
+--- a/src/map/lua/lua_baseentity.cpp
++++ b/src/map/lua/lua_baseentity.cpp
+@@ -9315,6 +9315,13 @@
+ 
+ void CLuaBaseEntity::addGil(int32 gil)
+ {
++    // Notify Lua modules about gil addition via xi.player.onPlayerAddGil
++    auto onPlayerAddGil = lua["xi"]["player"]["onPlayerAddGil"];
++    if (onPlayerAddGil.valid())
++    {
++        onPlayerAddGil(CLuaBaseEntity(m_PBaseEntity), gil);
++    }
++
+     if (m_PBaseEntity->objtype != TYPE_PC)
+     {
+         ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
