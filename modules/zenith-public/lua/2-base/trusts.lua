@@ -17,7 +17,7 @@ local trustCooldownTime = (60 * 15) -- 15 minutes
 -- Gets the cooldown time remaining for the next available trust.
 -- If both trusts are on cooldown, it returns the shorter of the two.
 local function getNextAvailableTrustTime(caster)
-    local now = os.time()
+    local now = GetSystemTime()
     local cooldown = 0
     local t1Cooldown = caster:getCharVar(trust1CooldownVar)
     local t2Cooldown = caster:getCharVar(trust2CooldownVar)
@@ -84,7 +84,7 @@ end)
 
 m:addOverride('xi.trust.spawn', function(caster, spell)
     super(caster, spell)
-    local now = os.time()
+    local now = GetSystemTime()
     local trustCdTimeStamp = now + trustCooldownTime
 
     -- When a player summons a trust, check if it's the first one they have summoned.
