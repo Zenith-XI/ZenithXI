@@ -1,9 +1,7 @@
 -----------------------------------
 -- Tremors
--- Deals Earth damage with a seismic disturbance. Additional effect: DEX Down
--- Area of Effect is centered around caster.
--- Utsusemi/Blink absorb: Wipes shadows
--- Duration: Three minutes ?
+-- Family: Worms
+-- Description: Deals Earth damage with a seismic disturbance. Additional Effect: DEX Down
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,13 +11,22 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = math.floor(mob:getWeaponDmg() * 2.5)
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.EARTH, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 1.50, 1.50, 1.50 }
+    params.element    = xi.element.EARTH
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.DEX_DOWN, 10, 3, 120)
+    -- TODO: Dynamis - Nightmare Worm fTPs
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.DEX_DOWN, 10, 9, 180)
+    end
 
     return damage
 end

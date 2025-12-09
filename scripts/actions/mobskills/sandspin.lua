@@ -1,9 +1,7 @@
 -----------------------------------
 -- Sandspin
--- Deals earth damage to enemies within range. Additional Effect: Accuracy Down.
--- Area of Effect is centered around caster.
--- The Additional Effect: Accuracy Down may not always process.
--- Duration: Three minutes ?
+-- Family: Worms
+-- Description: Deals Earth damage to enemies around mob. Additional Effect: Accuracy Down.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,13 +11,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = math.floor(mob:getWeaponDmg() * 2.3)
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.EARTH, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 2.0, 2.0, 2.0 }
+    params.element    = xi.element.EARTH
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.ACCURACY_DOWN, 50, 0, 120)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.ACCURACY_DOWN, 25, 0, 180)
+    end
 
     return damage
 end

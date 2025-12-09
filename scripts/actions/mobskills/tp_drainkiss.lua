@@ -1,9 +1,7 @@
 -----------------------------------
--- Drainkiss
--- Deals dark damage to a single target. Additional effect: TP Drain
--- Type: Magical
--- Utsusemi/Blink absorb: 1 shadow
--- Range: Melee
+-- TP Drainkiss
+-- Family: Leech
+-- Description: Steals a targets TP. TP stolen varies with TP.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,12 +11,26 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = math.floor(mob:getWeaponDmg() * 2.6)
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_1)
+    params.baseDamage = target:getTP()
+    params.fTP        = { 0.500, 0.666, 0.833 }
+    params.element    = xi.element.DARK
 
-    skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.TP, damage))
+    -- From captures, this TP Drains don't seem to be affected by these.
+    params.skipTMDA           = true
+    params.skipResist         = true
+    params.skipDayWeather     = true
+    params.skipMagicBonusDiff = true
+    -- TODO: This skill should penetrate/deal no damage to stoneskin.
+    --       Need to pass a param into mobFinalAdjustments in the future.
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_1, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        skill:setMsg(xi.mobskills.mobDrainMove(mob, target, xi.mobskills.drainType.TP, damage))
+    end
 
     return damage
 end

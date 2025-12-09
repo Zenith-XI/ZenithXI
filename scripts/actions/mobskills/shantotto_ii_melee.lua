@@ -9,13 +9,21 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg()
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.NONE, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.NONE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getWeaponDmg()
+    params.fTP        = { 1.0, 1.0, 1.0 } -- TODO: Capture fTPs
+    params.element    = xi.element.NONE
+    -- TODO: Capture shadowBehavior
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.NONE)
-    skill:setMsg(xi.msg.basic.HIT_DMG)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.NONE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.NONE)
+    end
+
+    skill:setMsg(xi.msg.basic.HIT_DMG) -- TODO: Set once params passed to mobFinalAdjustments
 
     return damage
 end

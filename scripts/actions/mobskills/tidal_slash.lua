@@ -9,7 +9,10 @@
 local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
-    if mob:getAnimationSub() ~= 1 and mob:getMainJob() == xi.job.SAM then
+    if
+        mob:getAnimationSub() ~= 1 and
+        mob:getMainJob() == xi.job.SAM
+    then
         return 0
     else
         return 1
@@ -17,12 +20,19 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = math.floor(mob:getWeaponDmg() * 3.5)
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.WATER, 3, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.NUMSHADOWS_3)
+    params.baseDamage = mob:getWeaponDmg() + 2
+    params.fTP        = { 9.9, 9.9, 9.9 }
+    params.element    = xi.element.WATER
+    -- TODO: This is a physical skill, will fix in mobPhysicalMove() PR
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.NUMSHADOWS_3, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
+    end
 
     return damage
 end

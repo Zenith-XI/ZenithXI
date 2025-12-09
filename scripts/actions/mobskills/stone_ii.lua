@@ -1,6 +1,7 @@
 -----------------------------------
 -- Stone II
--- Deals earth elemental damage. Damage varies with TP.
+-- Family: Avatar (Titan)
+-- Description: Deals Earth elemental damage.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -10,12 +11,18 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 3
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.EARTH, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 3.00, 3.00, 3.00 } -- TODO: Capture fTPs
+    params.element    = xi.element.EARTH
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+    end
 
     return damage
 end

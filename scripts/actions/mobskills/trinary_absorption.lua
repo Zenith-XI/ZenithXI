@@ -1,16 +1,14 @@
 -----------------------------------
 -- Trinary Absorption
--- Deals elemental damage to the target. Additional effect: Drain.
--- Type: Magical
--- Utsusemi/Blink absorb: 1 Shadows
--- Range: Melee
+-- Family: Thinker
+-- Description: Drains HP from a target.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
     if
-        mob:isMobType(xi.mobType.NOTORIOUS) or
+        mob:isMobType(xi.mobType.NOTORIOUS) or -- TODO: Set skill lists
         target:hasStatusEffect(xi.effect.BATTLEFIELD)
     then
         return 0
@@ -20,12 +18,24 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() * 5, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.NO_EFFECT, 0)
-    local dmg = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_1)
+    local params = {}
 
-    skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.HP, dmg))
+    params.baseDamage = mob:getMainLvl()
+    params.fTP        = { 5.0, 5.0, 5.0 }
+    params.element    = xi.element.DARK
 
-    return dmg
+    -- From captures, this HP Drains don't seem to be affected by these.
+    params.skipResist         = true
+    params.skipMagicBonusDiff = true
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.NUMSHADOWS_1, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        skill:setMsg(xi.mobskills.mobDrainMove(mob, target, xi.mobskills.drainType.HP, damage))
+    end
+
+    return damage
 end
 
 return mobskillObject

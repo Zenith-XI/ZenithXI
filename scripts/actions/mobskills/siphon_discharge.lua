@@ -1,12 +1,7 @@
 -----------------------------------
---  Siphon Discharge
---
---  Family: Xzomit
---  Type: Water elemental
---  Can be dispelled: N/A
---  Utsusemi/Blink absorb: Ignores shadows
---  Range: Unknown cone
---  Notes: Water Damage Knockback.
+-- Siphon Discharge
+-- Family: Xzomit
+-- Description: Deals Water damage to targets in front of mob. Additional Effect: Knockback
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -16,10 +11,19 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.WATER, 2, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    local params = {}
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 2.0, 2.0, 2.0 }
+    params.element    = xi.element.WATER
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
+    end
+
     return damage
 end
 

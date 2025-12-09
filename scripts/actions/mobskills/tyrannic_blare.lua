@@ -1,11 +1,7 @@
 -----------------------------------
---  Tyrannic Blare
---
---  Description: Emits an overwhelming scream that damages nearby targets.
---  Type: Magical?
---  Utsusemi/Blink absorb: Ignores shadows
---  Range: Less than or equal to 10.0
---  Notes: Only used by Gulool Ja Ja.
+-- Tyrannic Blare
+-- Family: Mamool Ja (Gulool Ja Ja)
+-- Description: Emits an overwhelming scream that damages nearby targets.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -15,12 +11,19 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = math.floor(mob:getWeaponDmg() * 2.8)
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.EARTH, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getWeaponDmg()
+    params.fTP        = { 2.80, 2.80, 2.80 } -- TODO: Capture fTPs
+    params.element    = xi.element.FIRE      -- TODO: Capture element
+    -- TODO: Capture shadowBehavior
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+    end
 
     return damage
 end

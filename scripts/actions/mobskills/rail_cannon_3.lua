@@ -1,6 +1,7 @@
 -----------------------------------
--- Rail Cannon 3 gears
--- 3 Gears: Rail Cannon is AoE and strips Utsusemi
+-- Rail Cannon (3/3 Gears)
+-- Family: Gears
+-- Description: 3/3 Gears: Rail Cannon is AoE and strips Utsusemi
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -10,13 +11,19 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 3
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.LIGHT, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.LIGHT, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    params.baseDamage      = mob:getMainLvl() + 2
+    params.fTP             = { 5.0, 5.0, 5.0 }
+    params.element         = xi.element.LIGHT
+    params.dStatMultiplier = 1.5
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.LIGHT, { breakBind = false })
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BIND, 1, 0, 30)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.LIGHT, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.LIGHT)
+    end
 
     return damage
 end

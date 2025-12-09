@@ -1,8 +1,7 @@
 -----------------------------------
 -- Proboscis
--- Steals MP and dispels one beneficial status effect from targets in front.
--- Type: Magical
--- Utsusemi/Blink absorb: ignore shadow
+-- Family: Wamoura
+-- Description: Drains MP from and dispels one beneficial status effect from targets in front.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -12,14 +11,23 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg()
+    local params = {}
 
-    target:dispelStatusEffect()
+    -- TODO: This is likely a physical skill with a drain attatched as its subject to PDIF. Return to this in mobPhysicalMove() PR.
+    -- TODO: Drain can be resisted. Need more data on if the drain is affected by anything other than Dark resists.
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 1, 1, 1 }
+    params.element    = xi.element.DARK
 
-    skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.MP, damage))
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.MP, damage))
+
+        target:dispelStatusEffect()
+    end
 
     return damage
 end

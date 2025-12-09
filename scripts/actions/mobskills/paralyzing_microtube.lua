@@ -1,6 +1,6 @@
 -----------------------------------
 -- Paralyzing Microtube
--- Deals Magic damage to target. Additional effect: Paralyze
+-- Description: Deals Magic damage to target. Additional effect: Paralyze
 -- Used by Adelheid (Trust)
 -----------------------------------
 ---@type TMobSkill
@@ -11,13 +11,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 5
+local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.NONE, 2.45, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.NONE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getWeaponDmg()
+    params.fTP        = { 12.25, 12.25, 12.25 } -- TODO: Capture fTPs
+    params.element    = xi.element.NONE
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.NONE)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.PARALYSIS, 20, 0, 60)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.NONE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.NONE)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.PARALYSIS, 20, 0, 60) -- TODO: Capture power/duration
+    end
 
     return damage
 end

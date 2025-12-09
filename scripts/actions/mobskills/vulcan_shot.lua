@@ -1,11 +1,7 @@
 -----------------------------------
 -- Vulcan Shot
---
+-- Family: Fomor
 -- Description: Fires an explosive bullet at targets in an area of effect.
--- Type: Magical
--- Can be dispelled: N/A
--- Utsusemi/Blink absorb: Wipes shadows?
--- Range: 14' radial
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -17,12 +13,21 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 4
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.FIRE, 8, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 32.00, 32.00, 32.00 } -- TODO: Capture fTPs (Original code was Weapon Damage * 4 * 8)
+    params.element    = xi.element.FIRE
+    -- TODO: Verify if magical or physical skill
+    -- TODO: Capture shadowBehavior
+    -- TODO: Capture AoE Type or Single hit.
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+    end
 
     return damage
 end

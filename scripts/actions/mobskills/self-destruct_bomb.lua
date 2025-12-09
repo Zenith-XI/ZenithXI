@@ -1,6 +1,7 @@
 -----------------------------------
 -- Self-Destruct
--- Description : Sacrifices user to deal fire damage to targets in the area.
+-- Family: Bombs
+-- Description: Suicide Move. Deals damage to targets in range based on mob's remaining HP.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -10,12 +11,18 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getHP() / 3
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.FIRE, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = skill:getMobHP() / 3
+    params.fTP        = { 1.00, 1.00, 1.00 }
+    params.element    = xi.element.FIRE
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+    end
 
     return damage
 end

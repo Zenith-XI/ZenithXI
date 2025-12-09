@@ -1,9 +1,8 @@
 -----------------------------------
 -- Putrid Breath
--- Description: Deals breath damage to enemies around the target..
--- Type: Magical
--- Utsusemi/Blink absorb: Ignores Shadows
--- Notes: Only used by Cirrate Christelle
+-- Description: Deals Dark damage to enemies.
+-- Notes: Deals Breath damage and follows corresponding damage reductions but damage is not based on HP.
+-- Notes: Only used by Cirrate Christelle.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,12 +12,25 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 8
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.NO_EFFECT, 1)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.BREATH, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getWeaponDmg() -- TODO: Currently balanced around weapon damage.
+    params.fTP        = { 8, 8, 8 }
+    params.element    = xi.element.DARK
+    params.useTBDA    = true
 
-    target:takeDamage(damage, mob, xi.attackType.BREATH, xi.damageType.DARK)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.BREATH, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.BREATH, xi.damageType.DARK)
+
+        if skill:getID() == xi.mobSkill.PUTRID_BREATH_1 then
+            skill:setMsg(xi.msg.basic.DAMAGE)
+        elseif skill:getID() == xi.mobSkill.PUTRID_BREATH_2 then
+            skill:setMsg(xi.msg.basic.HIT_DMG)
+        end
+    end
 
     return damage
 end

@@ -1,9 +1,7 @@
 -----------------------------------
---  Venom
---  Description: Deals damage in a fan shaped area. Additional effect: poison
---  Type: Magical: Water
---  Utsusemi/Blink absorb: Ignores shadows
---  Range: 10' cone
+-- Venom
+-- Family: Fly
+-- Description: Deals Water damage in a fan shaped area. Additional Effect: Poison
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,13 +11,24 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local power  = math.floor(mob:getMainLvl() / 6 + 1)
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.WATER, 1.5, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 1.50, 1.50, 1.50 }
+    params.element    = xi.element.WATER
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.POISON, power, 3, 60)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
+
+        -- TODO: Jugpet differences
+
+        -- TODO: Dynamis - Nightmare Fly
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.POISON, 1, 3, 60) -- TODO: Capture duration
+    end
 
     return damage
 end

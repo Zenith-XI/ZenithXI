@@ -1,11 +1,8 @@
 -----------------------------------
---  Ochre Blast
---
---  Description: Deals fire damage to enemies in area of effect.
---  Type: Magical
---  Utsusemi/Blink absorb: Wipes shadows
---  Range: 18' radial.
---  Notes: Used only by Ouryu and Cuelebre while flying.
+-- Ochre Blast
+-- Family: Wyrms
+-- Description: Deals Earth damage to enemies in area of effect.
+-- Notes: Used only by Ouryu and Cuelebre while flying.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -19,12 +16,19 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 8
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.EARTH, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 3.500, 3.875, 4.250 }
+    params.element    = xi.element.EARTH
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+    end
 
     return damage
 end

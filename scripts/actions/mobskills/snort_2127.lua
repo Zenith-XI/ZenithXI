@@ -1,7 +1,7 @@
 -----------------------------------
 -- Snort
+-- Family: Buffalo
 -- Description: Deals Wind damage to targets in a fan-shaped area of effect. Additional effect: Knockback
--- Type: Magical (Wind)
 -- Note: Shows as a regular attack and lowers enmity
 -----------------------------------
 ---@type TMobSkill
@@ -12,14 +12,22 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 4
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.WIND, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WIND, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 4.0, 4.0, 4.0 }
+    params.element    = xi.element.WIND
+    -- params.dStatMultiplier = 1 TODO: Possible dINT multiplier, need more captures.
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WIND)
-    skill:setMsg(xi.msg.basic.HIT_DMG)
-    mob:lowerEnmity(target, 25)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WIND, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WIND)
+
+        skill:setMsg(xi.msg.basic.HIT_DMG)
+        mob:lowerEnmity(target, 25)
+    end
 
     return damage
 end

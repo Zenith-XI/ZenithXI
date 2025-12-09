@@ -1,6 +1,7 @@
 -----------------------------------
 -- Thunder Break
--- Channels the power of Thunder toward targets in an area of effect. Additional effect: Stun
+-- Family: Golems
+-- Description: Deals Thunder damage to targets in range. Additional Effect: Stun
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -10,12 +11,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.THUNDER, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.THUNDER, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    local params = {}
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.THUNDER)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 1.00, 1.00, 1.00 } -- TODO: Capture fTP scaling
+    params.element    = xi.element.THUNDER
 
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.STUN, 1, 0, math.random(10, 20))
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.THUNDER, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.THUNDER)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.STUN, 1, 0, math.random(10, 20))
+    end
 
     return damage
 end

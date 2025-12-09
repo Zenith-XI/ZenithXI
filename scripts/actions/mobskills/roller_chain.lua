@@ -1,10 +1,8 @@
 -----------------------------------
 -- Roller Chain
--- Only used by Ramparts when its door is closed
--- Description: Single target Bind, Silence, Amnesia.
--- Type: Magical
--- Utsusemi/Blink absorb: Ignores shadows
--- Range: 10' Aoe
+-- Family: Ramparts
+-- Description: Deals Physical damage to a target. Additional Effect: Bind.
+-- Notes: Only used by Ramparts when its door is closed.
 -----------------------------------
 
 ---@type TMobSkill
@@ -19,15 +17,22 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * 2
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    -- TODO: This is a physical skill. Will revisit in mobPhysicalMove() PR
+    params.baseDamage = mob:getWeaponDmg()
+    params.fTP        = { 2, 2, 2 } -- TODO: Capture fTPs
+    params.element    = xi.element.DARK
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BIND, 1, 0, 30)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SILENCE, 1, 0, 60)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.AMNESIA, 3000, 0, 30)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
+
+        -- TODO: Capture power/durations
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BIND, 1, 0, 30)
+    end
 
     return damage
 end

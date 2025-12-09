@@ -1,9 +1,7 @@
 -----------------------------------
---  Vacuous Osculation
---
---  Description: Deals damage to a single target. Additional effect: Poison, Plague
---  Type: Physical
---  Utsusemi/Blink absorb: 1 shadow
+-- Vacuous Osculation
+-- Family: Weeper
+-- Description: Deals unaspected magic damage to a single target. Additional Effect: Poison, Plague
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,14 +11,22 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local ftp = 3
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.NONE, ftp, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    local params = {}
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 1.00, 1.00, 1.00 }
+    params.element    = xi.element.NONE
+    -- TODO: Capture shadow behavior
 
-    xi.mobskills.mobPhysicalStatusEffectMove(mob, target, skill, xi.effect.PLAGUE, 3, 3, 30)
-    xi.mobskills.mobPhysicalStatusEffectMove(mob, target, skill, xi.effect.POISON, 8, 3, 60)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL)
+
+        xi.mobskills.mobPhysicalStatusEffectMove(mob, target, skill, xi.effect.PLAGUE, 5, 3, 30)
+        xi.mobskills.mobPhysicalStatusEffectMove(mob, target, skill, xi.effect.POISON, 8, 3, 60)
+    end
 
     return damage
 end

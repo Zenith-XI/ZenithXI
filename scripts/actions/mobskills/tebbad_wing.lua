@@ -1,11 +1,8 @@
 -----------------------------------
---  Tebbad Wing
---
---  Description: A hot wind deals Fire damage to enemies within a very wide area of effect. Additional effect: Plague
---  Type: Magical
---  Utsusemi/Blink absorb: Wipes shadows
---  Range: 30' radial.
---  Notes: Used only by Tiamat, Smok and Ildebrann
+-- Tebbad Wing
+-- Family: Wyrms
+-- Description: A hot wind deals Fire damage to enemies within a very wide area of effect. Additional Effect: Plague
+-- Notes: Used by Tiamat, Smok and Ildebrann on round.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -23,11 +20,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.FIRE, 4, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    local params = {}
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.PLAGUE, 10, 0, 120)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 4.00, 4.00, 4.00 }
+    params.element    = xi.element.FIRE
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.PLAGUE, 10, 0, 120) -- TODO: Capture power/duration
+    end
 
     return damage
 end

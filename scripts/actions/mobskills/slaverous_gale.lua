@@ -1,8 +1,7 @@
 -----------------------------------
 -- Slaverous Gale
---
--- Description: Deals earth damage that inflicts Plague and Slow effects on targets in front of the caster
--- Type: Magical (Earth)
+-- Family: Sandworms
+-- Description: Deals damage to targets in front of mob. Additional Effect: Plague, Slow
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -12,14 +11,23 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local damage = mob:getWeaponDmg() * math.random(4, 6)
+    local params = {}
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.EARTH, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 5.0, 5.0, 5.0 }
+    params.element    = xi.element.EARTH
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.PLAGUE, 1, 3, 60)
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SLOW, 1250, 0, 60)
+    -- TODO: JP wiki says this can miss and may be a physical skill. Need more captures to confirm.
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.PLAGUE, 5, 3, 120)
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SLOW, 5000, 0, 120)
+    end
 
     return damage
 end

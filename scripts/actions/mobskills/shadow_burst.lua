@@ -1,0 +1,39 @@
+-----------------------------------
+-- Shadow Burst
+-- Family: Gargouille
+-- Description: Deals Dark damage to enemies within area of effect. Additional Effect: Curse
+-----------------------------------
+---@type TMobSkill
+local mobskillObject = {}
+
+mobskillObject.onMobSkillCheck = function(target, mob, skill)
+    -- TODO: Animation looks like it is meant to be used in standing form. Need captures.
+    if mob:getAnimationSub() ~= 0 then
+        return 1
+    end
+
+    return 0
+end
+
+mobskillObject.onMobWeaponSkill = function(target, mob, skill)
+    local params = {}
+
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 3.00, 3.00, 3.00 } -- TODO: Capture fTPs
+    params.element    = xi.element.DARK
+
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
+
+        -- TODO: Capture duration
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.CURSE_I, 50, 0, 300)
+    end
+
+    return damage
+end
+
+return mobskillObject

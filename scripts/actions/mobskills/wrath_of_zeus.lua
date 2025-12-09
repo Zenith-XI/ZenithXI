@@ -1,8 +1,7 @@
 -----------------------------------
---  Wrath of Zeus
---
---  Description: Area of Effect lightning damage around Ixion (400-1000) and Silence.
---  Type: Magical
+-- Wrath of Zeus
+-- Family: Monoceros (Dark Ixion)
+-- Description: Area of Effect Thunder damage around Ixion (400-1000). Additional Effect: Silence
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -12,22 +11,19 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    -- parameters for AE
-    local typeEffect = xi.effect.SILENCE
-    local power      = 1
-    local duration   = xi.mobskills.calculateDuration(30, 60)
+    local params = {}
 
-    -- perform magical attack
-    local damage = mob:getWeaponDmg()
-    local dmgmod = 4.5 -- unbuffed hit for ~700
+    params.baseDamage = mob:getMainLvl() + 2
+    params.fTP        = { 4.50, 4.50, 4.50 } -- TODO: Capture fTPs
+    params.element    = xi.element.THUNDER
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.THUNDER, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.THUNDER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.THUNDER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS, info.hitsLanded)
 
-    if damage > 0 then
-        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.THUNDER)
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WIND)
 
-        xi.mobskills.mobStatusEffectMove(mob, target, typeEffect, power, 0, duration)
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SILENCE, 1, 0, xi.mobskills.calculateDuration(30, 60))
     end
 
     return damage

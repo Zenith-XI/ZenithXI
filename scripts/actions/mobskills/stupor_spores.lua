@@ -2,8 +2,6 @@
 -- Stupor Spores
 -- Family: Euvhi
 -- Description: Spreads intoxicating spores that damages nearby targets. Additional effect: Sleep
--- Type: Magical
--- Utsusemi/Blink absorb: Ignores shadows
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
@@ -13,13 +11,21 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    -- TODO: Damage needs 1 + dINT added
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMainLvl() + 2, xi.element.NONE, 1, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local damage = xi.mobskills.mobFinalAdjustments(info, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    local params = {}
 
-    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL)
+    params.baseDamage      = mob:getMainLvl() + 2
+    params.fTP             = { 1.00, 1.00, 1.00 }
+    params.element         = xi.element.NONE
+    params.dStatMultiplier = 1
 
-    xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SLEEP_I, 1, 0, math.random(15, 60))
+    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, params)
+    local damage = xi.mobskills.mobFinalAdjustments(info.damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL, xi.mobskills.shadowBehavior.WIPE_SHADOWS, info.hitsLanded)
+
+    if not xi.mobskills.hasMissMessage(mob, target, skill, damage) then
+        target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL)
+
+        xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SLEEP_I, 1, 0, math.random(15, 60))
+    end
 
     return damage
 end
