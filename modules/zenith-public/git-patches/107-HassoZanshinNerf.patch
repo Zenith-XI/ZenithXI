@@ -1,0 +1,26 @@
+diff --git a/src/map/entities/battleentity.cpp b/src/map/entities/battleentity.cpp
+index a7b06338cb..5cd21215e8 100644
+--- a/src/map/entities/battleentity.cpp
++++ b/src/map/entities/battleentity.cpp
+@@ -2983,7 +2983,7 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
+             const bool normalZanshinProc = missedOrCountered && xirand::GetRandomNumber(100) < zanshinChance;
+ 
+             const bool isSamWithHasso   = GetMJob() == JOB_SAM && this->StatusEffectContainer->HasStatusEffect(EFFECT_HASSO);
+-            const bool hassoZanshinProc = isSamWithHasso && xirand::GetRandomNumber(100) < zanshinChance / 4;
++            const bool hassoZanshinProc = isSamWithHasso && xirand::GetRandomNumber(100) < zanshinChance / 8;
+ 
+             if (normalZanshinProc || hassoZanshinProc)
+             {
+diff --git a/src/map/utils/battleutils.cpp b/src/map/utils/battleutils.cpp
+index 9f7632fb6a..eaf06d8c13 100644
+--- a/src/map/utils/battleutils.cpp
++++ b/src/map/utils/battleutils.cpp
+@@ -3344,7 +3344,7 @@ uint8 CheckMultiHits(CBattleEntity* PEntity, CItemWeapon* PWeapon)
+                 zanshin += ((CCharEntity*)PEntity)->PMeritPoints->GetMeritValue(MERIT_ZASHIN_ATTACK_RATE, (CCharEntity*)PEntity);
+             }
+ 
+-            if (xirand::GetRandomNumber(100) < (zanshin / 4))
++            if (xirand::GetRandomNumber(100) < (zanshin / 8))
+             {
+                 num++;
+             }
