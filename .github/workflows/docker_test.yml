@@ -33,6 +33,8 @@ jobs:
       XI_NETWORK_SQL_DATABASE: xidb
       XI_NETWORK_SQL_LOGIN: xiadmin
       XI_NETWORK_SQL_PASSWORD: 'password'
+      REPO_OWNER: 'landsandboat'
+      REPO: 'landsandboat/server'
     services:
       database:
         image: mariadb:lts
