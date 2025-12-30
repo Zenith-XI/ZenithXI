@@ -3,11 +3,14 @@
 --
 -- This module overrides the max number of trusts a player can summon
 -- and implements a cooldown system for summoning trusts.
+--
+-- [ZENITH MOD] Also removes the LFP restriction to allow trusts while
+-- seeking a party, and allows setting LFP while trusts are deployed.
 -- -----------------------------------
 
 require('modules/module_utils')
 
-local m = Module:new('trusts')
+local m = Module:new('b_trusts')
 
 local trustLimitVar = '[TRUST]Additional'
 local trust1CooldownVar = '[TRUST]Cooldown1'
@@ -42,44 +45,41 @@ local function getNextAvailableTrustTime(caster)
     return fmt('{}:{} remaining until you can summon another trust.', mins, secsStr)
 end
 
+-- [ZENITH MOD] Temporarily disable LFP during trust casting, then re-enable
+-- This avoids duplicating all base casting restrictions and reduces maintenance burden
+local lfpRestoreDelay = 10 -- seconds
+
 m:addOverride('xi.trust.canCast', function(caster, spell, notAllowedTrustIds)
+    -- Check if both trust cooldowns are active
+    local cooldownMsg = getNextAvailableTrustTime(caster)
+    if cooldownMsg then
+        caster:printToPlayer(cooldownMsg, xi.msg.channel.SYSTEM_3)
+        return xi.msg.basic.TRUST_NO_CAST_TRUST
+    end
+
+    local wasSeekingParty = caster:isSeekingParty()
+
+    -- Temporarily disable LFP so base check passes
+    if wasSeekingParty then
+        caster:setSeekingParty(false)
+    end
+
+    -- Call the original canCast with all its checks
     local result = super(caster, spell, notAllowedTrustIds)
 
-    if result ~= 0 then
-        return result
+    -- If casting will succeed and player was LFP, schedule re-enable
+    if result == 0 and wasSeekingParty then
+        caster:timer(lfpRestoreDelay * 1000, function(player)
+            if player and player:isAlive() then
+                player:setSeekingParty(true)
+            end
+        end)
+    elseif wasSeekingParty then
+        -- Casting failed, immediately restore LFP
+        caster:setSeekingParty(true)
     end
 
-    local limit = 1
-    local trustAvailable = getNextAvailableTrustTime(caster)
-
-    -- Check if player has the trust limit variable set.
-    if
-        caster:getCharVar(trustLimitVar) ~= 0 and
-        caster:getMainLvl() >= 50
-    then
-        limit = 2
-    end
-
-    -- Check if player has summoned 2 trusts already.
-    local trusts = 0
-    for _, member in pairs(caster:getPartyWithTrusts()) do
-        if member:getObjType() == xi.objType.TRUST then
-            trusts = trusts + 1
-        end
-    end
-
-    if trusts >= limit then
-        caster:messageSystem(xi.msg.system.TRUST_MAXIMUM_NUMBER)
-        return -1
-    end
-
-    -- Check if player has both trusts variables on cooldown.
-    if trustAvailable ~= nil then
-        caster:printToPlayer(trustAvailable, xi.msg.channel.SYSTEM_3)
-        return -1
-    end
-
-    return 0
+    return result
 end)
 
 m:addOverride('xi.trust.spawn', function(caster, spell)
