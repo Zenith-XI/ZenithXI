@@ -68,6 +68,7 @@ UPDATE `abilities` SET `level` = 75, `content_tag`= NULL WHERE `name` = 'hamanoh
 -- NIN
 UPDATE `abilities` SET `level` = 50, `content_tag`= NULL WHERE `name` = 'futae';
 UPDATE `abilities` SET `level` = 71, `content_tag`= NULL WHERE `name` = 'issekigan';
+UPDATE `abilities` SET `recastTime`= 300 WHERE `name` = 'sange'; -- Reverts recast reduction from October 2014 update
 
 -- DRG
 UPDATE `abilities` SET `level` = 40, `content_tag`= NULL WHERE `name` = 'smiting_breath';
