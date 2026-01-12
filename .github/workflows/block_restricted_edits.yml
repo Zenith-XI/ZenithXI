@@ -38,7 +38,7 @@ jobs:
 
           if [ "$GITHUB_EVENT_NAME" = "push" ]; then
             BRANCH="$GITHUB_REF_NAME"
-          elif [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+          elif [ "$GITHUB_EVENT_NAME" = "pull_request" ] || [ "$GITHUB_EVENT_NAME" = "pull_request_target" ]; then
             BRANCH=$(jq -r '.pull_request.head.ref' "$GITHUB_EVENT_PATH")
           fi
 
