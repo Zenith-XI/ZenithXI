@@ -1,8 +1,7 @@
--- Guild Point and Crafter Point NPC Expansion Tags
--- Guild Point NPCs are tagged to COP (Chains of Promathia)
--- Crafter Point NPCs are tagged to SOA (Seekers of Adoulin)
+-- NPC Expansion Tags
 -- Using calculated zoneid from npcid + name matching as npcid values can change with client updates
 -- Zone formula: (npcid >> 12) & 0xFFF
+-----------------------------------
 
 -- Guild Point NPCs - Tag to COP (Chains of Promathia)
 UPDATE `npc_list` SET `content_tag` = 'COP' WHERE CONCAT((`npcid` >> 12) & 0xFFF, '-', `name`) IN (
@@ -29,4 +28,11 @@ UPDATE `npc_list` SET `content_tag` = 'SOA' WHERE CONCAT((`npcid` >> 12) & 0xFFF
     '231-Ore_Guzzler',    -- Smithing (Northern San d'Oria)
     '237-Esvin',          -- Smithing (Metalworks)
     '231-Luren'           -- Woodworking (Northern San d'Oria)
+);
+
+-- Trust NPCs - Remove tag to enable without any expansion
+UPDATE `npc_list` SET `content_tag` = NULL WHERE CONCAT((`npcid` >> 12) & 0xFFF, '-', `name`) IN (
+    '236-Clarion_Star',
+    '230-Gondebaud',
+    '241-Wetata'
 );
