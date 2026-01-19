@@ -59,7 +59,7 @@ jobs:
         shell: bash
     env:
       SCCACHE_DIR: ${{ format('{0}/build/sccache', github.workspace) }}
-      SCCACHE_CACHE_SIZE: '1G'
+      SCCACHE_CACHE_SIZE: "1G"
       SKIP_BUILD: false
     steps:
       - name: Download changed files artifact
@@ -207,7 +207,7 @@ jobs:
           python-version: '3.12'
 
       - name: Enable modules
-        if: false
+        if: ${{ inputs.build_modules && env.SKIP_BUILD != 'true' }}
         run: |
           python3 <<EOF
           with open("modules/init.txt", "w") as f:
