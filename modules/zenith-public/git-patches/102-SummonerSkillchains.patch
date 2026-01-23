@@ -7,9 +7,9 @@ diff --git a/src/map/entities/petentity.cpp b/src/map/entities/petentity.cpp
 index fb85d967f6..f079c266d8 100644
 --- a/src/map/entities/petentity.cpp
 +++ b/src/map/entities/petentity.cpp
-@@ -490,7 +490,14 @@ void CPetEntity::OnPetSkillFinished(CPetSkillState& state, action_t& action)
-     MSGBASIC_ID msg            = MSGBASIC_NONE;
-     MSGBASIC_ID defaultMessage = PSkill->getMsg();
+@@ -495,7 +495,14 @@ void CPetEntity::OnPetSkillFinished(CPetSkillState& state, action_t& action)
+     MsgBasic msg            = MsgBasic::NONE;
+     MsgBasic defaultMessage = PSkill->getMsg();
  
 -    bool first{ true };
 +    bool canSkillchain = true;

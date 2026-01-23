@@ -18,7 +18,7 @@ index 1c0df703fa..0e57d4a212 100644
 -            }
 -            else
 -            {
--                errMsg = std::make_unique<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PTarget, 0, 0, MSGBASIC_WAIT_LONGER);
+-                errMsg = std::make_unique<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PTarget, 0, 0, MsgBasic::WAIT_LONGER);
 +                PChar->PLatentEffectContainer->CheckLatentsWeaponDraw(true);
 +                PChar->pushPacket<GP_SERV_COMMAND_ASSIST>(PChar, PTarget);
 +                return true;

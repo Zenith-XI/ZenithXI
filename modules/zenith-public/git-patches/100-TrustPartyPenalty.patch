@@ -4,7 +4,7 @@ diff --git a/src/map/utils/charutils.cpp b/src/map/utils/charutils.cpp
 index 892a89d968..f6d310a953 100644
 --- a/src/map/utils/charutils.cpp
 +++ b/src/map/utils/charutils.cpp
-@@ -4307,7 +4307,17 @@ namespace charutils
+@@ -4777,7 +4777,17 @@ namespace charutils
                  {
                      minlevel = PMember->GetMLevel();
                  }
@@ -22,4 +22,4 @@ index 892a89d968..f6d310a953 100644
 +                }
              }
          });
-         // clang-format on
+     // clang-format on
