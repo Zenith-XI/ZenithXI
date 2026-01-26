@@ -6,36 +6,46 @@
 -- Players can trade a Fire Cluster to open the wall.
 -- -----------------------------------
 
-local m = Module:new('ice_wall_quest')
+local m = Module:new('c_ice_wall_quest')
 
 local ID = zones[xi.zone.ULEGUERAND_RANGE]
 local npcName = 'Ice Wall'
+
 local checkWaterfall = function(player)
     local waterfall = GetNPCByID(ID.npc.WATERFALL)
 
-    local waterfallOpen = waterfall:getAnimation() ~= xi.anim.OPEN_DOOR
+    -- CLOSE_DOOR = ice wall closed (blocking), OPEN_DOOR = ice wall open (path clear)
+    local waterfallBlocked = waterfall:getAnimation() == xi.anim.CLOSE_DOOR
 
-    if not waterfallOpen then
+    if not waterfallBlocked then
         player:fmt('{} : The path is currently clear!', npcName)
     end
 
-    return waterfallOpen
+    return waterfallBlocked
 end
 
 local openWaterfall = function(player)
     -- can't just use :openDoor(30) because we need to check the weather before closing it
     local waterfall = GetNPCByID(ID.npc.WATERFALL)
+
+    -- Mark as temporarily melted so weather changes don't re-block immediately
+    waterfall:setLocalVar('melted', 1)
+
+    -- OPEN_DOOR = open the path (melt the ice wall)
     waterfall:setAnimation(xi.anim.OPEN_DOOR)
 
-    -- close door after 30s, unless weather changed in that time
+    -- Re-close ice wall after 30s if weather is still snowy
     waterfall:timer(30000, function(npcArg)
+        -- Clear the melted state
+        npcArg:setLocalVar('melted', 0)
+
         local weather = npcArg:getZone():getWeather()
 
         if
-        npcArg:actionQueueEmpty() and -- don't close the door if someone else traded while it was open
-        (weather == xi.weather.SNOW or
-        weather == xi.weather.BLIZZARDS)
+            npcArg:actionQueueEmpty() and -- don't close the door if someone else traded while it was open
+            (weather == xi.weather.SNOW or weather == xi.weather.BLIZZARDS)
         then
+            -- CLOSE_DOOR = close ice wall (block the path)
             npcArg:setAnimation(xi.anim.CLOSE_DOOR)
         end
     end)
@@ -111,5 +121,29 @@ LQS.add(m, {
         },
     },
 })
+
+-- Override Zone weather change to respect temporarily melted state
+m:addOverride('xi.zones.Uleguerand_Range.Zone.onZoneWeatherChange', function(weather)
+    local waterfall = GetNPCByID(ID.npc.WATERFALL)
+
+    if waterfall then
+        -- Check if waterfall was temporarily melted by quest
+        if waterfall:getLocalVar('melted') == 1 then
+            return
+        end
+
+        if weather == xi.weather.SNOW or weather == xi.weather.BLIZZARDS then
+            -- CLOSE_DOOR = ice wall closed (blocking path)
+            if waterfall:getAnimation() ~= xi.anim.CLOSE_DOOR then
+                waterfall:setAnimation(xi.anim.CLOSE_DOOR)
+            end
+        else
+            -- OPEN_DOOR = ice wall open (path clear)
+            if waterfall:getAnimation() ~= xi.anim.OPEN_DOOR then
+                waterfall:setAnimation(xi.anim.OPEN_DOOR)
+            end
+        end
+    end
+end)
 
 return m
