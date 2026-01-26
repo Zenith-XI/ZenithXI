@@ -9,7 +9,7 @@
 --   - If the NM has spawned
 -----------------------------------
 
-local m = Module:new('phOnDespawn')
+local m = Module:new('b_phOnDespawn')
 
 local nmParamChanges =
 {
@@ -115,7 +115,7 @@ m:addOverride('xi.mob.phOnDespawn', function(ph, phNmId, chance, cooldown, param
     end
 
     -- call the original function with adjusted values
-    local superResults = super(ph, phList, chance, cooldown, params)
+    local superResults = super(ph, phNmId, chance, cooldown, params)
 
     -- reset counter if NM gets spawned
     if nm then
