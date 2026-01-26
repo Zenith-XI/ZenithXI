@@ -174,7 +174,6 @@ local function createStandardNMOverrides(nmList)
         -- Zone initialization override
         -- ensure path exists for multi-mapserver setups
         local zonePath = fmt('xi.zones.{}.Zone', zoneName)
-        xi.module.ensureTable(zonePath)
         m:addOverride(zonePath .. '.onInitialize',
         function(zone)
             super(zone)
