@@ -40,6 +40,22 @@ local effectAdjustments =
             subpower = 0.75, -- 25% reduction
         },
     },
+    dodge =
+    {
+        effectId = xi.effect.DODGE,
+        set =
+        {
+            duration = 90000, -- Changed to 90 seconds
+        },
+    },
+    focus =
+    {
+        effectId = xi.effect.FOCUS,
+        set =
+        {
+            duration = 90000, -- Changed to 90 seconds
+        },
+    },
     sepulcher =
     {
         effectId = xi.effect.SEPULCHER,
