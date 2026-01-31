@@ -4,7 +4,7 @@
 -- Public module for ZenitXI
 -- Items with an * have had their default prices changed
 -----------------------------------
-local m = Module:new('ooe_vendors')
+local m = Module:new('c_vendorOverrides')
 
 -- TODO: Dibstix is not yet implemented.
 -- TODO: Lollyspox is not yet implemented.
@@ -1773,7 +1773,12 @@ m:addOverride('xi.zones.Upper_Jeuno.npcs.Leillaine.onTrigger', function(player, 
     xi.shop.general(player, stock)
 end)
 
-m:addOverride('xi.zones.Aht_Urhgan_Whitegate.npcs.Khaf_Jhifanm.onTrigger', function(player, npc)
+-----------------------------------
+-- TOAU Vendor Overrides
+-----------------------------------
+
+if xi.settings.main.ENABLE_TOAU == 1 then
+    m:addOverride('xi.zones.Aht_Urhgan_Whitegate.npcs.Khaf_Jhifanm.onTrigger', function(player, npc)
     local stock =
     {
         { xi.item.FLASK_OF_AYRAN,            400, }, -- *
@@ -1850,7 +1855,8 @@ m:addOverride('xi.zones.Nashmau.npcs.Pipiroon.onTrigger', function(player, npc)
 
     player:showText(npc, zones[player:getZoneID()].text.PIPIROON_SHOP_DIALOG)
     xi.shop.general(player, stock)
-end)
+    end)
+end
 
 -----------------------------------
 -- Outpost Vendor Overrides
@@ -1890,7 +1896,8 @@ end)
 -- WOTG Goblin Vendor Overrides
 -----------------------------------
 
-m:addOverride('xi.zones.Windurst_Waters_[S].npcs.Pelftrix.onTrigger', function(player, npc)
+if xi.settings.main.ENABLE_WOTG == 1 then
+    m:addOverride('xi.zones.Windurst_Waters_[S].npcs.Pelftrix.onTrigger', function(player, npc)
     local stock =
     {
         { xi.item.HI_POTION,                2500 }, -- *
@@ -1909,7 +1916,8 @@ m:addOverride('xi.zones.Windurst_Waters_[S].npcs.Pelftrix.onTrigger', function(p
 
     player:showText(npc, zones[player:getZoneID()].text.PELFTRIX_SHOP_DIALOG)
     xi.shop.general(player, stock)
-end)
+    end)
+end
 
 -- Other shops that can't fit into the paradigm above
 
