@@ -125,6 +125,33 @@ end)
 --  - Revert potencies to pre-RoV values
 
 -----------------------------------
+-- Paladin
+-----------------------------------
+
+-- Rampart: Revert to a magical damage stoneskin effect for party members
+m:addOverride('xi.job_utils.paladin.useRampart', function(player, target, ability)
+    local duration    = 30 + player:getMod(xi.mod.RAMPART_DURATION)
+    local stoneskinHP = player:getStat(xi.mod.VIT) * 2
+    local defense     = player:getMainLvl() == 75 and 23 or 21
+
+    -- Apply STONESKIN effect but display as RAMPART icon
+    -- TODO: subType 2 not yet implemented for magical only stoneskin
+    target:addStatusEffectEx(xi.effect.STONESKIN, xi.effect.RAMPART, defense, 0, duration, 2, stoneskinHP)
+
+    return xi.effect.RAMPART
+end)
+
+-- Stoneskin onEffectGain: Add defense buff when displayed as RAMPART
+m:addOverride('xi.effects.stoneskin.onEffectGain', function(target, effect)
+    if effect:getIcon() == xi.effect.RAMPART then
+        effect:addMod(xi.mod.STONESKIN, effect:getSubPower())
+        effect:addMod(xi.mod.DEF, effect:getPower())
+    else
+        effect:addMod(xi.mod.STONESKIN, effect:getPower())
+    end
+end)
+
+-----------------------------------
 -- Dark Knight
 -----------------------------------
 

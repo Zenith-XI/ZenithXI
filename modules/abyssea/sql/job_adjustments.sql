@@ -102,6 +102,35 @@ UPDATE abilities SET recastTime = 900 WHERE name = 'diabolic_eye';
 UPDATE merits SET value = 150 WHERE name = 'diabolic_eye';
 
 ------------------------------------
+-- Paladin
+------------------------------------
+
+-- Holy Circle: Revert recast from 5 to 10 minutes
+-- Source: https://www.bg-wiki.com/ffxi/Version_Update_(02/13/2012)
+UPDATE abilities SET recastTime = 600 WHERE name = 'holy_circle';
+
+-- Holy Circle merit: Revert value to 20 seconds per level
+UPDATE merits SET value = 20 WHERE name = 'holy_circle_recast';
+
+-- Chivalry: Revert recast from 10 to 20 minutes
+UPDATE abilities SET recastTime = 1200 WHERE name = 'chivalry';
+
+-- Fealty: Revert recast from 10 to 20 minutes
+UPDATE abilities SET recastTime = 1200 WHERE name = 'fealty';
+
+-- Chivalry merit: Revert value to 150 seconds per level
+UPDATE merits SET value = 150 WHERE name = 'chivalry';
+
+-- Fealty merit: Revert value to 150 seconds per level
+UPDATE merits SET value = 150 WHERE name = 'fealty';
+
+-- Shield Bash: Revert recast from 3 to 5 minutes
+UPDATE abilities SET recastTime = 300 WHERE name = 'shield_bash';
+
+-- Shield Bash merit: Revert value to 10 seconds per level
+UPDATE merits SET value = 10 WHERE name = 'shield_bash_recast';
+
+------------------------------------
 -- Beastmaster
 ------------------------------------
 
