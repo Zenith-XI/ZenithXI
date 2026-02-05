@@ -13,7 +13,7 @@ effectObject.onEffectGain = function(target, effect)
     local subPower  = effect:getSubPower() -- Stores Critical Hit Damage & Accuracy bonuses
 
     if mainPower > 0 then
-        target:addMod(xi.mod.ATT, mainPower * 2)
+        target:addMod(xi.mod.ATT, mainPower)
         target:addMod(xi.mod.CRITHITRATE, mainPower)
     end
 
@@ -35,7 +35,7 @@ effectObject.onEffectLose = function(target, effect)
     local subPower  = effect:getSubPower() -- Stores Critical Hit Damage & Accuracy bonuses
 
     if mainPower > 0 then
-        target:delMod(xi.mod.ATT, mainPower * 2)
+        target:delMod(xi.mod.ATT, mainPower)
         target:delMod(xi.mod.CRITHITRATE, mainPower)
     end
 

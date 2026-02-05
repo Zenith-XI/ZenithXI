@@ -154,7 +154,7 @@ xi.job_utils.monk.impetusMissListener = function(attacker, victim, attack)
         local subPower  = effect:getSubPower() -- Stores Critical Hit Damage & Accuracy bonuses
 
         if mainPower > 0 then
-            attacker:delMod(xi.mod.ATT, mainPower * 2)
+            attacker:delMod(xi.mod.ATT, mainPower)
             attacker:delMod(xi.mod.CRITHITRATE, mainPower)
 
             effect:setPower(0)
@@ -179,7 +179,7 @@ xi.job_utils.monk.impetusHitListener = function(attacker, victim, attack)
         local subPower  = effect:getSubPower() -- Stores Critical Hit Damage & Accuracy bonuses
 
         if mainPower < 50 then
-            attacker:addMod(xi.mod.ATT, 2)
+            attacker:addMod(xi.mod.ATT, 1)
             attacker:addMod(xi.mod.CRITHITRATE, 1)
 
             effect:setPower(mainPower + 1)
