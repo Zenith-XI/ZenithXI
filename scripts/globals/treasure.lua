@@ -930,14 +930,14 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,      860 }, -- Gil
-            { xi.item.AMETRINE,   20 },
-            { xi.item.GARNET,     20 },
-            { xi.item.GOSHENITE,  20 },
-            { xi.item.ONYX,       20 },
-            { xi.item.PERIDOT,    20 },
-            { xi.item.SPHENE,     20 },
-            { xi.item.TURQUOISE,  20 },
+            { xi.item.NONE,      930 }, -- Gil
+            { xi.item.AMETRINE,   10 },
+            { xi.item.GARNET,     10 },
+            { xi.item.GOSHENITE,  10 },
+            { xi.item.ONYX,       10 },
+            { xi.item.PERIDOT,    10 },
+            { xi.item.SPHENE,     10 },
+            { xi.item.TURQUOISE,  10 },
         },
     },
 
@@ -945,14 +945,14 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,      860 }, -- Gil
-            { xi.item.AMETRINE,   20 },
-            { xi.item.GOSHENITE,  20 },
-            { xi.item.LIGHT_OPAL, 20 },
-            { xi.item.ONYX,       20 },
-            { xi.item.PERIDOT,    20 },
-            { xi.item.SPHENE,     20 },
-            { xi.item.TURQUOISE,  20 },
+            { xi.item.NONE,      930 }, -- Gil
+            { xi.item.AMETRINE,   10 },
+            { xi.item.GOSHENITE,  10 },
+            { xi.item.LIGHT_OPAL, 10 },
+            { xi.item.ONYX,       10 },
+            { xi.item.PERIDOT,    10 },
+            { xi.item.SPHENE,     10 },
+            { xi.item.TURQUOISE,  10 },
         },
     },
 
@@ -960,14 +960,14 @@ local lootTable =
     {
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,        860 }, -- Gil
-            { xi.item.AQUAMARINE,   20 },
-            { xi.item.CHRYSOBERYL,  20 },
-            { xi.item.JADEITE,      20 },
-            { xi.item.MOONSTONE,    20 },
-            { xi.item.PAINITE,      20 },
-            { xi.item.SUNSTONE,     20 },
-            { xi.item.ZIRCON,       20 },
+            { xi.item.NONE,        930 }, -- Gil
+            { xi.item.AQUAMARINE,   10 },
+            { xi.item.CHRYSOBERYL,  10 },
+            { xi.item.JADEITE,      10 },
+            { xi.item.MOONSTONE,    10 },
+            { xi.item.PAINITE,      10 },
+            { xi.item.SUNSTONE,     10 },
+            { xi.item.ZIRCON,       10 },
         },
     },
 
@@ -975,12 +975,12 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,       900 }, -- Gil
-            { xi.item.LIGHT_OPAL,  20 },
-            { xi.item.GARNET,      20 },
-            { xi.item.ONYX,        20 },
-            { xi.item.PERIDOT,     20 },
-            { xi.item.SPHENE,      20 },
+            { xi.item.NONE,       950 }, -- Gil
+            { xi.item.LIGHT_OPAL,  10 },
+            { xi.item.GARNET,      10 },
+            { xi.item.ONYX,        10 },
+            { xi.item.PERIDOT,     10 },
+            { xi.item.SPHENE,      10 },
         },
     },
 
@@ -988,15 +988,15 @@ local lootTable =
     {
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,        840 }, -- Gil
-            { xi.item.AQUAMARINE,   20 },
-            { xi.item.CHRYSOBERYL,  20 },
-            { xi.item.FLUORITE,     20 },
-            { xi.item.JADEITE,      20 },
-            { xi.item.MOONSTONE,    20 },
-            { xi.item.PAINITE,      20 },
-            { xi.item.SUNSTONE,     20 },
-            { xi.item.ZIRCON,       20 },
+            { xi.item.NONE,        920 }, -- Gil
+            { xi.item.AQUAMARINE,   10 },
+            { xi.item.CHRYSOBERYL,  10 },
+            { xi.item.FLUORITE,     10 },
+            { xi.item.JADEITE,      10 },
+            { xi.item.MOONSTONE,    10 },
+            { xi.item.PAINITE,      10 },
+            { xi.item.SUNSTONE,     10 },
+            { xi.item.ZIRCON,       10 },
         },
     },
 
@@ -1004,13 +1004,13 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,             675 }, -- Gil
+            { xi.item.NONE,             725 }, -- Gil
             { xi.item.COUGAR_BAGHNAKHS, 225 }, -- Item
-            { xi.item.AMBER_STONE,       20 },
-            { xi.item.AMETHYST,          20 },
-            { xi.item.LAPIS_LAZULI,      20 },
-            { xi.item.SARDONYX,          20 },
-            { xi.item.TOURMALINE,        20 },
+            { xi.item.AMBER_STONE,       10 },
+            { xi.item.AMETHYST,          10 },
+            { xi.item.LAPIS_LAZULI,      10 },
+            { xi.item.SARDONYX,          10 },
+            { xi.item.TOURMALINE,        10 },
         },
     },
 
@@ -1018,13 +1018,13 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,             675 }, -- Gil
+            { xi.item.NONE,             725 }, -- Gil
             { xi.item.COUGAR_BAGHNAKHS, 225 }, -- Item
-            { xi.item.AMBER_STONE,       20 },
-            { xi.item.AMETHYST,          20 },
-            { xi.item.LAPIS_LAZULI,      20 },
-            { xi.item.SARDONYX,          20 },
-            { xi.item.TOURMALINE,        20 },
+            { xi.item.AMBER_STONE,       10 },
+            { xi.item.AMETHYST,          10 },
+            { xi.item.LAPIS_LAZULI,      10 },
+            { xi.item.SARDONYX,          10 },
+            { xi.item.TOURMALINE,        10 },
         },
     },
 
@@ -1032,14 +1032,14 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,            660 }, -- Gil
+            { xi.item.NONE,            720 }, -- Gil
             { xi.item.FLAME_BOOMERANG, 220 }, -- Item
-            { xi.item.AMBER_STONE,      20 },
-            { xi.item.AMETHYST,         20 },
-            { xi.item.CLEAR_TOPAZ,      20 },
-            { xi.item.LAPIS_LAZULI,     20 },
-            { xi.item.SARDONYX,         20 },
-            { xi.item.TOURMALINE,       20 },
+            { xi.item.AMBER_STONE,      10 },
+            { xi.item.AMETHYST,         10 },
+            { xi.item.CLEAR_TOPAZ,      10 },
+            { xi.item.LAPIS_LAZULI,     10 },
+            { xi.item.SARDONYX,         10 },
+            { xi.item.TOURMALINE,       10 },
         },
     },
 
@@ -1047,14 +1047,14 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,           660 }, -- Gil
+            { xi.item.NONE,           720 }, -- Gil
             { xi.item.SHIELD_EARRING, 220 }, -- Item
-            { xi.item.AMBER_STONE,     20 },
-            { xi.item.AMETHYST,        20 },
-            { xi.item.CLEAR_TOPAZ,     20 },
-            { xi.item.LAPIS_LAZULI,    20 },
-            { xi.item.SARDONYX,        20 },
-            { xi.item.TOURMALINE,      20 },
+            { xi.item.AMBER_STONE,     10 },
+            { xi.item.AMETHYST,        10 },
+            { xi.item.CLEAR_TOPAZ,     10 },
+            { xi.item.LAPIS_LAZULI,    10 },
+            { xi.item.SARDONYX,        10 },
+            { xi.item.TOURMALINE,      10 },
         },
     },
 
@@ -1062,28 +1062,28 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,        660 }, -- Gil
+            { xi.item.NONE,        720 }, -- Gil
             { xi.item.ADEPTS_ROPE, 220 }, -- Item
-            { xi.item.AMETRINE,     20 },
-            { xi.item.GARNET,       20 },
-            { xi.item.GOSHENITE,    20 },
-            { xi.item.LIGHT_OPAL,   20 },
-            { xi.item.SPHENE,       20 },
-            { xi.item.TURQUOISE,    20 },
+            { xi.item.AMETRINE,     10 },
+            { xi.item.GARNET,       10 },
+            { xi.item.GOSHENITE,    10 },
+            { xi.item.LIGHT_OPAL,   10 },
+            { xi.item.SPHENE,       10 },
+            { xi.item.TURQUOISE,    10 },
         },
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,            615 }, -- Gil
+            { xi.item.NONE,            705 }, -- Gil
             { xi.item.SCROLL_OF_BURST, 205 }, -- Item
-            { xi.item.AQUAMARINE,       20 },
-            { xi.item.CHRYSOBERYL,      20 },
-            { xi.item.FLUORITE,         20 },
-            { xi.item.JADEITE,          20 },
-            { xi.item.MOONSTONE,        20 },
-            { xi.item.PAINITE,          20 },
-            { xi.item.PERIDOT,          20 },
-            { xi.item.SUNSTONE,         20 },
-            { xi.item.ZIRCON,           20 },
+            { xi.item.AQUAMARINE,       10 },
+            { xi.item.CHRYSOBERYL,      10 },
+            { xi.item.FLUORITE,         10 },
+            { xi.item.JADEITE,          10 },
+            { xi.item.MOONSTONE,        10 },
+            { xi.item.PAINITE,          10 },
+            { xi.item.PERIDOT,          10 },
+            { xi.item.SUNSTONE,         10 },
+            { xi.item.ZIRCON,           10 },
         },
     },
 
@@ -1091,16 +1091,16 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,          630 }, -- Gil
+            { xi.item.NONE,          710 }, -- Gil
             { xi.item.ELECTRUM_RING, 210 }, -- Item
-            { xi.item.AMETRINE,       20 },
-            { xi.item.GARNET,         20 },
-            { xi.item.GOSHENITE,      20 },
-            { xi.item.LIGHT_OPAL,     20 },
-            { xi.item.ONYX,           20 },
-            { xi.item.PERIDOT,        20 },
-            { xi.item.SPHENE,         20 },
-            { xi.item.TURQUOISE,      20 },
+            { xi.item.AMETRINE,       10 },
+            { xi.item.GARNET,         10 },
+            { xi.item.GOSHENITE,      10 },
+            { xi.item.LIGHT_OPAL,     10 },
+            { xi.item.ONYX,           10 },
+            { xi.item.PERIDOT,        10 },
+            { xi.item.SPHENE,         10 },
+            { xi.item.TURQUOISE,      10 },
         },
     },
 
@@ -1108,14 +1108,14 @@ local lootTable =
     {
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,             660 }, -- Gil
+            { xi.item.NONE,             720 }, -- Gil
             { xi.item.PHYSICAL_EARRING, 220 }, -- Item
-            { xi.item.CHRYSOBERYL,       20 },
-            { xi.item.FLUORITE,          20 },
-            { xi.item.JADEITE,           20 },
-            { xi.item.MOONSTONE,         20 },
-            { xi.item.PAINITE,           20 },
-            { xi.item.SUNSTONE,          20 },
+            { xi.item.CHRYSOBERYL,       10 },
+            { xi.item.FLUORITE,          10 },
+            { xi.item.JADEITE,           10 },
+            { xi.item.MOONSTONE,         10 },
+            { xi.item.PAINITE,           10 },
+            { xi.item.SUNSTONE,          10 },
         },
     },
 
@@ -1123,29 +1123,29 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,             630 }, -- Gil
+            { xi.item.NONE,             710 }, -- Gil
             { xi.item.ELECTRUM_HAIRPIN, 210 }, -- Item
-            { xi.item.AMETRINE,          20 },
-            { xi.item.GARNET,            20 },
-            { xi.item.GOSHENITE,         20 },
-            { xi.item.LIGHT_OPAL,        20 },
-            { xi.item.PERIDOT,           20 },
-            { xi.item.SARDONYX,          20 },
-            { xi.item.SPHENE,            20 },
-            { xi.item.TURQUOISE,         20 },
+            { xi.item.AMETRINE,          10 },
+            { xi.item.GARNET,            10 },
+            { xi.item.GOSHENITE,         10 },
+            { xi.item.LIGHT_OPAL,        10 },
+            { xi.item.PERIDOT,           10 },
+            { xi.item.SARDONYX,          10 },
+            { xi.item.SPHENE,            10 },
+            { xi.item.TURQUOISE,         10 },
         },
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,           630 }, -- Gil
+            { xi.item.NONE,           710 }, -- Gil
             { xi.item.SAFEGUARD_RING, 210 }, -- Item
-            { xi.item.AQUAMARINE,      20 },
-            { xi.item.CHRYSOBERYL,     20 },
-            { xi.item.FLUORITE,        20 },
-            { xi.item.JADEITE,         20 },
-            { xi.item.MOONSTONE,       20 },
-            { xi.item.PAINITE,         20 },
-            { xi.item.SUNSTONE,        20 },
-            { xi.item.ZIRCON,          20 },
+            { xi.item.AQUAMARINE,      10 },
+            { xi.item.CHRYSOBERYL,     10 },
+            { xi.item.FLUORITE,        10 },
+            { xi.item.JADEITE,         10 },
+            { xi.item.MOONSTONE,       10 },
+            { xi.item.PAINITE,         10 },
+            { xi.item.SUNSTONE,        10 },
+            { xi.item.ZIRCON,          10 },
         },
     },
 
@@ -1153,16 +1153,16 @@ local lootTable =
     {
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,          630 }, -- Gil
+            { xi.item.NONE,          710 }, -- Gil
             { xi.item.SCREAM_FUNGUS, 210 }, -- Item
-            { xi.item.AQUAMARINE,     20 },
-            { xi.item.CHRYSOBERYL,    20 },
-            { xi.item.FLUORITE,       20 },
-            { xi.item.JADEITE,        20 },
-            { xi.item.MOONSTONE,      20 },
-            { xi.item.PAINITE,        20 },
-            { xi.item.SUNSTONE,       20 },
-            { xi.item.ZIRCON,         20 },
+            { xi.item.AQUAMARINE,     10 },
+            { xi.item.CHRYSOBERYL,    10 },
+            { xi.item.FLUORITE,       10 },
+            { xi.item.JADEITE,        10 },
+            { xi.item.MOONSTONE,      10 },
+            { xi.item.PAINITE,        10 },
+            { xi.item.SUNSTONE,       10 },
+            { xi.item.ZIRCON,         10 },
         },
     },
 
@@ -1170,15 +1170,15 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,         645 }, -- Gil
+            { xi.item.NONE,         715 }, -- Gil
             { xi.item.EMETH_PICK,   215 }, -- Item
-            { xi.item.AMBER_STONE,   20 },
-            { xi.item.AMETHYST,      20 },
-            { xi.item.CLEAR_TOPAZ,   20 },
-            { xi.item.LAPIS_LAZULI,  20 },
-            { xi.item.LIGHT_OPAL,    20 },
-            { xi.item.ONYX,          20 },
-            { xi.item.TOURMALINE,    20 },
+            { xi.item.AMBER_STONE,   10 },
+            { xi.item.AMETHYST,      10 },
+            { xi.item.CLEAR_TOPAZ,   10 },
+            { xi.item.LAPIS_LAZULI,  10 },
+            { xi.item.LIGHT_OPAL,    10 },
+            { xi.item.ONYX,          10 },
+            { xi.item.TOURMALINE,    10 },
         },
     },
 
@@ -1186,15 +1186,15 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,         645 }, -- Gil
+            { xi.item.NONE,         715 }, -- Gil
             { xi.item.EMETH_PICK,   215 }, -- Item
-            { xi.item.AMBER_STONE,   20 },
-            { xi.item.AMETHYST,      20 },
-            { xi.item.CLEAR_TOPAZ,   20 },
-            { xi.item.LAPIS_LAZULI,  20 },
-            { xi.item.LIGHT_OPAL,    20 },
-            { xi.item.ONYX,          20 },
-            { xi.item.TOURMALINE,    20 },
+            { xi.item.AMBER_STONE,   10 },
+            { xi.item.AMETHYST,      10 },
+            { xi.item.CLEAR_TOPAZ,   10 },
+            { xi.item.LAPIS_LAZULI,  10 },
+            { xi.item.LIGHT_OPAL,    10 },
+            { xi.item.ONYX,          10 },
+            { xi.item.TOURMALINE,    10 },
         },
     },
 
@@ -1202,13 +1202,13 @@ local lootTable =
     {
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,        880 }, -- Gil
-            { xi.item.CHRYSOBERYL,  20 },
-            { xi.item.FLUORITE,     20 },
-            { xi.item.MOONSTONE,    20 },
-            { xi.item.PAINITE,      20 },
-            { xi.item.SUNSTONE,     20 },
-            { xi.item.ZIRCON,       20 },
+            { xi.item.NONE,        940 }, -- Gil
+            { xi.item.CHRYSOBERYL,  10 },
+            { xi.item.FLUORITE,     10 },
+            { xi.item.MOONSTONE,    10 },
+            { xi.item.PAINITE,      10 },
+            { xi.item.SUNSTONE,     10 },
+            { xi.item.ZIRCON,       10 },
         },
     },
 
@@ -1217,7 +1217,7 @@ local lootTable =
         [treasureType.COFFER] =
         {
             { xi.item.NONE,    960 }, -- Gil
-            { xi.item.PAINITE,  20 },
+            { xi.item.PAINITE,  20 }, -- Den of Rancor is probably missing some gems here...
             { xi.item.ZIRCON,   20 },
         },
     },
@@ -1226,27 +1226,27 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,         660 }, -- Gil
+            { xi.item.NONE,         720 }, -- Gil
             { xi.item.PHALANX_RING, 220 }, -- Item
-            { xi.item.AMETRINE,      20 },
-            { xi.item.GARNET,        20 },
-            { xi.item.GOSHENITE,     20 },
-            { xi.item.PERIDOT,       20 },
-            { xi.item.ONYX,          20 },
-            { xi.item.SPHENE,        20 },
+            { xi.item.AMETRINE,      10 },
+            { xi.item.GARNET,        10 },
+            { xi.item.GOSHENITE,     10 },
+            { xi.item.PERIDOT,       10 },
+            { xi.item.ONYX,          10 },
+            { xi.item.SPHENE,        10 },
         },
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,                      630 }, -- Gil
+            { xi.item.NONE,                      710 }, -- Gil
             { xi.item.SCROLL_OF_MAGES_BALLAD_II, 210 }, -- Item
-            { xi.item.AQUAMARINE,                 20 },
-            { xi.item.CHRYSOBERYL,                20 },
-            { xi.item.FLUORITE,                   20 },
-            { xi.item.JADEITE,                    20 },
-            { xi.item.MOONSTONE,                  20 },
-            { xi.item.PAINITE,                    20 },
-            { xi.item.SUNSTONE,                   20 },
-            { xi.item.ZIRCON,                     20 },
+            { xi.item.AQUAMARINE,                 10 },
+            { xi.item.CHRYSOBERYL,                10 },
+            { xi.item.FLUORITE,                   10 },
+            { xi.item.JADEITE,                    10 },
+            { xi.item.MOONSTONE,                  10 },
+            { xi.item.PAINITE,                    10 },
+            { xi.item.SUNSTONE,                   10 },
+            { xi.item.ZIRCON,                     10 },
         },
     },
 
@@ -1254,14 +1254,14 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,         660 }, -- Gil
+            { xi.item.NONE,         720 }, -- Gil
             { xi.item.PHALANX_RING, 220 }, -- Item
-            { xi.item.GARNET,        20 },
-            { xi.item.GOSHENITE,     20 },
-            { xi.item.LIGHT_OPAL,    20 },
-            { xi.item.PERIDOT,       20 },
-            { xi.item.SPHENE,        20 },
-            { xi.item.TURQUOISE,     20 },
+            { xi.item.GARNET,        10 },
+            { xi.item.GOSHENITE,     10 },
+            { xi.item.LIGHT_OPAL,    10 },
+            { xi.item.PERIDOT,       10 },
+            { xi.item.SPHENE,        10 },
+            { xi.item.TURQUOISE,     10 },
         },
     },
 
@@ -1269,14 +1269,14 @@ local lootTable =
     {
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,        860 }, -- Gil
-            { xi.item.AQUAMARINE,   20 },
-            { xi.item.CHRYSOBERYL,  20 },
-            { xi.item.JADEITE,      20 },
-            { xi.item.MOONSTONE,    20 },
-            { xi.item.PAINITE,      20 },
-            { xi.item.SUNSTONE,     20 },
-            { xi.item.ZIRCON,       20 },
+            { xi.item.NONE,        930 }, -- Gil
+            { xi.item.AQUAMARINE,   10 },
+            { xi.item.CHRYSOBERYL,  10 },
+            { xi.item.JADEITE,      10 },
+            { xi.item.MOONSTONE,    10 },
+            { xi.item.PAINITE,      10 },
+            { xi.item.SUNSTONE,     10 },
+            { xi.item.ZIRCON,       10 },
         },
     },
 
@@ -1284,15 +1284,15 @@ local lootTable =
     {
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,        840 }, -- Gil
-            { xi.item.AQUAMARINE,   20 },
-            { xi.item.CHRYSOBERYL,  20 },
-            { xi.item.FLUORITE,     20 },
-            { xi.item.JADEITE,      20 },
-            { xi.item.MOONSTONE,    20 },
-            { xi.item.PAINITE,      20 },
-            { xi.item.SUNSTONE,     20 },
-            { xi.item.ZIRCON,       20 },
+            { xi.item.NONE,        920 }, -- Gil
+            { xi.item.AQUAMARINE,   10 },
+            { xi.item.CHRYSOBERYL,  10 },
+            { xi.item.FLUORITE,     10 },
+            { xi.item.JADEITE,      10 },
+            { xi.item.MOONSTONE,    10 },
+            { xi.item.PAINITE,      10 },
+            { xi.item.SUNSTONE,     10 },
+            { xi.item.ZIRCON,       10 },
         },
     },
 
@@ -1300,26 +1300,26 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,       840 }, -- Gil
-            { xi.item.AMETRINE,    20 },
-            { xi.item.GARNET,      20 },
-            { xi.item.GOSHENITE,   20 },
-            { xi.item.LIGHT_OPAL,  20 },
-            { xi.item.ONYX,        20 },
-            { xi.item.PERIDOT,     20 },
-            { xi.item.SPHENE,      20 },
-            { xi.item.TURQUOISE,   20 },
+            { xi.item.NONE,       920 }, -- Gil
+            { xi.item.AMETRINE,    10 },
+            { xi.item.GARNET,      10 },
+            { xi.item.GOSHENITE,   10 },
+            { xi.item.LIGHT_OPAL,  10 },
+            { xi.item.ONYX,        10 },
+            { xi.item.PERIDOT,     10 },
+            { xi.item.SPHENE,      10 },
+            { xi.item.TURQUOISE,   10 },
         },
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,        860 }, -- Gil
-            { xi.item.AQUAMARINE,   20 },
-            { xi.item.CHRYSOBERYL,  20 },
-            { xi.item.FLUORITE,     20 },
-            { xi.item.JADEITE,      20 },
-            { xi.item.MOONSTONE,    20 },
-            { xi.item.PAINITE,      20 },
-            { xi.item.SUNSTONE,     20 },
+            { xi.item.NONE,        930 }, -- Gil
+            { xi.item.AQUAMARINE,   10 },
+            { xi.item.CHRYSOBERYL,  10 },
+            { xi.item.FLUORITE,     10 },
+            { xi.item.JADEITE,      10 },
+            { xi.item.MOONSTONE,    10 },
+            { xi.item.PAINITE,      10 },
+            { xi.item.SUNSTONE,     10 },
         },
     },
 
@@ -1328,7 +1328,7 @@ local lootTable =
         [treasureType.COFFER] =
         {
             { xi.item.NONE,       960 }, -- Gil
-            { xi.item.AQUAMARINE,  20 },
+            { xi.item.AQUAMARINE,  20 }, -- Likely also missing some gems
             { xi.item.ZIRCON,      20 },
         },
     },
@@ -1337,14 +1337,14 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,          660 }, -- Gil
+            { xi.item.NONE,          720 }, -- Gil
             { xi.item.BATTLE_GLOVES, 220 }, -- Item
-            { xi.item.AMBER_STONE,    20 },
-            { xi.item.AMETHYST,       20 },
-            { xi.item.CLEAR_TOPAZ,    20 },
-            { xi.item.LAPIS_LAZULI,   20 },
-            { xi.item.SARDONYX,       20 },
-            { xi.item.TOURMALINE,     20 },
+            { xi.item.AMBER_STONE,    10 },
+            { xi.item.AMETHYST,       10 },
+            { xi.item.CLEAR_TOPAZ,    10 },
+            { xi.item.LAPIS_LAZULI,   10 },
+            { xi.item.SARDONYX,       10 },
+            { xi.item.TOURMALINE,     10 },
         },
     },
 
@@ -1352,14 +1352,14 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,            660 }, -- Gil
+            { xi.item.NONE,            720 }, -- Gil
             { xi.item.TROPICAL_SHIELD, 220 }, -- Item
-            { xi.item.AMBER_STONE,      20 },
-            { xi.item.AMETHYST,         20 },
-            { xi.item.CLEAR_TOPAZ,      20 },
-            { xi.item.LAPIS_LAZULI,     20 },
-            { xi.item.SARDONYX,         20 },
-            { xi.item.TOURMALINE,       20 },
+            { xi.item.AMBER_STONE,      10 },
+            { xi.item.AMETHYST,         10 },
+            { xi.item.CLEAR_TOPAZ,      10 },
+            { xi.item.LAPIS_LAZULI,     10 },
+            { xi.item.SARDONYX,         10 },
+            { xi.item.TOURMALINE,       10 },
         },
     },
 
@@ -1367,13 +1367,13 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,         675 }, -- Gil
+            { xi.item.NONE,         725 }, -- Gil
             { xi.item.MOTH_AXE,     225 }, -- Item
-            { xi.item.AMBER_STONE,   20 },
-            { xi.item.AMETHYST,      20 },
-            { xi.item.CLEAR_TOPAZ,   20 },
-            { xi.item.LAPIS_LAZULI,  20 },
-            { xi.item.TOURMALINE,    20 },
+            { xi.item.AMBER_STONE,   10 },
+            { xi.item.AMETHYST,      10 },
+            { xi.item.CLEAR_TOPAZ,   10 },
+            { xi.item.LAPIS_LAZULI,  10 },
+            { xi.item.TOURMALINE,    10 },
         },
     },
 
@@ -1381,16 +1381,16 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,         675 }, -- Gil
+            { xi.item.NONE,         695 }, -- Gil
             { xi.item.FORCE_BELT,   225 }, -- Item
-            { xi.item.AMBER_STONE,   20 },
-            { xi.item.AMETHYST,      20 },
-            { xi.item.CLEAR_TOPAZ,   20 },
-            { xi.item.LAPIS_LAZULI,  20 },
-            { xi.item.LIGHT_OPAL,    20 },
-            { xi.item.ONYX,          20 },
-            { xi.item.SARDONYX,      20 },
-            { xi.item.TOURMALINE,    20 },
+            { xi.item.AMBER_STONE,   10 },
+            { xi.item.AMETHYST,      10 },
+            { xi.item.CLEAR_TOPAZ,   10 },
+            { xi.item.LAPIS_LAZULI,  10 },
+            { xi.item.LIGHT_OPAL,    10 },
+            { xi.item.ONYX,          10 },
+            { xi.item.SARDONYX,      10 },
+            { xi.item.TOURMALINE,    10 },
         },
     },
 
@@ -1398,13 +1398,13 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,         675 }, -- Gil
+            { xi.item.NONE,         725 }, -- Gil
             { xi.item.MOTH_AXE,     225 }, -- Item
-            { xi.item.AMBER_STONE,   20 },
-            { xi.item.AMETHYST,      20 },
-            { xi.item.CLEAR_TOPAZ,   20 },
-            { xi.item.LAPIS_LAZULI,  20 },
-            { xi.item.TOURMALINE,    20 },
+            { xi.item.AMBER_STONE,   10 },
+            { xi.item.AMETHYST,      10 },
+            { xi.item.CLEAR_TOPAZ,   10 },
+            { xi.item.LAPIS_LAZULI,  10 },
+            { xi.item.TOURMALINE,    10 },
         },
     },
 
@@ -1412,24 +1412,24 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,       660 }, -- Gil
+            { xi.item.NONE,       720 }, -- Gil
             { xi.item.FALCASTRA,  220 }, -- Item
-            { xi.item.AMETRINE,    20 },
-            { xi.item.GARNET,      20 },
-            { xi.item.GOSHENITE,   20 },
-            { xi.item.LIGHT_OPAL,  20 },
-            { xi.item.ONYX,        20 },
-            { xi.item.SPHENE,      20 },
+            { xi.item.AMETRINE,    10 },
+            { xi.item.GARNET,      10 },
+            { xi.item.GOSHENITE,   10 },
+            { xi.item.LIGHT_OPAL,  10 },
+            { xi.item.ONYX,        10 },
+            { xi.item.SPHENE,      10 },
         },
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,           675 }, -- Gil
+            { xi.item.NONE,           725 }, -- Gil
             { xi.item.VILE_ELIXIR_P1, 225 }, -- Item
-            { xi.item.CHRYSOBERYL,     20 },
-            { xi.item.FLUORITE,        20 },
-            { xi.item.MOONSTONE,       20 },
-            { xi.item.PAINITE,         20 },
-            { xi.item.SUNSTONE,        20 },
+            { xi.item.CHRYSOBERYL,     10 },
+            { xi.item.FLUORITE,        10 },
+            { xi.item.MOONSTONE,       10 },
+            { xi.item.PAINITE,         10 },
+            { xi.item.SUNSTONE,        10 },
         },
     },
 
@@ -1437,15 +1437,15 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,         645 }, -- Gil
+            { xi.item.NONE,         715 }, -- Gil
             { xi.item.REPLICA_MAUL, 215 }, -- Item
-            { xi.item.AMBER_STONE,   20 },
-            { xi.item.AMETHYST,      20 },
-            { xi.item.CLEAR_TOPAZ,   20 },
-            { xi.item.LAPIS_LAZULI,  20 },
-            { xi.item.LIGHT_OPAL,    20 },
-            { xi.item.ONYX,          20 },
-            { xi.item.TOURMALINE,    20 },
+            { xi.item.AMBER_STONE,   10 },
+            { xi.item.AMETHYST,      10 },
+            { xi.item.CLEAR_TOPAZ,   10 },
+            { xi.item.LAPIS_LAZULI,  10 },
+            { xi.item.LIGHT_OPAL,    10 },
+            { xi.item.ONYX,          10 },
+            { xi.item.TOURMALINE,    10 },
         },
     },
 
@@ -1453,27 +1453,27 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,       630 }, -- Gil
+            { xi.item.NONE,       710 }, -- Gil
             { xi.item.GIGANT_AXE, 210 }, -- Item
-            { xi.item.AMETRINE,    20 },
-            { xi.item.GARNET,      20 },
-            { xi.item.GOSHENITE,   20 },
-            { xi.item.LIGHT_OPAL,  20 },
-            { xi.item.ONYX,        20 },
-            { xi.item.PERIDOT,     20 },
-            { xi.item.SPHENE,      20 },
-            { xi.item.TURQUOISE,   20 },
+            { xi.item.AMETRINE,    10 },
+            { xi.item.GARNET,      10 },
+            { xi.item.GOSHENITE,   10 },
+            { xi.item.LIGHT_OPAL,  10 },
+            { xi.item.ONYX,        10 },
+            { xi.item.PERIDOT,     10 },
+            { xi.item.SPHENE,      10 },
+            { xi.item.TURQUOISE,   10 },
         },
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,        660 }, -- Gil
+            { xi.item.NONE,        720 }, -- Gil
             { xi.item.HI_RERAISER, 220 }, -- Item
-            { xi.item.AQUAMARINE,   20 },
-            { xi.item.CHRYSOBERYL,  20 },
-            { xi.item.JADEITE,      20 },
-            { xi.item.PAINITE,      20 },
-            { xi.item.SUNSTONE,     20 },
-            { xi.item.ZIRCON,       20 },
+            { xi.item.AQUAMARINE,   10 },
+            { xi.item.CHRYSOBERYL,  10 },
+            { xi.item.JADEITE,      10 },
+            { xi.item.PAINITE,      10 },
+            { xi.item.SUNSTONE,     10 },
+            { xi.item.ZIRCON,       10 },
         },
     },
 
@@ -1481,16 +1481,16 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,         630 }, -- Gil
+            { xi.item.NONE,         710 }, -- Gil
             { xi.item.HEAT_ROD,     210 }, -- Item
-            { xi.item.AMBER_STONE,   20 },
-            { xi.item.AMETHYST,      20 },
-            { xi.item.CLEAR_TOPAZ,   20 },
-            { xi.item.LAPIS_LAZULI,  20 },
-            { xi.item.LIGHT_OPAL,    20 },
-            { xi.item.ONYX,          20 },
-            { xi.item.SARDONYX,      20 },
-            { xi.item.TOURMALINE,    20 },
+            { xi.item.AMBER_STONE,   10 },
+            { xi.item.AMETHYST,      10 },
+            { xi.item.CLEAR_TOPAZ,   10 },
+            { xi.item.LAPIS_LAZULI,  10 },
+            { xi.item.LIGHT_OPAL,    10 },
+            { xi.item.ONYX,          10 },
+            { xi.item.SARDONYX,      10 },
+            { xi.item.TOURMALINE,    10 },
         },
     },
 
@@ -1498,22 +1498,22 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,       630 }, -- Gil
+            { xi.item.NONE,       710 }, -- Gil
             { xi.item.PYRO_ROBE,  210 }, -- Item
-            { xi.item.AMETRINE,    20 },
-            { xi.item.GARNET,      20 },
-            { xi.item.GOSHENITE,   20 },
-            { xi.item.LIGHT_OPAL,  20 },
-            { xi.item.ONYX,        20 },
-            { xi.item.PERIDOT,     20 },
-            { xi.item.SPHENE,      20 },
-            { xi.item.TURQUOISE,   20 },
+            { xi.item.AMETRINE,    10 },
+            { xi.item.GARNET,      10 },
+            { xi.item.GOSHENITE,   10 },
+            { xi.item.LIGHT_OPAL,  10 },
+            { xi.item.ONYX,        10 },
+            { xi.item.PERIDOT,     10 },
+            { xi.item.SPHENE,      10 },
+            { xi.item.TURQUOISE,   10 },
         },
         [treasureType.COFFER] =
         {
             { xi.item.NONE,            705 }, -- Gil
             { xi.item.LIGHT_GAUNTLETS, 235 }, -- Item
-            { xi.item.CHRYSOBERYL,      20 },
+            { xi.item.CHRYSOBERYL,      20 }, -- Probably needs more gems
             { xi.item.JADEITE,          20 },
             { xi.item.MOONSTONE,        20 },
         },
@@ -1523,16 +1523,16 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,       630 }, -- Gil
+            { xi.item.NONE,       710 }, -- Gil
             { xi.item.LIFE_BELT,  210 }, -- Item
-            { xi.item.AMETRINE,    20 },
-            { xi.item.GARNET,      20 },
-            { xi.item.GOSHENITE,   20 },
-            { xi.item.LIGHT_OPAL,  20 },
-            { xi.item.ONYX,        20 },
-            { xi.item.PERIDOT,     20 },
-            { xi.item.SPHENE,      20 },
-            { xi.item.TURQUOISE,   20 },
+            { xi.item.AMETRINE,    10 },
+            { xi.item.GARNET,      10 },
+            { xi.item.GOSHENITE,   10 },
+            { xi.item.LIGHT_OPAL,  10 },
+            { xi.item.ONYX,        10 },
+            { xi.item.PERIDOT,     10 },
+            { xi.item.SPHENE,      10 },
+            { xi.item.TURQUOISE,   10 },
         },
     },
 
@@ -1540,13 +1540,13 @@ local lootTable =
     {
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,        880 }, -- Gil
-            { xi.item.AQUAMARINE,   20 },
-            { xi.item.CHRYSOBERYL,  20 },
-            { xi.item.FLUORITE,     20 },
-            { xi.item.MOONSTONE,    20 },
-            { xi.item.PAINITE,      20 },
-            { xi.item.SUNSTONE,     20 },
+            { xi.item.NONE,        940 }, -- Gil
+            { xi.item.AQUAMARINE,   10 },
+            { xi.item.CHRYSOBERYL,  10 },
+            { xi.item.FLUORITE,     10 },
+            { xi.item.MOONSTONE,    10 },
+            { xi.item.PAINITE,      10 },
+            { xi.item.SUNSTONE,     10 },
         },
     },
 
@@ -1554,13 +1554,13 @@ local lootTable =
     {
         [treasureType.COFFER] =
         {
-            { xi.item.NONE,        880 }, -- Gil
-            { xi.item.AQUAMARINE,   20 },
-            { xi.item.CHRYSOBERYL,  20 },
-            { xi.item.FLUORITE,     20 },
-            { xi.item.JADEITE,      20 },
-            { xi.item.PAINITE,      20 },
-            { xi.item.SUNSTONE,     20 },
+            { xi.item.NONE,        940 }, -- Gil
+            { xi.item.AQUAMARINE,   10 },
+            { xi.item.CHRYSOBERYL,  10 },
+            { xi.item.FLUORITE,     10 },
+            { xi.item.JADEITE,      10 },
+            { xi.item.PAINITE,      10 },
+            { xi.item.SUNSTONE,     10 },
         },
     },
 
@@ -1568,15 +1568,15 @@ local lootTable =
     {
         [treasureType.CHEST] =
         {
-            { xi.item.NONE,       840 }, -- Gil
-            { xi.item.AMETRINE,    20 },
-            { xi.item.GARNET,      20 },
-            { xi.item.GOSHENITE,   20 },
-            { xi.item.LIGHT_OPAL,  20 },
-            { xi.item.ONYX,        20 },
-            { xi.item.PERIDOT,     20 },
-            { xi.item.SPHENE,      20 },
-            { xi.item.TURQUOISE,   20 },
+            { xi.item.NONE,       920 }, -- Gil
+            { xi.item.AMETRINE,    10 },
+            { xi.item.GARNET,      10 },
+            { xi.item.GOSHENITE,   10 },
+            { xi.item.LIGHT_OPAL,  10 },
+            { xi.item.ONYX,        10 },
+            { xi.item.PERIDOT,     10 },
+            { xi.item.SPHENE,      10 },
+            { xi.item.TURQUOISE,   10 },
         },
     },
 }
