@@ -43,10 +43,10 @@ ATTACKED - Defender, attacker, action
 RANGE_START - Entity, action
 RANGE_STATE_EXIT - Entity, Target, action
 
-ABILITY_START - Entity, Ability
-ABILITY_USE - Entity, Target, Ability, action
-ABILITY_TAKE - Target, Entity, Ability, action
-ABILITY_STATE_EXIT - Entity, Ability
+ABILITY_START      - userEntity, skillObject
+ABILITY_USE        - userEntity, targetEntity, skillObject, action
+ABILITY_TAKE       - userEntity, targetEntity, skillObject, action
+ABILITY_STATE_EXIT - userEntity, skillObject
 
 WEAPONSKILL_STATE_ENTER - userEntity, skillId
 WEAPONSKILL_BEFORE_USE  - userEntity, skillId
