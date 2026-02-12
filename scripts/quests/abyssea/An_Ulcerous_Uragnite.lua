@@ -1,12 +1,12 @@
 -----------------------------------
--- A Goldstruck Gigas
+-- An Ulcerous Uragnite
 -----------------------------------
--- !addquest 8 163
--- Cavernous Maw    : !pos -557.900 0.001 637.846 102
--- Briareus         : !spawnmob 17318446
+-- !addquest 8 178
+-- Cavernous Maw    : !pos -78.000 -0.500 600.000 106
+-- Amphitrite       : !spawnmob 17818054
 -----------------------------------
 
-local quest = Quest:new(xi.questLog.ABYSSEA, xi.quest.id.abyssea.A_GOLDSTRUCK_GIGAS)
+local quest = Quest:new(xi.questLog.ABYSSEA, xi.quest.id.abyssea.AN_ULCEROUS_URAGNITE)
 
 quest.reward = {}
 
@@ -19,18 +19,18 @@ quest.sections =
                 player:getQuestStatus(xi.questLog.ABYSSEA, xi.quest.id.abyssea.DAWN_OF_DEATH) >= xi.questStatus.QUEST_ACCEPTED
         end,
 
-        [xi.zone.LA_THEINE_PLATEAU] =
+        [xi.zone.NORTH_GUSTABERG] =
         {
-            ['Cavernous_Maw'] =
+            ['Cavernous_Maw_2'] =
             {
                 onTrigger = function(player, npc)
-                    return quest:progressEvent(9)
+                    return quest:progressEvent(0)
                 end,
             },
 
             onEventFinish =
             {
-                [9] = function(player, csid, option, npc)
+                [0] = function(player, csid, option, npc)
                     quest:begin(player)
                 end,
             },
@@ -39,18 +39,18 @@ quest.sections =
 
     {
         check = function(player, status, vars)
-            return status == xi.questStatus.QUEST_ACCEPTED and player:hasTitle(xi.title.BRIAREUS_FELLER)
+            return status == xi.questStatus.QUEST_ACCEPTED and player:hasTitle(xi.title.AMPHITRITE_SHUCKER)
         end,
 
-        [xi.zone.LA_THEINE_PLATEAU] =
+        [xi.zone.NORTH_GUSTABERG] =
         {
             onZoneIn = function(player, prevZone)
-                return 10
+                return 1
             end,
 
             onEventUpdate =
             {
-                [10] = function(player, csid, option, npc)
+                [1] = function(player, csid, option, npc)
                     if option == 1 then
                         player:updateEvent(xi.abyssea.getZoneKIReward(player))
                     end
@@ -59,9 +59,7 @@ quest.sections =
 
             onEventFinish =
             {
-                [10] = function(player, csid, option, npc)
-                    -- NOTE: Give the key item prior to completing the quest so that we reward the correct
-                    -- KI!  If we complete first, it'll adjust the total completed count, and be off by one!
+                [1] = function(player, csid, option, npc)
                     npcUtil.giveKeyItem(player, xi.abyssea.getZoneKIReward(player))
                     quest:complete(player)
                 end,

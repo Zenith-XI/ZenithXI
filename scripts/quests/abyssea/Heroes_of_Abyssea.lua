@@ -1,13 +1,13 @@
 -----------------------------------
--- Scars of Abyssea
+-- Heroes of Abyssea
 -----------------------------------
--- !addquest 8 175
+-- !addquest 8 179
 -- Joachim : !pos -52.844 0 -9.978 246
--- Flag when any of A Fluttery Fiend, The Beast of Bastore, A Delectable Demon started.
+-- Flag when any of An Ulcerous Uragnite, A Beaked Blusterer, A Man-eating Mite started.
 -- Complete when all three are completed and player talks to Joachim again.
 -----------------------------------
 
-local quest = Quest:new(xi.questLog.ABYSSEA, xi.quest.id.abyssea.SCARS_OF_ABYSSEA)
+local quest = Quest:new(xi.questLog.ABYSSEA, xi.quest.id.abyssea.HEROES_OF_ABYSSEA)
 
 quest.reward = {}
 
@@ -17,9 +17,9 @@ quest.sections =
         check = function(player, status, vars)
             return status == xi.questStatus.QUEST_AVAILABLE and
                 (
-                    player:getQuestStatus(xi.questLog.ABYSSEA, xi.quest.id.abyssea.THE_BEAST_OF_BASTORE) > xi.questStatus.QUEST_AVAILABLE or
-                    player:getQuestStatus(xi.questLog.ABYSSEA, xi.quest.id.abyssea.A_DELECTABLE_DEMON) > xi.questStatus.QUEST_AVAILABLE or
-                    player:getQuestStatus(xi.questLog.ABYSSEA, xi.quest.id.abyssea.A_FLUTTERY_FIEND) > xi.questStatus.QUEST_AVAILABLE
+                    player:getQuestStatus(xi.questLog.ABYSSEA, xi.quest.id.abyssea.AN_ULCEROUS_URAGNITE) > xi.questStatus.QUEST_AVAILABLE or
+                    player:getQuestStatus(xi.questLog.ABYSSEA, xi.quest.id.abyssea.A_BEAKED_BLUSTERER) > xi.questStatus.QUEST_AVAILABLE or
+                    player:getQuestStatus(xi.questLog.ABYSSEA, xi.quest.id.abyssea.A_MAN_EATING_MITE) > xi.questStatus.QUEST_AVAILABLE
                 )
         end,
 
@@ -28,13 +28,13 @@ quest.sections =
             ['Joachim'] =
             {
                 onTrigger = function(player, npc)
-                    return quest:progressEvent(337)
+                    return quest:progressEvent(340)
                 end,
             },
 
             onEventFinish =
             {
-                [337] = function(player, csid, option, npc)
+                [340] = function(player, csid, option, npc)
                     quest:begin(player)
                 end,
             },
@@ -44,9 +44,9 @@ quest.sections =
     {
         check = function(player, status, vars)
             return status == xi.questStatus.QUEST_ACCEPTED and
-                player:hasCompletedQuest(xi.questLog.ABYSSEA, xi.quest.id.abyssea.THE_BEAST_OF_BASTORE) and
-                player:hasCompletedQuest(xi.questLog.ABYSSEA, xi.quest.id.abyssea.A_DELECTABLE_DEMON) and
-                player:hasCompletedQuest(xi.questLog.ABYSSEA, xi.quest.id.abyssea.A_FLUTTERY_FIEND)
+                player:hasCompletedQuest(xi.questLog.ABYSSEA, xi.quest.id.abyssea.AN_ULCEROUS_URAGNITE) and
+                player:hasCompletedQuest(xi.questLog.ABYSSEA, xi.quest.id.abyssea.A_BEAKED_BLUSTERER) and
+                player:hasCompletedQuest(xi.questLog.ABYSSEA, xi.quest.id.abyssea.A_MAN_EATING_MITE)
         end,
 
         [xi.zone.PORT_JEUNO] =
@@ -54,13 +54,13 @@ quest.sections =
             ['Joachim'] =
             {
                 onTrigger = function(player, npc)
-                    return quest:progressEvent(338)
+                    return quest:progressEvent(341)
                 end,
             },
 
             onEventFinish =
             {
-                [338] = function(player, csid, option, npc)
+                [341] = function(player, csid, option, npc)
                     quest:complete(player)
                 end,
             },
