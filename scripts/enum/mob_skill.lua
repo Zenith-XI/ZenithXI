@@ -535,6 +535,8 @@ xi.mobSkill =
 
     TIDAL_DIVE                    = 1357,
     PLASMA_CHARGE                 = 1358,
+    CHTHONIAN_RAY                 = 1359,
+    APOCALYPTIC_RAY               = 1360,
 
     HUNGRY_CRUNCH                 = 1363,
 

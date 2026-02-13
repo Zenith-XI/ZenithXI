@@ -270,8 +270,8 @@ INSERT INTO `mob_groups` VALUES (2,384,6,'Bearclaw_Rabbit',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (3,383,6,'Bearclaw_Leveret',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (4,7100,6,'Snow_Devil_war',0,128,0,2000,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (9,7099,6,'Snow_Devil_blm',0,128,0,2000,4000,0,NULL);
-INSERT INTO `mob_groups` VALUES (5,1190,6,'Eldertaur',0,128,0,4500,0,0,NULL);
-INSERT INTO `mob_groups` VALUES (6,2668,6,'Mindertaur',0,128,0,4500,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (5,1190,6,'Eldertaur',0,128,0,5000,10000,0,NULL);
+INSERT INTO `mob_groups` VALUES (6,2668,6,'Mindertaur',0,128,0,4500,10000,0,NULL);
 INSERT INTO `mob_groups` VALUES (7,196,6,'Apis',0,128,0,13000,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (8,0,6,'Predataur',0,128,0,0,0,0,NULL);
 
