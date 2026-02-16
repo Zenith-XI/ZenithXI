@@ -746,4 +746,24 @@ INSERT INTO `mob_spawn_slots` VALUES (212,9,0);
 INSERT INTO `mob_spawn_slots` VALUES (212,10,0);
 INSERT INTO `mob_spawn_slots` VALUES (212,11,0);
 
+-- Labyrinth of Onzozo
+INSERT INTO `mob_spawn_slots` VALUES (213,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,9,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,10,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,11,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,12,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,13,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,14,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,15,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,16,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,17,0);
+INSERT INTO `mob_spawn_slots` VALUES (213,18,0);
+
 UNLOCK TABLES;
