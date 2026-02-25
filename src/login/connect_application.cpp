@@ -48,7 +48,7 @@ ConnectApplication::~ConnectApplication() = default;
 auto ConnectApplication::createEngine() -> std::unique_ptr<Engine>
 {
     certificateHelpers::generateSelfSignedCert();
-    return std::make_unique<ConnectEngine>(scheduler_.ioContext());
+    return std::make_unique<ConnectEngine>(scheduler_);
 }
 
 void ConnectApplication::registerCommands(ConsoleService& console)

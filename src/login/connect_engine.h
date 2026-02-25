@@ -38,13 +38,13 @@
 class ConnectEngine final : public Engine
 {
 public:
-    ConnectEngine(asio::io_context& io_context);
+    ConnectEngine(Scheduler& scheduler);
     ~ConnectEngine() override;
 
     // This cleanup function is to periodically poll for auth sessions that were successful but xiloader failed to actually launch FFXI
     // When this happens, the data/view socket are never opened and will never be cleaned up normally.
     // Auth is closed before any other sessions are open, so the data/view cleanups aren't sufficient
-    void periodicCleanup(const asio::error_code& error);
+    auto periodicCleanup() -> Task<void>;
 
 private:
     Scheduler& scheduler_;
@@ -54,5 +54,4 @@ private:
     handler<auth_session> m_authHandler;
     handler<data_session> m_dataHandler;
     handler<view_session> m_viewHandler;
-    asio::steady_timer    m_sessionCleanupTimer;
 };

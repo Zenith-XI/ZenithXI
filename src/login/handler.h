@@ -35,8 +35,8 @@ template <typename T>
 class handler
 {
 public:
-    handler(asio::io_context& io_context, unsigned int port, ZMQDealerWrapper& zmqDealerWrapper)
-    : acceptor_(io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
+    handler(Scheduler& scheduler, unsigned int port, ZMQDealerWrapper& zmqDealerWrapper)
+    : acceptor_(scheduler.ioContext(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
     , sslContext_(asio::ssl::context::tls_server)
     , zmqDealerWrapper_(zmqDealerWrapper)
     {
