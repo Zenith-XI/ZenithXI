@@ -2813,7 +2813,7 @@ void OnSpellPrecast(CBattleEntity* PCaster, CSpell* PSpell)
 {
     TracyZoneScoped;
 
-    if (PCaster->objtype != TYPE_MOB)
+    if (PCaster->objtype == TYPE_PC)
     {
         return;
     }
@@ -2829,6 +2829,30 @@ void OnSpellPrecast(CBattleEntity* PCaster, CSpell* PSpell)
     {
         sol::error err = result;
         ShowError("luautils::onSpellPrecast: %s", err.what());
+        ReportErrorToPlayer(PCaster, err.what());
+    }
+}
+
+void OnSpellCastStart(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell)
+{
+    TracyZoneScoped;
+
+    if (PCaster->objtype == TYPE_PC)
+    {
+        return;
+    }
+
+    sol::function onSpellInterrupted = getEntityCachedFunction(PCaster, "onSpellCastStart");
+    if (!onSpellInterrupted.valid())
+    {
+        return;
+    }
+
+    auto result = onSpellInterrupted(PCaster, PSpell);
+    if (!result.valid())
+    {
+        sol::error err = result;
+        ShowError("luautils::onSpellCastStart: %s", err.what());
         ReportErrorToPlayer(PCaster, err.what());
     }
 }
