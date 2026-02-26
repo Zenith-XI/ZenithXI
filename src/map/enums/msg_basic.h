@@ -29,7 +29,6 @@
  * Located in 1-27-72.xml if using MassExtractor -full-scan
  */
 
-// Todo: move to enum class
 enum class MsgBasic : uint16_t
 {
     NONE                           = 0,   // Display nothing
@@ -40,6 +39,9 @@ enum class MsgBasic : uint16_t
     UNABLE_TO_SEE_TARG             = 5,   // Unable to see <target>.
     DEFEATS_TARG                   = 6,   // The <player> defeats <target>.
     MAGIC_RECOVERS_HP              = 7,   // <caster> casts <spell>. <target> recovers <amount> HP.
+    ExperiencePointsGained         = 8,   // <player> gains # experience points.
+    LevelUp                        = 9,   // <player> attains level #!
+    LevelDown                      = 11,  // <player> falls to level #.
     ALREADY_CLAIMED                = 12,  // Cannot attack. Your target is already claimed.
     COUNTER_ABS_BY_SHADOW          = 14,  // The <player>'s attack is countered by the <target>. .. of <player>'s shadows absorbs the damage and disappears.
     ATTACK_MISSES                  = 15,  // <attacker> misses <target>.
@@ -67,6 +69,7 @@ enum class MsgBasic : uint16_t
     LEARNS_ABILITY                 = 45,  // <target> learns <ability>!
     CANNOT_CAST_SPELL              = 47,  // <player> cannot cast <spell>.
     UNABLE_TO_CAST_SPELLS          = 49,  // The <player> is unable to cast spells.
+    MeritPointGained               = 50,  // <player> earns a merit point! (Total: #)
     SKILL_LEVEL_UP                 = 53,  // <target>'s <skill> skill reaches level X.
     UNABLE_TO_USE_ITEM             = 56,  // Unable to use item.
     ITEM_FAILS_TO_ACTIVATE         = 62,  // The <item> fails to activate.
@@ -147,6 +150,7 @@ enum class MsgBasic : uint16_t
     USES_SKILL_RECEIVES_EFFECT     = 243, // <user> uses <skill>. <target> receives the effect of <status>.
     CHECK_ITG                      = 249, // <mob> strength is impossible to gauge!
     MAGIC_BURST_DAMAGE             = 252, // <caster> casts <spell>. Magic Burst! <target> takes <amount> points of damage.
+    ExpChain                       = 253, // EXP chain #! <player> gains # experience points.
     DEBUG_SUCCESS_CHANCE           = 255, // DEBUG: ..% chance of success
     GARDENING_SEED_SOWN            = 256, // In this flower pot: Seeds sown: <item>*/
     GARDENING_CRYSTAL_NONE         = 257, // Crystal used: none*/
@@ -193,6 +197,8 @@ enum class MsgBasic : uint16_t
     TARGET_MP_DRAINED              = 366, // <amount> MP drained from <target>.
     TARGET_RECOVERS_HP             = 367, // <target> recovers <amount> HP.
     USES_SKILL_EFFECT_DRAINED      = 370, // <user> uses <skill>. <amount> status effects drained from <target>.
+    LimitPointsGained              = 371, // <player> gains # limit points.
+    LimitChain                     = 372, // Limit chain ##! <player> gains # limit points.
     SPIKES_EFFECT_RECOVER          = 373, // <defender> recovers <number> hit points!
     STATUS_SPIKES                  = 374, // Striking <defender>'s armor causes <attacker> to become <status effect>.
     USES_ABILITY_DISPEL            = 378, // <user> uses <ability>. <target>'s <status> effect disappears!
@@ -259,14 +265,18 @@ enum class MsgBasic : uint16_t
     TRUST_NO_CAST_TRUST            = 700, // You are unable to use Trust magic at this time.
     ROE_START                      = 704,
     ROE_TIMED                      = 705, // You have undertaken the timed record X.
+    TrustPartyMessage              = 711, // Special lookup for various trust party messages.
     CHECKPARAM_PRIMARY             = 712,
     CHECKPARAM_AUXILIARY           = 713,
     CHECKPARAM_RANGE               = 714,
     CHECKPARAM_DEFENSE             = 715,
     TRUST_NO_CALL_AE               = 717, // You cannot call forth alter egos here.
+    CapacityPointsGained           = 718, // <player> gains # capacity points.
+    JobPointGained                 = 719, // <player> earns a job point! (Total: #)
     JOB_POINTS_INCREASE            = 720, // Your <job point category> modification has risen to level ≺level≻.
     CHECKPARAM_ILVL                = 731,
     CHECKPARAM_NAME                = 733,
+    CapacityChain                  = 735, // Capacity chain ##! <player> gains # capacity points.
     ROE_UNABLE                     = 742, // You are currently unable to undertake this objective.
     AUTO_EXCEEDS_CAPACITY          = 745, // Your automaton exceeds one or more elemental capacity values and cannot be activated.
     MOUNT_REQUIRED_LEVEL           = 773, // You are unable to call forth your mount because your main job level is not at least <level>.

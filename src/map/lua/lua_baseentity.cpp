@@ -570,7 +570,7 @@ void CLuaBaseEntity::messageSystem(MsgStd messageID, const sol::object& p0, cons
  *  Example : master:messageCombat(mob, offset + id, 0, 711)
  *  Notes   :
  ************************************************************************/
-void CLuaBaseEntity::messageCombat(const sol::object& speaker, int32 p0, int32 p1, int16 message)
+void CLuaBaseEntity::messageCombat(const sol::object& speaker, int32 p0, int32 p1, MsgBasic message) const
 {
     if (m_PBaseEntity->objtype != TYPE_PC)
     {
@@ -583,8 +583,8 @@ void CLuaBaseEntity::messageCombat(const sol::object& speaker, int32 p0, int32 p
     CBaseEntity* PSpeaker = nullptr;
     if (speaker != sol::lua_nil)
     {
-        CLuaBaseEntity* PLuaBaseEntity = speaker.as<CLuaBaseEntity*>();
-        PSpeaker                       = PLuaBaseEntity->m_PBaseEntity;
+        const auto* PLuaBaseEntity = speaker.as<CLuaBaseEntity*>();
+        PSpeaker                   = PLuaBaseEntity->m_PBaseEntity;
     }
     else
     {
@@ -15791,7 +15791,7 @@ uint32 CLuaBaseEntity::getTrustID()
  *  Example : mob:trustPartyMessage(message_id)
  ************************************************************************/
 
-void CLuaBaseEntity::trustPartyMessage(uint32 message_id)
+void CLuaBaseEntity::trustPartyMessage(uint32 message_id) const
 {
     if (m_PBaseEntity->objtype != TYPE_TRUST)
     {
@@ -15806,7 +15806,7 @@ void CLuaBaseEntity::trustPartyMessage(uint32 message_id)
         PMaster->ForParty([&](CBattleEntity* PMember)
         {
             auto* PCharMember = static_cast<CCharEntity*>(PMember);
-            PCharMember->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE2>(PTrust, PMember, message_id, 0, 711);
+            PCharMember->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE2>(PTrust, PMember, message_id, 0, MsgBasic::TrustPartyMessage);
         });
         // clang-format on
     }
