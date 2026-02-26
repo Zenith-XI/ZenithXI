@@ -1,7 +1,7 @@
-﻿/*
+/*
 ===========================================================================
 
-  Copyright (c) 2023 LandSandBoat Dev Teams
+  Copyright (c) 2024 LandSandBoat Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,33 +21,22 @@
 
 #pragma once
 
-#include <asio/ssl.hpp>
 #include <asio/ts/buffer.hpp>
 #include <asio/ts/internet.hpp>
-
-#include "auth_session.h"
-#include "data_session.h"
-#include "view_session.h"
+#include <common/logging.h>
 
 #include "common/scheduler.h"
-#include "common/zmq_dealer_wrapper.h"
+#include "search_handler.h"
 
-template <typename T>
-class handler
+class SearchListener
 {
 public:
-    handler(Scheduler& scheduler, unsigned int port, ZMQDealerWrapper& zmqDealerWrapper)
+    SearchListener(Scheduler& scheduler, unsigned int port, SynchronizedShared<std::unordered_set<std::string>>& ipWhitelist)
     : scheduler_(scheduler)
     , acceptor_(scheduler_.ioContext(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
-    , sslContext_(asio::ssl::context::tls_server)
-    , zmqDealerWrapper_(zmqDealerWrapper)
+    , ipWhitelist_(ipWhitelist)
     {
         acceptor_.set_option(asio::socket_base::reuse_address(true));
-
-        sslContext_.set_options(asio::ssl::context::default_workarounds | asio::ssl::context::verify_fail_if_no_peer_cert);
-        sslContext_.set_default_verify_paths();
-        sslContext_.use_rsa_private_key_file("login.key", asio::ssl::context::file_format::pem);
-        sslContext_.use_certificate_chain_file("login.cert");
 
         scheduler_.postToMainThread(accept_loop());
     }
@@ -61,23 +50,19 @@ private:
 
             if (!ec)
             {
-                const auto sessionHandler = std::make_shared<T>(asio::ssl::stream<asio::ip::tcp::socket>(std::move(socket), sslContext_), zmqDealerWrapper_);
-                scheduler_.postToWorkerThread(
-                    [sessionHandler]
-                    {
-                        sessionHandler->start();
-                    });
+                auto handler = std::make_shared<SearchHandler>(scheduler_, std::move(socket), ipInFlight_, ipWhitelist_);
+                scheduler_.postToMainThread(handler->run());
             }
             else
             {
-                ShowError(ec.message());
+                ShowErrorFmt("Failed to accept connection: {}", ec.message());
             }
         }
     }
 
     Scheduler&              scheduler_;
     asio::ip::tcp::acceptor acceptor_;
-    asio::ssl::context      sslContext_;
 
-    ZMQDealerWrapper& zmqDealerWrapper_;
+    SynchronizedShared<std::unordered_set<std::string>>& ipWhitelist_;
+    SynchronizedShared<std::map<std::string, uint16_t>>  ipInFlight_;
 };
