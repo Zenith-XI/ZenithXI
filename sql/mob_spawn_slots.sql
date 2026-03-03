@@ -692,6 +692,26 @@ INSERT INTO `mob_spawn_slots` VALUES (151,37,0);
 INSERT INTO `mob_spawn_slots` VALUES (151,38,0);
 INSERT INTO `mob_spawn_slots` VALUES (151,39,0);
 
+-- The Boyahda Tree
+INSERT INTO `mob_spawn_slots` VALUES (153,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,9,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,10,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,11,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,12,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,13,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,14,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,15,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,16,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,17,0);
+INSERT INTO `mob_spawn_slots` VALUES (153,18,0);
+
 -- Dragons Aery
 INSERT INTO `mob_spawn_slots` VALUES (154,1,0);
 
