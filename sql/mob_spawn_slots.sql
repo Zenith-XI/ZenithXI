@@ -51,6 +51,10 @@ INSERT INTO `mob_spawn_slots` VALUES (11,9,0);
 INSERT INTO `mob_spawn_slots` VALUES (11,10,0);
 INSERT INTO `mob_spawn_slots` VALUES (11,11,0);
 
+-- Arrapago Reef
+INSERT INTO `mob_spawn_slots` VALUES (54,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (54,2,0);
+
 -- Valkurum Dunes
 INSERT INTO `mob_spawn_slots` VALUES (103,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (103,2,0);
