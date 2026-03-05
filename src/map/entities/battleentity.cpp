@@ -2668,7 +2668,7 @@ void CBattleEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
         }
         else
         {
-            damage = luautils::OnMobWeaponSkill(PTargetFound, this, PSkill, &action);
+            damage = luautils::OnMobWeaponSkill(this, PTargetFound, PSkill, &action);
             this->PAI->EventHandler.triggerListener("WEAPONSKILL_USE", this, PTargetFound, PSkill->getID(), state.GetSpentTP(), &action, damage);
             PTargetFound->PAI->EventHandler.triggerListener("WEAPONSKILL_TAKE", this, PTargetFound, PSkill->getID(), state.GetSpentTP(), &action);
         }
