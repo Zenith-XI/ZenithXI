@@ -394,7 +394,7 @@ void CalculateStats(CCharEntity* PChar)
  *                                                                       *
  ************************************************************************/
 
-auto LoadChar(Scheduler& scheduler, const uint32 charId) -> std::unique_ptr<CCharEntity>
+auto LoadChar(const uint32 charId) -> std::unique_ptr<CCharEntity>
 {
     TracyZoneScoped;
 
@@ -946,11 +946,12 @@ auto LoadChar(Scheduler& scheduler, const uint32 charId) -> std::unique_ptr<CCha
     PChar->health.mp = canRestore ? PChar->GetMaxMP() : MP;
     PChar->UpdateHealth();
 
+    // TODO: Fix me
     // Lazy loading: ensure initial zone is loaded synchronously before OnZoneIn
-    if (zoneutils::IsLazyLoadingEnabled() && !zoneutils::GetZone(PChar->loc.destination))
-    {
-        zoneutils::LoadZones(scheduler, { PChar->loc.destination });
-    }
+    // if (zoneutils::IsLazyLoadingEnabled() && !zoneutils::GetZone(PChar->loc.destination))
+    // {
+    //     co_await zoneutils::LoadZones(scheduler, { PChar->loc.destination });
+    // }
 
     luautils::OnZoneIn(PChar);
     luautils::OnGameIn(PChar, zoning == 1);
