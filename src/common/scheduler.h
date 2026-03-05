@@ -37,6 +37,8 @@
 #include <asio/this_coro.hpp>
 #include <asio/use_awaitable.hpp>
 
+#include <common/types/maybe.h>
+
 #include <atomic>
 #include <chrono>
 #include <concepts>
@@ -534,10 +536,10 @@ public:
     }
 
     // withTimeout
-    //   Executes a task with a given timeout. Returns std::optional<T>, which is empty if the timeout
+    //   Executes a task with a given timeout. Returns Maybe<T>, which is empty if the timeout
     //   was reached before the task completed.
     template <typename T>
-    [[nodiscard]] auto withTimeout(Task<T> task, std::chrono::steady_clock::duration timeout) -> Task<std::optional<T>>
+    [[nodiscard]] auto withTimeout(Task<T> task, std::chrono::steady_clock::duration timeout) -> Task<Maybe<T>>
     {
         using namespace asio::experimental::awaitable_operators;
         auto result = co_await (std::move(task) || yieldFor(timeout));

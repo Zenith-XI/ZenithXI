@@ -99,11 +99,11 @@ public:
     void requestExit();
 
 private:
-    Scheduler&                      scheduler_;
-    std::optional<Scheduler::Token> mapCleanupToken_;
-    std::optional<Scheduler::Token> mapGarbageCollectToken_;
-    std::optional<Scheduler::Token> timeServerToken_;
-    std::optional<Scheduler::Token> persistVolatileServerVarsToken_;
+    Scheduler&              scheduler_;
+    Maybe<Scheduler::Token> mapCleanupToken_;
+    Maybe<Scheduler::Token> mapGarbageCollectToken_;
+    Maybe<Scheduler::Token> timeServerToken_;
+    Maybe<Scheduler::Token> persistVolatileServerVarsToken_;
 
     std::unique_ptr<MapStatistics> mapStatistics_;
     std::unique_ptr<MapNetworking> networking_;

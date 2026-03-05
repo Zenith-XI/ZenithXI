@@ -80,7 +80,7 @@ CLuaSimulation::CLuaSimulation(MapEngine* _mapServer, const std::shared_ptr<InMe
 {
 }
 
-void CLuaSimulation::cleanClients(std::optional<ClientScope> scope)
+void CLuaSimulation::cleanClients(Maybe<ClientScope> scope)
 {
     if (!scope.has_value())
     {
@@ -285,7 +285,7 @@ void CLuaSimulation::processClientUpdates() const
  *          : This does not execute unrelated tasks, when possible.
  ************************************************************************/
 
-void CLuaSimulation::tick(const std::optional<TickType> boundary) const
+void CLuaSimulation::tick(const Maybe<TickType> boundary) const
 {
     TracyZoneScoped;
 

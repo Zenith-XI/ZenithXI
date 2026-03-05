@@ -467,7 +467,7 @@ void CGambitsContainer::Tick(timer::time_point tick)
                         resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power >> 8));
                     }
 
-                    std::optional<SpellID> spell_id;
+                    Maybe<SpellID> spell_id;
                     for (auto& resonance_element : resonanceProperties)
                     {
                         for (auto& chain_element : battleutils::GetSkillchainMagicElement(resonance_element))
@@ -1161,8 +1161,8 @@ bool CGambitsContainer::TryTrustSkill()
         }
     };
 
-    std::optional<TrustSkill_t> chosen_skill;
-    SKILLCHAIN_ELEMENT          chosen_skillchain = SC_NONE;
+    Maybe<TrustSkill_t> chosen_skill;
+    SKILLCHAIN_ELEMENT  chosen_skillchain = SC_NONE;
     if (checkTPTrigger() && !tp_skills.empty())
     {
         switch (tp_select)

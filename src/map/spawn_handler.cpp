@@ -39,7 +39,7 @@ SpawnHandler::SpawnHandler(CZone* PZone)
 
 // Register a given mob for respawn at its default respawn timer.
 // Respawn timer can optionally be overriden for deaggro/scripting purposes.
-void SpawnHandler::registerForRespawn(CMobEntity* PMob, const std::optional<timer::duration> respawnTime)
+void SpawnHandler::registerForRespawn(CMobEntity* PMob, const Maybe<timer::duration> respawnTime)
 {
     if (!PMob || !PMob->m_AllowRespawn || PMob->PInstance != nullptr)
     {
@@ -51,8 +51,8 @@ void SpawnHandler::registerForRespawn(CMobEntity* PMob, const std::optional<time
 
     if (SpawnSlot* slot = PMob->GetSpawnSlot())
     {
-        const std::optional<uint32> specificMobId = respawnTime.has_value() ? std::optional(PMob->id) : std::nullopt;
-        pendingSlotRespawns_[slot]                = { respawnAt, specificMobId };
+        const Maybe<uint32> specificMobId = respawnTime.has_value() ? Maybe(PMob->id) : std::nullopt;
+        pendingSlotRespawns_[slot]        = { respawnAt, specificMobId };
     }
     else
     {
@@ -92,7 +92,7 @@ auto SpawnHandler::isRegistered(CMobEntity* PMob) const -> bool
     return pendingRespawns_.contains(PMob->id);
 }
 
-auto SpawnHandler::getRemainingRespawnTime(CMobEntity* PMob) const -> std::optional<timer::duration>
+auto SpawnHandler::getRemainingRespawnTime(CMobEntity* PMob) const -> Maybe<timer::duration>
 {
     if (!PMob)
     {

@@ -108,7 +108,7 @@ bool CAIContainer::WeaponSkill(uint16 targid, uint16 wsid)
     return false;
 }
 
-bool CAIContainer::MobSkill(uint16 targid, uint16 wsid, std::optional<timer::duration> castTimeOverride)
+bool CAIContainer::MobSkill(uint16 targid, uint16 wsid, Maybe<timer::duration> castTimeOverride)
 {
     auto* AIController = dynamic_cast<CMobController*>(Controller.get());
     if (AIController)
@@ -279,7 +279,7 @@ bool CAIContainer::Internal_WeaponSkill(uint16 targid, uint16 wsid)
     return false;
 }
 
-bool CAIContainer::Internal_MobSkill(uint16 targid, uint16 wsid, std::optional<timer::duration> castTimeOverride)
+bool CAIContainer::Internal_MobSkill(uint16 targid, uint16 wsid, Maybe<timer::duration> castTimeOverride)
 {
     auto* entity = dynamic_cast<CBattleEntity*>(PEntity);
     if (entity)

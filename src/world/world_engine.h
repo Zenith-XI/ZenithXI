@@ -59,6 +59,6 @@ public:
     std::unique_ptr<HTTPServer> httpServer_;
 
 private:
-    std::optional<Scheduler::Token> timeServerToken_;
-    std::optional<Scheduler::Token> pumpQueuesToken_;
+    Maybe<Scheduler::Token> timeServerToken_;
+    Maybe<Scheduler::Token> pumpQueuesToken_;
 };

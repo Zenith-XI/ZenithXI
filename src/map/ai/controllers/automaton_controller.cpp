@@ -1636,7 +1636,7 @@ auto CAutomatonController::Cast(uint16 targid, SpellID spellid) -> bool
     return CPetController::Cast(targid, spellid);
 }
 
-auto CAutomatonController::MobSkill(uint16 targid, uint16 wsid, std::optional<timer::duration> castTimeOverride) -> bool
+auto CAutomatonController::MobSkill(uint16 targid, uint16 wsid, Maybe<timer::duration> castTimeOverride) -> bool
 {
     if (PAutomaton->PRecastContainer->HasRecast(RECAST_ABILITY, static_cast<Recast>(wsid), 0s))
     {
@@ -1709,7 +1709,7 @@ bool CanUseEnfeeble(CBattleEntity* PTarget, SpellID spell)
     return (!statuses->HasStatusEffect(PSpell.enfeeble) && !PTarget->hasImmunity(PSpell.immunity));
 }
 
-std::optional<SpellID> FindNaSpell(CStatusEffect* PStatus)
+Maybe<SpellID> FindNaSpell(CStatusEffect* PStatus)
 {
     for (auto spell : naSpells)
     {

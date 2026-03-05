@@ -48,7 +48,7 @@ private:
     // Auth is closed before any other sessions are open, so the data/view cleanups aren't sufficient.
     void periodicCleanup();
 
-    std::optional<Scheduler::Token> periodicCleanupToken_;
+    Maybe<Scheduler::Token> periodicCleanupToken_;
 
     Scheduler& scheduler_;
 

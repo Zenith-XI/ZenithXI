@@ -36,10 +36,10 @@ enum INSTANCE_STATUS
 
 struct zoneMusicOverride_t
 {
-    xi::optional<uint16> m_songDay;   // music (daytime)
-    xi::optional<uint16> m_songNight; // music (nighttime)
-    xi::optional<uint16> m_bSongS;    // battle music (solo)
-    xi::optional<uint16> m_bSongM;    // battle music (party)
+    Maybe<uint16> m_songDay;   // music (daytime)
+    Maybe<uint16> m_songNight; // music (nighttime)
+    Maybe<uint16> m_bSongS;    // battle music (solo)
+    Maybe<uint16> m_bSongM;    // battle music (party)
 };
 
 class CInstance : public CZoneEntities

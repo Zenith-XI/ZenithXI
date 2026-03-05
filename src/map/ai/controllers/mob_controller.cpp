@@ -402,7 +402,7 @@ auto CMobController::MobSkill(int listId) -> bool
 
     PActionTarget = luautils::OnMobSkillTarget(PActionTarget, PMob, PMobSkill);
 
-    std::optional<timer::duration> mobSkillReadyTime = luautils::OnMobSkillReadyTime(PActionTarget, PMob, PMobSkill);
+    Maybe<timer::duration> mobSkillReadyTime = luautils::OnMobSkillReadyTime(PActionTarget, PMob, PMobSkill);
 
     if (PActionTarget && !PMobSkill->isAstralFlow() && luautils::OnMobSkillCheck(PActionTarget, PMob, PMobSkill) == 0) // A script says that the move in question is valid
     {
@@ -483,7 +483,7 @@ auto CMobController::TryCastSpell() -> bool
     }
 
     // Find random spell from list
-    std::optional<SpellID> chosenSpellId;
+    Maybe<SpellID> chosenSpellId;
     if (!PMob->PAI->IsEngaged())
     {
         if (PMob->SpellContainer->HasBuffSpells())
@@ -512,8 +512,8 @@ auto CMobController::TryCastSpell() -> bool
     auto PSpellTarget            = PTarget ? PTarget : PMob;
     auto possibleOverriddenSpell = luautils::OnMobSpellChoose(PMob, PSpellTarget, chosenSpellId);
 
-    std::optional<SpellID>        maybeSpellOverride  = std::get<0>(possibleOverriddenSpell);
-    std::optional<CBattleEntity*> maybeTargetOverride = std::get<1>(possibleOverriddenSpell);
+    Maybe<SpellID>        maybeSpellOverride  = std::get<0>(possibleOverriddenSpell);
+    Maybe<CBattleEntity*> maybeTargetOverride = std::get<1>(possibleOverriddenSpell);
 
     if (maybeSpellOverride.has_value())
     {
@@ -1307,7 +1307,7 @@ void CMobController::Reset()
     ClearFollowTarget();
 }
 
-auto CMobController::MobSkill(const uint16 targid, uint16 wsid, std::optional<timer::duration> castTimeOverride) -> bool
+auto CMobController::MobSkill(const uint16 targid, uint16 wsid, Maybe<timer::duration> castTimeOverride) -> bool
 {
     TracyZoneScoped;
     if (POwner)

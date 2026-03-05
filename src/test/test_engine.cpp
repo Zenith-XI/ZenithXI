@@ -343,7 +343,7 @@ auto TestEngine::executeTestCase(const TestCase& testCase, const HookContext& co
     return status == TestStatus::Passed;
 }
 
-auto TestEngine::runBeforeHooks(const HookContext& context, const std::string& testName) const -> std::optional<std::string>
+auto TestEngine::runBeforeHooks(const HookContext& context, const std::string& testName) const -> Maybe<std::string>
 {
     TracyZoneScoped;
 

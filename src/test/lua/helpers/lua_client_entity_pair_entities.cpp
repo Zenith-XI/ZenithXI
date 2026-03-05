@@ -46,7 +46,7 @@ CLuaClientEntityPairEntities::CLuaClientEntityPairEntities(CLuaClientEntityPair*
  *            Returned entity is wired up for assertions.
  ************************************************************************/
 
-auto CLuaClientEntityPairEntities::get(const sol::object& entityQuery) const -> std::optional<CLuaTestEntity>
+auto CLuaClientEntityPairEntities::get(const sol::object& entityQuery) const -> Maybe<CLuaTestEntity>
 {
     switch (entityQuery.get_type())
     {
@@ -111,7 +111,7 @@ auto CLuaClientEntityPairEntities::get(const sol::object& entityQuery) const -> 
  *  Notes   : Returned entity is wired up for assertions.
  ************************************************************************/
 
-auto CLuaClientEntityPairEntities::moveTo(const sol::object& entityQuery) const -> std::optional<CLuaTestEntity>
+auto CLuaClientEntityPairEntities::moveTo(const sol::object& entityQuery) const -> Maybe<CLuaTestEntity>
 {
     const auto entity = get(entityQuery);
 
@@ -141,7 +141,7 @@ auto CLuaClientEntityPairEntities::moveTo(const sol::object& entityQuery) const 
  *  Notes   : Can optionally expect a specific event to be triggered.
  ************************************************************************/
 
-auto CLuaClientEntityPairEntities::gotoAndTrigger(const sol::object& entityQuery, const sol::optional<sol::table>& expectedEvent) const -> std::optional<CLuaTestEntity>
+auto CLuaClientEntityPairEntities::gotoAndTrigger(const sol::object& entityQuery, const sol::optional<sol::table>& expectedEvent) const -> Maybe<CLuaTestEntity>
 {
     auto entity = moveTo(entityQuery);
 

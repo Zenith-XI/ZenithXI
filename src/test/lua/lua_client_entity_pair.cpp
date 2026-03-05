@@ -151,7 +151,7 @@ auto CLuaClientEntityPair::isPendingZone() const -> bool
  *  Notes   : Only for LOC_INVENTORY, player-specific
  ************************************************************************/
 
-auto CLuaClientEntityPair::getItemInvSlot(const uint16 itemId, const uint8 quantity) const -> std::optional<uint16>
+auto CLuaClientEntityPair::getItemInvSlot(const uint16 itemId, const uint8 quantity) const -> Maybe<uint16>
 {
     uint8       slotId = 0;
     const auto* PChar  = testChar_->entity();

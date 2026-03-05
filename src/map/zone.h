@@ -716,9 +716,9 @@ private:
     std::unordered_map<std::string, QueryByNameResult_t> m_queryByNameResults;
 
 protected:
-    std::optional<Scheduler::Token> zoneTimer_;
-    std::optional<Scheduler::Token> zoneTimerTriggerAreas_;
-    std::optional<Scheduler::Token> spawnHandlerTimer_;
+    Maybe<Scheduler::Token> zoneTimer_;
+    Maybe<Scheduler::Token> zoneTimerTriggerAreas_;
+    Maybe<Scheduler::Token> spawnHandlerTimer_;
 
     triggerAreaList_t m_triggerAreaList;
 

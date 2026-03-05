@@ -8523,7 +8523,7 @@ bool CLuaBaseEntity::setEminenceProgress(uint16 recordID, uint32 progress, const
  *  Notes   : returns nil if player does not have the record.
  ************************************************************************/
 
-std::optional<uint32> CLuaBaseEntity::getEminenceProgress(uint16 recordID)
+Maybe<uint32> CLuaBaseEntity::getEminenceProgress(uint16 recordID)
 {
     if (m_PBaseEntity->objtype != TYPE_PC)
     {
@@ -8652,7 +8652,7 @@ uint8 CLuaBaseEntity::getUnityLeader()
  *  Example : player:getUnityRank()
  ************************************************************************/
 
-std::optional<uint8> CLuaBaseEntity::getUnityRank(const sol::object& unityObj)
+Maybe<uint8> CLuaBaseEntity::getUnityRank(const sol::object& unityObj)
 {
     if (m_PBaseEntity->objtype != TYPE_PC)
     {
@@ -18460,7 +18460,7 @@ void CLuaBaseEntity::useMobAbility(sol::variadic_args va)
         PTarget                        = PLuaBaseEntity ? (CBattleEntity*)PLuaBaseEntity->m_PBaseEntity : nullptr;
     }
 
-    std::optional<timer::duration> castTimeOverride = std::nullopt;
+    Maybe<timer::duration> castTimeOverride = std::nullopt;
     if (va.size() >= 3)
     {
         if (va.get_type(2) == sol::type::number)

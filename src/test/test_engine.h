@@ -84,7 +84,7 @@ private:
     auto executeSuite(const TestSuite& suite, HookContext context) -> TestResults;
     void reportSetupTeardownFailure(const TestSuite& suite, const std::string& functionName, const std::string& errorMessage) const;
     auto executeTestCase(const TestCase& testCase, const HookContext& context, const TestSuite& suite) const -> bool;
-    auto runBeforeHooks(const HookContext& context, const std::string& testName) const -> std::optional<std::string>;
+    auto runBeforeHooks(const HookContext& context, const std::string& testName) const -> Maybe<std::string>;
     void runAfterHooks(const HookContext& context, const std::string& testName) const;
 
     Scheduler&                          scheduler_;

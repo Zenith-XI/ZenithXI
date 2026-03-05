@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2025 LandSandBoat Dev Teams
+  Copyright (c) 2026 LandSandBoat Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,26 +21,26 @@
 
 #pragma once
 
-#include <common/types/maybe.h>
+#include <optional>
 
-#include <sol/sol.hpp>
+// namespace xi
+// {
 
-#include <string>
+//
+// Maybe<T>
+//
 
-class TestCase
+template <typename T>
+using Maybe = std::optional<T>;
+
+// TODO: Rename to apply() once we're using xi:: namespace, because otherwise we'll collide with std
+template <typename T, typename F>
+void applyTo(const Maybe<T>& maybe, F fn)
 {
-public:
-    TestCase(std::string name, Maybe<sol::protected_function> func, std::string parentPath);
+    if (maybe)
+    {
+        fn(*maybe);
+    }
+}
 
-    auto fullName() const -> std::string;
-    auto name() const -> const std::string&;
-    auto testFunc() const -> const Maybe<sol::protected_function>&;
-    auto isSkipped() const -> bool;
-    void markAsSkipped();
-
-private:
-    std::string                    name_;
-    Maybe<sol::protected_function> testFunc_;
-    std::string                    parentPath_;
-    bool                           skipped_ = false;
-};
+// } // namespace xi
