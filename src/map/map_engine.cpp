@@ -100,7 +100,6 @@ MapEngine::MapEngine(Application& application, MapConfig& config)
 , networking_(std::make_unique<MapNetworking>(scheduler_, *mapStatistics_, config))
 , engineConfig_(config)
 {
-    scheduler_.postToMainThread(init());
 }
 
 MapEngine::~MapEngine()

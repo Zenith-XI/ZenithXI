@@ -1602,7 +1602,7 @@ auto CZoneEntities::mobTick(CMobEntity* PMob, timer::time_point tick) -> Task<vo
         PMob->StatusEffectContainer->TickEffects(tick);
     }
 
-    PMob->PAI->Tick(tick);
+    co_await PMob->PAI->Tick(tick);
 
     // This is only valid for dynamic entities
     if (PMob->status == STATUS_TYPE::DISAPPEAR && PMob->m_bReleaseTargIDOnDisappear)
@@ -1690,7 +1690,7 @@ auto CZoneEntities::npcTick(CNpcEntity* PNpc, timer::time_point tick) -> Task<vo
 
     ShowTraceFmt("CZoneEntities::ZoneServer: NPC: {} ({})", PNpc->getName(), PNpc->id);
 
-    PNpc->PAI->Tick(tick);
+    co_await PNpc->PAI->Tick(tick);
 
     // This is only valid for dynamic entities
     if (PNpc->status == STATUS_TYPE::DISAPPEAR && PNpc->m_bReleaseTargIDOnDisappear)
@@ -1742,7 +1742,7 @@ auto CZoneEntities::petTick(CPetEntity* PPet, timer::time_point tick) -> Task<vo
         PPet->StatusEffectContainer->TickEffects(tick);
     }
 
-    PPet->PAI->Tick(tick);
+    co_await PPet->PAI->Tick(tick);
 
     co_return;
 }
@@ -1762,7 +1762,7 @@ auto CZoneEntities::trustTick(CTrustEntity* PTrust, timer::time_point tick) -> T
         PTrust->StatusEffectContainer->TickEffects(tick);
     }
 
-    PTrust->PAI->Tick(tick);
+    co_await PTrust->PAI->Tick(tick);
 
     if (PTrust->status == STATUS_TYPE::DISAPPEAR)
     {
@@ -1804,7 +1804,7 @@ auto CZoneEntities::charTick(CCharEntity* PChar, timer::time_point tick) -> Task
             PChar->StatusEffectContainer->TickEffects(tick);
         }
 
-        PChar->PAI->Tick(tick);
+        co_await PChar->PAI->Tick(tick);
 
         if (PChar->PTreasurePool)
         {

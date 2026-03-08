@@ -394,7 +394,7 @@ void CalculateStats(CCharEntity* PChar)
  *                                                                       *
  ************************************************************************/
 
-auto LoadChar(const uint32 charId) -> std::unique_ptr<CCharEntity>
+auto LoadChar(Scheduler& scheduler, const uint32 charId) -> std::unique_ptr<CCharEntity>
 {
     TracyZoneScoped;
 
@@ -946,12 +946,11 @@ auto LoadChar(const uint32 charId) -> std::unique_ptr<CCharEntity>
     PChar->health.mp = canRestore ? PChar->GetMaxMP() : MP;
     PChar->UpdateHealth();
 
-    // TODO: Fix me. Once LoadChar is a coroutine we can just co_await here
     // Lazy loading: ensure initial zone is loaded synchronously before OnZoneIn
-    // if (zoneutils::IsLazyLoadingEnabled() && !zoneutils::GetZone(PChar->loc.destination))
-    // {
-    //     co_await zoneutils::LoadZones(scheduler, { PChar->loc.destination });
-    // }
+    if (zoneutils::IsLazyLoadingEnabled() && !zoneutils::GetZone(PChar->loc.destination))
+    {
+        scheduler.dispatchToMainThread(zoneutils::LoadZones(scheduler, { PChar->loc.destination }));
+    }
 
     luautils::OnZoneIn(PChar);
     luautils::OnGameIn(PChar, zoning == 1);

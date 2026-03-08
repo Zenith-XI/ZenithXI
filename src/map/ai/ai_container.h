@@ -80,7 +80,7 @@ public:
     bool Accept_Raise();
 
     void    Reset();
-    void    Tick(timer::time_point _tick);
+    auto    Tick(timer::time_point tick) -> Task<void>;
     CState* GetCurrentState();
     bool    IsStateStackEmpty();
     void    ClearStateStack();

@@ -24,6 +24,8 @@
 #include "lua_test_entity_assertions.h"
 #include "map/lua/lua_baseentity.h"
 
+#include <map/map_engine.h>
+
 class CBaseEntity;
 class CLuaTestEntity : public CLuaBaseEntity
 {
@@ -37,4 +39,6 @@ public:
     auto         assert_() -> CLuaTestEntityAssertions;
 
     static void Register();
+
+    MapEngine* engine_;
 };

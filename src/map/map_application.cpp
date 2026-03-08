@@ -109,15 +109,16 @@ void MapApplication::requestExit()
 
 void MapApplication::run()
 {
-    // The creation of MapEngine queues up init() and recurrent time_server() tasks on the scheduler.
-    // It also creates and binds MapSocket and MapNetworking, to handle network events with the
-    // scheduler.
     engine_ = createEngine();
-    if (engine_)
+    if (!engine_)
     {
-        engine_->onInitialize();
-        registerCommands(console());
+        std::terminate();
     }
+
+    engine_->onInitialize();
+    registerCommands(console());
+
+    scheduler_.postToMainThread(static_cast<MapEngine*>(engine_.get())->init());
 
     try
     {
@@ -127,8 +128,4 @@ void MapApplication::run()
     {
         ShowCriticalFmt("Fatal Exception: {}", e.what());
     }
-
-    // MapEngine destructor must occur before Application destructor
-    engine_.reset();
-    scheduler_.stop();
 }

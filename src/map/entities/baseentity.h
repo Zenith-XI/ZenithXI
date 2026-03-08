@@ -296,7 +296,8 @@ public:
     auto   GetLocalVars() -> std::map<std::string, uint32>&;
 
     // pre-tick update
-    virtual void Tick(timer::time_point) = 0;
+    virtual auto Tick(timer::time_point) -> Task<void> = 0;
+
     // post-tick update
     virtual void PostTick() = 0;
 

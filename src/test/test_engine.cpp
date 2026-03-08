@@ -39,10 +39,11 @@
 #include <utility>
 #include <vector>
 
-TestEngine::TestEngine(Application& application, TestConfig testConfig)
+TestEngine::TestEngine(Application& application, TestConfig testConfig, std::unique_ptr<MapEngine> mapEngine, std::unique_ptr<WorldEngine> worldEngine)
 : application_(application)
 , scheduler_(application_.scheduler())
-, worldEngine_(std::make_unique<WorldEngine>(scheduler_))
+, mapEngine_(std::move(mapEngine))
+, worldEngine_(std::move(worldEngine))
 , mockManager_(std::make_unique<MockManager>())
 , testConfig_(std::move(testConfig))
 , reporters_(testConfig_.verbose, testConfig_.output)
@@ -52,22 +53,6 @@ TestEngine::TestEngine(Application& application, TestConfig testConfig)
     // Unset specific settings that conflict with tests
     lua["xi"]["settings"]["main"]["NEW_CHARACTER_CUTSCENE"] = 0;
     lua["xi"]["settings"]["main"]["ALL_MAPS"]               = 0;
-
-    // Without a world server actively pumping the queues,
-    // the embedded map server deadlocks on exit
-    //
-    // We will need this to work to support multiprocess tests and validating systems that rely on world server.
-    // However, that requires deeper rework to the IPP logic so we can smartly route messages during tests.
-    auto mapConfig = MapConfig{
-        .isTestServer      = true,
-        .lazyZones         = true,
-        .controlledWeather = true,
-    };
-
-    mapEngine_ = std::make_unique<MapEngine>(application_, mapConfig);
-
-    worldEngine_->onInitialize();
-    mapEngine_->onInitialize();
 
     // Initialize Lua environment after engines are ready
     luaEnvironment_ = std::make_unique<TestLuaEnvironment>(mockManager_.get());
@@ -85,54 +70,42 @@ TestEngine::TestEngine(Application& application, TestConfig testConfig)
 
 TestEngine::~TestEngine() = default;
 
-auto TestEngine::executeTests() -> bool
+auto TestEngine::executeTests() -> Task<bool>
 {
     TracyZoneScoped;
 
     TestResults results;
-    scheduler_.postToMainThread(
-        [&]
+
+    const auto runStartTime = std::chrono::steady_clock::now();
+
+    // Execute all test suites
+    const auto& rootSuite = testCollector_->rootSuite();
+    for (const auto& suite : rootSuite.childSuites())
+    {
+        const HookContext baseContext{};
+        const auto        suiteResults = executeSuite(suite, baseContext);
+
+        results.total += suiteResults.total;
+        results.passed += suiteResults.passed;
+        results.failed += suiteResults.failed;
+
+        simulation_->cleanClients();
+
+        // Stop on first failure unless keep-going is set
+        if (suiteResults.failed > 0 && !testConfig_.keepGoing)
         {
-            const auto runStartTime = std::chrono::steady_clock::now();
+            ShowError("Stopping test execution due to failure (use --keep-going to continue)");
+            break;
+        }
+    }
 
-            // Execute all test suites
-            const auto& rootSuite = testCollector_->rootSuite();
-            for (const auto& suite : rootSuite.childSuites())
-            {
-                const HookContext baseContext{};
-                const auto        suiteResults = executeSuite(suite, baseContext);
+    // Calculate total run duration
+    const auto runEndTime    = std::chrono::steady_clock::now();
+    const auto totalDuration = std::chrono::duration_cast<std::chrono::milliseconds>(runEndTime - runStartTime);
 
-                results.total += suiteResults.total;
-                results.passed += suiteResults.passed;
-                results.failed += suiteResults.failed;
+    reporters_.onRunComplete(totalDuration);
 
-                simulation_->cleanClients();
-
-                // Stop on first failure unless keep-going is set
-                if (suiteResults.failed > 0 && !testConfig_.keepGoing)
-                {
-                    ShowError("Stopping test execution due to failure (use --keep-going to continue)");
-                    break;
-                }
-            }
-
-            // Calculate total run duration
-            const auto runEndTime    = std::chrono::steady_clock::now();
-            const auto totalDuration = std::chrono::duration_cast<std::chrono::milliseconds>(runEndTime - runStartTime);
-
-            reporters_.onRunComplete(totalDuration);
-
-            // Control the destruction order, else the program may hang.
-            // TODO: Figure out why the ZMQ listeners hang on early exits.
-            mapEngine_.reset();
-            worldEngine_.reset();
-
-            scheduler_.stop();
-        });
-
-    scheduler_.run(); // blocks
-
-    return results.failed == 0;
+    co_return results.failed == 0;
 }
 
 auto TestEngine::executeSuite(const TestSuite& suite, HookContext context) -> TestResults

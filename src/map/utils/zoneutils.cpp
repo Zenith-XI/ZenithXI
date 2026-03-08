@@ -282,7 +282,7 @@ auto LoadNPCList(Scheduler& scheduler, const std::vector<uint16>& zoneIds) -> Ta
         {
             for (const auto zoneId : zoneIds)
             {
-                add(scheduler.onWorkerThread(
+                add(scheduler.spawnOnWorkerThread(
                     [zoneId]()
                     {
                         TracyZoneScoped;
@@ -411,7 +411,7 @@ auto LoadMOBList(Scheduler& scheduler, const std::vector<uint16>& zoneIds) -> Ta
         {
             for (const auto zoneId : zoneIds)
             {
-                add(scheduler.onWorkerThread(
+                add(scheduler.spawnOnWorkerThread(
                     [normalLevelRangeMin, normalLevelRangeMax, zoneId]()
                     {
                         TracyZoneScoped;
@@ -800,13 +800,13 @@ auto LoadZones(Scheduler& scheduler, const std::vector<uint16>& zoneIds) -> Task
         {
             for (const auto zoneId : zonesIdsToLoad)
             {
-                add(scheduler.onWorkerThread(
+                add(scheduler.spawnOnWorkerThread(
                     [zoneId]()
                     {
                         g_PZoneList[zoneId]->LoadNavMesh();
                     }));
 
-                add(scheduler.onWorkerThread(
+                add(scheduler.spawnOnWorkerThread(
                     [zoneId]()
                     {
                         g_PZoneList[zoneId]->LoadZoneLos();

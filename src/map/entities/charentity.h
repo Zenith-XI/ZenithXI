@@ -598,7 +598,7 @@ public:
     bool PersistData();
     bool PersistData(timer::time_point tick);
 
-    virtual void Tick(timer::time_point) override;
+    virtual auto Tick(timer::time_point) -> Task<void> override;
     void         PostTick() override;
 
     virtual void addTrait(CTrait*) override;
