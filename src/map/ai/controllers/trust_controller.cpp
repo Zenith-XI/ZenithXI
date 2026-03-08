@@ -123,35 +123,60 @@ void CTrustController::DoCombatTick(timer::time_point tick)
         m_CombatEndTime = m_Tick;
     }
 
-    if (POwner->PMaster->GetBattleTargetID() != POwner->GetBattleTargetID())
-    {
-        POwner->PAI->Internal_ChangeTarget(POwner->PMaster->GetBattleTargetID());
-        m_LastTopEnmity = nullptr;
-    }
-
-    // If busy, don't run around!
-    if (POwner->PAI->IsCurrentState<CMagicState>() || POwner->PAI->IsCurrentState<CRangeState>())
-    {
-        return;
-    }
-
     CTrustEntity* PTrust  = static_cast<CTrustEntity*>(POwner);
     CCharEntity*  PMaster = static_cast<CCharEntity*>(POwner->PMaster);
     PTarget               = POwner->GetBattleTarget();
 
+    if (PMaster->GetBattleTarget() && PTarget->objtype == TYPE_MOB && PTrust->GetBattleTargetID() != PMaster->GetBattleTargetID())
+    {
+        CMobEntity* PMob = dynamic_cast<CMobEntity*>(PMaster->GetBattleTarget());
+
+        if (PMob && PMaster)
+        {
+            auto  masterID   = PMaster->id;
+            auto* enmityList = PMob->PEnmityContainer->GetEnmityList();
+            bool  hasEnmity  = false;
+
+            if (auto it = enmityList->find(masterID); it != enmityList->end())
+            {
+                const EnmityObject_t& entry = it->second;
+                // Only treat as "has enmity" if:
+                // the entry is active,
+                // the CE+VE is positive,
+                // and the master is within enmity range (same checks used when adding enmity).
+                if (entry.active && (entry.CE + entry.VE) > 0)
+                {
+                    hasEnmity = true;
+                }
+            }
+
+            if (hasEnmity)
+            {
+                PTrust->PAI->Internal_ChangeTarget(PMaster->GetBattleTargetID());
+                m_LastTopEnmity = nullptr;
+            }
+        }
+    }
+
+    // If busy, don't run around!
+    if (PTrust->PAI->IsCurrentState<CMagicState>() || PTrust->PAI->IsCurrentState<CRangeState>())
+    {
+        return;
+    }
+
     if (PTarget)
     {
-        if (POwner->PAI->CanFollowPath() && POwner->GetSpeed() > 0)
+        if (PTrust->PAI->CanFollowPath() && PTrust->GetSpeed() > 0)
         {
-            float currentDistanceToTarget = distance(POwner->loc.p, PTarget->loc.p);
-            float currentDistanceToMaster = distance(POwner->loc.p, PMaster->loc.p);
+            float currentDistanceToTarget = distance(PTrust->loc.p, PTarget->loc.p);
+            float currentDistanceToMaster = distance(PTrust->loc.p, PMaster->loc.p);
 
             if (currentDistanceToTarget > WarpDistance)
             {
-                POwner->PAI->PathFind->WarpTo(PTarget->loc.p);
+                PTrust->PAI->PathFind->WarpTo(PTarget->loc.p);
             }
 
-            POwner->PAI->PathFind->LookAt(PTarget->loc.p);
+            PTrust->PAI->PathFind->LookAt(PTarget->loc.p);
 
             int16 movementDistance = PTrust->getMobMod(MOBMOD_TRUST_DISTANCE);
 
@@ -200,7 +225,7 @@ void CTrustController::DoCombatTick(timer::time_point tick)
                 }
             }
 
-            if (!POwner->PAI->PathFind->IsFollowingPath())
+            if (!PTrust->PAI->PathFind->IsFollowingPath())
             {
                 Declump(PMaster, PTarget);
             }
@@ -208,12 +233,12 @@ void CTrustController::DoCombatTick(timer::time_point tick)
 
         if (!m_InTransit)
         {
-            POwner->PAI->PathFind->FollowPath(m_Tick);
+            PTrust->PAI->PathFind->FollowPath(m_Tick);
         }
 
         m_GambitsContainer->Tick(tick);
 
-        POwner->PAI->EventHandler.triggerListener("COMBAT_TICK", POwner, POwner->PMaster, PTarget);
+        PTrust->PAI->EventHandler.triggerListener("COMBAT_TICK", PTrust, PMaster, PTarget);
     }
 }
 
