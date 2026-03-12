@@ -6,7 +6,7 @@
     url = https://github.com/LandSandBoat/losmeshes.git
 [submodule "mod-lqs"]
     path = modules/LQS
-    url = https://github.com/vybsh/LQS.git
+    url = https://github.com/LoxleyX/LQS.git
     branch = main
     ignore = dirty
 [submodule "mod-priv"]
