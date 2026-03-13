@@ -92,6 +92,11 @@ CZone::CZone(Scheduler& scheduler, ZONEID ZoneID, REGION_TYPE RegionID, CONTINEN
     LoadZoneLines();
     LoadZoneWeather();
 
+    if (scheduler.isTest())
+    {
+        return;
+    }
+
     // This must run continually, regardless of if the zone is awake
     spawnHandlerTimerToken_ = scheduler.intervalOnMain(
         kSpawnHandlerInterval,
@@ -967,6 +972,11 @@ void CZone::ForEachAllyInstance(CBaseEntity* PEntity, const std::function<void(C
 void CZone::createZoneTimers()
 {
     TracyZoneScoped;
+
+    if (scheduler_.isTest())
+    {
+        return;
+    }
 
     zoneTimerToken_ = scheduler_.intervalOnMain(
         kLogicUpdateInterval,

@@ -51,9 +51,3 @@ auto WorldApplication::createEngine() -> std::unique_ptr<Engine>
 {
     return std::make_unique<WorldEngine>(scheduler_);
 }
-
-void WorldApplication::requestExit()
-{
-    Application::requestExit();
-    scheduler_.stop();
-}

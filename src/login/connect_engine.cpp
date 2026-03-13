@@ -47,7 +47,7 @@ constexpr auto kSessionCleanTime = 15min;
 
 ConnectEngine::ConnectEngine(Scheduler& scheduler)
 : scheduler_(scheduler)
-, zmqDealerWrapper_(getZMQEndpointString(), getZMQRoutingId())
+, zmqDealerWrapper_(scheduler_, getZMQEndpointString(), getZMQRoutingId())
 , m_authHandler(scheduler_, settings::get<uint32>("network.LOGIN_AUTH_PORT"), zmqDealerWrapper_)
 , m_dataHandler(scheduler_, settings::get<uint32>("network.LOGIN_DATA_PORT"), zmqDealerWrapper_)
 , m_viewHandler(scheduler_, settings::get<uint32>("network.LOGIN_VIEW_PORT"), zmqDealerWrapper_)

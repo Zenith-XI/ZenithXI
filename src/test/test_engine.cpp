@@ -282,7 +282,17 @@ auto TestEngine::executeTestCase(const TestCase& testCase, const HookContext& co
     {
         if (const auto& testFunc = testCase.testFunc())
         {
-            if (auto testResult = (*testFunc)(); !testResult.valid())
+            sol::function_result testResult;
+            try
+            {
+                testResult = (*testFunc)(); 
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+            }
+            
+            if (!testResult.valid())
             {
                 sol::error err = testResult;
                 errorMessage   = err.what();

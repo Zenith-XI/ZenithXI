@@ -249,15 +249,16 @@ public:
 
     void stop()
     {
-        bool expected = false;
-        if (!closeRequested_.compare_exchange_strong(expected, true))
-        {
-            return;
-        }
+        closeRequested_ = true;
 
+        // NOTE: The order of operations is important here
+
+        mainContext_.stop();
         mainGuard_.reset();
+
         workerPool_.stop();
         workerPool_.join();
+
     }
 
     [[nodiscard]] auto closeRequested() const noexcept -> bool
@@ -499,6 +500,10 @@ public:
             throw std::runtime_error("blockOnMain called from non-main thread");
         }
 
+        // local work guard ensures the context keeps pumping even if
+        // the current task is the only thing left and it is suspended.
+        auto work = asio::make_work_guard(mainContext_);
+
         using ResultType      = typename detail::AwaitableResult<std::decay_t<T>>::type;
         constexpr bool IsVoid = std::is_void_v<ResultType>;
         using StoredType      = std::conditional_t<IsVoid, char, ResultType>;
@@ -526,10 +531,23 @@ public:
             std::forward<T>(task),
             asio::bind_allocator(asio::recycling_allocator<void>(), completion));
 
-        mainContext_.restart();
-        while (!done && !mainContext_.stopped())
+        // Reset stopped state in case a previous run/nested run stopped the context
+        if (mainContext_.stopped())
         {
-            mainContext_.poll_one();
+            mainContext_.restart();
+        }
+
+        // Pumping loop
+        while (!done)
+        {
+            // run_one() blocks until one handler is executed.
+            // If it returns 0, no work is currently available.
+            if (mainContext_.run_one() == 0 && !done)
+            {
+                // This prevents a deadlock if the coroutine is waiting on something
+                // that will never happen.
+                throw std::runtime_error("Main context stalled in blockOnMain: No work remaining.");
+            }
         }
 
         if (exceptPtr)
@@ -554,9 +572,20 @@ public:
         return mainContext_;
     }
 
+    void setIsTest(bool isTest) noexcept
+    {
+        isTest_ = isTest;
+    }
+
+    [[nodiscard]] auto isTest() const noexcept -> bool
+    {
+        return isTest_;
+    }
+
 private:
     std::thread::id mainThreadId_{ std::this_thread::get_id() };
 
+    std::atomic<bool> isTest_{ false };
     std::atomic<bool> closeRequested_{ false };
 
     asio::io_context                                           mainContext_;

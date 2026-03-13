@@ -239,17 +239,17 @@ auto MapEngine::init() -> Task<void>
     {
         mapCleanupToken_        = scheduler_.intervalOnMain(kSessionCleanupInterval, std::bind(&MapEngine::sessionCleanup, this));
         mapGarbageCollectToken_ = scheduler_.intervalOnMain(kGarbageCollectionInterval, std::bind(&MapEngine::garbageCollect, this));
+
+        timeServerToken_ = scheduler_.intervalOnMain(
+            kTimeServerTickInterval,
+            [this]() -> Task<void>
+            {
+                co_await time_server(scheduler_);
+            });
+    
+        persistVolatileServerVarsToken_ = scheduler_.intervalOnMain(kPersistVolatileServerVarsInterval, serverutils::PersistVolatileServerVars);
+        pumpIPCToken_                   = scheduler_.intervalOnMain(kIPCPumpInterval, message::handle_incoming);
     }
-
-    timeServerToken_ = scheduler_.intervalOnMain(
-        kTimeServerTickInterval,
-        [this]() -> Task<void>
-        {
-            co_await time_server(scheduler_);
-        });
-
-    persistVolatileServerVarsToken_ = scheduler_.intervalOnMain(kPersistVolatileServerVarsInterval, serverutils::PersistVolatileServerVars);
-    pumpIPCToken_                   = scheduler_.intervalOnMain(kIPCPumpInterval, message::handle_incoming);
 
     zoneutils::TOTDChange(vanadiel_time::get_totd()); // This tells the zones to spawn stuff based on time of day conditions (such as undead at night)
 

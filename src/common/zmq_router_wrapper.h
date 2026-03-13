@@ -21,8 +21,9 @@
 
 #pragma once
 
-#include "common/ipp.h"
-#include "common/logging.h"
+#include <common/ipp.h>
+#include <common/logging.h>
+#include <common/scheduler.h>
 
 #include <atomic>
 #include <memory>
@@ -43,11 +44,11 @@ class ZMQRouterWrapper final
     class ZMQWorker final
     {
     public:
-        ZMQWorker(std::atomic<bool>&                       requestExit,
+        ZMQWorker(Scheduler&                               scheduler,
                   moodycamel::ConcurrentQueue<IPPMessage>& incomingQueue,
                   moodycamel::ConcurrentQueue<IPPMessage>& outgoingQueue,
                   const std::string&                       endpoint)
-        : requestExit_(requestExit)
+        : scheduler_(scheduler)
         , incomingQueue_(incomingQueue)
         , outgoingQueue_(outgoingQueue)
         , zmqContext_(1)
@@ -76,14 +77,14 @@ class ZMQRouterWrapper final
     private:
         void listen()
         {
-            while (!requestExit_)
+            while (scheduler_.closeRequested())
             {
                 // Since we are a zmq::socket_type::router, we expect a multipart message:
                 // [routing id (IPP), message]
                 std::array<zmq::message_t, 2> msgs;
                 try
                 {
-                    if (!zmq::recv_multipart_n(zmqSocket_, msgs.data(), msgs.size(), zmq::recv_flags::none))
+                    if (!zmq::recv_multipart_n(zmqSocket_, msgs.data(), msgs.size(), zmq::recv_flags::dontwait))
                     {
                         IPPMessage msg;
                         while (outgoingQueue_.try_dequeue(msg))
@@ -91,7 +92,7 @@ class ZMQRouterWrapper final
                             // We send the same way as we receive: [routing id (IPP), message]
                             msgs[0] = msg.ipp.toZMQMessage();
                             msgs[1] = zmq::message_t(msg.payload);
-                            zmq::send_multipart(zmqSocket_, msgs, zmq::send_flags::none);
+                            zmq::send_multipart(zmqSocket_, msgs, zmq::send_flags::dontwait);
                         }
                         continue;
                     }
@@ -123,7 +124,7 @@ class ZMQRouterWrapper final
         }
 
     private:
-        std::atomic<bool>& requestExit_;
+        Scheduler& scheduler_;
 
         moodycamel::ConcurrentQueue<IPPMessage>& incomingQueue_;
         moodycamel::ConcurrentQueue<IPPMessage>& outgoingQueue_;
@@ -133,20 +134,19 @@ class ZMQRouterWrapper final
     };
 
 public:
-    ZMQRouterWrapper(const std::string& endpoint)
-    : requestExit_(false)
+    ZMQRouterWrapper(Scheduler& scheduler, const std::string& endpoint)
+    : scheduler_(scheduler)
     , thread_(
           [this, endpoint]()
           {
               TracySetThreadName("ZMQ Router");
-              ZMQWorker worker(requestExit_, incomingQueue_, outgoingQueue_, endpoint);
+              ZMQWorker worker(scheduler_, incomingQueue_, outgoingQueue_, endpoint);
           })
     {
     }
 
     ~ZMQRouterWrapper()
     {
-        requestExit_ = true;
         thread_.join();
     }
 
@@ -154,6 +154,6 @@ public:
     moodycamel::ConcurrentQueue<IPPMessage> outgoingQueue_;
 
 private:
-    std::atomic<bool> requestExit_;
-    std::jthread      thread_;
+    Scheduler&   scheduler_;
+    std::jthread thread_;
 };

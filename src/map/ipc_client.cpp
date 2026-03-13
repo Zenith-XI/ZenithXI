@@ -73,7 +73,7 @@ void message::handle_incoming()
 
 IPCClient::IPCClient(MapNetworking& networking)
 : networking_(networking)
-, zmqDealerWrapper_(getZMQEndpointString(), getZMQRoutingId())
+, zmqDealerWrapper_(networking_.scheduler(), getZMQEndpointString(), getZMQRoutingId())
 {
     TracyZoneScoped;
 }

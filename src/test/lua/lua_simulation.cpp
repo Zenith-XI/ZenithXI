@@ -597,7 +597,7 @@ auto CLuaSimulation::getSpawnSlot(const ZONEID zoneId, const uint32 slotId) cons
     {
         if (mob)
         {
-            result[i] = CLuaTestEntity(mob);
+            result[i] = CLuaTestEntity(engine_->scheduler(), mob);
         }
 
         ++i;

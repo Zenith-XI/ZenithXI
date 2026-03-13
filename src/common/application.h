@@ -83,12 +83,12 @@ public:
     // Runtime
     //
 
-    auto         isRunning() const -> bool;
-    virtual void requestExit();
-
     // Is expected to block until requestExit() is called and/or isRunning() returns false
-    virtual void run();
+    void run();
+    void requestExit();
+    auto closeRequested() const -> bool;
 
+    auto isRunning() const -> bool;
     auto isRunningInCI() const -> bool;
 
     //

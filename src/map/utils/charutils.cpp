@@ -947,6 +947,8 @@ auto LoadChar(Scheduler& scheduler, const uint32 charId) -> std::unique_ptr<CCha
     PChar->UpdateHealth();
 
     // Lazy loading: ensure initial zone is loaded synchronously before OnZoneIn
+    // TODO: Hoist his block out of LoadChar() so we're guaranteeing that a char's zone exists
+    //     : before we try to put them in it.
     if (zoneutils::IsLazyLoadingEnabled() && !zoneutils::GetZone(PChar->loc.destination))
     {
         // TODO: Remove this usage of blockOnMain, it's here to help with xi_test

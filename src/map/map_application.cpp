@@ -101,12 +101,6 @@ void MapApplication::registerCommands(ConsoleService& console)
     console.registerCommand("backtrace", "Print backtrace", std::bind(&MapEngine::onBacktrace, mapEngine, std::placeholders::_1));
 }
 
-void MapApplication::requestExit()
-{
-    Application::requestExit();
-    scheduler_.stop();
-}
-
 void MapApplication::run()
 {
     engine_ = createEngine();

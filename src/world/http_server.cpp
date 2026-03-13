@@ -36,6 +36,11 @@ HTTPServer::HTTPServer(Scheduler& scheduler)
 : scheduler_(scheduler)
 , apiDataCache_(APIDataCache{})
 {
+    if (scheduler.isTest())
+    {
+        return;
+    }
+
     if (!settings::get<bool>("network.ENABLE_HTTP"))
     {
         return;

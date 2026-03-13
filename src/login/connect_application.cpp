@@ -69,9 +69,3 @@ void ConnectApplication::registerCommands(ConsoleService& console)
             ShowInfo("Serving %u IP addresses with %u accounts", uniqueIPs, uniqueAccounts);
         });
 }
-
-void ConnectApplication::requestExit()
-{
-    Application::requestExit();
-    scheduler_.stop();
-}

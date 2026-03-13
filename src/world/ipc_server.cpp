@@ -45,7 +45,7 @@ auto getZMQEndpointString() -> std::string
 
 IPCServer::IPCServer(WorldEngine& worldServer)
 : worldServer_(worldServer)
-, zmqRouterWrapper_(getZMQEndpointString())
+, zmqRouterWrapper_(worldServer_.scheduler_, getZMQEndpointString())
 {
     TracyZoneScoped;
 }

@@ -28,6 +28,7 @@
 #include "lua/lua_test_entity.h"
 #include "map/lua/lua_baseentity.h"
 #include "map/utils/zoneutils.h"
+#include "map/map_engine.h"
 #include "map/zone.h"
 #include "test_char.h"
 #include "test_common.h"
@@ -61,7 +62,7 @@ auto CLuaClientEntityPairEntities::get(const sol::object& entityQuery) const -> 
                 return std::nullopt;
             }
 
-            return CLuaTestEntity(entity);
+            return CLuaTestEntity(parent_->engine()->scheduler(), entity);
         }
         case sol::type::string:
         {
@@ -83,7 +84,7 @@ auto CLuaClientEntityPairEntities::get(const sol::object& entityQuery) const -> 
                 return std::nullopt;
             }
 
-            return CLuaTestEntity(results[0]);
+            return CLuaTestEntity(parent_->engine()->scheduler(), results[0]);
         }
         case sol::type::userdata:
         {
