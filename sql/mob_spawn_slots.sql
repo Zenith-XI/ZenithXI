@@ -1224,6 +1224,12 @@ INSERT INTO `mob_spawn_slots` VALUES (196,26,0);
 INSERT INTO `mob_spawn_slots` VALUES (196,27,0);
 INSERT INTO `mob_spawn_slots` VALUES (196,28,0);
 
+-- Crawler's Nest
+INSERT INTO `mob_spawn_slots` VALUES (197,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (197,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (197,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (197,4,0);
+
 -- Fei'Yin
 INSERT INTO `mob_spawn_slots` VALUES (204,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (204,2,0);
