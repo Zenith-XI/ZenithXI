@@ -1069,6 +1069,10 @@ INSERT INTO `mob_spawn_slots` VALUES (166,6,0);
 INSERT INTO `mob_spawn_slots` VALUES (166,7,0);
 INSERT INTO `mob_spawn_slots` VALUES (166,8,0);
 
+-- Bostaunieux Oubliette
+INSERT INTO `mob_spawn_slots` VALUES (167,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (167,2,0);
+
 -- Korroloka Tunnel
 INSERT INTO `mob_spawn_slots` VALUES (173,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (173,2,0);
