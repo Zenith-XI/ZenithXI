@@ -15,6 +15,23 @@ end
 spellObject.onMobSpawn = function(mob)
     xi.trust.message(mob, xi.trust.messageOffset.SPAWN)
 
+    mob:setMobMod(xi.mobMod.CAN_SHIELD_BLOCK, 1)
+
+    local lvl = mob:getMainLvl()
+    local shieldMasteryPower = 0
+
+    if lvl >= 96 then
+        shieldMasteryPower = 40
+    elseif lvl >= 75 then
+        shieldMasteryPower = 30
+    elseif lvl >= 50 then
+        shieldMasteryPower = 20
+    elseif lvl >= 25 then
+        shieldMasteryPower = 10
+    end
+
+    mob:setMod(xi.mod.SHIELD_MASTERY_TP, shieldMasteryPower)
+    mob:setMod(xi.mod.SHIELDBLOCKRATE, 45) -- 45% base block rate
     mob:addMod(xi.mod.FASTCAST, 30)
     mob:addMod(xi.mod.CURE_POTENCY, 50)
     mob:addMod(xi.mod.DMG, -10)
