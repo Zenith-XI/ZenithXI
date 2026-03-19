@@ -104,7 +104,7 @@ local packets =
             trg_sum = 1,
             res_sum = 0,
             cmd_no  = xi.action.category.MOBABILITY_FINISH,
-            cmd_arg = xi.jobSpecialAbility.PERFECT_DODGE,
+            cmd_arg = xi.jsa.PERFECT_DODGE,
             info    = 0,
             target  =
             {
