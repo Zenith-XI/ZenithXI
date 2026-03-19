@@ -67,7 +67,7 @@ INSERT INTO `augments` VALUES (38,0,31,-1,0,0); -- Mag.Evasion-1
 INSERT INTO `augments` VALUES (39,0,27,1,0,0); -- Enmity+1
 INSERT INTO `augments` VALUES (40,0,27,-1,0,0); -- Enmity-1
 INSERT INTO `augments` VALUES (41,0,165,1,0,0); -- Crit.hit rate+1%
-INSERT INTO `augments` VALUES (42,0,166,-1,0,0); -- Enemy crit. hit rate-1%
+INSERT INTO `augments` VALUES (42,0,166,1,0,0); -- Enemy crit. hit rate-1%
 INSERT INTO `augments` VALUES (43,0,391,1,0,0); -- Charm+1 Could not determine retail AUGMENT effect. Duration? Chance to land charm? Just set as chance for now.
 INSERT INTO `augments` VALUES (44,0,73,1,0,0); -- Store TP+1 Subtle Blow+1
 INSERT INTO `augments` VALUES (44,0,289,1,0,0); -- Cont.
@@ -897,33 +897,33 @@ INSERT INTO `augments` VALUES (739,0,0,0,0,0);
 -- End unused block
 
 INSERT INTO `augments` VALUES (740,0,287,1,0,0); -- DMG:+1
-insert into `augments` values (741,0,0,0,0,0); -- Dmg:+33   Needs to work in either hand,whichever one the weapon is equipped in.
-insert into `augments` values (742,0,0,0,0,0); -- Dmg:+65   Ranged weapons use diff AugID (starts at 746) and diff ModID.
-insert into `augments` values (743,0,0,0,0,0); -- Dmg:+97    (melee,not ranged)
-insert into `augments` values (744,0,0,0,0,0); -- Dmg:-1    (melee,not ranged)
-insert into `augments` values (745,0,0,0,0,0); -- Dmg:-33    (melee,not ranged)
-insert into `augments` values (746,0,287,1,0,0); -- Dmg:+1    (ranged,not melee)
-insert into `augments` values (747,0,0,0,0,0); -- Dmg:+33    (ranged,not melee)
-insert into `augments` values (748,0,0,0,0,0); -- Dmg:+65    (ranged,not melee)
-insert into `augments` values (749,0,0,0,0,0); -- Dmg:+97    (ranged,not melee)
-insert into `augments` values (750,0,0,0,0,0); -- Dmg:-1    (ranged,not melee)
-insert into `augments` values (751,0,0,0,0,0); -- Dmg:-33    (ranged,not melee)
-insert into `augments` values (752,0,0,0,0,0); -- Delay:+1    (melee,not ranged)
-insert into `augments` values (753,0,0,0,0,0); -- Delay:+33    (melee,not ranged)
-insert into `augments` values (754,0,0,0,0,0); -- Delay:+65    (melee,not ranged)
-insert into `augments` values (755,0,0,0,0,0); -- Delay:+97    (melee,not ranged)
-insert into `augments` values (756,0,0,0,0,0); -- Delay:-1    (melee,not ranged)
-insert into `augments` values (757,0,0,0,0,0); -- Delay:-33    (melee,not ranged)
-insert into `augments` values (758,0,0,0,0,0); -- Delay:-65    (melee,not ranged)
-insert into `augments` values (759,0,0,0,0,0); -- Delay:-97    (melee,not ranged)
-insert into `augments` values (760,0,0,0,0,0); -- Delay:+1    (ranged,not melee)
-insert into `augments` values (761,0,0,0,0,0); -- Delay:+33    (ranged,not melee)
-insert into `augments` values (762,0,0,0,0,0); -- Delay:+65    (ranged,not melee)
-insert into `augments` values (763,0,0,0,0,0); -- Delay:+97    (ranged,not melee)
-insert into `augments` values (764,0,0,0,0,0); -- Delay:-1    (ranged,not melee)
-insert into `augments` values (765,0,0,0,0,0); -- Delay:-33    (ranged,not melee)
-insert into `augments` values (766,0,0,0,0,0); -- Delay:-65    (ranged,not melee)
-insert into `augments` values (767,0,0,0,0,0); -- Delay:-97    (ranged,not melee)
+INSERT INTO `augments` VALUES (741,0,287,33,0,0); -- Dmg:+33   Needs to work in either hand,whichever one the weapon is equipped in.
+INSERT INTO `augments` VALUES (742,0,287,65,0,0); -- Dmg:+65   Ranged weapons use diff AugID (starts at 746) and diff ModID.
+INSERT INTO `augments` VALUES (743,0,287,97,0,0); -- Dmg:+97    (melee,not ranged)
+INSERT INTO `augments` VALUES (744,0,287,-1,0,0); -- Dmg:-1    (melee,not ranged)
+INSERT INTO `augments` VALUES (745,0,287,-33,0,0); -- Dmg:-33    (melee,not ranged)
+INSERT INTO `augments` VALUES (746,0,376,1,0,0); -- Dmg:+1    (ranged,not melee)
+INSERT INTO `augments` VALUES (747,0,376,33,0,0); -- Dmg:+33    (ranged,not melee)
+INSERT INTO `augments` VALUES (748,0,376,65,0,0); -- Dmg:+65    (ranged,not melee)
+INSERT INTO `augments` VALUES (749,0,376,97,0,0); -- Dmg:+97    (ranged,not melee)
+INSERT INTO `augments` VALUES (750,0,376,-1,0,0); -- Dmg:-1    (ranged,not melee)
+INSERT INTO `augments` VALUES (751,0,376,-33,0,0); -- Dmg:-33    (ranged,not melee)
+INSERT INTO `augments` VALUES (752,0,171,1,0,0); -- Delay:+1    (melee,not ranged)
+INSERT INTO `augments` VALUES (753,0,171,33,0,0); -- Delay:+33    (melee,not ranged)
+INSERT INTO `augments` VALUES (754,0,171,65,0,0); -- Delay:+65    (melee,not ranged)
+INSERT INTO `augments` VALUES (755,0,171,97,0,0); -- Delay:+97    (melee,not ranged)
+INSERT INTO `augments` VALUES (756,0,171,-1,0,0); -- Delay:-1    (melee,not ranged)
+INSERT INTO `augments` VALUES (757,0,171,-33,0,0); -- Delay:-33    (melee,not ranged)
+INSERT INTO `augments` VALUES (758,0,171,-65,0,0); -- Delay:-65    (melee,not ranged)
+INSERT INTO `augments` VALUES (759,0,171,-97,0,0); -- Delay:-97    (melee,not ranged)
+INSERT INTO `augments` VALUES (760,0,172,1,0,0); -- Delay:+1    (ranged,not melee)
+INSERT INTO `augments` VALUES (761,0,172,33,0,0); -- Delay:+33    (ranged,not melee)
+INSERT INTO `augments` VALUES (762,0,172,65,0,0); -- Delay:+65    (ranged,not melee)
+INSERT INTO `augments` VALUES (763,0,172,97,0,0); -- Delay:+97    (ranged,not melee)
+INSERT INTO `augments` VALUES (764,0,172,-1,0,0); -- Delay:-1    (ranged,not melee)
+INSERT INTO `augments` VALUES (765,0,172,-33,0,0); -- Delay:-33    (ranged,not melee)
+INSERT INTO `augments` VALUES (766,0,172,-65,0,0); -- Delay:-65    (ranged,not melee)
+INSERT INTO `augments` VALUES (767,0,172,-97,0,0); -- Delay:-97    (ranged,not melee)
 INSERT INTO `augments` VALUES (768,0,15,1,0,0); -- Fire resist+1
 INSERT INTO `augments` VALUES (769,0,16,1,0,0); -- Ice resist+1
 INSERT INTO `augments` VALUES (770,0,17,1,0,0); -- Wind resist+1
@@ -1100,7 +1100,7 @@ INSERT INTO `augments` VALUES (895,0,0,0,0,0);
 INSERT INTO `augments` VALUES (896,0,432,1,0,0); -- Sword Enhancement Spell Damage +1
 INSERT INTO `augments` VALUES (897,0,96,1,0,0); -- Enhances Souleater Effect +1%
 INSERT INTO `augments` VALUES (898,0,0,0,0,0);
-INSERT INTO `augments` VALUES (899,0,0,0,0,0); --  Sword Enhancement spell damage +1% (Percent Damage)
+INSERT INTO `augments` VALUES (899,0,1195,1,0,0); --  Sword Enhancement spell damage +1% (Percent Damage)
 INSERT INTO `augments` VALUES (900,0,0,0,0,0);
 INSERT INTO `augments` VALUES (901,0,0,0,0,0);
 INSERT INTO `augments` VALUES (902,0,0,0,0,0);

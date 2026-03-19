@@ -39,7 +39,6 @@
 #include "states/mobskill_state.h"
 #include "states/petskill_state.h"
 #include "states/range_state.h"
-#include "states/respawn_state.h"
 #include "states/synth_state.h"
 #include "states/trigger_state.h"
 #include "states/weaponskill_state.h"
@@ -432,14 +431,34 @@ void CAIContainer::Tick(timer::time_point _tick)
     {
         Controller->Tick(_tick);
     }
-    CState* top = nullptr;
-    while (!m_stateStack.empty() && (top = m_stateStack.top().get())->DoUpdate(_tick))
+
+    while (!m_stateStack.empty())
     {
-        if (top == GetCurrentState())
+        CState* top = m_stateStack.top().get();
+
+        if (top)
         {
-            auto state = std::move(m_stateStack.top());
-            m_stateStack.pop();
-            state->Cleanup(_tick);
+            // If DoUpdate returns true, the state has signaled it's done
+            // Clean it up.
+            // If the state stack is not empty, the next state will be polled.
+            if (top->DoUpdate(_tick))
+            {
+                // the state may change (and get cleaned up) during DoUpdate as a consequence of things it does
+                // Only clean up the state if the current state is still the same one we ran DoUpdate on
+                if (top == GetCurrentState())
+                {
+                    top->Cleanup(_tick);
+                    m_stateStack.pop();
+                }
+            }
+            else // The state isn't done yet, preserve the state stack and bail out
+            {
+                break;
+            }
+        }
+        else // This should be dead code, but just in case...
+        {
+            break;
         }
     }
 
@@ -538,18 +557,9 @@ void CAIContainer::checkQueueImmediately()
 
 bool CAIContainer::Internal_Despawn(bool instantDespawn)
 {
-    if (!IsCurrentState<CDespawnState>() && !IsCurrentState<CRespawnState>())
+    if (!IsCurrentState<CDespawnState>())
     {
         return ForceChangeState<CDespawnState>(PEntity, instantDespawn);
-    }
-    return false;
-}
-
-bool CAIContainer::Internal_Respawn(timer::duration _duration)
-{
-    if (!IsCurrentState<CRespawnState>())
-    {
-        return ForceChangeState<CRespawnState>(PEntity, _duration);
     }
     return false;
 }

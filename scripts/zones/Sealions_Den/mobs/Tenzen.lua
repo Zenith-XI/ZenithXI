@@ -152,7 +152,7 @@ entity.onMobEngage = function(mob, target)
     end
 end
 
-entity.onMobMobskillChoose = function(mob, target)
+entity.onMobMobskillChoose = function(mob, target, skillId)
     local form         = mob:getAnimationSub()
     local shouldOisoya = mob:getLocalVar('[Tenzen]ShouldOisoya') == 1
     local skill        = 0
@@ -194,7 +194,7 @@ entity.onMobMobskillChoose = function(mob, target)
     return skill
 end
 
-entity.onMobWeaponSkill = function(target, mob, skill)
+entity.onMobWeaponSkill = function(mob, target, skill, action)
     local skillId = skill:getID()
 
     -- Track last time Tenzen did a mobskill. Dont Meikyo Shisui immediately after.

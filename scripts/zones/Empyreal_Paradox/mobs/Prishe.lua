@@ -53,7 +53,7 @@ local itemActions =
         end,
 
         action = function(mob)
-            mob:addStatusEffect(xi.effect.FOOD, 0, 0, 150, 0, 0, 0, xi.effectSourceType.FOOD, 4511, mob:getID())
+            mob:addStatusEffect(xi.effect.FOOD, { duration = 150, origin = mob, sourceType = xi.effectSourceType.FOOD, sourceTypeParam = 4511 })
             mob:messageText(mob, ID.text.PRISHE_TEXT + 8, false)
             mob:useMobAbility(xi.mobSkill.ITEM_1_PRISHE)
         end,
@@ -66,7 +66,7 @@ local itemActions =
         end,
 
         action = function(mob)
-            mob:addStatusEffect(xi.effect.PHYSICAL_SHIELD, 1, 0, 30)
+            mob:addStatusEffect(xi.effect.PHYSICAL_SHIELD, { power = 1, duration = 30, origin = mob })
             mob:messageText(mob, ID.text.PRISHE_TEXT + 10, false)
             mob:useMobAbility(xi.mobSkill.ITEM_2_PRISHE)
         end,
@@ -79,7 +79,7 @@ local itemActions =
         end,
 
         action = function(mob)
-            mob:addStatusEffect(xi.effect.MAGIC_SHIELD, 1, 0, 30)
+            mob:addStatusEffect(xi.effect.MAGIC_SHIELD, { power = 1, duration = 30, origin = mob })
             mob:messageText(mob, ID.text.PRISHE_TEXT + 11, false)
             mob:useMobAbility(xi.mobSkill.ITEM_2_PRISHE)
         end,
@@ -153,10 +153,10 @@ entity.onMobSpawn = function(mob)
         end
     end)
 
-    mob:addListener('WEAPONSKILL_STATE_EXIT', 'PRISHE_DAEDALUS', function(mobArg, skillID)
+    mob:addListener('WEAPONSKILL_STATE_EXIT', 'PRISHE_DAEDALUS', function(mobArg, skillId, wasExecuted)
         -- Handle Daedulus Wing TP restoration
         if
-            skillID == xi.mobSkill.ITEM_1_PRISHE and
+            skillId == xi.mobSkill.ITEM_1_PRISHE and
             mobArg:getLocalVar('daedulus') == 1
         then
             mobArg:setTP(3000)
@@ -164,7 +164,7 @@ entity.onMobSpawn = function(mob)
         end
 
         -- Reset animation sub after Nullifying Dropkick completes
-        if skillID == xi.mobSkill.NULLIFYING_DROPKICK_1 then
+        if skillId == xi.mobSkill.NULLIFYING_DROPKICK_1 then
             local target = mobArg:getTarget()
             if target then
                 target:setAnimationSub(0)
@@ -229,7 +229,7 @@ entity.onMobFight = function(mob, target)
     end
 end
 
-entity.onMobMobskillChoose = function(mob, target)
+entity.onMobMobskillChoose = function(mob, target, skillId)
     if
         target:hasStatusEffect(xi.effect.PHYSICAL_SHIELD) or
         target:hasStatusEffect(xi.effect.MAGIC_SHIELD)

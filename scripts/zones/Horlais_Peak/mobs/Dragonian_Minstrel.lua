@@ -25,7 +25,7 @@ entity.onMobSpawn = function(mob)
     mob:setMod(xi.mod.DOUBLE_ATTACK, 50)
 end
 
-entity.onMobMobskillChoose = function(mob, target)
+entity.onMobMobskillChoose = function(mob, target, skillId)
     local skills =
     {
         xi.mobSkill.VOIDSONG_1,
@@ -45,7 +45,7 @@ entity.onMobMobskillChoose = function(mob, target)
     return skills[math.random(1, #skills)]
 end
 
-entity.onMobWeaponSkill = function(target, mob, skill)
+entity.onMobWeaponSkill = function(mob, target, skill, action)
     local skillID = skill:getID()
 
     if skillID == xi.mobSkill.SOUL_VOICE_1 then

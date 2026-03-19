@@ -17,7 +17,9 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
     return 0
 end
 
-mobskillObject.onMobWeaponSkill = function(target, mob, skill)
+mobskillObject.onMobWeaponSkill = function(mob, target, skill, action)
+    -- TODO: Rework this to use one of the mobMove functions at some point.
+    -- Maybe mobBreathMove() with support for fTP ranges.
     if mob:getPool() == xi.mobPool.THRONE_ROOM_VOLKER then -- Volker@Throne_Room only
         target:showText(mob, zones[xi.zone.THRONE_ROOM].text.RETURN_TO_THE_DARKNESS)
     end
@@ -34,7 +36,7 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
     dmg = math.floor(dmg * 2.5)
 
     -- Believe it or not, it's been proven to be breath damage.
-    dmg = math.floor(dmg * xi.spells.damage.calculateDamageAdjustment(target, false, false, false, true))
+    dmg = math.floor(dmg * xi.combat.damage.calculateDamageAdjustment(target, false, false, false, true))
     dmg = math.floor(dmg * xi.spells.damage.calculateAbsorption(target, xi.element.NONE, false))
     dmg = math.floor(dmg * xi.spells.damage.calculateNullification(target, xi.element.NONE, false, true))
     dmg = math.floor(target:handleSevereDamage(dmg, false))

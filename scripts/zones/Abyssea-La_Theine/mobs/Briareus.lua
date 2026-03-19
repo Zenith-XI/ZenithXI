@@ -47,7 +47,7 @@ entity.onMobFight = function(mob, target)
     end
 end
 
-entity.onMobMobskillChoose = function(mob, target)
+entity.onMobMobskillChoose = function(mob, target, skillId)
     local cueMove = mob:getLocalVar('CUE_MOVE')
     mob:setLocalVar('CUE_MOVE', 0)
 
@@ -60,7 +60,9 @@ entity.onMobMobskillChoose = function(mob, target)
 end
 
 entity.onMobDeath = function(mob, player, optParams)
-    player:addTitle(xi.title.BRIAREUS_FELLER)
+    if player then
+        player:addTitle(xi.title.BRIAREUS_FELLER)
+    end
 end
 
 return entity

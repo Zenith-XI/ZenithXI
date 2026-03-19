@@ -162,7 +162,7 @@ xi.additionalEffect.calcPhysDamage = function(attacker, defender, item, params)
         return params.damage * -1
     end
 
-    params.damage = params.damage * xi.spells.damage.calculateDamageAdjustment(defender, params.isPhysical, false, params.isRanged, params.isBreath)
+    params.damage = params.damage * xi.combat.damage.calculateDamageAdjustment(defender, params.isPhysical, false, params.isRanged, params.isBreath)
 
     -- multiplicative
     switch (params.damageType) : caseof
@@ -281,7 +281,7 @@ xi.additionalEffect.procFunctions[xi.additionalEffect.procType.DEBUFF] = functio
     local tick     = xi.additionalEffect.statusAttack(effectId, target)
     local duration = math.floor(params.duration * resistRate)
 
-    target:addStatusEffect(effectId, power, tick, duration)
+    target:addStatusEffect(effectId, { power = power, duration = duration, origin = actor, tick = tick })
 
     return subEffect, xi.msg.basic.ADD_EFFECT_STATUS_2, effectId
 end
@@ -442,12 +442,12 @@ xi.additionalEffect.procFunctions[xi.additionalEffect.procType.SELF_BUFF] =  fun
         then
             return 0, 0, 0
         else
-            attacker:addStatusEffect(xi.effect.BLINK, params.power, 0, params.duration)
+            attacker:addStatusEffect(xi.effect.BLINK, { power = params.power, duration = params.duration, origin = attacker })
             msgID    = xi.msg.basic.ADD_EFFECT_SELFBUFF
             msgParam = xi.effect.BLINK
         end
     elseif params.addStatus == xi.effect.HASTE then
-        attacker:addStatusEffect(xi.effect.HASTE, params.power, 0, params.duration, 0, 0)
+        attacker:addStatusEffect(xi.effect.HASTE, { power = params.power, duration = params.duration, origin = attacker })
         -- Todo: verify power/duration/tier/overwrite etc
         msgID    = xi.msg.basic.ADD_EFFECT_SELFBUFF
         msgParam = xi.effect.HASTE

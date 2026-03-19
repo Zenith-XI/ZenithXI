@@ -209,7 +209,7 @@ local function calculateNukeWallFactor(target, spellElement, finalDamage)
     local finalPotency = utils.clamp(math.floor(4000 * finalDamage / damageCap) + potency, 0, 4000)
 
     -- Renew status effect without messages.
-    target:addStatusEffectEx(xi.effect.NUKE_WALL, 0, finalPotency, 0, 5, 0, spellElement)
+    target:addStatusEffect(xi.effect.NUKE_WALL, { power = finalPotency, duration = 5, origin = target, icon = 0, subPower = spellElement })
 
     -----------------------------------
     -- We return JUST the factor based on previous nuke. This nuke only affects the next one.
@@ -286,7 +286,7 @@ xi.spells.blue.usePhysicalSpell = function(caster, target, spell, params)
     params.tphitslanded = 0
 
     -- params.critchance will only be non-nil if base critchance is passed from spell lua
-    local nativecrit  = xi.combat.physical.calculateSwingCriticalRate(caster, target, 0, false)
+    local nativecrit  = xi.combat.physical.calculateSwingCriticalRate(caster, target, 0, xi.slot.MAIN)
     params.critchance = params.critchance == nil and 0 or utils.clamp(params.critchance / 100 + nativecrit, 0.05, 0.95)
 
     local cratio  = calculatecRatio(params.offcratiomod / target:getStat(xi.mod.DEF), caster:getMainLvl(), target:getMainLvl())
@@ -359,7 +359,7 @@ xi.spells.blue.usePhysicalSpell = function(caster, target, spell, params)
         hitsdone = hitsdone + 1
     end
 
-    finaldmg = math.floor(finaldmg * xi.spells.damage.calculateDamageAdjustment(target, true, false, false, false))
+    finaldmg = math.floor(finaldmg * xi.combat.damage.calculateDamageAdjustment(target, true, false, false, false))
 
     if finaldmg <= 0 then
         spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
@@ -412,16 +412,16 @@ xi.spells.blue.useMagicalSpell = function(caster, target, spell, params)
     local spellElement       = spell:getElement()
     local spellGroup         = spell:getSpellGroup()
     local skillType          = xi.skill.BLUE_MAGIC
-    local _, skillchainCount = xi.magicburst.formMagicBurst(spellElement, target) -- External function. Not present in magic.lua.
+    local _, skillchainCount = xi.magicburst.formMagicBurst(target, spellElement) -- External function. Not present in magic.lua.
 
     -- Final D value
     local finalDamage    = (initialD + wsc) * (params.multiplier + azureBonus + correlationMultiplier) + statBonus
 
     finalDamage = math.floor(finalDamage * xi.combat.magicHitRate.calculateResistRate(caster, target, spellGroup, skillType, 0, spellElement, params.attribute, 0, 0))
     finalDamage = math.floor(finalDamage * xi.spells.damage.calculateElementalStaffBonus(caster, spellElement))
-    finalDamage = math.floor(finalDamage * xi.spells.damage.calculateSDT(target, spellElement))
+    finalDamage = math.floor(finalDamage * xi.combat.damage.magicalElementSDT(target, spellElement))
     finalDamage = math.floor(finalDamage * xi.spells.damage.calculateDayAndWeather(caster, spellElement, false))
-    finalDamage = math.floor(finalDamage * xi.spells.damage.calculateMagicBonusDiff(caster, target, spellId, skillType, spellElement))
+    finalDamage = math.floor(finalDamage * xi.spells.damage.calculateMagicBonusDiff(caster, target, spellId, skillType, spellElement, 0))
 
     if
         caster:hasStatusEffect(xi.effect.BURST_AFFINITY) or
@@ -472,13 +472,13 @@ xi.spells.blue.useDrainSpell = function(caster, target, spell, params, damageCap
     local spellElement       = spell:getElement()
     local spellGroup         = spell:getSpellGroup()
     local skillType          = xi.skill.BLUE_MAGIC
-    local _, skillchainCount = xi.magicburst.formMagicBurst(spellElement, target) -- External function. Not present in magic.lua.
+    local _, skillchainCount = xi.magicburst.formMagicBurst(target, spellElement) -- External function. Not present in magic.lua.
 
     finalDamage = math.floor(finalDamage * xi.combat.magicHitRate.calculateResistRate(caster, target, spellGroup, skillType, 0, spellElement, params.attribute, 0, 0))
     finalDamage = math.floor(finalDamage * xi.spells.damage.calculateElementalStaffBonus(caster, spellElement))
-    finalDamage = math.floor(finalDamage * xi.spells.damage.calculateSDT(target, spellElement))
+    finalDamage = math.floor(finalDamage * xi.combat.damage.magicalElementSDT(target, spellElement))
     finalDamage = math.floor(finalDamage * xi.spells.damage.calculateDayAndWeather(caster, spellElement, false))
-    finalDamage = math.floor(finalDamage * xi.spells.damage.calculateMagicBonusDiff(caster, target, spellId, skillType, spellElement))
+    finalDamage = math.floor(finalDamage * xi.spells.damage.calculateMagicBonusDiff(caster, target, spellId, skillType, spellElement, 0))
 
     if
         caster:hasStatusEffect(xi.effect.BURST_AFFINITY) or
@@ -497,7 +497,7 @@ xi.spells.blue.useDrainSpell = function(caster, target, spell, params, damageCap
     end
 
     finalDamage = math.floor(finalDamage * xi.spells.damage.calculateEbullienceMultiplier(caster, spellGroup))
-    finalDamage = math.floor(finalDamage * xi.spells.damage.calculateDamageAdjustment(target, false, true, false, false))
+    finalDamage = math.floor(finalDamage * xi.combat.damage.calculateDamageAdjustment(target, false, true, false, false))
     finalDamage = math.floor(finalDamage * xi.settings.main.BLUE_POWER)
 
     -- MP drain
@@ -559,14 +559,14 @@ xi.spells.blue.useBreathSpell = function(caster, target, spell, params)
     local breathSDT                   = 1 + caster:getMod(xi.mod.BREATH_DMG_DEALT) / 100
     local absorb                      = xi.spells.damage.calculateAbsorption(target, spellElement, false)
     local nullify                     = xi.spells.damage.calculateNullification(target, spellElement, false, true)
-    local targetMagicDamageAdjustment = xi.spells.damage.calculateDamageAdjustment(target, false, false, false, true)
+    local targetMagicDamageAdjustment = xi.combat.damage.calculateDamageAdjustment(target, false, false, false, true)
     local elementalStaffBonus         = xi.spells.damage.calculateElementalStaffBonus(caster, spellElement)
     local elementalAffinityBonus      = xi.spells.damage.calculateElementalAffinityBonus(caster, spellElement)
     local resistTier                  = xi.combat.magicHitRate.calculateResistRate(caster, target, spellFamily, xi.skill.BLUE_MAGIC, 0, spellElement, 0, 0, 0)
     local additionalResistTier        = xi.spells.damage.calculateAdditionalResistTier(caster, target, spellElement)
-    local elementalSDT                = xi.spells.damage.calculateSDT(target, spellElement)
+    local elementalSDT                = xi.combat.damage.magicalElementSDT(target, spellElement)
     local dayAndWeather               = xi.spells.damage.calculateDayAndWeather(caster, spellElement, false)
-    local magicBonusDiff              = xi.spells.damage.calculateMagicBonusDiff(caster, target, spellId, xi.skill.BLUE_MAGIC, spellElement)
+    local magicBonusDiff              = xi.spells.damage.calculateMagicBonusDiff(caster, target, spellId, xi.skill.BLUE_MAGIC, spellElement, 0)
     local skillTypeMultiplier         = xi.spells.damage.calculateSkillTypeMultiplier(xi.skill.BLUE_MAGIC)
     local ninFutaeBonus               = xi.spells.damage.calculateNinFutaeBonus(caster, xi.skill.BLUE_MAGIC)
     local ninjutsuMultiplier          = xi.spells.damage.calculateNinjutsuMultiplier(caster, target, xi.skill.BLUE_MAGIC)
@@ -738,9 +738,9 @@ xi.spells.blue.useEnfeeblingSpell = function(caster, target, spell, params)
         return effect
     end
 
-    if target:addStatusEffect(effect, params.power, params.tick, math.floor(params.duration * resist)) then
+    if target:addStatusEffect(effect, { power = params.power, duration = math.floor(params.duration * resist), origin = caster, tick = params.tick }) then
         -- Add "Magic Burst!" message
-        local _, skillchainCount = xi.magicburst.formMagicBurst(spellElement, target) -- External function. Not present in magic.lua.
+        local _, skillchainCount = xi.magicburst.formMagicBurst(target, spellElement) -- External function. Not present in magic.lua.
 
         if skillchainCount > 0 then
             spell:setMsg(xi.msg.basic.MAGIC_BURST_ENFEEB_IS)
@@ -813,7 +813,7 @@ xi.spells.blue.applyBlueAdditionalEffect = function(caster, target, params, effe
             not xi.data.statusEffect.isTargetResistant(caster, target, effect) and -- Target didn't trigger a job trait resistance.
             not xi.data.statusEffect.isEffectNullified(target, effect, 0)          -- Target doesn't have an status effect that nullifies current. TODO: Tier.
         then
-            target:addStatusEffect(effect, power, tick, math.floor(duration * resist))
+            target:addStatusEffect(effect, { power = power, duration = math.floor(duration * resist), origin = caster, tick = tick })
         end
     end
 end

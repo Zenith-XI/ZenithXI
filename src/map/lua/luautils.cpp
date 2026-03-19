@@ -43,6 +43,7 @@
 #include "lua_trade_container.h"
 #include "lua_treasure_pool.h"
 #include "lua_trigger_area.h"
+#include "lua_weaponskill.h"
 #include "lua_zone.h"
 
 #include "ai/ai_container.h"
@@ -350,6 +351,7 @@ void init(IPP mapIPP, bool isRunningInCI)
         CLuaLootContainer::Register();
         CLuaMobSkill::Register();
         CLuaPetSkill::Register();
+        CLuaWeaponSkill::Register();
         CLuaTriggerArea::Register();
         CLuaSpell::Register();
         CLuaStatusEffect::Register();
@@ -1949,9 +1951,12 @@ void OnZoneIn(CCharEntity* PChar)
     TracyZoneScoped;
 
     CZone* destinationZone = zoneutils::GetZone(PChar->loc.destination);
-    if (!PChar->inMogHouse() && destinationZone == nullptr)
+    if (!destinationZone)
     {
-        ShowWarning("Attempt to Zone In player to invalid/disabled zone %d.", PChar->loc.destination);
+        if (!PChar->inMogHouse())
+        {
+            ShowWarning("Attempt to Zone In player to invalid/disabled zone %d.", PChar->loc.destination);
+        }
         return;
     }
 
@@ -2351,7 +2356,7 @@ void OnAdditionalEffect(CBattleEntity* PAttacker, CBattleEntity* PDefender, acti
     }
 
     Action->additionalEffect = result.get_type(0) == sol::type::number ? result.get<ActionProcAddEffect>(0) : ActionProcAddEffect::None;
-    Action->addEffectMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::NONE;
+    Action->addEffectMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::None;
     Action->addEffectParam   = result.get_type(2) == sol::type::number ? result.get<int32>(2) : 0;
 }
 
@@ -2378,7 +2383,7 @@ void OnSpikesDamage(CBattleEntity* PDefender, CBattleEntity* PAttacker, action_r
     }
 
     Action->spikesEffect  = result.get_type(0) == sol::type::number ? result.get<ActionReactKind>(0) : ActionReactKind::None;
-    Action->spikesMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::NONE;
+    Action->spikesMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::None;
     Action->spikesParam   = result.get_type(2) == sol::type::number ? result.get<int32>(2) : 0;
 }
 
@@ -2407,7 +2412,7 @@ int32 additionalEffectAttack(CBattleEntity* PAttacker, CBattleEntity* PDefender,
     }
 
     Action->additionalEffect = result.get_type(0) == sol::type::number ? result.get<ActionProcAddEffect>(0) : ActionProcAddEffect::None;
-    Action->addEffectMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::NONE;
+    Action->addEffectMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::None;
     Action->addEffectParam   = result.get_type(2) == sol::type::number ? result.get<int32>(2) : 0;
 
     return 0;
@@ -2436,7 +2441,7 @@ int32 OnItemAdditionalEffect(CBattleEntity* PAttacker, CBattleEntity* PDefender,
     }
 
     Action->additionalEffect = result.get_type(0) == sol::type::number ? result.get<ActionProcAddEffect>(0) : ActionProcAddEffect::None;
-    Action->addEffectMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::NONE;
+    Action->addEffectMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::None;
     Action->addEffectParam   = result.get_type(2) == sol::type::number ? result.get<int32>(2) : 0;
 
     return 0;
@@ -2463,7 +2468,7 @@ void additionalEffectSpikes(CBattleEntity* PDefender, CBattleEntity* PAttacker, 
     }
 
     Action->spikesEffect  = result.get_type(0) == sol::type::number ? result.get<ActionReactKind>(0) : ActionReactKind::None;
-    Action->spikesMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::NONE;
+    Action->spikesMessage = result.get_type(1) == sol::type::number ? result.get<MsgBasic>(1) : MsgBasic::None;
     Action->spikesParam   = result.get_type(2) == sol::type::number ? result.get<int32>(2) : 0;
 }
 
@@ -2810,7 +2815,7 @@ void OnSpellPrecast(CBattleEntity* PCaster, CSpell* PSpell)
 {
     TracyZoneScoped;
 
-    if (PCaster->objtype != TYPE_MOB)
+    if (PCaster->objtype == TYPE_PC)
     {
         return;
     }
@@ -2826,6 +2831,30 @@ void OnSpellPrecast(CBattleEntity* PCaster, CSpell* PSpell)
     {
         sol::error err = result;
         ShowError("luautils::onSpellPrecast: %s", err.what());
+        ReportErrorToPlayer(PCaster, err.what());
+    }
+}
+
+void OnSpellCastStart(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell)
+{
+    TracyZoneScoped;
+
+    if (PCaster->objtype == TYPE_PC)
+    {
+        return;
+    }
+
+    sol::function onSpellInterrupted = getEntityCachedFunction(PCaster, "onSpellCastStart");
+    if (!onSpellInterrupted.valid())
+    {
+        return;
+    }
+
+    auto result = onSpellInterrupted(PCaster, PSpell);
+    if (!result.valid())
+    {
+        sol::error err = result;
+        ShowError("luautils::onSpellCastStart: %s", err.what());
         ReportErrorToPlayer(PCaster, err.what());
     }
 }
@@ -3780,7 +3809,7 @@ std::tuple<int32, uint8, uint8> OnUseWeaponSkill(CBattleEntity* PChar, CBaseEnti
     return std::make_tuple(dmg, tpHitsLanded, extraHitsLanded);
 }
 
-uint16 OnMobMobskillChoose(CBattleEntity* PMob, CBattleEntity* PTarget)
+uint16 OnMobMobskillChoose(CBattleEntity* PMob, CBattleEntity* PTarget, uint16 chosenSkillId)
 {
     TracyZoneScoped;
 
@@ -3795,7 +3824,7 @@ uint16 OnMobMobskillChoose(CBattleEntity* PMob, CBattleEntity* PTarget)
         return 0;
     }
 
-    auto result = onMobMobskillChoose(PMob, PTarget);
+    auto result = onMobMobskillChoose(PMob, PTarget, chosenSkillId);
     if (!result.valid())
     {
         sol::error err = result;
@@ -3803,7 +3832,7 @@ uint16 OnMobMobskillChoose(CBattleEntity* PMob, CBattleEntity* PTarget)
         return 0;
     }
 
-    uint16 retVal = result.get_type(0) == sol::type::number ? result.get<uint16>(0) : 0;
+    uint16 retVal = result.get_type(0) == sol::type::number ? result.template get<uint16>(0) : 0;
     if (retVal > 0)
     {
         return retVal;
@@ -3812,7 +3841,7 @@ uint16 OnMobMobskillChoose(CBattleEntity* PMob, CBattleEntity* PTarget)
     return 0;
 }
 
-int32 OnMobWeaponSkill(CBaseEntity* PTarget, CBaseEntity* PMob, CMobSkill* PMobSkill, action_t* action)
+int32 OnMobWeaponSkill(CBaseEntity* PMob, CBaseEntity* PTarget, CMobSkill* PMobSkill, action_t* action)
 {
     TracyZoneScoped;
 
@@ -3824,7 +3853,7 @@ int32 OnMobWeaponSkill(CBaseEntity* PTarget, CBaseEntity* PMob, CMobSkill* PMobS
         auto onMobWeaponSkill = lua["xi"]["zones"][zone]["mobs"][name]["onMobWeaponSkill"];
         if (onMobWeaponSkill.valid())
         {
-            auto result = onMobWeaponSkill(PTarget, PMob, PMobSkill, action);
+            auto result = onMobWeaponSkill(PMob, PTarget, PMobSkill, action);
             if (!result.valid())
             {
                 sol::error err = result;
@@ -3843,7 +3872,7 @@ int32 OnMobWeaponSkill(CBaseEntity* PTarget, CBaseEntity* PMob, CMobSkill* PMobS
         return 0;
     }
 
-    auto result = onMobWeaponSkill(PTarget, PMob, PMobSkill, action);
+    auto result = onMobWeaponSkill(PMob, PTarget, PMobSkill, action);
     if (!result.valid())
     {
         sol::error err = result;
@@ -3906,6 +3935,35 @@ CBattleEntity* OnMobSkillTarget(CBattleEntity* PTarget, CBaseEntity* PMob, CMobS
     }
 
     return PTarget;
+}
+
+std::optional<timer::duration> OnMobSkillReadyTime(CBattleEntity* PTarget, CBaseEntity* PMob, CMobSkill* PMobSkill)
+{
+    TracyZoneScoped;
+
+    auto zone = PMob->loc.zone->getName();
+    auto name = PMob->getName();
+
+    auto onMobSkillReadyTime = lua["xi"]["zones"][zone]["mobs"][name]["onMobSkillReadyTime"];
+    if (!onMobSkillReadyTime.valid())
+    {
+        return std::nullopt;
+    }
+
+    auto result = onMobSkillReadyTime(PTarget, PMob, PMobSkill);
+    if (!result.valid())
+    {
+        sol::error err = result;
+        ShowError("luautils::onMobSkillReadyTime: %s", err.what());
+        return std::nullopt;
+    }
+
+    if (result.get_type(0) == sol::type::number)
+    {
+        return std::chrono::milliseconds(result.template get<uint16>(0));
+    }
+
+    return std::nullopt;
 }
 
 // onMobSkillFinalize always executes once per uninterrupted mobskill use, independently of any target being found.
@@ -5579,11 +5637,23 @@ CBaseEntity* GenerateDynamicEntity(CZone* PZone, CInstance* PInstance, sol::tabl
         {
             PMob->m_minLevel = minLevel;
         }
+        else
+        {
+            // If there is no level set default to 255
+            ShowError("luautils::GenerateDynamicEntity: No minLevel set for mob %s in zone %s. Defaulting to 255.", PMob->name.c_str(), PZone->getName().c_str());
+            PMob->m_minLevel = 255;
+        }
 
         const auto maxLevel = table["maxLevel"].get_or<uint8>(0);
         if (maxLevel > 0)
         {
             PMob->m_maxLevel = maxLevel;
+        }
+        else
+        {
+            // If there is no level set default to 255
+            ShowError("luautils::GenerateDynamicEntity: No maxLevel set for mob %s in zone %s. Defaulting to 255.", PMob->name.c_str(), PZone->getName().c_str());
+            PMob->m_maxLevel = 255;
         }
 
         const auto dropId = table["dropId"].get_or<uint16>(0);

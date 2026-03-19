@@ -152,7 +152,7 @@ entity.onMobFight = function(mob, target)
     end
 end
 
-entity.onMobMobskillChoose = function(mob, target)
+entity.onMobMobskillChoose = function(mob, target, skillId)
     local form = mob:getAnimationSub()
     local tpMoves = { xi.mobSkill.REACTOR_COOL }
 
@@ -178,7 +178,7 @@ entity.onMobMobskillChoose = function(mob, target)
     return tpMoves[math.random(1, #tpMoves)]
 end
 
-entity.onMobWeaponSkill = function(target, mob, skill)
+entity.onMobWeaponSkill = function(mob, target, skill, action)
     -- Handle healing completion
     if skill:getID() == xi.mobSkill.VULTURE_3 then
         mob:setBehavior(bit.bor(mob:getBehavior(), xi.behavior.STANDBACK))

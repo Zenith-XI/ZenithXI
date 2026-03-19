@@ -15,11 +15,14 @@ spellObject.onSpellCast = function(caster, target, spell)
 
     -- Check for Bio
     local bio = target:getStatusEffect(xi.effect.BIO)
-    if bio and bio:getTier() < tier then
+    if
+        not bio or
+        (bio and bio:getTier() < tier)
+    then
         target:delStatusEffect(xi.effect.BIO)
         local power = 1 + caster:getMod(xi.mod.DIA_DOT)
 
-        target:addStatusEffect(xi.effect.DIA, power, 3, 60, 0, 10, tier)
+        target:addStatusEffect(xi.effect.DIA, { power = power, duration = 60, origin = caster, tick = 3, subPower = 10, tier = tier })
     end
 
     return damage

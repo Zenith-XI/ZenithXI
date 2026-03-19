@@ -34,6 +34,7 @@ const std::set immobilePets = {
     PETID_LUOPAN,
     PETID_ALEXANDER,
     PETID_ODIN,
+    PETID_ATOMOS,
 };
 
 }
@@ -118,6 +119,11 @@ void CPetController::DoRoamTick(timer::time_point tick)
         {
             return;
         }
+    }
+
+    if (!PPet->PMaster)
+    {
+        return;
     }
 
     float currentDistance = distance(PPet->loc.p, PPet->PMaster->loc.p);

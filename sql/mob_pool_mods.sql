@@ -57,9 +57,6 @@ INSERT INTO `mob_pool_mods` VALUES (370,28,5,1); -- EXP_BONUS: 5
 -- Biast
 INSERT INTO `mob_pool_mods` VALUES (410,236,20,0); -- HUMANOID_KILLER: 20
 
--- Bladmall
-INSERT INTO `mob_pool_mods` VALUES (444,23,23,1); -- IMMUNITY: 23
-
 -- Bloodlapper
 INSERT INTO `mob_pool_mods` VALUES (459,23,50,0);  -- ATT: 50
 INSERT INTO `mob_pool_mods` VALUES (459,73,25,0);  -- STORETP: 25
@@ -129,9 +126,6 @@ INSERT INTO `mob_pool_mods` VALUES (1306,4,30,1); -- SIGHT_RANGE: 30
 -- Frostmane
 INSERT INTO `mob_pool_mods` VALUES (1429,28,10,1); -- EXP_BONUS: 10
 
--- Gambilox Wanderling
-INSERT INTO `mob_pool_mods` VALUES (1456,368,20,0); -- REGAIN: 20
-
 -- Gargantua
 INSERT INTO `mob_pool_mods` VALUES (1461,4,4,1); -- SIGHT_RANGE: 4
 
@@ -157,9 +151,6 @@ INSERT INTO `mob_pool_mods` VALUES (1750,56,1,1); -- HP_STANDBACK: 1
 
 -- Goliath
 INSERT INTO `mob_pool_mods` VALUES (1754,4,4,1); -- SIGHT_RANGE: 4
-
--- Gration
-INSERT INTO `mob_pool_mods` VALUES (1792,368,70,0); -- REGAIN: 70
 
 -- Greater Manticore
 INSERT INTO `mob_pool_mods` VALUES (1806,28,10,1); -- EXP_BONUS: 10
@@ -227,10 +218,6 @@ INSERT INTO `mob_pool_mods` VALUES (2748,370,5,0); -- REGEN: 5
 
 -- Mythril Golem
 INSERT INTO `mob_pool_mods` VALUES (2793,4,4,1); -- SIGHT_RANGE: 4
-
--- Nepionic Soulflayer
-INSERT INTO `mob_pool_mods` VALUES (2834,368,250,0); -- REGAIN: 250
-INSERT INTO `mob_pool_mods` VALUES (2834,574,100,0); -- WSD+% (Backhand Blow): 100
 
 -- Nidhogg
 INSERT INTO `mob_pool_mods` VALUES (2840,368,70,0); -- REGAIN: 70

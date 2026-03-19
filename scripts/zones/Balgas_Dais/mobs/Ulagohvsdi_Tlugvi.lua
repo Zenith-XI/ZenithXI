@@ -45,16 +45,24 @@ end
 
 -- Has additional effect: Paralyze (15% chance)
 entity.onAdditionalEffect = function(mob, target, damage)
-    return xi.mob.onAddEffect(mob, target, damage, xi.mob.ae.PARALYZE, { chance = 15, duration = math.random(30, 60) })
+    local pTable =
+    {
+        chance   = 25,
+        effectId = xi.effect.PARALYSIS,
+        power    = 20,
+        duration = 60,
+    }
+
+    return xi.combat.action.executeAddEffectEnfeeblement(mob, target, pTable)
 end
 
 -- Only uses Pinecone Bomb.
-entity.onMobMobskillChoose = function(mob, target)
+entity.onMobMobskillChoose = function(mob, target, skillId)
     return xi.mobSkill.PINECONE_BOMB
 end
 
 -- If Mijin Gakure is used, the Winter tree (Gola Tlugvi) attacks.
-entity.onMobWeaponSkill = function(target, mob, skill)
+entity.onMobWeaponSkill = function(mob, target, skill, action)
     local skillID = skill:getID()
     local battlefield = mob:getBattlefield()
 
@@ -88,10 +96,10 @@ entity.onMobSpellChoose = function(mob, target, spellId)
         [ 4] = { xi.magic.spell.KATON_NI,     target, false, xi.action.type.DAMAGE_TARGET,     nil,                  0, 100 },
         [ 5] = { xi.magic.spell.RAITON_NI,    target, false, xi.action.type.DAMAGE_TARGET,     nil,                  0, 100 },
         [ 6] = { xi.magic.spell.SUITON_NI,    target, false, xi.action.type.DAMAGE_TARGET,     nil,                  0, 100 },
-        [ 7] = { xi.magic.spell.DOKUMORI_NI,  mob,    false, xi.action.type.ENFEEBLING_EFFECT, xi.effect.POISON,     0, 100 },
-        [ 8] = { xi.magic.spell.KURAYAMI_NI,  mob,    false, xi.action.type.ENFEEBLING_EFFECT, xi.effect.BLINDNESS,  0, 100 },
-        [ 9] = { xi.magic.spell.HOJO_NI,      mob,    false, xi.action.type.ENFEEBLING_EFFECT, xi.effect.SLOW,       4, 100 },
-        [10] = { xi.magic.spell.JUBAKU_NI,    mob,    false, xi.action.type.ENFEEBLING_EFFECT, xi.effect.PARALYSIS,  0, 100 },
+        [ 7] = { xi.magic.spell.DOKUMORI_NI,  target, false, xi.action.type.ENFEEBLING_EFFECT, xi.effect.POISON,     0, 100 },
+        [ 8] = { xi.magic.spell.KURAYAMI_NI,  target, false, xi.action.type.ENFEEBLING_EFFECT, xi.effect.BLINDNESS,  0, 100 },
+        [ 9] = { xi.magic.spell.HOJO_NI,      target, false, xi.action.type.ENFEEBLING_EFFECT, xi.effect.SLOW,       4, 100 },
+        [10] = { xi.magic.spell.JUBAKU_NI,    target, false, xi.action.type.ENFEEBLING_EFFECT, xi.effect.PARALYSIS,  0, 100 },
         [11] = { xi.magic.spell.UTSUSEMI_NI,  mob,    false, xi.action.type.ENHANCING_TARGET,  xi.effect.COPY_IMAGE, 0, 100 },
     }
     return xi.combat.behavior.chooseAction(mob, target, nil, spellList)

@@ -9,6 +9,26 @@ xi.mobSkill =
     SHARK_BITE                    =   24,
     EVISCERATION                  =   25,
 
+    FAST_BLADE_1                  =   32,
+    BURNING_BLADE_1               =   33,
+    RED_LOTUS_BLADE_1             =   34,
+    FLAT_BLADE_1                  =   35,
+    SHINING_BLADE_1               =   36,
+    SERAPH_BLADE_1                =   37,
+    CIRCLE_BLADE_1                =   38,
+    SPIRITS_WITHIN_1              =   39,
+    VORPAL_BLADE_1                =   40,
+
+    SAVAGE_BLADE_1                =   42,
+
+    HARD_SLASH_1                  =   48,
+    POWER_SLASH_1                 =   49,
+    FROSTBITE_1                   =   50,
+    FREEZEBITE_1                  =   51,
+    SHOCKWAVE_1                   =   52,
+    CRESCENT_MOON_1               =   53,
+    SICKLE_MOON_1                 =   54,
+
     VORPAL_SCYTHE                 =  101,
     GUILLOTINE_1                  =  102,
 
@@ -78,6 +98,7 @@ xi.mobSkill =
 
     VELOCIOUS_BLADE               =  347, -- Mammet-800
 
+    DEATH_SCISSORS                =  353,
     WILD_RAGE                     =  354,
     EARTH_POUNDER                 =  355,
 
@@ -143,6 +164,8 @@ xi.mobSkill =
 
     MIND_WALL                     =  471, -- Mammet-800
 
+    GRAVE_REEL                    =  472,
+
     PETRIFACTIVE_BREATH           =  480,
 
     CHARGED_WHISKER               =  483,
@@ -160,9 +183,14 @@ xi.mobSkill =
     FRIGHTFUL_ROAR_1              =  501,
     MORTAL_RAY_1                  =  502,
     UNBLESSED_ARMOR               =  503,
+    GAS_SHELL_1                   =  504,
+    VENOM_SHELL_1                 =  505,
+    PALSYNYXIS_1                  =  506,
+    PAINFUL_WHIP_1                =  507,
+    SUCTORIAL_TENTACLE_1          =  508,
 
     SELF_DESTRUCT_BOMB            =  509,
-
+    BERSERK_BOMB                  =  510,
     SELF_DESTRUCT_BOMB_321        =  511,
 
     SMITE_OF_RAGE                 =  513,
@@ -173,16 +201,19 @@ xi.mobSkill =
     BLITZSTRAHL                   =  535,
     PANZERFAUST                   =  536,
     BERSERK_DOLL                  =  537,
-
+    PANZERSCHRECK                 =  538,
     TYPHOON                       =  539,
 
     TREMOROUS_TREAD               =  540, -- Mammet-800
     GRAVITY_FIELD                 =  541,
+    EMPTY_SEED                    =  542,
 
     CAMISADO_1                    =  544,
-
+    SOMNOLENCE_1                  =  545,
     NOCTOSHIELD_1                 =  546,
     ULTIMATE_TERROR_1             =  547,
+
+    DREAM_SHROUD_1                =  556,
 
     NIGHTMARE_1                   =  558,
 
@@ -201,6 +232,7 @@ xi.mobSkill =
     CHOKE_BREATH_1                =  579,
     FANTOD_1                      =  580,
     BLOW                          =  581,
+    CACODEMONIA_1                 =  582,
 
     BLANK_GAZE                    =  586,
 
@@ -216,6 +248,10 @@ xi.mobSkill =
     COLD_WAVE_2                   =  600, -- Snoll Tzar
     HIEMAL_STORM                  =  601, -- Snoll Tzar
     HYPOTHERMAL_COMBUSTION_2      =  602, -- Snoll Tzar
+
+    NETHER_BLAST_1                =  610,
+
+    RUINOUS_OMEN_1                =  616,
 
     SWEEP                         =  620,
 
@@ -236,6 +272,11 @@ xi.mobSkill =
 
     CURSED_SPHERE_1               =  659,
     VENOM_1                       =  660,
+    SNOW_CLOUD_1                  =  661,
+
+    GRAND_SLAM_1                  =  665,
+
+    POWER_ATTACK_ARMED_1          =  667,
 
     KICK_BACK                     =  668,
     IMPLOSION                     =  669,
@@ -258,8 +299,16 @@ xi.mobSkill =
 
     CHARM                         =  710,
 
+    VENOM_BREATH_1                =  717,
     JUMP_1                        =  718,
+    CRITICAL_BITE                 =  719,
+    VENOM_STING_1                 =  720,
+    STASIS                        =  721,
+    VENOM_STORM_1                 =  722,
+    EARTHBREAKER_1                =  723,
+    EVASION                       =  724,
 
+    DEATH_TRAP                    =  729, -- Lockpicked coffer mimics only
     MEIKYO_SHISUI_1               =  730, -- Tenzen, etc...
     MIJIN_GAKURE_1                =  731, -- Season's Greetings KSNM 30 (Ulagohvsdi Tlugvi)
     CALL_WYVERN                   =  732,
@@ -270,7 +319,7 @@ xi.mobSkill =
 
     QUADRATIC_CONTINUUM_2         =  742,
 
-    SPIRIT_ABSORPTION_2           =  745,
+    SPIRIT_ABSORPTION_GORGER_2    =  745,
 
     VANITY_DRIVE_2                =  748,
 
@@ -300,6 +349,12 @@ xi.mobSkill =
     WATER_BLADE_1                 =  828,
     GREAT_WHEEL_1                 =  829,
     LIGHT_BLADE_1                 =  830,
+    MOONLIT_CHARGE                =  831,
+    CRESCENT_FANG                 =  832,
+    LUNAR_CRY                     =  833,
+
+    LUNAR_ROAR                    =  835,
+    ECLIPSE_BITE                  =  836,
 
     HOWLING_MOON_1                =  838, -- Unknown usage.
     HOWLING_MOON_2                =  839, -- Confirmed usage: "The Moonlit Path" bcnm (Fenrir).
@@ -351,6 +406,16 @@ xi.mobSkill =
     TACHI_YUKIKAZE                =  946, -- Ark Angel GK
     TACHI_GEKKO                   =  947, -- Ark Angel GK
     TACHI_KASHA                   =  948, -- Ark Angel GK
+
+    FLAME_BLAST_ATTACK            =  950,
+    HURRICANE_WING_1              =  951,
+    SPIKE_FLAIL_1                 =  952,
+    DRAGON_BREATH_1               =  953,
+    TOUCHDOWN_1                   =  954,
+    FLAME_BLAST_1                 =  955,
+    HURRICANE_WING_FLYING         =  956,
+    ABSOLUTE_TERROR_1             =  957,
+    HORRID_ROAR_1                 =  958,
 
     ARKANGEL_TT_WARP_IN           =  962, -- Ark Angel TT Warp In
 
@@ -497,6 +562,8 @@ xi.mobSkill =
 
     TIDAL_DIVE                    = 1357,
     PLASMA_CHARGE                 = 1358,
+    CHTHONIAN_RAY                 = 1359,
+    APOCALYPTIC_RAY               = 1360,
 
     HUNGRY_CRUNCH                 = 1363,
 
@@ -537,6 +604,7 @@ xi.mobSkill =
     DECAYED_FILAMENT              = 1467,
     REACTOR_OVERHEAT              = 1468,
     REACTOR_OVERLOAD              = 1469,
+    SELF_DESTRUCT_CLUSTER_RAZON   = 1470,
 
     HUNDRED_FISTS_PRISHE          = 1485,
     BENEDICTION_PRISHE            = 1486,
@@ -566,10 +634,24 @@ xi.mobSkill =
     REVELATION_1                  = 1510,
 
     HOWLING_MOON_3                = 1520, -- Unknown usage.
+    ARMOR_BUSTER                  = 1521,
+    ENERGY_SCREEN                 = 1522,
+    MANA_SCREEN                   = 1523,
+    DISSIPATION                   = 1524,
+
+    CITADEL_BUSTER                = 1540,
+
+    CAMISADO_2                    = 1554,
 
     FOOT_KICK_2                   = 1567,
     DUST_CLOUD_2                  = 1568,
     WHIRL_CLAWS_2                 = 1569,
+
+    MIASMIC_BREATH_1              = 1604, -- Cirrate Christelle - Mobskill Version
+    MIASMIC_BREATH_2              = 1605, -- Cirrate Christelle - Skill Attack version
+
+    PUTRID_BREATH_1               = 1608, -- Cirrate Christelle - Mobskill Version
+    PUTRID_BREATH_2               = 1609, -- Cirrate Christelle - Skill Attack version
 
     FROGKICK_2                    = 1621,
 
@@ -595,11 +677,20 @@ xi.mobSkill =
 
     XENOGLOSSIA                   = 1823, -- Unique entry.
 
+    PYRIC_BLAST                   = 1828,
+    PYRIC_BULWARK                 = 1829,
+    POLAR_BLAST                   = 1830,
+    POLAR_BULWARK                 = 1831,
+    BAROFIELD                     = 1832,
+
+    NERVE_GAS                     = 1836,
+
     SANDBLAST_2                   = 1841,
     SANDPIT_2                     = 1842,
     VENOM_SPRAY_2                 = 1843,
     PIT_AMBUSH_2                  = 1844,
     MANDIBULAR_BITE_2             = 1845,
+    FIRESPIT_BLUE_MAMOOLJA        = 1923, -- Ignores shadows
 
     RANGED_ATTACK_15              = 1949,
 

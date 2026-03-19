@@ -50,7 +50,7 @@ entity.onMobFight = function(mob, target)
     end
 end
 
-entity.onMobMobskillChoose = function(mob, target)
+entity.onMobMobskillChoose = function(mob, target, skillId)
     local tpList =
     {
         xi.mobSkill.GREAT_WHEEL_1,
@@ -60,7 +60,7 @@ entity.onMobMobskillChoose = function(mob, target)
     return tpList[math.random(1, #tpList)]
 end
 
-entity.onMobWeaponSkill = function(target, mob, skill)
+entity.onMobWeaponSkill = function(mob, target, skill, action)
     local skillId = skill:getID()
     local absorbId = skillToAbsorb[skillId]
 

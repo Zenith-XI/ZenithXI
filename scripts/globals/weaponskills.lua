@@ -152,6 +152,7 @@ local function getSingleHitDamage(attacker, target, dmg, ftp, wsParams, calcPara
     -- check shadows
     if
         not calcParams.guaranteedHit and
+        not wsParams.ignoreShadows and
         shadowAbsorb(target)
     then
         -- shadow absorb logic
@@ -247,7 +248,7 @@ local function calculateHybridMagicDamage(tp, physicaldmg, attacker, target, wsP
     magicdmg = math.floor(addBonusesAbility(attacker, wsParams.ele, target, magicdmg, wsParams))
     magicdmg = math.floor(magicdmg + calcParams.bonusfTP * physicaldmg)
     magicdmg = math.floor(magicdmg * xi.combat.magicHitRate.calculateResistRate(attacker, target, 0, wsParams.skill, 0, wsParams.ele, 0, 0, calcParams.bonusAcc))
-    magicdmg = math.floor(magicdmg * xi.spells.damage.calculateDamageAdjustment(target, false, true, false, false))
+    magicdmg = math.floor(magicdmg * xi.combat.damage.calculateDamageAdjustment(target, false, true, false, false))
     magicdmg = math.floor(target:handleSevereDamage(magicdmg, false))
 
     if magicdmg > 0 then
@@ -312,10 +313,9 @@ xi.weaponskills.calculateRawWSDmg = function(attacker, target, wsID, tp, action,
     end
 
     -- Calculate critrates
-    -- TODO: calc per-hit with weapon crit+% on each hand (if dual wielding)
     calcParams.critRate = 0
     if wsParams.critVaries then -- Work out critical hit ratios
-        calcParams.critRate = xi.combat.physical.calculateSwingCriticalRate(attacker, target, tp, wsParams.critVaries)
+        calcParams.critRate = xi.combat.physical.calculateSwingCriticalRate(attacker, target, tp, calcParams.attackInfo.slot, wsParams.critVaries)
     end
 
     -- Start the WS
@@ -542,6 +542,10 @@ xi.weaponskills.calculateRawWSDmg = function(attacker, target, wsID, tp, action,
     if calcParams.extraOffhandHit then
         calcParams.attackInfo.slot       = xi.slot.SUB
         calcParams.attackInfo.weaponType = offhandSkill
+
+        if wsParams.critVaries then -- Update crit rate if this applies
+            calcParams.critRate = xi.combat.physical.calculateSwingCriticalRate(attacker, target, tp, calcParams.attackInfo.slot, wsParams.critVaries)
+        end
     end
 
     -- Recalculate hitRate with offhand acc
@@ -775,6 +779,8 @@ xi.weaponskills.doRangedWeaponskill = function(attacker, target, wsID, wsParams,
 
     -- Delete statuses that may have been spent by the WS
     attacker:delStatusEffectsByFlag(xi.effectFlag.DETECTABLE)
+    attacker:delStatusEffect(xi.effect.FLASHY_SHOT)
+    attacker:delStatusEffect(xi.effect.STEALTH_SHOT)
 
     -- Calculate reductions
     finaldmg = target:rangedDmgTaken(finaldmg)
@@ -876,7 +882,7 @@ xi.weaponskills.doMagicWeaponskill = function(attacker, target, wsID, wsParams, 
         -- Calculate magical bonuses and reductions
         dmg = math.floor(addBonusesAbility(attacker, wsParams.ele, target, dmg, wsParams))
         dmg = math.floor(dmg * xi.combat.magicHitRate.calculateResistRate(attacker, target, 0, wsParams.skill, 0, wsParams.ele, 0, 0, gearAcc))
-        dmg = math.floor(dmg * xi.spells.damage.calculateDamageAdjustment(target, false, true, false, false))
+        dmg = math.floor(dmg * xi.combat.damage.calculateDamageAdjustment(target, false, true, false, false))
         dmg = math.floor(target:handleSevereDamage(dmg, false))
 
         if dmg < 0 then
@@ -939,6 +945,7 @@ xi.weaponskills.takeWeaponskillDamage = function(defender, attacker, wsParams, p
     elseif wsResults.shadowsAbsorbed > 0 then
         action:messageID(defender:getID(), xi.msg.basic.SHADOW_ABSORB)
         action:param(defender:getID(), wsResults.shadowsAbsorbed)
+        action:resolution(defender:getID(), xi.action.resolution.MISS)
     else
         if primaryMsg then
             action:messageID(defender:getID(), xi.msg.basic.SKILL_MISS)
@@ -1075,6 +1082,6 @@ xi.weaponskills.handleWeaponskillEffect = function(actor, target, effectId, acti
         not xi.data.statusEffect.isTargetResistant(actor, target, effectId) and
         not xi.data.statusEffect.isEffectNullified(target, effectId, 0)
     then
-        target:addStatusEffect(effectId, power, 0, duration)
+        target:addStatusEffect(effectId, { power = power, duration = duration, origin = actor })
     end
 end

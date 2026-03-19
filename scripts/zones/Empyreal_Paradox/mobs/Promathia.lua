@@ -85,7 +85,7 @@ entity.onSpellPrecast = function(mob, spell)
     end
 end
 
-entity.onMobMobskillChoose = function(mob, target)
+entity.onMobMobskillChoose = function(mob, target, skillId)
     local battlefield = mob:getBattlefield()
     if not battlefield then
         return
@@ -110,7 +110,7 @@ entity.onMobMobskillChoose = function(mob, target)
     return tpList[math.random(#tpList)]
 end
 
-entity.onMobWeaponSkill = function(target, mob, skill)
+entity.onMobWeaponSkill = function(mob, target, skill, action)
     local battlefield = mob:getBattlefield()
     if not battlefield then
         return
