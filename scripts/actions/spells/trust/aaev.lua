@@ -79,7 +79,7 @@ spellObject.onMobSpawn = function(mob)
     mob:addGambit(ai.t.SELF,    { ai.c.NOT_STATUS,         xi.effect.SENTINEL      }, { ai.r.JA, ai.s.SPECIFIC,        xi.ja.SENTINEL            })
     mob:addGambit(ai.t.SELF,    { ai.c.NOT_STATUS,         xi.effect.ENLIGHT       }, { ai.r.MA, ai.s.SPECIFIC,        xi.magic.spell.ENLIGHT    })
     mob:addGambit(ai.t.SELF,    { ai.c.NOT_STATUS,         xi.effect.DIVINE_EMBLEM }, { ai.r.JA, ai.s.SPECIFIC,        xi.ja.DIVINE_EMBLEM       })
-    mob:addGambit(ai.t.SELF,    { ai.c.NOT_STATUS,         xi.effect.PALISADE      }, { ai.r.MA, ai.s.SPECIFIC,        xi.magic.spell.PALISADE   })
+    mob:addGambit(ai.t.SELF,    { ai.c.NOT_STATUS,         xi.effect.PALISADE      }, { ai.r.JA, ai.s.SPECIFIC,        xi.ja.PALISADE            })
 
     -- 2 conditions
     mob:addGambit(ai.t.SELF,    { { ai.c.MPP_LT,           25                      }, { ai.c.TP_GTE,           1000 }, }, { ai.r.JA, ai.s.SPECIFIC,        xi.ja.CHIVALRY })
