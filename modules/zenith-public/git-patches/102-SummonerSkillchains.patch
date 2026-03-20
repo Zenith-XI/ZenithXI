@@ -7,8 +7,8 @@ diff --git a/src/map/entities/petentity.cpp b/src/map/entities/petentity.cpp
 index fb85d967f6..f079c266d8 100644
 --- a/src/map/entities/petentity.cpp
 +++ b/src/map/entities/petentity.cpp
-@@ -495,7 +495,14 @@ void CPetEntity::OnPetSkillFinished(CPetSkillState& state, action_t& action)
-     MsgBasic msg            = MsgBasic::NONE;
+@@ -495,8 +495,15 @@ void CPetEntity::OnPetSkillFinished(CPetSkillState& state, action_t& action)
+     MsgBasic msg            = MsgBasic::None;
      MsgBasic defaultMessage = PSkill->getMsg();
  
 -    bool first{ true };

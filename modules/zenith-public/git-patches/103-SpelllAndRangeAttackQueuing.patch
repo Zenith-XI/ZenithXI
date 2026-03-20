@@ -1,9 +1,9 @@
 diff --git a/src/map/ai/ai_container.cpp b/src/map/ai/ai_container.cpp
-index 4d3ec21190..3635cfd6b4 100644
+index ff9c8ed6bc..a1d0574463 100644
 --- a/src/map/ai/ai_container.cpp
 +++ b/src/map/ai/ai_container.cpp
-@@ -450,6 +453,32 @@ void CAIContainer::Tick(time_point _tick)
-             state->Cleanup(_tick);
+@@ -461,6 +461,29 @@ void CAIContainer::Tick(timer::time_point _tick)
+             break;
          }
      }
 +    auto* PChar = dynamic_cast<CCharEntity*>(PEntity);
@@ -14,19 +14,16 @@ index 4d3ec21190..3635cfd6b4 100644
 +        PChar->PAI->CanChangeState()
 +    )
 +    {
-+        // ShowDebug("Checking player queue...\n");
 +        if (
 +            m_queuedRangedAttack &&
-+            _tick - PChar->m_LastRangedAttackTime > std::chrono::milliseconds(1100) // phase 3 waittime for ranged attacks
++            _tick - PChar->m_LastRangedAttackTime > std::chrono::milliseconds(1100)
 +        )
 +        {
-+            // ShowDebug("Doing queued ranged attack...\n");
 +            RangedAttack(m_queuedRangedAttack);
 +            m_queuedRangedAttack = 0;
 +        }
 +        else if (m_queuedSpellTargId)
 +        {
-+            // ShowDebug("Doing queued spell...\n");
 +            Cast(m_queuedSpellTargId, m_queuedSpell);
 +            m_queuedSpell = (SpellID)0;
 +            m_queuedSpellTargId = 0;
@@ -36,7 +33,7 @@ index 4d3ec21190..3635cfd6b4 100644
      PEntity->PostTick();
  }
 diff --git a/src/map/ai/ai_container.h b/src/map/ai/ai_container.h
-index 4f523e72db..35fb8c9a7e 100644
+index ef3f629986..a5f00c6faa 100644
 --- a/src/map/ai/ai_container.h
 +++ b/src/map/ai/ai_container.h
 @@ -133,6 +133,10 @@ public:
@@ -50,67 +47,58 @@ index 4f523e72db..35fb8c9a7e 100644
  protected:
      // input controller
      std::unique_ptr<CController> Controller;
-diff --git a/src/map/ai/controllers/controller.cpp b/src/map/ai/controllers/controller.cpp
-index a9109aa656..b73ab4e66c 100644
---- a/src/map/ai/controllers/controller.cpp
-+++ b/src/map/ai/controllers/controller.cpp
-@@ -22,6 +22,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
- #include "controller.h"
- 
- #include "ai/ai_container.h"
-+#include "ai/states/magic_state.h"
- #include "entities/battleentity.h"
- 
- CController::CController(CBattleEntity* _POwner)
-@@ -46,6 +47,25 @@ bool CController::Cast(uint16 targid, SpellID spellid)
- {
-     if (POwner)
-     {
-+        if (
-+            POwner->objtype == TYPE_PC &&
-+            POwner->PAI->IsCurrentState<CMagicState>()
-+        )
-+        {
-+            // ShowDebug("Got spellcast request while already spellcasting...\n");
-+            if (POwner->PAI->GetCurrentState()->IsCompleted())
-+            {
-+                // ShowDebug("Queueing another spellcast...\n");
-+                POwner->PAI->m_queuedSpellTargId = targid;
-+                POwner->PAI->m_queuedSpell = spellid;
-+                POwner->PAI->m_queuedRangedAttack = 0;
-+                return true;
-+            }
-+            else
-+            {
-+                return false;
-+            }
-+        }
-         return POwner->PAI->Internal_Cast(targid, spellid);
-     }
-     return false;
 diff --git a/src/map/ai/controllers/player_controller.cpp b/src/map/ai/controllers/player_controller.cpp
-index 1c0df703fa..9eda23fb8a 100644
+index f78f912183..53f1df355c 100644
 --- a/src/map/ai/controllers/player_controller.cpp
 +++ b/src/map/ai/controllers/player_controller.cpp
-@@ -25,6 +25,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
+@@ -25,6 +25,8 @@
  #include "ai/ai_container.h"
  #include "ai/states/death_state.h"
  #include "ai/states/inactive_state.h"
++#include "ai/states/magic_state.h"
 +#include "ai/states/range_state.h"
  #include "entities/charentity.h"
  #include "items/item_weapon.h"
  #include "latent_effect_container.h"
-@@ -149,7 +150,23 @@ bool CPlayerController::Ability(uint16 targid, uint16 abilityid)
+@@ -49,6 +51,26 @@ void CPlayerController::Tick(timer::time_point /*tick*/)
+ bool CPlayerController::Cast(uint16 targid, SpellID spellid)
+ {
+     auto* PChar = static_cast<CCharEntity*>(POwner);
++
++    // Check for spell queuing during animation phase
++    if (PChar->PAI->IsCurrentState<CMagicState>())
++    {
++        if (PChar->PAI->GetCurrentState()->IsCompleted())
++        {
++            // Queue the spell during animation phase
++            PChar->PAI->m_queuedSpellTargId = targid;
++            PChar->PAI->m_queuedSpell = spellid;
++            PChar->PAI->m_queuedRangedAttack = 0;
++            return true;
++        }
++        else
++        {
++            // Still casting, send wait message
++            PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::WaitLonger);
++            return false;
++        }
++    }
++
+     if (canAct() && !PChar->PRecastContainer->HasRecast(RECAST_MAGIC, static_cast<Recast>(spellid), 0s))
+     {
+         if (auto target = PChar->GetEntity(targid); target && target->PAI->IsUntargetable())
+@@ -155,7 +177,26 @@ bool CPlayerController::Ability(uint16 targid, uint16 abilityid)
  bool CPlayerController::RangedAttack(uint16 targid)
  {
      auto* PChar = static_cast<CCharEntity*>(POwner);
 -    if (canAct() && PChar->PAI->CanChangeState())
++
++    // Check for ranged attack queuing during animation phase
 +    if (PChar->PAI->IsCurrentState<CRangeState>())
 +    {
-+        // ShowDebug("Got ranged attack request while already ranged attacking...\n");
 +        if (PChar->PAI->GetCurrentState()->IsCompleted())
 +        {
-+            // ShowDebug("Queueing another ranged attack...\n");
++            // Queue the ranged attack during animation phase
 +            PChar->PAI->m_queuedRangedAttack = targid;
 +            PChar->PAI->m_queuedSpell = (SpellID)0;
 +            PChar->PAI->m_queuedSpellTargId = 0;
@@ -118,6 +106,8 @@ index 1c0df703fa..9eda23fb8a 100644
 +        }
 +        else
 +        {
++            // Still shooting, send wait message
++            PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::WaitLonger);
 +            return false;
 +        }
 +    }
