@@ -23,7 +23,6 @@
 
 #include <common/ipp.h>
 #include <common/logging.h>
-#include <common/scheduler.h>
 
 #include <atomic>
 #include <memory>
@@ -38,12 +37,12 @@ class ZMQDealerWrapper final
     class ZMQWorker final
     {
     public:
-        ZMQWorker(Scheduler&                                   scheduler,
+        ZMQWorker(std::atomic<bool>&                           requestExit,
                   moodycamel::ConcurrentQueue<zmq::message_t>& incomingQueue,
                   moodycamel::ConcurrentQueue<zmq::message_t>& outgoingQueue,
                   const std::string&                           endpoint,
                   uint64_t                                     routingId)
-        : scheduler_(scheduler)
+        : requestExit_(requestExit)
         , incomingQueue_(incomingQueue)
         , outgoingQueue_(outgoingQueue)
         , zmqContext_(1)
@@ -73,16 +72,16 @@ class ZMQDealerWrapper final
     private:
         void listen()
         {
-            while (scheduler_.closeRequested())
+            while (!requestExit_)
             {
                 zmq::message_t msg;
                 try
                 {
-                    if (!zmqSocket_.recv(msg, zmq::recv_flags::dontwait))
+                    if (!zmqSocket_.recv(msg, zmq::recv_flags::none))
                     {
                         while (outgoingQueue_.try_dequeue(msg))
                         {
-                            zmqSocket_.send(msg, zmq::send_flags::dontwait);
+                            zmqSocket_.send(msg, zmq::send_flags::none);
                         }
                         continue;
                     }
@@ -105,7 +104,7 @@ class ZMQDealerWrapper final
         }
 
     private:
-        Scheduler& scheduler_;
+        std::atomic<bool>& requestExit_;
 
         moodycamel::ConcurrentQueue<zmq::message_t>& incomingQueue_;
         moodycamel::ConcurrentQueue<zmq::message_t>& outgoingQueue_;
@@ -115,19 +114,20 @@ class ZMQDealerWrapper final
     };
 
 public:
-    ZMQDealerWrapper(Scheduler& scheduler, const std::string& endpoint, uint64 routingId)
-    : scheduler_(scheduler)
+    ZMQDealerWrapper(const std::string& endpoint, uint64 routingId)
+    : requestExit_(false)
     , thread_(
           [this, endpoint, routingId]()
           {
               TracySetThreadName("ZMQ Dealer");
-              ZMQWorker worker(scheduler_, incomingQueue_, outgoingQueue_, endpoint, routingId);
+              ZMQWorker worker(requestExit_, incomingQueue_, outgoingQueue_, endpoint, routingId);
           })
     {
     }
 
     ~ZMQDealerWrapper()
     {
+        requestExit_ = true;
         thread_.join();
     }
 
@@ -135,6 +135,6 @@ public:
     moodycamel::ConcurrentQueue<zmq::message_t> outgoingQueue_;
 
 private:
-    Scheduler&   scheduler_;
-    std::jthread thread_;
+    std::atomic<bool> requestExit_;
+    std::jthread      thread_;
 };

@@ -23,7 +23,6 @@
 
 #include <common/ipp.h>
 #include <common/logging.h>
-#include <common/scheduler.h>
 
 #include <atomic>
 #include <memory>
@@ -44,11 +43,11 @@ class ZMQRouterWrapper final
     class ZMQWorker final
     {
     public:
-        ZMQWorker(Scheduler&                               scheduler,
+        ZMQWorker(std::atomic<bool>&                       requestExit,
                   moodycamel::ConcurrentQueue<IPPMessage>& incomingQueue,
                   moodycamel::ConcurrentQueue<IPPMessage>& outgoingQueue,
                   const std::string&                       endpoint)
-        : scheduler_(scheduler)
+        : requestExit_(requestExit)
         , incomingQueue_(incomingQueue)
         , outgoingQueue_(outgoingQueue)
         , zmqContext_(1)
@@ -77,7 +76,7 @@ class ZMQRouterWrapper final
     private:
         void listen()
         {
-            while (scheduler_.closeRequested())
+            while (!requestExit_)
             {
                 // Since we are a zmq::socket_type::router, we expect a multipart message:
                 // [routing id (IPP), message]
@@ -124,7 +123,7 @@ class ZMQRouterWrapper final
         }
 
     private:
-        Scheduler& scheduler_;
+        std::atomic<bool>& requestExit_;
 
         moodycamel::ConcurrentQueue<IPPMessage>& incomingQueue_;
         moodycamel::ConcurrentQueue<IPPMessage>& outgoingQueue_;
@@ -134,19 +133,20 @@ class ZMQRouterWrapper final
     };
 
 public:
-    ZMQRouterWrapper(Scheduler& scheduler, const std::string& endpoint)
-    : scheduler_(scheduler)
+    ZMQRouterWrapper(const std::string& endpoint)
+    : requestExit_(false)
     , thread_(
           [this, endpoint]()
           {
               TracySetThreadName("ZMQ Router");
-              ZMQWorker worker(scheduler_, incomingQueue_, outgoingQueue_, endpoint);
+              ZMQWorker worker(requestExit_, incomingQueue_, outgoingQueue_, endpoint);
           })
     {
     }
 
     ~ZMQRouterWrapper()
     {
+        requestExit_ = true;
         thread_.join();
     }
 
@@ -154,6 +154,6 @@ public:
     moodycamel::ConcurrentQueue<IPPMessage> outgoingQueue_;
 
 private:
-    Scheduler&   scheduler_;
-    std::jthread thread_;
+    std::atomic<bool> requestExit_;
+    std::jthread      thread_;
 };
