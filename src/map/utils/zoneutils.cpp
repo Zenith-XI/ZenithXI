@@ -47,7 +47,6 @@
 #include <ranges>
 
 std::map<uint16, CZone*> g_PZoneList; // Global array of pointers for zones
-CNpcEntity*              g_PTrigger;  // trigger to start events
 
 namespace zoneutils
 {
@@ -116,13 +115,6 @@ auto GetZone(uint16 zoneId) -> CZone*
     }
 
     return nullptr;
-}
-
-auto GetTrigger(const uint16 targId, const uint16 zoneId) -> CNpcEntity*
-{
-    g_PTrigger->targid = targId;
-    g_PTrigger->id     = ((4096 + zoneId) << 12) + targId;
-    return g_PTrigger;
 }
 
 auto GetEntity(const uint32 id, const uint8 filter) -> CBaseEntity*
@@ -769,11 +761,6 @@ auto LoadZones(Scheduler& scheduler, MapConfig config, const std::vector<uint16>
         }
     }
 
-    if (g_PTrigger == nullptr)
-    {
-        g_PTrigger = new CNpcEntity(); // you need to set the default model in the CNpcEntity constructor
-    }
-
     if (zonesIdsToLoad.empty())
     {
         // Requested zones are already loaded.
@@ -1303,7 +1290,6 @@ void FreeZoneList()
         destroy(PZone);
     }
     g_PZoneList.clear();
-    destroy(g_PTrigger);
 }
 
 void ForEachZone(const std::function<void(CZone*)>& func)

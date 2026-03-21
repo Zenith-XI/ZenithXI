@@ -85,14 +85,6 @@
 #include <io.h>
 #endif
 
-//
-// Legacy global variables
-//
-
-// TODO: These are all hacks and shouldn't be globally exposed like this!
-
-extern std::map<uint16, CZone*> g_PZoneList; // Global array of pointers for zones
-
 MapEngine::MapEngine(Application& application, MapConfig& config)
 : application_(application)
 , scheduler_(application_.scheduler())
