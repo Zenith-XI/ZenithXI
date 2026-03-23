@@ -91,6 +91,7 @@ xi.mobSkill =
     BAD_BREATH_1                  =  319,
 
     THOUSAND_NEEDLES_1            =  322,
+    WILD_CARROT_1                 =  323,
 
     DRILL_BRANCH                  =  328,
     PINECONE_BOMB                 =  329,
@@ -603,6 +604,7 @@ xi.mobSkill =
     CHTHONIAN_RAY                 = 1359,
     APOCALYPTIC_RAY               = 1360,
 
+    WILD_GINSENG                  = 1362,
     HUNGRY_CRUNCH                 = 1363,
 
     SINUATE_RUSH                  = 1367,
