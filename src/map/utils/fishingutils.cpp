@@ -2449,6 +2449,16 @@ fishresponse_t* FishingCheck(CCharEntity* PChar, uint8 fishingSkill, rod_t* rod,
         ChestPoolWeight = 0;
     }
 
+    // Pirate's Chart quest pool weighting: just catch items
+    if (PChar->GetLocalVar("pChartActive") == 1 && PChar->getZone() == ZONE_VALKURM_DUNES && area->areaId == 2)
+    {
+        FishPoolWeight  = 0;
+        ItemPoolWeight  = 100;
+        MobPoolWeight   = 0;
+        ChestPoolWeight = 0;
+        NoCatchWeight   = 0;
+    }
+
     if (FishPoolWeight == 0 && ItemPoolWeight == 0 && MobPoolWeight == 0 && ChestPoolWeight == 0)
     {
         NoCatchWeight = 1000;
@@ -2671,6 +2681,11 @@ void FishingAction(CCharEntity* PChar, const GP_CLI_COMMAND_FISHING_2_MODE mode,
 
             fishingarea_t*  fishingArea = GetFishingArea(PChar);
             fishresponse_t* response    = nullptr;
+
+            if (PChar->GetLocalVar("pChartActive") == 1 && PChar->getZone() == ZONE_VALKURM_DUNES)
+            {
+                fishingArea = FishingAreaList[ZONE_VALKURM_DUNES][2];
+            }
 
             if (PChar->hookedFish != nullptr)
             {
