@@ -22,6 +22,7 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <cctype>
 #include <chrono>
 #include <climits>
@@ -90,3 +91,6 @@ struct PtrGreater
 
 template <class T>
 using MinHeapPtr = std::priority_queue<T, std::vector<T>, PtrGreater<T>>;
+
+using NetworkBuffer = std::array<uint8, kMaxBufferSize>;
+using ByteSpan      = std::span<uint8>;
