@@ -111,9 +111,32 @@ void MapNetworking::handle_incoming_packet(ByteSpan buffer, IPP ipp)
             // However, the client will fail to decrypt this if they received it before, effectively being a no-op.
             // It could be beneficial to parse 0x00D here anyway.
 
-            // Client failed to receive 0x00B, resend it
+            //
+            // Client failed to receive 0x00B, manually rebuild and resend it
+            //
+
             GP_SERV_COMMAND_LOGOUT zonePacket(PSession->zone_type, PSession->zone_ipp);
-            sendSinglePacketNoPChar(PBuff.data(), &size, PSession, UsePreviousKey::Yes, &zonePacket);
+
+            preparePacket(PBuff.data(), PSession);
+
+            TotalPacketsToSendPerTick += 1;
+
+            size = FFXI_HEADER_SIZE;
+            zonePacket.setSequence(PSession->server_packet_id);
+            std::memcpy(PBuff.data() + size, &zonePacket, zonePacket.getSize());
+            size += zonePacket.getSize();
+
+            auto maybePacketSize = compressPacket(PBuff.data(), size);
+            if (!maybePacketSize)
+            {
+                ShowError("zlib compression error");
+                size = 0;
+            }
+            else
+            {
+                finalizePacket(PBuff.data(), &size, *maybePacketSize, PSession, UsePreviousKey::Yes);
+                TotalPacketsSentPerTick += 1;
+            }
 
             // Increment sync count with every packet
             // TODO: match incoming with a new parse that only cares about sync count
@@ -508,17 +531,7 @@ int32 MapNetworking::send_parse(uint8* buff, size_t* buffsize, MapSession* PSess
 {
     TracyZoneScoped;
 
-    // Modify the header of the outgoing packet
-    // The essence of the transformations:
-    // - send the client the number of the last packet received from him
-    // - assign the outgoing packet the number of the last packet sent to the client +1
-    // - write down the current time of sending the packet
-
-    ref<uint16>(buff, 0) = PSession->server_packet_id;
-    ref<uint16>(buff, 2) = PSession->client_packet_id;
-
-    // save the current time (32 BIT!)
-    ref<uint32>(buff, 8) = earth_time::timestamp();
+    preparePacket(buff, PSession);
 
     // build a large package, consisting of several small packets
     auto* PChar = PSession->PChar.get();
@@ -526,7 +539,7 @@ int32 MapNetworking::send_parse(uint8* buff, size_t* buffsize, MapSession* PSess
 
     std::unique_ptr<CBasicPacket> PSmallPacket = nullptr;
 
-    uint32 PacketSize               = UINT32_MAX;
+    size_t PacketSize               = static_cast<size_t>(UINT32_MAX);
     size_t PacketCount              = std::clamp<size_t>(PChar->getPacketCount(), 0, kMaxPacketPerCompression);
     uint8  packets                  = 0;
     bool   incrementKeyAfterEncrypt = false;
@@ -578,19 +591,13 @@ int32 MapNetworking::send_parse(uint8* buff, size_t* buffsize, MapSession* PSess
 
             // Compress the data without regard to the header
             // The returned size is 8 times the real data
-            PacketSize = zlib_compress((int8*)(buff + FFXI_HEADER_SIZE), (uint32)(*buffsize - FFXI_HEADER_SIZE), (int8*)PScratchBuffer.data(), kMaxBufferSize);
-
-            // handle compression error
-            if (PacketSize == static_cast<uint32>(-1))
+            auto maybePacketSize = compressPacket(buff, static_cast<size_t>(*buffsize));
+            if (!maybePacketSize)
             {
                 ShowError("zlib compression error");
                 continue;
             }
-
-            ref<uint32>(PScratchBuffer.data(), zlib_compressed_size(PacketSize)) = PacketSize;
-
-            PacketSize = (uint32)zlib_compressed_size(PacketSize) + 4;
-
+            PacketSize = *maybePacketSize;
         } while (PacketCount > 0 && PacketSize > 1300 - FFXI_HEADER_SIZE - 16); // max size for client to accept
 
         if (PacketSize == static_cast<uint32>(-1))
@@ -612,46 +619,7 @@ int32 MapNetworking::send_parse(uint8* buff, size_t* buffsize, MapSession* PSess
     TotalPacketsSentPerTick += packets;
     TracyZoneString(fmt::format("Sending {} packets", packets));
 
-    // Record data size excluding header
-    uint8 hash[16];
-    md5(PScratchBuffer.data(), hash, PacketSize);
-    std::memcpy(PScratchBuffer.data() + PacketSize, hash, 16);
-    PacketSize += 16;
-
-    if (PacketSize > kMaxBufferSize)
-    {
-        ShowCritical("Network: PScratchBuffer is overflowed (%u) by %s", PacketSize, PChar->name);
-    }
-
-    // Making total outgoing packet
-    std::memcpy(buff + FFXI_HEADER_SIZE, PScratchBuffer.data(), PacketSize);
-
-    uint32 CypherSize = (PacketSize / 4) & -2;
-
-    blowfish_t* pbfkey = nullptr;
-
-    if (PSession->blowfish.status == BLOWFISH_PENDING_ZONE && usePreviousKey)
-    {
-        pbfkey = &PSession->prev_blowfish;
-    }
-    else
-    {
-        pbfkey = &PSession->blowfish;
-    }
-
-    for (uint32 j = 0; j < CypherSize; j += 2)
-    {
-        blowfish_encipher((uint32*)(buff) + j + 7, (uint32*)(buff) + j + 8, pbfkey->P, pbfkey->S[0]);
-    }
-
-    // Control the size of the sent packet.
-    // if its size exceeds 1400 bytes (data size + 42 bytes IP header),
-    // then the client ignores the packet and returns a message about its loss
-
-    // in case of a similar situation, display a warning message and
-    // decrease the size of BuffMaxSize in 4 byte increments until it is removed (manually)
-
-    *buffsize = PacketSize + FFXI_HEADER_SIZE;
+    finalizePacket(buff, buffsize, PacketSize, PSession, usePreviousKey);
 
     auto remainingPackets = PChar->getPacketCount();
     TotalPacketsDelayedPerTick += static_cast<uint32>(remainingPackets);
@@ -700,7 +668,7 @@ int32 MapNetworking::send_parse(uint8* buff, size_t* buffsize, MapSession* PSess
     return 0;
 }
 
-int32 MapNetworking::sendSinglePacketNoPChar(uint8* buff, size_t* buffsize, MapSession* PSession, UsePreviousKey usePreviousKey, CBasicPacket* packet)
+void MapNetworking::preparePacket(uint8* buff, MapSession* PSession)
 {
     TracyZoneScoped;
 
@@ -715,54 +683,44 @@ int32 MapNetworking::sendSinglePacketNoPChar(uint8* buff, size_t* buffsize, MapS
 
     // save the current time (32 BIT!)
     ref<uint32>(buff, 8) = earth_time::timestamp();
+}
 
-    uint32 PacketSize = UINT32_MAX;
-    uint8  packets    = 0;
-
-    TotalPacketsToSendPerTick += static_cast<size_t>(1);
-
-    *buffsize = FFXI_HEADER_SIZE;
-    packets   = 0;
-
-    packet->setSequence(PSession->server_packet_id);
-
-    std::memcpy(buff + *buffsize, *packet, packet->getSize());
-    *buffsize += packet->getSize();
-    packets++;
+auto MapNetworking::compressPacket(uint8* buff, size_t buffsize) -> Maybe<size_t>
+{
+    TracyZoneScoped;
 
     // Compress the data without regard to the header
     // The returned size is 8 times the real data
-    PacketSize = zlib_compress((int8*)(buff + FFXI_HEADER_SIZE), (uint32)(*buffsize - FFXI_HEADER_SIZE), (int8*)PScratchBuffer.data(), kMaxBufferSize);
+    int32 result = zlib_compress((int8*)(buff + FFXI_HEADER_SIZE), (uint32)(buffsize - FFXI_HEADER_SIZE), (int8*)PScratchBuffer.data(), kMaxBufferSize);
 
     // handle compression error
-    if (PacketSize == static_cast<uint32>(-1))
+    if (result == -1)
     {
-        ShowError("zlib compression error");
-        return -1;
+        return std::nullopt;
     }
 
-    ref<uint32>(PScratchBuffer.data(), zlib_compressed_size(PacketSize)) = PacketSize;
+    auto packetSize = static_cast<size_t>(result);
 
-    PacketSize = (uint32)zlib_compressed_size(PacketSize) + 4;
+    ref<uint32>(PScratchBuffer.data(), zlib_compressed_size(packetSize)) = static_cast<uint32>(packetSize);
 
-    if (PacketSize == static_cast<uint32>(-1))
-    {
-        *buffsize = 0;
-        return -1;
-    }
+    packetSize = zlib_compressed_size(packetSize) + 4;
 
-    TotalPacketsSentPerTick += packets;
-    TracyZoneString(fmt::format("Sending {} packets", packets));
+    return packetSize;
+}
+
+void MapNetworking::finalizePacket(uint8* buff, size_t* buffsize, size_t PacketSize, MapSession* PSession, UsePreviousKey usePreviousKey)
+{
+    TracyZoneScoped;
 
     // Record data size excluding header
     uint8 hash[16];
-    md5(PScratchBuffer.data(), hash, PacketSize);
+    md5(PScratchBuffer.data(), hash, static_cast<int32>(PacketSize));
     std::memcpy(PScratchBuffer.data() + PacketSize, hash, 16);
     PacketSize += 16;
 
     if (PacketSize > kMaxBufferSize)
     {
-        ShowCritical("Network: PScratchBuffer is overflowed (%u) by char id %s", PacketSize, PSession->charID);
+        ShowCritical("Network: PScratchBuffer is overflowed (%u)", PacketSize);
     }
 
     // Making total outgoing packet
@@ -772,7 +730,7 @@ int32 MapNetworking::sendSinglePacketNoPChar(uint8* buff, size_t* buffsize, MapS
 
     blowfish_t* pbfkey = nullptr;
 
-    if (PSession->blowfish.status == BLOWFISH_PENDING_ZONE && usePreviousKey)
+    if (PSession->blowfish.status == BLOWFISH_PENDING_ZONE && usePreviousKey == UsePreviousKey::Yes)
     {
         pbfkey = &PSession->prev_blowfish;
     }
@@ -787,8 +745,6 @@ int32 MapNetworking::sendSinglePacketNoPChar(uint8* buff, size_t* buffsize, MapS
     }
 
     *buffsize = PacketSize + FFXI_HEADER_SIZE;
-
-    return 0;
 }
 
 void MapNetworking::tapStatistics()

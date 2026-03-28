@@ -49,6 +49,7 @@ public:
     // TODO: Pass around std::span<uint8> instead of uint8* and size_t*
     // TODO: Stop changing the buffsize size_t as we go along
     // TODO: All of these need to become coroutines
+    // TODO: Properly use size_t or u32/i32 where appropriate, we do a lot of casting
     void handle_incoming_packet(ByteSpan buffer, IPP ipp);
 
     int32 map_decipher_packet(uint8*, size_t, MapSession*, blowfish_t*); // Decipher packet
@@ -56,7 +57,23 @@ public:
     int32 parse(uint8*, size_t*, MapSession*);                           // main function parsing the packets
     int32 send_parse(uint8*, size_t*, MapSession*, UsePreviousKey);      // main function is building big packet
 
-    int32 sendSinglePacketNoPChar(uint8*, size_t*, MapSession*, UsePreviousKey, CBasicPacket*); // used to resend 0x00B if client didn't receive it (dropped packet)
+    //
+    // Packet Building
+    //
+
+    // Sets header, sequence, timestamp
+    void preparePacket(uint8* buff, MapSession* PSession);
+
+    // Add payload between preparePacket and compressPacket
+
+    auto compressPacket(uint8* buff, size_t buffsize) -> Maybe<size_t>;
+
+    // Sets MD5 hash, blowfish, final buffer size
+    void finalizePacket(uint8* buff, size_t* buffsize, size_t PacketSize, MapSession* PSession, UsePreviousKey usePreviousKey);
+
+    //
+    // Utils
+    //
 
     void tapStatistics();
 
@@ -78,11 +95,13 @@ private:
     MapConfig                  config_;
 
     // TODO: We can probably dedupe these and move the main buffer into MapSocket
+    // TODO: Update the naming conventions of these
     NetworkBuffer PBuff;          // Global packet clipboard
     NetworkBuffer PBuffCopy;      // Copy of above, used to decrypt a second time if necessary.
     NetworkBuffer PScratchBuffer; // Temporary packet clipboard
 
     // TODO: Move these to MapStatistics
+    // TODO: Update the naming conventions of these
     uint32 TotalPacketsToSendPerTick{ 0U };
     uint32 TotalPacketsSentPerTick{ 0U };
     uint32 TotalPacketsDelayedPerTick{ 0U };
