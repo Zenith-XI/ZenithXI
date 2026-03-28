@@ -83,7 +83,7 @@ public:
     // Utils
     //
 
-    void tapStatistics();
+    void flushStatistics();
 
     //
     // Accessors
@@ -108,10 +108,4 @@ private:
     NetworkBuffer PBuff;          // Global packet clipboard
     NetworkBuffer PBuffCopy;      // Copy of above, used to decrypt a second time if necessary.
     NetworkBuffer PScratchBuffer; // Temporary packet clipboard
-
-    // TODO: Move these to MapStatistics
-    // TODO: Update the naming conventions of these
-    uint32 TotalPacketsToSendPerTick{ 0U };
-    uint32 TotalPacketsSentPerTick{ 0U };
-    uint32 TotalPacketsDelayedPerTick{ 0U };
 };

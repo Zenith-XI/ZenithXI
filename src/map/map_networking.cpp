@@ -53,6 +53,9 @@ MapNetworking::MapNetworking(Scheduler& scheduler, MapStatistics& mapStatistics,
 , mapStatistics_(mapStatistics)
 , mapIPP_(config.ipp) // TODO: Refactor to not use this, since we have config_ in here
 , config_(config)
+, PBuff{}
+, PBuffCopy{}
+, PScratchBuffer{}
 {
     TracyZoneScoped;
 
@@ -112,18 +115,23 @@ void MapNetworking::handle_incoming_packet(ByteSpan buffer, const IPP& ipp)
             // It could be beneficial to parse 0x00D here anyway.
 
             //
-            // Client failed to receive 0x00B, manually rebuild and resend it
+            // Client failed to receive 0x00B, manually rebuild it, and copy it into PBuff for
+            // re-sending
             //
 
-            GP_SERV_COMMAND_LOGOUT zonePacket(PSession->zone_type, PSession->zone_ipp);
+            mapStatistics_.increment(MapStatistics::Key::TotalPacketsToSendPerTick);
 
             preparePacket(PBuff.data(), PSession);
 
-            TotalPacketsToSendPerTick += 1;
-
+            // Build the packet
+            GP_SERV_COMMAND_LOGOUT zonePacket(PSession->zone_type, PSession->zone_ipp);
             size = FFXI_HEADER_SIZE;
             zonePacket.setSequence(PSession->server_packet_id);
-            std::memcpy(PBuff.data() + size, &zonePacket, zonePacket.getSize());
+
+            // Copy into PBuff
+            // TODO: This memcpy is funky, we need to fix the API of BasicPacket and derived
+            //     : packets.
+            std::memcpy(PBuff.data() + size, &(*zonePacket), zonePacket.getSize());
             size += zonePacket.getSize();
 
             auto maybePacketSize = compressPacket(PBuff.data(), size);
@@ -135,7 +143,7 @@ void MapNetworking::handle_incoming_packet(ByteSpan buffer, const IPP& ipp)
             else
             {
                 finalizePacket(PBuff.data(), &size, *maybePacketSize, PSession, UsePreviousKey::Yes);
-                TotalPacketsSentPerTick += 1;
+                mapStatistics_.increment(MapStatistics::Key::TotalPacketsSentPerTick);
             }
 
             // Increment sync count with every packet
@@ -544,7 +552,7 @@ int32 MapNetworking::send_parse(uint8* buff, size_t* buffsize, MapSession* PSess
     uint8  packets                  = 0;
     bool   incrementKeyAfterEncrypt = false;
 
-    TotalPacketsToSendPerTick += static_cast<uint32>(PChar->getPacketCount());
+    mapStatistics_.increment(MapStatistics::Key::TotalPacketsToSendPerTick, static_cast<uint32>(PChar->getPacketCount()));
 
 #ifdef LOG_OUTGOING_PACKETS
     PacketGuard::PrintPacketList(PChar);
@@ -616,13 +624,15 @@ int32 MapNetworking::send_parse(uint8* buff, size_t* buffsize, MapSession* PSess
     } while (PacketSize == static_cast<uint32>(-1));
 
     PChar->erasePackets(packets);
-    TotalPacketsSentPerTick += packets;
+
+    mapStatistics_.increment(MapStatistics::Key::TotalPacketsSentPerTick, static_cast<uint32>(packets));
     TracyZoneString(fmt::format("Sending {} packets", packets));
 
     finalizePacket(buff, buffsize, PacketSize, PSession, usePreviousKey);
 
     auto remainingPackets = PChar->getPacketCount();
-    TotalPacketsDelayedPerTick += static_cast<uint32>(remainingPackets);
+    mapStatistics_.increment(MapStatistics::Key::TotalPacketsDelayedPerTick, static_cast<uint32>(remainingPackets));
+
     if (settings::get<bool>("logging.DEBUG_PACKET_BACKLOG"))
     {
         TracyZoneString(fmt::format("{} packets remaining", remainingPackets));
@@ -747,7 +757,7 @@ void MapNetworking::finalizePacket(uint8* buff, size_t* buffsize, size_t PacketS
     *buffsize = PacketSize + FFXI_HEADER_SIZE;
 }
 
-void MapNetworking::tapStatistics()
+void MapNetworking::flushStatistics()
 {
     // Collect statistics
     // TODO: Collect these inline
@@ -770,9 +780,6 @@ void MapNetworking::tapStatistics()
     }
 
     // Set statistics
-    mapStatistics_.set(MapStatistics::Key::TotalPacketsToSendPerTick, TotalPacketsToSendPerTick);
-    mapStatistics_.set(MapStatistics::Key::TotalPacketsSentPerTick, TotalPacketsSentPerTick);
-    mapStatistics_.set(MapStatistics::Key::TotalPacketsDelayedPerTick, TotalPacketsDelayedPerTick);
     mapStatistics_.set(MapStatistics::Key::ActiveZones, activeZoneCount);
     mapStatistics_.set(MapStatistics::Key::ConnectedPlayers, playerCount);
     mapStatistics_.set(MapStatistics::Key::ActiveMobs, mobCount);
@@ -780,12 +787,11 @@ void MapNetworking::tapStatistics()
     const auto percent = dynamicTargIdCapacity > 0
                              ? static_cast<double>(dynamicTargIdCount) / static_cast<double>(dynamicTargIdCapacity) * 100.0
                              : 0.0;
+
     mapStatistics_.set(MapStatistics::Key::DynamicTargIdUsagePercent, static_cast<int64>(percent));
 
-    // Clear statistics
-    TotalPacketsToSendPerTick  = 0U;
-    TotalPacketsSentPerTick    = 0U;
-    TotalPacketsDelayedPerTick = 0U;
+    // This also zeroes out all the stats
+    mapStatistics_.flush();
 }
 
 auto MapNetworking::ipp() const -> IPP
