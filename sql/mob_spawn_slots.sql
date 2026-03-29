@@ -1111,6 +1111,24 @@ INSERT INTO `mob_spawn_slots` VALUES (157,85,0);
 INSERT INTO `mob_spawn_slots` VALUES (157,86,0);
 INSERT INTO `mob_spawn_slots` VALUES (157,87,0);
 
+-- Upper Delkfutts Tower
+INSERT INTO `mob_spawn_slots` VALUES (158,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,9,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,10,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,11,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,12,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,13,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,14,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,15,0);
+INSERT INTO `mob_spawn_slots` VALUES (158,16,0);
+
 -- Den of Rancor
 INSERT INTO `mob_spawn_slots` VALUES (160,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (160,2,0);
