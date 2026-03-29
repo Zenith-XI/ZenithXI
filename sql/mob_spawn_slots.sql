@@ -38,6 +38,21 @@ INSERT INTO `mob_spawn_slots` VALUES (2,24,0);
 INSERT INTO `mob_spawn_slots` VALUES (2,25,0);
 INSERT INTO `mob_spawn_slots` VALUES (2,26,0);
 
+-- Psoxja
+INSERT INTO `mob_spawn_slots` VALUES (9,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,9,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,10,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,11,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,12,0);
+INSERT INTO `mob_spawn_slots` VALUES (9,13,0);
+
 -- Oldton Movalpolos
 INSERT INTO `mob_spawn_slots` VALUES (11,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (11,2,0);
