@@ -1576,6 +1576,28 @@ INSERT INTO `mob_spawn_slots` VALUES (191,21,0);
 INSERT INTO `mob_spawn_slots` VALUES (191,22,0);
 INSERT INTO `mob_spawn_slots` VALUES (191,23,0);
 
+-- Inner Horutoto Ruins
+INSERT INTO `mob_spawn_slots` VALUES (192,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,9,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,10,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,11,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,12,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,13,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,14,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,15,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,16,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,17,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,18,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,19,0);
+INSERT INTO `mob_spawn_slots` VALUES (192,20,0);
+
 -- Ordelle's Caves
 INSERT INTO `mob_spawn_slots` VALUES (193,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (193,2,0);
