@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2015 Darkstar Dev Teams
+  Copyright (c) 2026 LandSandBoat Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,22 +19,14 @@
 ===========================================================================
 */
 
-#pragma once
+#include "weapon_unlock.h"
 
-#include "common/cbasetypes.h"
-#include "item.h"
-
-class CItemFish : public CItem
+void Exdata::WeaponUnlock::toTable(sol::table& table) const
 {
-public:
-    CItemFish(const CItem& PItem);
-    virtual ~CItemFish();
+    table["unlockPoints"] = this->UnlockPoints;
+}
 
-    auto GetLength() -> uint16;
-    auto GetWeight() -> uint16;
-    auto IsRanked() -> bool;
-
-    void SetLength(uint16);
-    void SetWeight(uint16);
-    void SetRank(bool);
-};
+void Exdata::WeaponUnlock::fromTable(const sol::table& data)
+{
+    this->UnlockPoints = Exdata::get_or<uint16_t>(data, "unlockPoints", this->UnlockPoints);
+}

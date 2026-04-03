@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2015 Darkstar Dev Teams
+  Copyright (c) 2026 LandSandBoat Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,22 +19,19 @@
 ===========================================================================
 */
 
-#pragma once
+#include "fish.h"
 
-#include "common/cbasetypes.h"
-#include "item.h"
-
-class CItemFish : public CItem
+void Exdata::Fish::toTable(sol::table& table) const
 {
-public:
-    CItemFish(const CItem& PItem);
-    virtual ~CItemFish();
+    table["size"]     = this->Size;
+    table["weight"]   = this->Weight;
+    table["isRanked"] = static_cast<bool>(this->IsRanked);
+}
 
-    auto GetLength() -> uint16;
-    auto GetWeight() -> uint16;
-    auto IsRanked() -> bool;
+void Exdata::Fish::fromTable(const sol::table& data)
+{
+    this->Size   = Exdata::get_or<uint16_t>(data, "size", this->Size);
+    this->Weight = Exdata::get_or<uint16_t>(data, "weight", this->Weight);
 
-    void SetLength(uint16);
-    void SetWeight(uint16);
-    void SetRank(bool);
-};
+    this->IsRanked = Exdata::get_or<bool>(data, "isRanked", this->IsRanked) ? 1 : 0;
+}

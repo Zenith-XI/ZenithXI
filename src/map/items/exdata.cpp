@@ -22,8 +22,10 @@
 #include "exdata.h"
 
 #include "item.h"
+#include "item_weapon.h"
 
 #include "items.h"
+#include "utils/fishingutils.h"
 #include <sol/sol.hpp>
 
 namespace Exdata
@@ -40,6 +42,11 @@ auto getType(const CItem* item) -> Type
 
     const auto itemId = item->getID();
 
+    if (fishingutils::IsFish(item))
+    {
+        return Type::Fish;
+    }
+
     if (itemId == LEGION_PASS)
     {
         return Type::LegionPass;
@@ -55,6 +62,16 @@ auto getType(const CItem* item) -> Type
         (itemId >= COPY_OF_THE_BRENNER_BLUEBOOK && itemId <= PAGE_OF_THE_BRENNER_BLACKBOOK))
     {
         return Type::BrennerBook;
+    }
+
+    if (itemId == SOUL_PLATE || itemId == GAUGER_PLATE || itemId == FIEND_PLATE)
+    {
+        return Type::SoulPlate;
+    }
+
+    if (itemId == SOUL_REFLECTOR || itemId == OFFICIAL_SOUL_REFLECTOR)
+    {
+        return Type::SoulReflector;
     }
 
     if (itemId == CHOCOBET_TICKET)
@@ -120,6 +137,24 @@ auto getType(const CItem* item) -> Type
         return Type::ChocoboCard;
     }
 
+    // Escutcheon (+4 is the finished item, no crafting exdata)
+    if (itemId >= JOINERS_ASPIS && itemId <= CHEFS_SHIELD &&
+        (itemId - JOINERS_ASPIS) % 5 != 4)
+    {
+        return Type::Escutcheon;
+    }
+
+    // Unlockable weapons use specific exdata
+    // Must be checked before augments
+    if (item->isType(ITEM_WEAPON))
+    {
+        auto* PWeapon = static_cast<const CItemWeapon*>(item);
+        if (PWeapon->isUnlockable())
+        {
+            return Type::WeaponUnlock;
+        }
+    }
+
     return Type::None;
 }
 
@@ -172,6 +207,21 @@ auto toTable(const CItem* item, sol::table& table) -> bool
             return true;
         case Type::ChocoboCard:
             item->exdata<ChocoboCard>().toTable(table);
+            return true;
+        case Type::Fish:
+            item->exdata<Fish>().toTable(table);
+            return true;
+        case Type::Escutcheon:
+            item->exdata<Escutcheon>().toTable(table);
+            return true;
+        case Type::SoulPlate:
+            item->exdata<SoulPlate>().toTable(table);
+            return true;
+        case Type::SoulReflector:
+            item->exdata<SoulReflector>().toTable(table);
+            return true;
+        case Type::WeaponUnlock:
+            item->exdata<WeaponUnlock>().toTable(table);
             return true;
         default:
             return false;
@@ -227,6 +277,21 @@ auto fromTable(CItem* item, const sol::table& data) -> bool
             return true;
         case Type::ChocoboCard:
             item->exdata<ChocoboCard>().fromTable(data);
+            return true;
+        case Type::Fish:
+            item->exdata<Fish>().fromTable(data);
+            return true;
+        case Type::Escutcheon:
+            item->exdata<Escutcheon>().fromTable(data);
+            return true;
+        case Type::SoulPlate:
+            item->exdata<SoulPlate>().fromTable(data);
+            return true;
+        case Type::SoulReflector:
+            item->exdata<SoulReflector>().fromTable(data);
+            return true;
+        case Type::WeaponUnlock:
+            item->exdata<WeaponUnlock>().fromTable(data);
             return true;
         default:
             return false;
