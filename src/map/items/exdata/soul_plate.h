@@ -21,37 +21,24 @@
 
 #pragma once
 
-#include "enums/exdata.h"
-
-#include "exdata/base.h"
-
-#include "exdata/assault_log.h"
-#include "exdata/betting_slip.h"
-#include "exdata/brenner_book.h"
-#include "exdata/chocobo_card.h"
-#include "exdata/chocobo_egg.h"
-#include "exdata/crafting_set.h"
-#include "exdata/escutcheon.h"
-#include "exdata/evolith.h"
-#include "exdata/fish.h"
-#include "exdata/glowing_lamp.h"
-#include "exdata/honeymoon_ticket.h"
-#include "exdata/legion_pass.h"
-#include "exdata/lottery_ticket.h"
-#include "exdata/meeble_grimoire.h"
-#include "exdata/perpetual_hourglass.h"
-#include "exdata/race_certificate.h"
-#include "exdata/soul_plate.h"
-#include "exdata/soul_reflector.h"
-#include "exdata/tabula.h"
-#include "exdata/weapon_unlock.h"
-
-class CItem;
+#include "base.h"
 
 namespace Exdata
 {
-auto getType(const CItem* item) -> Type;
+#pragma pack(push, 1)
+struct SoulPlate
+{
+    uint8_t  Signature[14]; // Retail: 18 bytes
+    uint16_t ZoneId;        // Retail: does not exist
+    uint16_t SuperFamilyId; // Retail: does not exist
+    uint16_t PoolId;        // Retail: Stores ID similar to pool IDs in LSB
+    uint32_t Level : 7;
+    uint32_t FeralSkill : 12;
+    uint32_t FeralPoints : 7;
+    uint32_t Quality : 6; // Zeni score
 
-auto toTable(const CItem* item, sol::table& table) -> bool;
-auto fromTable(CItem* item, const sol::table& data) -> bool;
+    void toTable(sol::table& table) const;
+    void fromTable(const sol::table& data);
+};
+#pragma pack(pop)
 } // namespace Exdata

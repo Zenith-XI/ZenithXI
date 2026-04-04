@@ -14,8 +14,12 @@ set(ITEM_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/chocobo_egg.h
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/crafting_set.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/crafting_set.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/escutcheon.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/escutcheon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/evolith.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/evolith.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/fish.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/fish.h
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/glowing_lamp.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/glowing_lamp.h
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/honeymoon_ticket.cpp
@@ -30,8 +34,14 @@ set(ITEM_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/perpetual_hourglass.h
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/race_certificate.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/race_certificate.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/soul_plate.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/soul_plate.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/soul_reflector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/soul_reflector.h
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/tabula.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exdata/tabula.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/weapon_unlock.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exdata/weapon_unlock.h
     ${CMAKE_CURRENT_SOURCE_DIR}/item_currency.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/item_currency.h
     ${CMAKE_CURRENT_SOURCE_DIR}/item_equipment.cpp

@@ -398,6 +398,126 @@ describe('Exdata', function()
         assert(ex.name == 'ChocoTest')
     end)
 
+    it('can get and set Fish exdata', function()
+        local item = player:addItem({ id = xi.item.LIK, quantity = 1 })
+        assert(item)
+
+        item:setExData(
+            {
+                size     = 300,
+                weight   = 1500,
+                isRanked = true,
+            })
+
+        local ex = item:getExData()
+        assert(ex.size == 300)
+        assert(ex.weight == 1500)
+        assert(ex.isRanked == true)
+    end)
+
+    it('can get and set Escutcheon exdata', function()
+        local item = player:addItem({ id = xi.item.JOINERS_ASPIS, quantity = 1 })
+        assert(item)
+
+        item:setExData(
+            {
+                status             = 1,
+                bonusObjective     = xi.escutcheon.bonusObjective.CRAFT_DAYTIME,
+                craftsmanship      = 2500,
+                stage              = xi.escutcheon.stage.ASPIS,
+                successDownPenalty = 0,
+                signature          = 'TestCrafter',
+            })
+
+        local ex = item:getExData()
+        assert(ex.status == 1)
+        assert(ex.bonusObjective == xi.escutcheon.bonusObjective.CRAFT_DAYTIME)
+        assert(ex.craftsmanship == 2500)
+        assert(ex.stage == xi.escutcheon.stage.ASPIS)
+        assert(ex.successDownPenalty == 0)
+        assert(ex.signature == 'TestCrafter')
+    end)
+
+    it('can get and set Soul Plate exdata', function()
+        local item = player:addItem({ id = xi.item.SOUL_PLATE, quantity = 1 })
+        assert(item)
+
+        item:setExData(
+            {
+                signature     = 'Goblin_Bounty_Hunter',
+                zoneId        = xi.zone.QUFIM_ISLAND,
+                superFamilyId = xi.mobSuperFamily.GOBLIN,
+                poolId        = xi.mobPool.BUGBEAR_MATMAN,
+                level         = 12,
+                feralSkill    = xi.pankration.feralSkill.MAIN_JOB_WARRIOR,
+                feralPoints   = 50,
+                quality       = 42,
+            })
+
+        local ex = item:getExData()
+        assert(ex.signature == 'GoblinBountyH')
+        assert(ex.zoneId == xi.zone.QUFIM_ISLAND)
+        assert(ex.superFamilyId == xi.mobSuperFamily.GOBLIN)
+        assert(ex.poolId == xi.mobPool.BUGBEAR_MATMAN)
+        assert(ex.level == 12)
+        assert(ex.feralSkill == xi.pankration.feralSkill.MAIN_JOB_WARRIOR)
+        assert(ex.feralPoints == 50)
+        assert(ex.quality == 42)
+    end)
+
+    it('soul plate signature encodes and truncates correctly', function()
+        local item = player:addItem({ id = xi.item.SOUL_PLATE, quantity = 1 })
+        assert(item)
+
+        -- Goblin_Bounty_Hunter -> Goblin_Bounty_H -> GoblinBountyH
+        item:setExData({ signature = 'Goblin_Bounty_Hunter' })
+        assert(item:getExData().signature == 'GoblinBountyH')
+
+        -- Thunder_Elemental -> Thunder_Element -> ThunderElement
+        item:setExData({ signature = 'Thunder_Elemental' })
+        assert(item:getExData().signature == 'ThunderElement')
+
+        item:setExData({ signature = 'Crab' })
+        assert(item:getExData().signature == 'Crab')
+    end)
+
+    it('can get and set Soul Reflector exdata', function()
+        local item = player:addItem({ id = xi.item.SOUL_REFLECTOR, quantity = 1 })
+        assert(item)
+
+        item:setExData(
+            {
+                nameFirst      = xi.pankration.firstName.BLOODY,
+                nameLast       = xi.pankration.secondName.BEAST,
+                poolId         = 200,
+                exp            = 150,
+                discipline     = 112,
+                temperament    = 10,
+                aggressiveness = 8,
+                level          = 60,
+                feralSkills    =
+                {
+                    { skillId = xi.pankration.feralSkill.MAIN_JOB_WARRIOR, level = 5 },
+                    { skillId = xi.pankration.feralSkill.SUPPORT_JOB_MONK, level = 3 },
+                },
+            })
+
+        local ex = item:getExData()
+        assert(ex.nameFirst == xi.pankration.firstName.BLOODY)
+        assert(ex.nameLast == xi.pankration.secondName.BEAST)
+        assert(ex.poolId == 200)
+        assert(ex.exp == 150)
+        assert(ex.discipline == 112)
+        assert(ex.temperament == 10)
+        assert(ex.aggressiveness == 8)
+        assert(ex.level == 60)
+        assert(#ex.feralSkills == 7)
+        assert(ex.feralSkills[1].skillId == xi.pankration.feralSkill.MAIN_JOB_WARRIOR)
+        assert(ex.feralSkills[1].level == 5)
+        assert(ex.feralSkills[2].skillId == xi.pankration.feralSkill.SUPPORT_JOB_MONK)
+        assert(ex.feralSkills[2].level == 3)
+    end)
+
     it('unhandled items fall back to raw bytes', function()
         local item = player:addItem({ id = xi.item.FIRE_CRYSTAL, quantity = 1 })
         assert(item)
