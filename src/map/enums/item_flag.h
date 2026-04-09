@@ -47,7 +47,6 @@ enum class ItemFlag : uint32
     NoDelivery     = 0x00002000, // Cannot be sent through the PBX
     Exclusive      = 0x00004000, // Cannot be traded to another PC
     Rare           = 0x00008000, // Cannot own multiple copies
-    // Above u16 is LSB-specific flags
     NoRecycle      = 0x00010000, // Item skips Recycle Bin
     NoRareCheck    = 0x00020000, // Item skips Rare check in Treasure Pool
 };
