@@ -1081,7 +1081,7 @@ void LoadInventory(CCharEntity* PChar)
                     EncodeStringLinkshell(rset->get<std::string>("signature").c_str(), EncodedString);
                     PItem->setSignature(EncodedString);
                 }
-                else if (PItem->getFlag() & (ITEM_FLAG_INSCRIBABLE))
+                else if (PItem->hasFlag(ItemFlag::Inscribable))
                 {
                     PItem->setSignature(rset->get<std::string>("signature"));
                 }
@@ -1706,7 +1706,7 @@ uint8 AddItem(CCharEntity* PChar, uint8 LocationID, CItem* PItem, bool silence)
         return 0;
     }
 
-    if (PItem->getFlag() & ITEM_FLAG_RARE)
+    if (PItem->hasFlag(ItemFlag::Rare))
     {
         if (HasItem(PChar, PItem->getID()))
         {
@@ -2025,7 +2025,7 @@ bool CanTrade(CCharEntity* PChar, CCharEntity* PTarget)
     {
         CItem* PItem = PChar->UContainer->GetItem(slotid);
 
-        if (PItem != nullptr && PItem->getFlag() & ITEM_FLAG_RARE)
+        if (PItem != nullptr && PItem->hasFlag(ItemFlag::Rare))
         {
             if (HasItem(PTarget, PItem->getID()))
             {
