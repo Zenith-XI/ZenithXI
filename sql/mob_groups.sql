@@ -725,7 +725,7 @@ INSERT INTO `mob_groups` VALUES (14,0,17,'Constant_Wanderer',0,128,0,0,0,0,NULL)
 -- Promyvion-Dem (Zone 18)
 -- ------------------------------------------------------------
 
-INSERT INTO `mob_groups` VALUES (2,2048,18,'Idle_Wanderer',960,0,0,260000,0,0,'ABYSSEA'); -- TODO: Apex Idle Drifter
+INSERT INTO `mob_groups` VALUES (2,2048,18,'Apex_Idle_Drifter',960,0,0,260000,0,0,'ABYSSEA'); -- TODO: Confirm HP/MP
 INSERT INTO `mob_groups` VALUES (1,6651,18,'Wanderer',600,0,2613,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (3,6652,18,'Weeper',600,0,2635,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (4,1768,18,'Gorger',600,0,1207,0,0,0,NULL);
@@ -746,8 +746,8 @@ INSERT INTO `mob_groups` VALUES (13,6652,18,'Weeper',720,0,2635,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (19,6651,18,'Wanderer',720,0,2613,0,0,0,NULL);
 -- 20 free
 INSERT INTO `mob_groups` VALUES (21,3483,18,'Satiator',14400,0,2166,3000,0,0,NULL);
-INSERT INTO `mob_groups` VALUES (22,298,18,'Woeful_Weeper',960,0,0,260000,0,0,'ABYSSEA'); -- TODO: Apex Woeful Lamenter
-INSERT INTO `mob_groups` VALUES (23,4527,18,'Livid_Seether',960,0,0,260000,0,0,'ABYSSEA'); -- TODO: Apex Livid Rager
+INSERT INTO `mob_groups` VALUES (22,298,18,'Apex_Woeful_Lamenter',960,0,0,260000,0,0,'ABYSSEA'); -- TODO: Confirm HP/MP
+INSERT INTO `mob_groups` VALUES (23,4527,18,'Apex_Livid_Rager',960,0,0,260000,0,0,'ABYSSEA'); -- TODO: Confirm HP/MP
 
 -- ------------------------------------------------------------
 -- Spire_of_Dem (Zone 19)
