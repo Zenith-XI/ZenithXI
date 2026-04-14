@@ -671,10 +671,18 @@ xi.combat.physical.calculateMeleePDIF = function(actor, target, weaponType, wsAt
 
     -- Apply level correction to UL/LL
     -- https://www.ffxiah.com/forum/topic/57989/post-2016-level-correction-testing/
-    pDifLowerCap = pDifLowerCap + levelDifFactor
-    pDifUpperCap = pDifUpperCap + levelDifFactor
+    -- Dice roll the 50/50 chance to select two different bounds. Mote has not yet implemented the spike by the time of this post so his ratio is not 50/50 rate.
+    -- His model at the time and implemented spike, so the (0.0, 0.5) bounds also looks different
+    -- https://www.bluegartr.com/threads/108161-pDif-and-damage?p=5007487&viewfull=1#post5007487
+    local upperMax   = math.random(0, 1) == 0 and 0.5 or 0
+    local upperBound = math.max(pDifUpperCap + levelDifFactor, upperMax)
+    local lowerbound = math.max(pDifLowerCap + levelDifFactor, 0)
 
-    pDif = math.random(pDifLowerCap * 1000, pDifUpperCap * 1000) / 1000
+    if upperBound == 0 then
+        return 0
+    end
+
+    pDif = math.random(lowerbound * 1000, upperBound * 1000) / 1000
 
     ----------------------------------------
     -- Step 4: Melee random factor.
@@ -820,6 +828,9 @@ xi.combat.physical.calculateRangedPDIF = function(actor, target, weaponType, wsA
     pDifLowerCap = pDifLowerCap + levelDifFactor
 
     pDif = math.random(pDifLowerCap * 1000, pDifUpperCap * 1000) / 1000
+
+    -- do not go negative, rolls below zero (proportionally) need to be rolled
+    pDif = math.max(pDif, 0)
 
     ----------------------------------------
     -- Step 4: Ranged critical factor. Bypasses caps.
