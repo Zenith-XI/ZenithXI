@@ -518,6 +518,37 @@ xi.combat.physical.wRatioCapOthers = function(wRatio, pDifFinalCap)
     return pDifLowerCap, pDifUpperCap
 end
 
+---@param isPC boolean
+---@param wRatio number
+---@return number
+local function getSpikeRatio(isPC, wRatio)
+    if isPC then
+        -- https://www.bg-wiki.com/ffxi/PDIF#Average_Melee_pDIF(qRatio)
+        -- This is also known as "pDIF spike"
+        if wRatio > 0.5 and wRatio < 1.5 then -- 0.5 and 1.5 are 0% chance
+            local sRatio = (0.5 - math.abs(wRatio - 1)) * 1.2
+
+            return utils.clamp(sRatio, 0, 1 / 3) -- 1/3 (one-third), not 0.33
+        end
+    else
+        -- https://www.ffxiah.com/forum/topic/58479/monster-pdif-curves-and-other-info/#3751498
+        -- This is also known as "pDIF spike"
+        local sRatio = 0
+
+        if wRatio > 0.0 and wRatio < 0.75 then
+            sRatio = -5 / 9 + (10 / 9) * wRatio
+        elseif wRatio <= 1.3 then
+            sRatio = 0.3
+        else
+            sRatio = 5 / 3 - (270 / 256) * wRatio
+        end
+
+        return utils.clamp(sRatio, 0, 0.3)
+    end
+
+    return 0
+end
+
 -- WARNING: This function is used in src/utils/battleutils.cpp "GetDamageRatio" function.
 -- If you update this parameters, update them there aswell.
 ---@param actor CBaseEntity
@@ -614,16 +645,10 @@ xi.combat.physical.calculateMeleePDIF = function(actor, target, weaponType, wsAt
     if actor:isPC() then
         pDifFinalCap = (xi.combat.physical.pDifWeaponCapTable[weaponType] + damageLimitPlus) * damageLimitPercent + (isCritical and 1 or 0)
 
-        -- https://www.bg-wiki.com/ffxi/PDIF#Average_Melee_pDIF(qRatio)
-        -- This is also known as "pDIF spike"
-        if wRatio > 0.5 and wRatio < 1.5 then -- 0.5 and 1.5 are 0% chance
-            local sRatio = (0.5 - math.abs(wRatio - 1)) * 1.2
+        local sRatio = getSpikeRatio(true, wRatio)
 
-            sRatio = utils.clamp(sRatio, 0, 1 / 3) -- 1/3 (one-third), not 0.33
-
-            if math.random(1, 10000) / 10000 <= sRatio then
-                return 1.0
-            end
+        if math.random(1, 10000) / 10000 <= sRatio then
+            return 1.0
         end
 
         pDifLowerCap, pDifUpperCap = xi.combat.physical.wRatioCapPC(wRatio, pDifFinalCap)
@@ -635,19 +660,7 @@ xi.combat.physical.calculateMeleePDIF = function(actor, target, weaponType, wsAt
         local critBonus = (applyLevelCorrection and isCritical) and 1 or 0
         pDifFinalCap    = (basePDIF + damageLimitPlus) * damageLimitPercent + critBonus
 
-        -- https://www.ffxiah.com/forum/topic/58479/monster-pdif-curves-and-other-info/#3751498
-        -- This is also known as "pDIF spike"
-        local sRatio = 0
-
-        if wRatio > 0.0 and wRatio < 0.75 then
-            sRatio = -5 / 9 + (10 / 9) * wRatio
-        elseif wRatio <= 1.3 then
-            sRatio = 0.3
-        else
-            sRatio = 5 / 3 - (270 / 256) * wRatio
-        end
-
-        sRatio = utils.clamp(sRatio, 0, 0.3)
+        local sRatio = getSpikeRatio(false, wRatio)
 
         if math.random(1, 10000) / 10000 <= sRatio then
             return 1.0
