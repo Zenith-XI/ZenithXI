@@ -144,35 +144,32 @@ xi.job_utils.monk.useHundredFists = function(player, target, ability)
     return xi.effect.HUNDRED_FISTS
 end
 
-xi.job_utils.monk.impetus =
-{
-    ATT_PER_STACK       = 2,
-    CRIT_RATE_PER_STACK = 1,
-    ACC_PER_STACK       = 2,
-    CRIT_DMG_PER_STACK  = 1,
-    MAX_STACKS          = 50,
-}
+xi.job_utils.monk.addImpetusMods = function(effect, mainDelta, subDelta)
+    local stacks      = effect:getPower()
+    local newStacks   = math.max(0, math.min(stacks + mainDelta, 50))
+    local mainApplied = newStacks - stacks
+    if mainApplied ~= 0 then
+        effect:addMod(xi.mod.ATT, mainApplied * 2)
+        effect:addMod(xi.mod.CRITHITRATE, mainApplied * 1)
+        effect:setPower(newStacks)
+    end
+
+    local subStacks    = effect:getSubPower()
+    local newSubStacks = math.max(0, math.min(subStacks + subDelta, 50))
+    local subApplied   = newSubStacks - subStacks
+    if subApplied ~= 0 then
+        effect:addMod(xi.mod.ACC, subApplied * 2)
+        effect:addMod(xi.mod.CRIT_DMG_INCREASE, subApplied * 1)
+        effect:setSubPower(newSubStacks)
+    end
+end
 
 -- TODO: Support Tantra Cyclas + 1 (does not give critical hit damage)
 -- Probably will be exceptionally jank, very low priority
 xi.job_utils.monk.impetusMissListener = function(attacker, victim, attack)
     local effect = attacker:getStatusEffect(xi.effect.IMPETUS)
-
     if effect then
-        local stacks    = effect:getPower()    -- Number of main stacks (ATT / Crit Rate)
-        local subStacks = effect:getSubPower() -- Number of sub stacks (ACC / Crit DMG)
-
-        if stacks > 0 then
-            effect:addMod(xi.mod.ATT, -(stacks * xi.job_utils.monk.impetus.ATT_PER_STACK))
-            effect:addMod(xi.mod.CRITHITRATE, -(stacks * xi.job_utils.monk.impetus.CRIT_RATE_PER_STACK))
-            effect:setPower(0)
-        end
-
-        if subStacks > 0 then
-            effect:addMod(xi.mod.ACC, -(subStacks * xi.job_utils.monk.impetus.ACC_PER_STACK))
-            effect:addMod(xi.mod.CRIT_DMG_INCREASE, -(subStacks * xi.job_utils.monk.impetus.CRIT_DMG_PER_STACK))
-            effect:setSubPower(0)
-        end
+        xi.job_utils.monk.addImpetusMods(effect, -effect:getPower(), -effect:getSubPower())
     end
 end
 
@@ -180,25 +177,9 @@ end
 -- Probably will be exceptionally jank, very low priority
 xi.job_utils.monk.impetusHitListener = function(attacker, victim, attack)
     local effect = attacker:getStatusEffect(xi.effect.IMPETUS)
-
     if effect then
-        local stacks    = effect:getPower()    -- Number of main stacks (ATT / Crit Rate)
-        local subStacks = effect:getSubPower() -- Number of sub stacks (ACC / Crit DMG)
-
-        if stacks < xi.job_utils.monk.impetus.MAX_STACKS then
-            effect:addMod(xi.mod.ATT, xi.job_utils.monk.impetus.ATT_PER_STACK)
-            effect:addMod(xi.mod.CRITHITRATE, xi.job_utils.monk.impetus.CRIT_RATE_PER_STACK)
-            effect:setPower(stacks + 1)
-        end
-
-        if
-            attacker:getMod(xi.mod.AUGMENTS_IMPETUS) > 0 and
-            subStacks < xi.job_utils.monk.impetus.MAX_STACKS
-        then
-            effect:addMod(xi.mod.ACC, xi.job_utils.monk.impetus.ACC_PER_STACK)
-            effect:addMod(xi.mod.CRIT_DMG_INCREASE, xi.job_utils.monk.impetus.CRIT_DMG_PER_STACK)
-            effect:setSubPower(subStacks + 1)
-        end
+        local subDelta = attacker:getMod(xi.mod.AUGMENTS_IMPETUS) > 0 and 1 or 0
+        xi.job_utils.monk.addImpetusMods(effect, 1, subDelta)
     end
 end
 
