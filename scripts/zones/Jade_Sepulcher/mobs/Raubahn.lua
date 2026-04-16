@@ -19,6 +19,7 @@ end
 
 entity.onMobSpawn = function(mob)
     mob:setUnkillable(true)
+    mob:setMobMod(xi.mobMod.ROAM_COOL, 8)
     mob:setMod(xi.mod.DMGMAGIC, -1250) -- Observed at 99 and the skillchain damage in under level 71 vods
     mob:setMobMod(xi.mobMod.BASE_DAMAGE_MULTIPLIER, 150)
     xi.mix.jobSpecial.config(mob, {
