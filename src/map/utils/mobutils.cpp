@@ -1279,6 +1279,11 @@ uint8 JobSkillRankToBaseEvaRank(JOBTYPE mjob, JOBTYPE sjob)
     uint8 mainEvasionSkillRank = battleutils::GetSkillRank(SKILL_EVASION, mjob);
     uint8 subEvasionSkillRank  = battleutils::GetSkillRank(SKILL_EVASION, sjob);
 
+    if (sjob == JOB_NON)
+    {
+        subEvasionSkillRank = mainEvasionSkillRank;
+    }
+
     switch (std::min(mainEvasionSkillRank, subEvasionSkillRank))
     {
         case 1:
