@@ -1166,7 +1166,7 @@ INSERT INTO `mob_groups` VALUES (12,513,29,'Boroka',86400,0,341,9000,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (13,3725,29,'Spell_Spitter_Spilospok',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (14,708,29,'Chemical_Cook_Chemachiq',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (15,503,29,'Book_Browser_Bokabraq',0,128,0,0,0,0,NULL);
-INSERT INTO `mob_groups` VALUES (16,4102,29,'Unstable_Cluster',0,128,2523,10000,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (16,4102,29,'Unstable_Cluster',0,128,2523,10800,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (17,325,29,'Bahamut',0,128,0,26000,15000,0,NULL);
 INSERT INTO `mob_groups` VALUES (18,7554,29,'Ouryu_bv2',0,128,0,6000,15000,0,NULL);
 INSERT INTO `mob_groups` VALUES (19,7551,29,'Tiamat_bv2',0,128,0,6500,15000,0,NULL);
