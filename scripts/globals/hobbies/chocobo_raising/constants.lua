@@ -4,8 +4,6 @@
 xi = xi or {}
 xi.chocoboRaising = xi.chocoboRaising or {}
 
-local debug = utils.getDebugPlayerPrinter(xi.settings.main.DEBUG_CHOCOBO_RAISING)
-
 -- TODO: Remove the duplication for walk CSs
 xi.chocoboRaising.csidTable =
 {

@@ -15,6 +15,7 @@ local vmOpCodes =
     CHECK_REPORT_STATUS                 = 208,
     INTRO_MENU_PT_2                     = 214,
     INTRO_MENU_PT_3                     = 215,
+    UNKNOWN_216                         = 216,
     BUY_CHOCOBO_WHISTLE                 = 221,
     RECEIVE_CHOCOBO_WHISTLE             = 222,
     DEBUG_ABILITIES_PRINT               = 229,
@@ -54,6 +55,7 @@ local vmOpCodeNames =
     [vmOpCodes.CHECK_REPORT_STATUS]         = 'Check report status',
     [vmOpCodes.INTRO_MENU_PT_2]             = 'Intro menu pt 2',
     [vmOpCodes.INTRO_MENU_PT_3]             = 'Intro menu pt 3',
+    [vmOpCodes.UNKNOWN_216]                 = 'Unknown 216 (forced renaming?)',
     [vmOpCodes.BUY_CHOCOBO_WHISTLE]         = 'Buy chocobo whistle',
     [vmOpCodes.RECEIVE_CHOCOBO_WHISTLE]     = 'Receive chocobo whistle',
     [vmOpCodes.DEBUG_ABILITIES_PRINT]       = 'Debug abilities print',
@@ -233,7 +235,7 @@ xi.chocoboRaising.eventVM = function(player, csid, option, npc)
         --------------------------------------------------------
         -- Main body update logic
         --------------------------------------------------------
-        local opCodeName = xi.chocoboRaising.vmOpCodeNames[option] or '?'
+        local opCodeName = vmOpCodeNames[option] or '?'
         debug(string.format('ChocoVM Op: %i: %s', option, opCodeName))
 
         switch (option): caseof

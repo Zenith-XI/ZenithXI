@@ -44,25 +44,16 @@ xi.chocoboRaising.handleCarePlan = function(player, chocoState, carePlan, elapse
     local plan4Length = bit.rshift(bit.band(chocoState.care_plan, 0x000000F0),  4)
     local plan4Type   = bit.rshift(bit.band(chocoState.care_plan, 0x0000000F),  0)
 
-    local remainingDays     = elapsedDays
-    local hasRemainingPlans = plan1Length > 0 or plan2Length > 0 or plan3Length > 0 or plan4Length > 0
+    local remainingDays = elapsedDays
 
-    while
-        remainingDays > 0 and
-        hasRemainingPlans
-    do
+    while remainingDays > 0 do
         if plan1Length > 0 then
-            local deduct = math.min(plan1Length, remainingDays)
-            plan1Length = plan1Length - deduct
+            local deduct  = math.min(plan1Length, remainingDays)
+            plan1Length   = plan1Length - deduct
             remainingDays = remainingDays - deduct
         end
 
-        local hasNextPlans = plan2Length > 0 or plan3Length > 0 or plan4Length > 0
-
-        if
-            plan1Length == 0 and
-            hasNextPlans
-        then
+        if plan1Length == 0 then
             -- Shift plans left
             plan1Length = plan2Length
             plan1Type   = plan2Type
@@ -72,9 +63,49 @@ xi.chocoboRaising.handleCarePlan = function(player, chocoState, carePlan, elapse
             plan3Type   = plan4Type
             plan4Length = 0
             plan4Type   = 0
-        end
 
-        hasRemainingPlans = plan1Length > 0 or plan2Length > 0 or plan3Length > 0 or plan4Length > 0
+            -- After shifting, if a plan slot is 0, it should be set back to 7 days of basic care
+            if plan1Length == 0 then
+                plan1Length = 7
+                plan1Type   = xi.chocoboRaising.carePlans.BASIC_CARE
+            end
+
+            if plan2Length == 0 then
+                plan2Length = 7
+                plan2Type   = xi.chocoboRaising.carePlans.BASIC_CARE
+            end
+
+            if plan3Length == 0 then
+                plan3Length = 7
+                plan3Type   = xi.chocoboRaising.carePlans.BASIC_CARE
+            end
+
+            if plan4Length == 0 then
+                plan4Length = 7
+                plan4Type   = xi.chocoboRaising.carePlans.BASIC_CARE
+            end
+        end
+    end
+
+    -- Ensure all slots are refilled if they are still empty
+    if plan1Length == 0 then
+        plan1Length = 7
+        plan1Type   = xi.chocoboRaising.carePlans.BASIC_CARE
+    end
+
+    if plan2Length == 0 then
+        plan2Length = 7
+        plan2Type   = xi.chocoboRaising.carePlans.BASIC_CARE
+    end
+
+    if plan3Length == 0 then
+        plan3Length = 7
+        plan3Type   = xi.chocoboRaising.carePlans.BASIC_CARE
+    end
+
+    if plan4Length == 0 then
+        plan4Length = 7
+        plan4Type   = xi.chocoboRaising.carePlans.BASIC_CARE
     end
 
     chocoState.care_plan =
@@ -83,16 +114,16 @@ xi.chocoboRaising.handleCarePlan = function(player, chocoState, carePlan, elapse
         bit.lshift(plan3Length, 12) + bit.lshift(plan3Type,  8) +
         bit.lshift(plan4Length,  4) + bit.lshift(plan4Type,  0)
 
-    chocoState.strength    = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.STRENGTH   , chocoState.strength   , xi.chocoboRaising.carePlanData[carePlan][1] * elapsedDays, 255)
-    chocoState.endurance   = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.ENDURANCE  , chocoState.endurance  , xi.chocoboRaising.carePlanData[carePlan][2] * elapsedDays, 255)
+    chocoState.strength    = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.STRENGTH,    chocoState.strength,    xi.chocoboRaising.carePlanData[carePlan][1] * elapsedDays, 255)
+    chocoState.endurance   = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.ENDURANCE,   chocoState.endurance,   xi.chocoboRaising.carePlanData[carePlan][2] * elapsedDays, 255)
     chocoState.discernment = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.DISCERNMENT, chocoState.discernment, xi.chocoboRaising.carePlanData[carePlan][3] * elapsedDays, 255)
     chocoState.receptivity = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.RECEPTIVITY, chocoState.receptivity, xi.chocoboRaising.carePlanData[carePlan][4] * elapsedDays, 255)
-    chocoState.affection   = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.AFFECTION  , chocoState.affection  , xi.chocoboRaising.carePlanData[carePlan][5] * elapsedDays, 255)
+    chocoState.affection   = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.AFFECTION,   chocoState.affection,   xi.chocoboRaising.carePlanData[carePlan][5] * elapsedDays, 255)
 
     -- TODO: Double check this from caps.
     -- After each day the chocobo's energy is refreshed, so only previous day's energy cost is applied
     -- to the chocobo
-    chocoState.energy = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.ENERGY, chocoState.energy, xi.chocoboRaising.carePlanData[carePlan][6], 100)
+    chocoState.energy = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.ENERGY, 100, xi.chocoboRaising.carePlanData[carePlan][6], 100)
 
     local payment = xi.chocoboRaising.carePlanData[carePlan][7]
 

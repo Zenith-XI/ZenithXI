@@ -49,7 +49,7 @@ xi.chocoboRaising.initChocoState = function(player)
     chocoState.report.day_end   = chocoState.age
 
     local reportLength = chocoState.report.day_end - chocoState.report.day_start
-    debug('Report length:', chocoState.reportLength)
+    debug('Report length:', reportLength)
 
     chocoState.last_update_age = chocoState.age
 
@@ -90,7 +90,7 @@ xi.chocoboRaising.initChocoState = function(player)
         local possibleCarePlanEvent = possibleCarePlanFuture[idx]
 
         if possibleCarePlanEvent == nil then -- We went past the end of the care plan
-            possibleCarePlanEvent = 0 -- Default to Basic Care
+            possibleCarePlanEvent = xi.chocoboRaising.carePlans.BASIC_CARE
         end
 
         local age          = chocoState.report.day_start + idx - 1
