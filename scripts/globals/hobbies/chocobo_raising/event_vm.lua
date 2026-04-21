@@ -465,29 +465,12 @@ xi.chocoboRaising.eventVM = function(player, csid, option, npc)
                 -- TODO: These appearance changes are locked in on day 29 if
                 -- they are 'Average' (128) or above. This will need to be
                 -- written to the db and this part rewritten.
-
-                -- Crest type
-                local enlargedCrest = 0
-
-                if chocoState.discernment >= 128 then
-                    enlargedCrest = 1
-                end
-
-                -- Feet type
-                local enlargedFeet = 0
-
-                if chocoState.strength >= 128 then
-                    enlargedFeet = 1
-                end
-
-                -- Tail feathers type
-                local moreTailFeathers = 0
-
-                if chocoState.endurance >= 128 then
-                    moreTailFeathers = 1
-                end
+                local enlargedCrest    = chocoState.discernment >= 128 and 1 or 0
+                local enlargedFeet     = chocoState.strength >= 128 and 1 or 0
+                local moreTailFeathers = chocoState.endurance >= 128 and 1 or 0
 
                 -- Event update parameters.
+                -- TODO: What's that 1 for?
                 player:updateEvent(chocoState.color, enlargedCrest, enlargedFeet, moreTailFeathers, chocoState.stage, 1, 0, 0)
             end,
 
@@ -518,6 +501,7 @@ xi.chocoboRaising.eventVM = function(player, csid, option, npc)
                     bit.lshift(chocoState.ability2, 12) +
                     bit.lshift(chocoState.stage, 16)
 
+                -- TODO: Refactor to use the -bit pattern
                 -- Condition flags (can be combined)
                 -- No flags: Stable
                 -- local legWounded = bit.lshift(0x01, 0)
@@ -542,6 +526,7 @@ xi.chocoboRaising.eventVM = function(player, csid, option, npc)
             [vmOpCodes.CARE_FOR_CHOCOBO_MENU] = function()
                 debug(string.format('  Energy: %i', chocoState.energy))
 
+                -- TODO: Refactor to use the -bit pattern
                 local watchOverChocobo  = 0x01
                 local tellAStory        = 0x02
                 local scoldTheChocobo   = 0x04
@@ -824,6 +809,8 @@ xi.chocoboRaising.eventVM = function(player, csid, option, npc)
 
                 local storyMask = 0xFFFFFF9C
 
+                -- TODO: This looks very similar to SCOLD_CHOCOBO and COMPETE_WITH_OTHERS, should we move those updates
+                --     : inside onRaisingEventPlayout?
                 chocoState = xi.chocoboRaising.onRaisingEventPlayout(player, xi.chocoboRaising.cutscenes.INTERESTED_IN_YOUR_STORY, chocoState)
 
                 player:updateEventString(chocoState.first_name, chocoState.last_name, chocoState.first_name, chocoState.last_name, 0, 0, 0, 0, 0, 0, 0)
@@ -978,15 +965,16 @@ xi.chocoboRaising.eventVM = function(player, csid, option, npc)
             end,
 
             [vmOpCodes.WHISTLE_GAME_RESULT] = function()
-                local keyItem = xi.keyItem.HANDKERCHIEF
-
                 -- TODO: Handle this:
                 --     : A successful search does not guarantee you'll find the item. That means the item is not in that area, and you should look in the other two areas.
+                --     : We'll need to pre-assign which area the search will succeed in, and also remember
+                --     : if the chocobo finished the white handkerchief quest with the player.
 
-                -- TODO: If you have a high bond with your chocobo, this gets upgraded to be the
-                --     : DIRTY_HANDKERCHIEF, apparently.
+                -- TODO: If you finished the white handerchief quest, you'll get the
+                --     : DIRTY_HANDKERCHIEF instead of HANDKERCHIEF.
+                local keyItem = xi.keyItem.HANDKERCHIEF
 
-                -- TODO: What are the chances here?
+                -- TODO: What are the chances here, seems fair but not guaranteed from caps.
                 if math.random(1, 100) < 25 then -- success
                     player:updateEvent(keyItem, 0, 0, 0, 0, 1, 0, 0)
                     player:addKeyItem(keyItem)
@@ -997,10 +985,6 @@ xi.chocoboRaising.eventVM = function(player, csid, option, npc)
             end,
 
             [vmOpCodes.SKIP_REPORT] = function()
-                -- TODO: Set up movement between chocoState.report.events and chocoState.csList to
-                --     : include the length of each playout in days, so it can be used in handleCSUpdate()
-                --     : to multiply values etc.
-                -- Prepare chocoState.csList
                 for _, currentEvent in pairs (chocoState.report.events) do
                     local eventStartStart = currentEvent[1]
                     local eventStartEnd   = currentEvent[2]
@@ -1036,34 +1020,14 @@ xi.chocoboRaising.eventVM = function(player, csid, option, npc)
                 debug('Registering field chocobo details')
                 player:updateEvent(0, 0, 0, 0, 0, 0, 0, 0)
 
-                -- TODO: Shamelessly taken from !chocobo and other handlers
-
-                -- Crest type
-                local enlargedCrest = 0
-
-                if chocoState.discernment >= 128 then
-                    enlargedCrest = 1
-                end
-
-                -- Feet type
-                local enlargedFeet = 0
-
-                if chocoState.strength >= 128 then
-                    enlargedFeet = 1
-                end
-
-                -- Tail feathers type
-                local moreTailFeathers = 0
-
-                if chocoState.endurance >= 128 then
-                    moreTailFeathers = 1
-                end
-
+                -- TODO: These appearance changes are locked in on day 29 if
+                -- they are 'Average' (128) or above. This will need to be
+                -- written to the db and this part rewritten.
                 local traits =
                 {
-                    largeBeak   = enlargedCrest,
-                    fullTail    = moreTailFeathers,
-                    largeTalons = enlargedFeet,
+                    largeBeak   = chocoState.discernment >= 128 and 1 or 0,
+                    fullTail    = chocoState.endurance >= 128 and 1 or 0,
+                    largeTalons = chocoState.strength >= 128 and 1 or 0,
                 }
 
                 player:registerChocobo(chocoState.color, traits)
