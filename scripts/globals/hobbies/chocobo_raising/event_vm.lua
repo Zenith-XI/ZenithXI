@@ -862,20 +862,54 @@ xi.chocoboRaising.eventVM = function(player, csid, option, npc)
                     bit.lshift(plan3Length,  16) + bit.lshift(plan3Type,  19) +
                     bit.lshift(plan4Length,  24) + bit.lshift(plan4Type,  27)
 
-                -- TODO: Set up mask for relevant stage
-                local menuMask = 0 -- Egg: 0x7FFFFFFE
+                local emptyMask            = 0x7FFFFFFF
+                local basicCare            = -bit.lshift(0x01, 0)
+                local rest                 = -bit.lshift(0x01, 1)
+                local takeAWalkInTown      = -bit.lshift(0x01, 2)
+                local listenToMusic        = -bit.lshift(0x01, 3)
+                local exerciseAlone        = -bit.lshift(0x01, 4)
+                local exerciseInAGroup     = -bit.lshift(0x01, 5)
+                local interactWithChildren = -bit.lshift(0x01, 6)
+                local interactWithChocobos = -bit.lshift(0x01, 7)
+                local carryPackages        = -bit.lshift(0x01, 8)
+                local exhibitToThePublic   = -bit.lshift(0x01, 9)
+                local deliverMessages      = -bit.lshift(0x01, 10)
+                local digForTreasure       = -bit.lshift(0x01, 11)
+                local actInAPlay           = -bit.lshift(0x01, 12)
+                -- The remaining options are blank and there seemingly are no
+                -- debug options
 
-                -- Default to Egg:
-                -- TODO: Make this a table
-                if chocoState.stage == xi.chocoboRaising.stage.EGG then
-                    -- Just 'Basic Care'
-                    menuMask = 0x7FFFFFFE
-                elseif chocoState.stage == xi.chocoboRaising.stage.CHICK then
-                    menuMask = 0x7FFFFFFE
-                elseif chocoState.stage == xi.chocoboRaising.stage.ADOLESCENT then
-                    menuMask = 0x7FFFFFFE
-                elseif chocoState.stage >= xi.chocoboRaising.stage.ADULT_1 then
-                    menuMask = 0x7FFFFFFE
+                --
+                -- Append more options depending on chocobo's age
+                --
+
+                -- TODO: Make all of this a table
+
+                -- Options for Egg and beyond
+                local menuMask = emptyMask + basicCare
+
+                if chocoState.stage >= xi.chocoboRaising.stage.CHICK then
+                    menuMask = menuMask +
+                        rest +
+                        takeAWalkInTown +
+                        listenToMusic
+                end
+
+                if chocoState.stage >= xi.chocoboRaising.stage.ADOLESCENT then
+                    menuMask = menuMask +
+                        exerciseAlone +
+                        exerciseInAGroup +
+                        interactWithChildren +
+                        interactWithChocobos +
+                        carryPackages +
+                        exhibitToThePublic
+                end
+
+                if chocoState.stage >= xi.chocoboRaising.stage.ADULT_1 then
+                    menuMask = menuMask +
+                        deliverMessages +
+                        digForTreasure +
+                        actInAPlay
                 end
 
                 player:updateEvent(250, planInfo, 0, 0, 0, 0, 0, menuMask)
