@@ -47,9 +47,9 @@ xi.chocoboRaising.initChocoState = function(player)
 
     chocoState.report.day_start = chocoState.last_update_age
     chocoState.report.day_end   = chocoState.age
-    local reportLength          = chocoState.report.day_end - chocoState.report.day_start
 
-    debug('reportLength', reportLength)
+    local reportLength = chocoState.report.day_end - chocoState.report.day_start
+    debug('Report length:', chocoState.reportLength)
 
     chocoState.last_update_age = chocoState.age
 
@@ -85,9 +85,6 @@ xi.chocoboRaising.initChocoState = function(player)
     for _ = 1, plan4Length do
         table.insert(possibleCarePlanFuture, plan4Type)
     end
-
-    -- TODO: Remove careplan energy from this
-    chocoState.energy = 100
 
     for idx = 1, reportLength do
         local possibleCarePlanEvent = possibleCarePlanFuture[idx]
@@ -152,8 +149,6 @@ xi.chocoboRaising.initChocoState = function(player)
         then
             table.insert(events, { age, { xi.chocoboRaising.cutscenes.HAVENT_SEEN_YOU } })
         end
-
-        -- TODO: Remove used days from care plan and write back to chocoState + db
     end
 
     -- Step 3: Condense that table down

@@ -14,10 +14,10 @@ xi.chocoboRaising.handleStatChange = function(stat, value, change, max)
     end
 
     if change > 0 then
-        debug(string.format('%s += %i', xi.chocoboRaising.carePlanStatNames[stat], change))
+        debug(string.format('  %s += %i', xi.chocoboRaising.carePlanStatNames[stat], change))
         change = change * xi.settings.main.CHOCOBO_RAISING_STAT_POS_MULTIPLIER
     elseif change < 0 then
-        debug(string.format('%s -= %i', xi.chocoboRaising.carePlanStatNames[stat], -change))
+        debug(string.format('  %s -= %i', xi.chocoboRaising.carePlanStatNames[stat], -change))
         change = change * xi.settings.main.CHOCOBO_RAISING_STAT_NEG_MULTIPLIER
     end
 
@@ -32,7 +32,7 @@ end
 xi.chocoboRaising.handleCarePlan = function(player, chocoState, carePlan, elapsedDays)
     elapsedDays = elapsedDays or 1
 
-    debug(string.format('handleCarePlan: %i days', elapsedDays))
+    debug(string.format('Execute Care Plan: %i days', elapsedDays))
 
     -- Process Care Plan shifting
     local plan1Length = bit.rshift(bit.band(chocoState.care_plan, 0xF0000000), 28)
@@ -83,15 +83,16 @@ xi.chocoboRaising.handleCarePlan = function(player, chocoState, carePlan, elapse
         bit.lshift(plan3Length, 12) + bit.lshift(plan3Type,  8) +
         bit.lshift(plan4Length,  4) + bit.lshift(plan4Type,  0)
 
-    -- TODO: Do we end up with the correct energy usage, if we assume the chocobo has slept and recovered
-    --     : on the morning of the final day of the report?
-
     chocoState.strength    = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.STRENGTH   , chocoState.strength   , xi.chocoboRaising.carePlanData[carePlan][1] * elapsedDays, 255)
     chocoState.endurance   = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.ENDURANCE  , chocoState.endurance  , xi.chocoboRaising.carePlanData[carePlan][2] * elapsedDays, 255)
     chocoState.discernment = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.DISCERNMENT, chocoState.discernment, xi.chocoboRaising.carePlanData[carePlan][3] * elapsedDays, 255)
     chocoState.receptivity = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.RECEPTIVITY, chocoState.receptivity, xi.chocoboRaising.carePlanData[carePlan][4] * elapsedDays, 255)
     chocoState.affection   = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.AFFECTION  , chocoState.affection  , xi.chocoboRaising.carePlanData[carePlan][5] * elapsedDays, 255)
-    chocoState.energy      = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.ENERGY     , chocoState.energy     , xi.chocoboRaising.carePlanData[carePlan][6] * elapsedDays, 100)
+
+    -- TODO: Double check this from caps.
+    -- After each day the chocobo's energy is refreshed, so only previous day's energy cost is applied
+    -- to the chocobo
+    chocoState.energy = xi.chocoboRaising.handleStatChange(xi.chocoboRaising.carePlanStats.ENERGY, chocoState.energy, xi.chocoboRaising.carePlanData[carePlan][6], 100)
 
     local payment = xi.chocoboRaising.carePlanData[carePlan][7]
 
