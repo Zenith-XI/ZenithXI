@@ -161,8 +161,13 @@ xi.chocoboRaising.onEventFinishVCSTrainer = function(player, csid, option, npc)
             return
         end
 
-        xi.chocoboRaising.updateChocoState(player, chocoState)
+        if chocoState.retiring then
+            -- TODO: Hand over VCS registration card
+            -- TODO: Hand over Color VCS plaque
+            player:deleteRaisedChocobo()
+            xi.chocoboRaising.chocoState[player:getID()] = nil
+        else
+            xi.chocoboRaising.updateChocoState(player, chocoState)
+        end
     end
-
-    -- TODO: Hand out cards and plaques etc.
 end

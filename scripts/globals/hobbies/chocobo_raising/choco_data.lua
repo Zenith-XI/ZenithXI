@@ -56,6 +56,7 @@ end
 
 xi.chocoboRaising.updateChocoState = function(player, chocoState)
     chocoState.age             = math.floor((GetSystemTime() - chocoState.created) / xi.chocoboRaising.dayLength) + 1
+    chocoState.age             = math.min(chocoState.age, xi.chocoboRaising.daysToAdult4 + 1)
     chocoState.last_update_age = chocoState.age
 
     debug(string.format('Writing chocoState to cache and db. age: %d, last_update_age: %d', chocoState.age, chocoState.last_update_age))
@@ -95,6 +96,7 @@ xi.chocoboRaising.initChocoState = function(player)
     -- Age is worked out alongside 'the day you handed in your egg'
     -- So on the 0th day, the chocobo is 1 day old.
     chocoState.age = math.floor((GetSystemTime() - chocoState.created) / xi.chocoboRaising.dayLength) + 1
+    chocoState.age = math.min(chocoState.age, xi.chocoboRaising.daysToAdult4 + 1)
 
     debug('chocoState.age = ' .. chocoState.age)
     debug('chocoState.last_update_age = ' .. chocoState.last_update_age)
@@ -121,7 +123,7 @@ xi.chocoboRaising.initChocoState = function(player)
     chocoState.last_update_age = chocoState.age
 
     -- Step 2: Build a table of every event that happened on every day
-    local events = {}
+    local events                 = {}
     local possibleCarePlanFuture = {}
 
     -- Extract care plan logic into a clean array of future plan types
@@ -136,7 +138,8 @@ xi.chocoboRaising.initChocoState = function(player)
     end
 
     -- Track quest states
-    local questState = {
+    local questState =
+    {
         whiteHandkerchiefStarted   = false,
         whiteHandkerchiefCancelled = false,
         whiteHandkerchiefFinished  = false,

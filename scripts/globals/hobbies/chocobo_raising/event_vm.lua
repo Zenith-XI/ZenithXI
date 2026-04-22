@@ -209,8 +209,17 @@ local vmHandlers =
             playMultipleCutscenes = 0x00010000
         end
 
+        -- If we're ABOUT to play out the care plan followed by the retirement CS, set the exit flag
         local exitFlag = 0
-        player:updateEvent(248, report, #chocoState.csList, playMultipleCutscenes, chocoState.stage, 0, 0, exitFlag)
+        for _, entry in ipairs(chocoState.csList) do
+            local cs = entry[1]
+            if cs == xi.chocoboRaising.cutscenes.ADULT_3_TO_ADULT_4 then
+                exitFlag = 1
+                break
+            end
+        end
+
+        player:updateEvent(248, report, #chocoState.csList, playMultipleCutscenes, chocoState.stage, exitFlag, 0, exitFlag)
     end,
 
     [vmOpCodes.INTRO_MENU_PT_2] = function(player, chocoState, option)
@@ -460,8 +469,9 @@ local vmHandlers =
         player:updateEventString(chocoState.first_name, chocoState.last_name, chocoState.first_name, chocoState.last_name,
             0, 0, 0, 0, 0, 0, 0, 0)
 
-        local csData = {
-            [1] = { 0, 0,  7, 0, 0, 0, 0, 0 },
+        local csData =
+        {
+            [1] = { 0, 0, 7,   0, 0, 0, 0, 0 },
             [2] = { 0, 0, 3, 256, 0, 3, 0, 0 },
         }
 
@@ -515,7 +525,8 @@ local vmHandlers =
         player:updateEventString(chocoState.first_name, chocoState.last_name, chocoState.first_name, chocoState.last_name,
             0, 0, 0, 0, 0, 0, 0, 0)
 
-        local csData = {
+        local csData =
+        {
             [1] = { 0, 0,  7, 0, 0, 0, 0, 0 },
         }
 
@@ -561,7 +572,8 @@ local vmHandlers =
         player:updateEventString(chocoState.first_name, chocoState.last_name, chocoState.first_name, chocoState.last_name,
             0, 0, 0, 0, 0, 0, 0, 0)
 
-        local csData = {
+        local csData =
+        {
             [1] = { 0, 0,  7, 0, 0, 0, 0, 0 },
         }
 
@@ -659,7 +671,8 @@ local vmHandlers =
             winner = 1
         end
 
-        local winnerStr = {
+        local winnerStr =
+        {
             [0] = 'Player',
             [1] = 'Tie',
             [2] = 'Rival',
@@ -810,7 +823,8 @@ local vmHandlers =
         debug('Registering field chocobo details')
         player:updateEvent(0, 0, 0, 0, 0, 0, 0, 0)
 
-        local traits = {
+        local traits =
+        {
             largeBeak   = chocoState.discernment >= 128 and 1 or 0,
             fullTail    = chocoState.endurance >= 128 and 1 or 0,
             largeTalons = chocoState.strength >= 128 and 1 or 0,
@@ -839,16 +853,19 @@ local vmHandlers =
 
     [vmOpCodes.GIVE_UP_CHOCOBO] = function(player, chocoState, option)
         player:updateEvent(0, 0, 0, 0, 0, 0, 0, 0)
-        player:deleteRaisedChocobo()
+        chocoState.retiring = true
     end,
 
     [vmOpCodes.RETIRE_YOUR_CHOCOBO] = function(player, chocoState, option)
         player:updateEvent(0, 0, 0, 0, 0, 0, 0, 0)
-        player:deleteRaisedChocobo()
+        chocoState.retiring = true
     end,
 
     [vmOpCodes.UNKNOWN_24672] = function(player, chocoState, option)
-        player:updateEvent(0, 352, 0, 0, chocoState.stage, 0, 0, 0)
+        player:updateEvent(0, 20, 0, 0, chocoState.stage, 0, 0, 0)
+
+        -- TODO?:
+        -- chocoState.retiring = true
     end,
 }
 
