@@ -11,7 +11,7 @@ local debug = utils.getDebugPlayerPrinter(xi.settings.main.DEBUG_CHOCOBO_RAISING
 local vmOpCodes =
 {
     RETIRE_YOUR_CHOCOBO        = 40,
-    PREPARE_CHOCOBO_MENU       = 46,
+    PRESENT_CHOCOBO_MOOD       = 46,
     CHECK_REPORT_STATUS        = 208,
     INTRO_MENU_PT_2            = 214,
     INTRO_MENU_PT_3            = 215,
@@ -54,7 +54,7 @@ local vmOpCodes =
 local vmOpCodeNames =
 {
     [vmOpCodes.RETIRE_YOUR_CHOCOBO]        = 'Retire your chocobo',
-    [vmOpCodes.PREPARE_CHOCOBO_MENU]       = 'Prepare chocobo menu',
+    [vmOpCodes.PRESENT_CHOCOBO_MOOD]       = 'Present chocobo mood',
     [vmOpCodes.CHECK_REPORT_STATUS]        = 'Check report status',
     [vmOpCodes.INTRO_MENU_PT_2]            = 'Intro menu pt 2',
     [vmOpCodes.INTRO_MENU_PT_3]            = 'Intro menu pt 3',
@@ -401,7 +401,36 @@ local vmHandlers =
         end
     end,
 
-    [vmOpCodes.PREPARE_CHOCOBO_MENU] = function(player, chocoState, option)
+    [vmOpCodes.PRESENT_CHOCOBO_MOOD] = function(player, chocoState, option)
+        -- This seems to feed the 'Watch over your chocobo' menu, and the chocobo's stance
+
+        -- Caps: Chocobo doesn't look very happy
+        -- (136, 0, 0, 0, 0, 0, 0, 0)
+        -- 136: 1000 1000
+
+        -- (Standing, neutral) Happy to see you (Default)
+        -- (0, 0, 0, 0, 0, 0, 0, 0)
+
+        -- Notes:
+        -- Are these flags?
+        --
+        -- 1: (Laying down, head down - flap, blink, shiver) Chocobo doesn't look very happy.
+        -- 2: (Standing, head down) Chocobo doesn't look very happy.
+        -- 4: (Laying down, head down, shivering) Chocobo doesn't look very happy.
+        -- 8: (Standing, head up, stamping foot) Chocobo doesn't look very happy.
+        --
+        -- 16: Chocobo is in high spirits.
+        -- 32: (Sleeping) Chocobo is sleeping peacefully
+        -- 64: (Laying down, head down) Chocobo doesn't look very happy.
+        -- 128: Chocobo looks irritated.
+        --
+        -- It doesn't seem like you can combine these. Higher bits get precedence.
+        -- But the retail cap prefers the 8 (stompy) choice, is this LE/BE stuff?
+        -- In regular usage you'll only see one mood per day, so you can get some strange results
+        -- by changing the mood multiple times while in the same menu session.
+
+        -- TODO: What are the conditions for a chocobo to change its visible mood
+
         player:updateEvent(0, 0, 0, 0, 0, 0, 0, 0)
     end,
 
@@ -565,7 +594,9 @@ local vmHandlers =
             givingItem = 2
         end
 
-        player:updateEvent(baseCS, energyFlag, givingItem, givenItem, 2, 0, 0, 1)
+        local unknown = 1 -- TODO: What's this?
+
+        player:updateEvent(baseCS, energyFlag, givingItem, givenItem, chocoState.stage, 0, 0, unknown)
 
         if givingItem == 1 then
             player:addItem({ id = givenItem, silent = true })
