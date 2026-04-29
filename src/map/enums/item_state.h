@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2025 LandSandBoat Dev Teams
+  Copyright (c) 2026 LandSandBoat Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,31 +19,15 @@
 ===========================================================================
 */
 
-#include "0x0e0_group_comlink.h"
+#pragma once
 
-#include "entities/charentity.h"
+#include "common/cbasetypes.h"
 
-GP_SERV_COMMAND_GROUP_COMLINK::GP_SERV_COMMAND_GROUP_COMLINK(const CCharEntity* PChar, const uint8 linkshellNumber)
+enum class ItemState : uint8
 {
-    auto& packet = this->data();
-
-    packet.LinkshellNum = linkshellNumber;
-    if (linkshellNumber == 1)
-    {
-        auto eloc = PChar->equipLocation(SLOT_LINK1);
-        if (eloc)
-        {
-            packet.ItemIndex = eloc->Slot;
-            packet.Category  = static_cast<uint8>(eloc->Container);
-        }
-    }
-    else
-    {
-        auto eloc = PChar->equipLocation(SLOT_LINK2);
-        if (eloc)
-        {
-            packet.ItemIndex = eloc->Slot;
-            packet.Category  = static_cast<uint8>(eloc->Container);
-        }
-    }
-}
+    Free            = 0,
+    Equipped        = 1, // Item is currently equipped
+    Bazaar          = 2, // Item is currently being sold in Bazaar
+    PlacedFurniture = 3, // Item has been placed in the Mog House
+    InTransaction   = 4, // Item is being used as part of a transaction subsystem
+};
