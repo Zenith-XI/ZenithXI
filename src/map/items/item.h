@@ -121,7 +121,7 @@ public:
     bool isMannequin() const;
 
     auto state() const -> ItemState;
-    auto setState(ItemState newState, xi::Badge<xi::items::detail::ItemAccess>) -> void;
+    void setState(ItemState newState, xi::Badge<xi::items::detail::ItemAccess>);
     auto isBusy() const -> bool;
 
     static constexpr uint32_t extra_size = 0x18;

@@ -427,7 +427,7 @@ auto CItem::state() const -> ItemState
     return state_;
 }
 
-auto CItem::setState(ItemState newState, xi::Badge<xi::items::detail::ItemAccess>) -> void
+void CItem::setState(const ItemState newState, xi::Badge<xi::items::detail::ItemAccess>)
 {
     state_ = newState;
 }

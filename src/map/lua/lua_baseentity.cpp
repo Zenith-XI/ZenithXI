@@ -4404,7 +4404,8 @@ bool CLuaBaseEntity::delContainerItems(const sol::object& containerID)
     // ensure we unequip equipped items before deletion
     for (uint8 equipmentSlot = 0; equipmentSlot <= 15; equipmentSlot++)
     {
-        if (PChar->equipLoc[equipmentSlot] == location)
+        auto eloc = PChar->equipLocation(equipmentSlot);
+        if (eloc && static_cast<uint8>(eloc->Container) == location)
         {
             // UnequipItem doesn't consider SLOT_MAIN removing SLOT_SUB, so we say to Equip nothing in this equipment slot
             // this is the same thing that equipset_set packet does to remove a slot
@@ -4860,8 +4861,13 @@ bool CLuaBaseEntity::addLinkpearl(const std::string& lsname, bool equip)
         auto* PInserted = static_cast<CItemLinkshell*>(PChar->getStorage(LOC_INVENTORY)->GetItem(slotID));
         linkshell::AddOnlineMember(PChar, PInserted, 2);
         PInserted->setSubType(ITEM_LOCKED);
-        PChar->equip[SLOT_LINK2]    = PInserted->getSlotID();
-        PChar->equipLoc[SLOT_LINK2] = LOC_INVENTORY;
+        if (!PChar->bindEquip(SLOT_LINK2, PInserted))
+        {
+            linkshell::DelOnlineMember(PChar, PInserted);
+            PInserted->setSubType(ITEM_UNLOCKED);
+            return false;
+        }
+
         PChar->pushPacket<GP_SERV_COMMAND_ITEM_LIST>(PInserted, ItemLockFlg::Linkshell);
         charutils::SaveCharEquip(PChar);
         PChar->pushPacket<GP_SERV_COMMAND_GROUP_COMLINK>(PChar, PInserted->GetLSID());

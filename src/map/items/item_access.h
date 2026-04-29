@@ -24,8 +24,8 @@
 #include "common/logging.h"
 #include "common/types/badge.h"
 
-#include "map/items/item.h"
 #include "map/enums/item_state.h"
+#include "map/items/item.h"
 
 #include <magic_enum/magic_enum.hpp>
 
@@ -33,7 +33,7 @@ namespace xi::items::detail
 {
 struct ItemAccess
 {
-    static auto mark(CItem* item, const ItemState target) -> bool
+    [[nodiscard]] static auto mark(CItem* item, const ItemState target) -> bool
     {
         if (item == nullptr)
         {
@@ -77,7 +77,7 @@ struct ItemAccess
 
 namespace xi::items
 {
-inline auto mark(CItem* item, const ItemState target) -> bool
+[[nodiscard]] inline auto mark(CItem* item, const ItemState target) -> bool
 {
     return detail::ItemAccess::mark(item, target);
 }
