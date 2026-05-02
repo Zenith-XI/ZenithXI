@@ -19246,9 +19246,9 @@ auto CLuaBaseEntity::getChocoboRaisingInfo() -> sol::table
             table["location"]        = rset->get<uint32>("location");
             table["color"]           = rset->get<uint32>("color");
 
-            table["allele1"]  = rset->get<uint32>("allele1");
-            table["allele2"]  = rset->get<uint32>("allele2");
-            table["allele3"]  = rset->get<uint32>("allele3");
+            table["allele1"] = rset->get<uint32>("allele1");
+            table["allele2"] = rset->get<uint32>("allele2");
+            table["allele3"] = rset->get<uint32>("allele3");
 
             table["strength"]    = rset->get<uint32>("strength");
             table["endurance"]   = rset->get<uint32>("endurance");
@@ -19341,34 +19341,35 @@ bool CLuaBaseEntity::setChocoboRaisingInfo(const sol::table& table)
                         "care_plan = VALUES(care_plan), "
                         "held_item = VALUES(held_item);";
 
-    const auto rset = db::preparedStmt(Query,
-                                       m_PBaseEntity->id,
-                                       table.get_or<std::string>("first_name", "Chocobo"),
-                                       table.get_or<std::string>("last_name", "Chocobo"),
-                                       table.get_or<uint32>("sex", 0),
-                                       table.get_or<uint32>("created", 0),
-                                       table.get_or<uint32>("last_update_age", 0),
-                                       table.get_or<uint32>("stage", 1),
-                                       table.get_or<uint32>("location", 0),
-                                       table.get_or<uint32>("color", 0),
-                                       table.get_or<uint32>("allele1", 0),
-                                       table.get_or<uint32>("allele2", 0),
-                                       table.get_or<uint32>("allele3", 0),
-                                       table.get_or<uint32>("strength", 0),
-                                       table.get_or<uint32>("endurance", 0),
-                                       table.get_or<uint32>("discernment", 0),
-                                       table.get_or<uint32>("receptivity", 0),
-                                       table.get_or<uint32>("affection", 0),
-                                       table.get_or<uint32>("energy", 0),
-                                       table.get_or<uint32>("satisfaction", 0),
-                                       table.get_or<uint32>("conditions", 0),
-                                       table.get_or<uint32>("ability1", 0),
-                                       table.get_or<uint32>("ability2", 0),
-                                       table.get_or<uint32>("personality", 0),
-                                       table.get_or<uint32>("weather_preference", 0),
-                                       table.get_or<uint32>("hunger", 0),
-                                       table.get_or<uint32>("care_plan", 0),
-                                       table.get_or<uint32>("held_item", 0));
+    const auto rset = db::preparedStmt(
+        Query,
+        m_PBaseEntity->id,
+        table.get_or<std::string>("first_name", "Chocobo"),
+        table.get_or<std::string>("last_name", "Chocobo"),
+        table.get_or<uint32>("sex", 0),
+        table.get_or<uint32>("created", 0),
+        table.get_or<uint32>("last_update_age", 0),
+        table.get_or<uint32>("stage", 1),
+        table.get_or<uint32>("location", 0),
+        table.get_or<uint32>("color", 0),
+        table.get_or<uint32>("allele1", 0),
+        table.get_or<uint32>("allele2", 0),
+        table.get_or<uint32>("allele3", 0),
+        table.get_or<uint32>("strength", 0),
+        table.get_or<uint32>("endurance", 0),
+        table.get_or<uint32>("discernment", 0),
+        table.get_or<uint32>("receptivity", 0),
+        table.get_or<uint32>("affection", 0),
+        table.get_or<uint32>("energy", 0),
+        table.get_or<uint32>("satisfaction", 0),
+        table.get_or<uint32>("conditions", 0),
+        table.get_or<uint32>("ability1", 0),
+        table.get_or<uint32>("ability2", 0),
+        table.get_or<uint32>("personality", 0),
+        table.get_or<uint32>("weather_preference", 0),
+        table.get_or<uint32>("hunger", 0),
+        table.get_or<uint32>("care_plan", 0),
+        table.get_or<uint32>("held_item", 0));
 
     if (!rset)
     {
