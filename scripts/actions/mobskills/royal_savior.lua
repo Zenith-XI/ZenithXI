@@ -16,8 +16,8 @@ mobskillObject.onMobWeaponSkill = function(mob, target, skill, action)
     if mob:isTrust() then
         local effectDuration = 60
         skill:setMsg(xi.mobskills.mobBuffMove(mob, xi.effect.DEFENSE_BOOST, 50, 0, effectDuration))
-        mob:addStatusEffect(xi.effect.PALISADE, {power = 30, duration = effectDuration, origin = mob})
-        mob:addStatusEffect(xi.effect.STONESKIN, {power = utils.clamp(math.floor(mob:getMaxHP() / 10), 10, 200) , duration = effectDuration, origin = mob})
+        mob:addStatusEffect(xi.effect.PALISADE, { power = 30, duration = effectDuration, origin = mob })
+        mob:addStatusEffect(xi.effect.STONESKIN, { power = utils.clamp(math.floor(mob:getMaxHP() / 10), 10, 200) , duration = effectDuration, origin = mob })
         effect = xi.effect.DEFENSE_BOOST
         mob:setTP(0)
     else
