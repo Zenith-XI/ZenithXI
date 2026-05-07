@@ -108,6 +108,17 @@ if(earcut_hpp_ADDED) # header-only
 endif()
 
 CPMAddPackage(
+    NAME rapidyaml
+    GITHUB_REPOSITORY biojppm/rapidyaml
+    GIT_TAG v0.12.0
+    SYSTEM ON
+    OPTIONS
+        "RYML_BUILD_TOOLS OFF"
+        "RYML_BUILD_API OFF"
+        "RYML_INSTALL OFF"
+) # defines: ryml
+
+CPMAddPackage(
     NAME argparse
     GITHUB_REPOSITORY p-ranav/argparse
     GIT_TAG d924b84eba1f0f0adf38b20b7b4829f6f65b6570
@@ -308,6 +319,7 @@ set(MAP_ONLY_EXTERNAL_LIBS
     RecastNavigation::Detour
     fast_obj
     earcut_hpp
+    ryml
     zlibstatic
 )
 
