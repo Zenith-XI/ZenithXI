@@ -89,6 +89,7 @@ jobs:
             fi
           done
           echo "SKIP_BUILD=$([[ $source_changes == false && ${{ inputs.optional_build }} == true ]] && echo 'true' || echo 'false')" >> $GITHUB_ENV
+          echo "source_changes=$source_changes" >> $GITHUB_OUTPUT
 
       - name: Checkout
         if: ${{ env.SKIP_BUILD != 'true' }}
