@@ -54,6 +54,7 @@
 #include "packets/s2c/0x061_clistatus.h"
 #include "packets/s2c/0x062_clistatus2.h"
 #include "packets/s2c/0x0ac_command_data.h"
+#include "packets/s2c/0x0ad_dungeon.h"
 #include "packets/s2c/0x0e0_group_comlink.h"
 #include "packets/s2c/0x119_abil_recast.h"
 
@@ -6714,6 +6715,18 @@ void SaveTeleport(CCharEntity* PChar, TELEPORT_TYPE type)
         }
         break;
     }
+}
+
+void SaveMazeUnlocks(CCharEntity* PChar)
+{
+    TracyZoneScoped;
+
+    db::preparedStmt("UPDATE char_unlocks SET maze_vouchers = ?, maze_runes = ? WHERE charid = ? LIMIT 1",
+                     PChar->maze().vouchers,
+                     PChar->maze().runes,
+                     PChar->id);
+
+    PChar->pushPacket<GP_SERV_COMMAND_DUNGEON>(PChar);
 }
 
 void SaveLastLogout(const CCharEntity* PChar)
