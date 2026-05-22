@@ -200,7 +200,7 @@ INSERT INTO `mob_groups` VALUES (53,7062,4,'Locus_Bight_Rarab',60,0,309,308300,0
 INSERT INTO `mob_groups` VALUES (54,7063,4,'Locus_Camelopard',60,0,432,308300,0,0,'ROV');  -- TODO Audit Drops
 INSERT INTO `mob_groups` VALUES (55,7064,4,'Locus_Hypnos_Eft',60,0,2379,308300,0,0,'ROV'); -- TODO Audit Drops
 INSERT INTO `mob_groups` VALUES (56,7061,4,'Locus_Ghost_Crab',60,0,2930,308300,0,0,'ROV'); -- TODO Audit Drops
--- INSERT INTO `mob_groups` VALUES (57,6810,4,'Locus_Fiddler_Crab',0,0,0,0,0,139,139,0,NULL); -- Needs capture for Venom Shower and Mega Scissors
+INSERT INTO `mob_groups` VALUES (57,7357,4,'Locus_Fiddler_Crab',3600,128,0,327500,0,0,'ROV'); -- TODO Audit Drops. Spawn disabled pending lottery captures.
 
 -- ------------------------------------------------------------
 -- Uleguerand_Range (Zone 5)
@@ -4598,6 +4598,7 @@ INSERT INTO `mob_groups` VALUES (69,6758,79,'Shedu',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (70,0,79,'Vidhuwa_the_Wrathborn',0,128,0,0,0,0,'WOTG');
 INSERT INTO `mob_groups` VALUES (71,7299,79,'Chigoe_pet',0,128,466,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (72,7188,79,'Chigoe',300,0,466,0,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (73,7356,79,'Locus_Imp',60,0,0,267000,0,0,'TVR'); -- TODO: Drops, MP
 
 -- ------------------------------------------------------------
 -- Southern_San_dOria_[S] (Zone 80)
