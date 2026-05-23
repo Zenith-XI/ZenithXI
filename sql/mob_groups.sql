@@ -2777,7 +2777,7 @@ INSERT INTO `mob_groups` VALUES (39,2534,51,'Mamool_Ja_Sophist',300,0,1593,0,0,0
 INSERT INTO `mob_groups` VALUES (40,2508,51,'Mamool_Ja_Bounder',300,0,1588,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (41,2533,51,'Mamool_Ja_Savant',300,0,1593,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (42,1809,51,'Great_Ameretat',300,0,63,0,0,0,NULL);
-INSERT INTO `mob_groups` VALUES (43,2123,51,'Jaded_Jody',0,32,1389,13800,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (43,2123,51,'Jaded_Jody',0,32,1389,14000,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (44,2545,51,'Mamool_Ja_Zenist',300,0,1588,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (45,393,51,'Berried_Chigoe',0,128,255,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (46,716,51,'Chigoes_Nit',0,128,0,0,0,0,NULL);
