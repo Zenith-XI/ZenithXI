@@ -1,15 +1,29 @@
 -----------------------------------
--- Eraser
+-- Eraser (Pre-2011)
 -- Removes up to 3 status effects from the Automaton or its Master based on the number of Light Maneuvers active.
------------------------------------
----@type TAbilityAutomaton
-local abilityObject = {}
-
-abilityObject.onAutomatonAbilityCheck = function(target, automaton, skill)
-    return 0
-end
-
+-- Consumes all maneuvers on use.
 -- Eraser cannot remove Venom, Death Sentence, Charm or Gradual Petrification.
+-- Prioritizes removing effects from the Automaton over the Master.
+-- Updated to consume only Light Maneuvers on December 15th, 2011.
+-- Updated to consume no maneuvers on March 11th, 2019.
+-- https://wiki.ffo.jp/html/5365.html
+-----------------------------------
+require('modules/module_utils')
+-----------------------------------
+
+local m = Module:new('era_eraser')
+
+local maneuvers =
+{
+    xi.effect.FIRE_MANEUVER,
+    xi.effect.ICE_MANEUVER,
+    xi.effect.WIND_MANEUVER,
+    xi.effect.EARTH_MANEUVER,
+    xi.effect.THUNDER_MANEUVER,
+    xi.effect.WATER_MANEUVER,
+    xi.effect.LIGHT_MANEUVER,
+    xi.effect.DARK_MANEUVER,
+}
 
 local removables =
 {
@@ -67,26 +81,33 @@ local removables =
     -- HP/MP/TP Stat Downs
     xi.effect.MAX_TP_DOWN,
     xi.effect.MAX_MP_DOWN,
-    xi.effect.MAX_HP_DOWN
+    xi.effect.MAX_HP_DOWN,
 }
 
-abilityObject.onAutomatonAbility = function(target, automaton, skill, master, action)
+m:addOverride('xi.actions.abilities.pets.automaton.eraser.onAutomatonAbilityCheck', function(target, automaton, skill)
+    return 0
+end)
+
+m:addOverride('xi.actions.abilities.pets.automaton.eraser.onAutomatonAbility', function(target, automaton, skill, master, action)
     automaton:addRecast(xi.recast.ABILITY, skill:getID(), 30)
 
-    local maneuvers = master:countEffect(xi.effect.LIGHT_MANEUVER)
-
+    local lightManeuvers = master:countEffect(xi.effect.LIGHT_MANEUVER)
     local effectsRemoved = 0
 
-    -- Eraser removes 1 effect per Light Maneuver, up to a maximum of 3.
-    for i = 1, #removables do
-        local effectId = removables[i]
+    for _, effectId in ipairs(removables) do
         if target:hasStatusEffect(effectId) then
             target:delStatusEffectSilent(effectId)
             effectsRemoved = effectsRemoved + 1
 
-            if effectsRemoved >= maneuvers then
+            if effectsRemoved >= lightManeuvers then
                 break
             end
+        end
+    end
+
+    for _, maneuverId in ipairs(maneuvers) do
+        for _ = 1, master:countEffect(maneuverId) do
+            master:delStatusEffectSilent(maneuverId)
         end
     end
 
@@ -97,6 +118,6 @@ abilityObject.onAutomatonAbility = function(target, automaton, skill, master, ac
     end
 
     return effectsRemoved
-end
+end)
 
-return abilityObject
+return m
