@@ -3082,10 +3082,11 @@ INSERT INTO `mob_groups` VALUES (9,4123,57,'Valkeng',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (10,3292,57,'Qultada',0,128,0,1925,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (11,1506,57,'Gessho',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (12,1506,57,'Gessho',0,128,0,2000,0,0,NULL);
--- 13 free
--- 14 free
+INSERT INTO `mob_groups` VALUES (13,7591,57,'Medusa',0,128,0,0,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (14,7592,57,'Lamia_Exon_BLM',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (15,2071,57,'Imp_Bandsman_Add',0,128,0,1400,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (16,7288,57,'Valkeng',0,128,0,0,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (17,7593,57,'Lamia_Exon_COR',0,128,0,0,0,0,NULL);
 
 -- ------------------------------------------------------------
 -- Silver_Sea_route_to_Nashmau (Zone 58)
@@ -3325,6 +3326,9 @@ INSERT INTO `mob_groups` VALUES (5,3582,64,'Shamarhaan',0,128,0,1900,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (6,4123,64,'Valkeng',0,128,0,1300,1300,0,NULL);
 INSERT INTO `mob_groups` VALUES (7,2221,64,'Khimaira_13',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (8,2189,64,'Karababa',0,128,0,1000,1000,1,NULL); -- ally
+INSERT INTO `mob_groups` VALUES (9,7596,64,'Gurfurlur_the_Menacing',0,128,0,0,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (10,7594,64,'Hilltroll_Elite_Guard',0,128,0,0,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (11,7595,64,'Woodtroll_Elite_Guard',0,128,0,0,0,0,NULL);
 
 -- ------------------------------------------------------------
 -- Mamook (Zone 65)
@@ -3470,6 +3474,9 @@ INSERT INTO `mob_groups` VALUES (14,6957,67,'Mamool_Ja_Profligate',0,128,0,0,0,0
 INSERT INTO `mob_groups` VALUES (15,6958,67,'Mamool_Ja_Unseen',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (16,6959,67,'Mamool_Ja_Flamerearer',0,128,0,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (17,6960,67,'Scorched-snout_Wyvern',0,128,0,0,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (18,7597,67,'Gulool_Ja_Ja',0,128,0,0,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (19,7598,67,'Mamool_Ja_Chamberlain',0,128,0,0,0,0,NULL);
+INSERT INTO `mob_groups` VALUES (20,7599,67,'Mamool_Ja_Palatine',0,128,0,0,0,0,NULL);
 
 -- ------------------------------------------------------------
 -- Aydeewa_Subterrane (Zone 68)
