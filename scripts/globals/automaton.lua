@@ -248,9 +248,7 @@ local function calculatePerformanceBoost(pet)
     local performanceBoost = 0
 
     local numLightManeuvers = master and master:countEffect(xi.effect.LIGHT_MANEUVER) or 0
-    for _, attachmentObj in ipairs(pet:getAttachments()) do
-        local attachmentName = attachmentObj:getName()
-
+    for _, attachmentName in pairs(pet:getAttachments()) do
         if isOpticFiber(attachmentName) then
             performanceBoost = performanceBoost + attachmentModifiers[attachmentName][1][2][numLightManeuvers + 1]
         end

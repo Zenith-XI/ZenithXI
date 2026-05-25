@@ -3611,12 +3611,6 @@ end
 function CBaseEntity:removeAllManeuvers()
 end
 
----@nodiscard
----@param slotId integer
----@return CItem?
-function CBaseEntity:getAttachment(slotId)
-end
-
 ---@param itemId integer
 ---@param slotId integer
 ---@return nil
@@ -3624,7 +3618,7 @@ function CBaseEntity:setAttachment(itemId, slotId)
 end
 
 ---@nodiscard
----@return CItem[]
+---@return table
 function CBaseEntity:getAttachments()
 end
 
