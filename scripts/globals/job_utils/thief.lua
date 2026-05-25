@@ -218,6 +218,20 @@ xi.job_utils.thief.useDespoil = function(player, target, ability, action)
 
     local despoiled = target:getDespoilItem()
 
+    if despoiled ~= 0 then
+        local despoiledItem      = GetItemByID(despoiled)
+        local despoiledItemFlags = GetItemFlagsByID(despoiled)
+
+        -- check nil of item, since GetItemFlagsByID can't return nil (but we can't fetch from it yet either)
+        if
+            despoiledItem and
+            bit.band(despoiledItemFlags, xi.itemFlag.RARE) ~= 0 and
+            player:hasItem(despoiled)
+        then
+            despoiled = 0 -- Failed to despoil rare item the player already has
+        end
+    end
+
     if
         target:isMob() and
         math.random(1, 100) <= despoilChance and
@@ -411,6 +425,20 @@ xi.job_utils.thief.useSteal = function(player, target, ability, action)
 
     if stolen == 0 then
         stolen = target:getStealItem()
+    end
+
+    if stolen ~= 0 then
+        local stolenItem      = GetItemByID(stolen)
+        local stolenItemFlags = GetItemFlagsByID(stolen)
+
+        -- check nil of item, since GetItemFlagsByID can't return nil (but we can't fetch from it yet either)
+        if
+            stolenItem and
+            bit.band(stolenItemFlags, xi.itemFlag.RARE) ~= 0 and
+            player:hasItem(stolen)
+        then
+            stolen = 0 -- Failed to steal rare item the player already has
+        end
     end
 
     if target:isMob() and math.random(1, 100) <= stealChance and stolen ~= 0 then
