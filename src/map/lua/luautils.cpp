@@ -1050,33 +1050,56 @@ void PopulateIDLookups(uint16 zoneId, const std::string& zoneName)
     // Load all Name/ID pairs from mobs and npcs
     std::unordered_map<std::string, std::vector<uint32>> lookup;
 
-    // Mobs
-    {
-        const auto rset = db::preparedStmt("SELECT mobname, mobid FROM mob_spawn_points WHERE ((mobid >> 12) & 0xFFF) = ? ORDER BY mobid ASC", zoneId);
-        if (rset && rset->rowsCount())
-        {
-            while (rset->next())
-            {
-                const auto name = rset->get<std::string>("mobname");
-                const auto id   = rset->get<uint32>("mobid");
+    std::vector<uint16> effectiveZones;
+    effectiveZones.push_back(static_cast<uint16>(zoneId));
 
-                lookup[name].emplace_back(id);
-            }
+    const auto overlayRset = db::preparedStmt("SELECT overlay_id FROM instance_list "
+                                              "WHERE instance_zone = ? AND overlay_id IS NOT NULL AND overlay_id != 0",
+                                              zoneId);
+    FOR_DB_MULTIPLE_RESULTS(overlayRset)
+    {
+        effectiveZones.push_back(overlayRset->get<uint16>("overlay_id"));
+    }
+
+    const auto idRange = [](uint16 effectiveZone) -> std::pair<uint32, uint32>
+    {
+        const uint32 idMin = (static_cast<uint32>(effectiveZone) << 12) | 0x01000000;
+        return { idMin, idMin + 0xFFF };
+    };
+
+    // Mobs
+    for (auto effectiveZone : effectiveZones)
+    {
+        const auto [idMin, idMax] = idRange(effectiveZone);
+        const auto rset           = db::preparedStmt("SELECT mobname, mobid FROM mob_spawn_points "
+                                                     "WHERE mobid BETWEEN ? AND ? "
+                                                     "ORDER BY mobid ASC",
+                                           idMin,
+                                           idMax);
+        FOR_DB_MULTIPLE_RESULTS(rset)
+        {
+            const auto name = rset->get<std::string>("mobname");
+            const auto id   = rset->get<uint32>("mobid");
+
+            lookup[name].emplace_back(id);
         }
     }
 
     // NPCs
+    for (auto effectiveZone : effectiveZones)
     {
-        const auto rset = db::preparedStmt("SELECT name, npcid FROM npc_list WHERE ((npcid >> 12) & 0xFFF) = ? ORDER BY npcid ASC", zoneId);
-        if (rset && rset->rowsCount())
+        const auto [idMin, idMax] = idRange(effectiveZone);
+        const auto rset           = db::preparedStmt("SELECT name, npcid FROM npc_list "
+                                                     "WHERE npcid BETWEEN ? AND ? "
+                                                     "ORDER BY npcid ASC",
+                                           idMin,
+                                           idMax);
+        FOR_DB_MULTIPLE_RESULTS(rset)
         {
-            while (rset->next())
-            {
-                const auto name = rset->get<std::string>("name");
-                const auto id   = rset->get<uint32>("npcid");
+            const auto name = rset->get<std::string>("name");
+            const auto id   = rset->get<uint32>("npcid");
 
-                lookup[name].emplace_back(id);
-            }
+            lookup[name].emplace_back(id);
         }
     }
 
