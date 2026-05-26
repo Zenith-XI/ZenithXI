@@ -16858,31 +16858,6 @@ void CLuaBaseEntity::removeAllManeuvers() const
 }
 
 /************************************************************************
- *  Function: getAttachment(slotId)
- *  Purpose : Gets the attachment of an automaton in the slot specified
- *  Example : pet:getAttachment(1)
- ************************************************************************/
-
-auto CLuaBaseEntity::getAttachment(const uint8 slotId) const -> const CItem*
-{
-    auto* PAutomaton = dynamic_cast<CAutomatonEntity*>(m_PBaseEntity);
-
-    if (PAutomaton == nullptr)
-    {
-        ShowWarning("Invalid Entity accessing function.");
-        return nullptr;
-    }
-
-    uint8 slotItem = PAutomaton->getAttachment(slotId);
-    if (slotItem != 0)
-    {
-        return xi::items::lookup(0x2100 + slotItem); // TODO: Stop storing by offset
-    }
-
-    return nullptr;
-}
-
-/************************************************************************
  *  Function: setAttachment(attachmentItemID, slotID)
  *  Purpose : Sets the attachment of an automaton in the slot specified
  *  Example : player:setAttachment(8465, 0)
@@ -16926,7 +16901,20 @@ auto CLuaBaseEntity::getAttachments() const -> sol::table
 
         if (attachmentItemId != 0)
         {
-            attachmentTable[attachmentSlot] = CLuaItemPuppet(xi::items::lookup<CItemPuppet>(0x2100 + attachmentItemId));
+            const auto PAttachment = xi::items::lookup<CItemPuppet>(0x2100 + attachmentItemId);
+
+            if (PAttachment)
+            {
+                attachmentTable[attachmentSlot] = PAttachment->getName();
+            }
+            else
+            {
+                attachmentTable[attachmentSlot] = "";
+            }
+        }
+        else
+        {
+            attachmentTable[attachmentSlot] = "";
         }
     }
 
@@ -20709,7 +20697,6 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("getActiveManeuverCount", CLuaBaseEntity::getActiveManeuverCount);
     SOL_REGISTER("removeOldestManeuver", CLuaBaseEntity::removeOldestManeuver);
     SOL_REGISTER("removeAllManeuvers", CLuaBaseEntity::removeAllManeuvers);
-    SOL_REGISTER("getAttachment", CLuaBaseEntity::getAttachment);
     SOL_REGISTER("setAttachment", CLuaBaseEntity::setAttachment);
     SOL_REGISTER("getAttachments", CLuaBaseEntity::getAttachments);
     SOL_REGISTER("updateAttachments", CLuaBaseEntity::updateAttachments);

@@ -244,6 +244,8 @@ void init(IPP mapIPP, bool isRunningInCI)
     lua.set_function("GarbageCollectFull", &luautils::garbageCollectFull);
     lua.set_function("GetZone", &luautils::GetZone);
     lua.set_function("GetItemByID", &luautils::GetItemByID);
+    lua.set_function("GetItemFlagsByID", &luautils::GetItemFlagsByID);
+    lua.set_function("GetItemLevelRequirementsByID", &luautils::GetItemLevelRequirementsByID);
     lua.set_function("GetNPCByID", &luautils::GetNPCByID);
     lua.set_function("GetMobByID", &luautils::GetMobByID);
     lua.set_function("GetEntityByID", &luautils::GetEntityByID);
@@ -1287,6 +1289,36 @@ auto GetItemByID(uint32 itemId) -> const CItem*
     TracyZoneScoped;
 
     return xi::items::lookup(itemId);
+}
+
+// GetItemByID currently fails because we can't properly guarantee the constness of `const CItem*`
+// We fetch the template and then intend to return an item, but that's really just not set up to work properly
+// So instead we return non-reference values from the item templates that cannot be modified
+// Remove me when we come up with a better way to fetch item templates in lua
+auto GetItemFlagsByID(uint32 itemId) -> ItemFlag
+{
+    const auto* item = xi::items::lookup(itemId);
+    if (item)
+    {
+        return item->getFlag();
+    }
+
+    return ItemFlag::None;
+}
+
+// GetItemByID currently fails because we can't properly guarantee the constness of `const CItem*`
+// We fetch the template and then intend to return an item, but that's really just not set up to work properly
+// So instead we return non-reference values from the item templates that cannot be modified
+// Remove me when we come up with a better way to fetch item templates in lua
+auto GetItemLevelRequirementsByID(uint32 itemId) -> uint8
+{
+    const auto* item = xi::items::lookup<CItemEquipment>(itemId);
+    if (item)
+    {
+        return item->getReqLvl();
+    }
+
+    return 0;
 }
 
 CBaseEntity* GetNPCByID(uint32 npcid, const sol::object& instanceObj)
