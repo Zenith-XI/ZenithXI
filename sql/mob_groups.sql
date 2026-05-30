@@ -130,8 +130,8 @@ INSERT INTO `mob_groups` VALUES (2,5868,3,'Greater_Pugil_fished',0,128,147,0,0,0
 INSERT INTO `mob_groups` VALUES (3,6029,3,'Kraken_fished',0,128,504,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (4,1891,3,'Harajnite',0,128,1276,6800,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (5,881,3,'Cyclopean_Conch',0,128,556,5600,0,0,NULL);
-INSERT INTO `mob_groups` VALUES (6,5864,3,'Cutter_fished',0,128,93,0,0,0,NULL);
 
+INSERT INTO `mob_groups` VALUES (6,883,3,'Cutter',0,128,93,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (7,1304,3,'Fatty_Pugil',0,128,248,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (8,4106,3,'Uragnite',0,128,2527,0,0,0,NULL);
 INSERT INTO `mob_groups` VALUES (9,746,3,'Clot',0,128,487,0,0,0,NULL);
