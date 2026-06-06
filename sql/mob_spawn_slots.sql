@@ -2128,6 +2128,43 @@ INSERT INTO `mob_spawn_slots` VALUES (194,78,0);
 INSERT INTO `mob_spawn_slots` VALUES (194,79,0);
 INSERT INTO `mob_spawn_slots` VALUES (194,80,0);
 
+-- The Eldieme Necropolis
+INSERT INTO `mob_spawn_slots` VALUES (195,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,9,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,10,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,11,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,12,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,13,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,14,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,15,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,16,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,17,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,18,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,19,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,20,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,21,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,22,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,23,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,24,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,25,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,26,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,27,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,28,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,29,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,30,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,31,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,32,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,33,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,34,0);
+INSERT INTO `mob_spawn_slots` VALUES (195,35,0);
+
 -- Gusgen Mines
 INSERT INTO `mob_spawn_slots` VALUES (196,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (196,2,0);
