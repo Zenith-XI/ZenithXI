@@ -2230,6 +2230,12 @@ INSERT INTO `mob_spawn_slots` VALUES (198,62,0);
 INSERT INTO `mob_spawn_slots` VALUES (198,63,0);
 INSERT INTO `mob_spawn_slots` VALUES (198,64,0);
 
+-- Garlaige Citadel
+INSERT INTO `mob_spawn_slots` VALUES (200,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (200,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (200,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (200,4,0);
+
 -- Fei'Yin
 INSERT INTO `mob_spawn_slots` VALUES (204,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (204,2,0);
