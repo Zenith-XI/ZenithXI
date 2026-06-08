@@ -2,6 +2,8 @@
 -- Area: Batallia Downs
 --   NM: Eyegouger
 -----------------------------------
+local ID = zones[xi.zone.BATALLIA_DOWNS]
+-----------------------------------
 ---@type TMobEntity
 local entity = {}
 
