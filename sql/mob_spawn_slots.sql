@@ -118,6 +118,14 @@ INSERT INTO `mob_spawn_slots` VALUES (18,15,0);
 INSERT INTO `mob_spawn_slots` VALUES (18,16,0);
 INSERT INTO `mob_spawn_slots` VALUES (18,17,0);
 
+-- Riverne-Site A01
+INSERT INTO `mob_spawn_slots` VALUES (30,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (30,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (30,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (30,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (30,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (30,6,0);
+
 -- Arrapago Reef
 INSERT INTO `mob_spawn_slots` VALUES (54,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (54,2,0);
