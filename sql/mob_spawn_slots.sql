@@ -1251,6 +1251,32 @@ INSERT INTO `mob_spawn_slots` VALUES (124,59,0);
 INSERT INTO `mob_spawn_slots` VALUES (124,60,0);
 INSERT INTO `mob_spawn_slots` VALUES (124,61,0);
 
+-- Western Altepa Desert
+INSERT INTO `mob_spawn_slots` VALUES (125,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,9,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,10,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,11,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,12,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,13,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,14,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,15,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,16,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,17,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,18,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,19,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,20,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,21,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,22,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,23,0);
+INSERT INTO `mob_spawn_slots` VALUES (125,24,0);
+
 -- Qufim Island
 INSERT INTO `mob_spawn_slots` VALUES (126,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (126,2,0);
