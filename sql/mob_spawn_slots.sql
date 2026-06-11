@@ -183,6 +183,16 @@ INSERT INTO `mob_spawn_slots` VALUES (27,3,0);
 INSERT INTO `mob_spawn_slots` VALUES (27,4,0);
 INSERT INTO `mob_spawn_slots` VALUES (27,5,0);
 
+-- Sacrarium
+INSERT INTO `mob_spawn_slots` VALUES (28,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (28,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (28,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (28,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (28,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (28,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (28,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (28,8,0);
+
 -- Riverne-Site A01
 INSERT INTO `mob_spawn_slots` VALUES (30,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (30,2,0);
