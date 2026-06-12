@@ -96,14 +96,14 @@ def setup_test_character():
         # Populate more char tables with defaults
         cur.execute("REPLACE INTO char_stats (charid, mjob) VALUES(1, 1);")
 
-        # Place near some Robber Crabs in Kuftal Tunnel
+        # Place near some Robber Crabs in Kuftal Tunnel (moved to valk so it works even when kuftal is disabled)
         cur.execute(
             "UPDATE chars SET \
-            pos_zone = 174, \
-            pos_prevzone = 174, \
-            pos_x = 55, \
-            pos_y = -9, \
-            pos_z = -140 \
+            pos_zone = 103, \
+            pos_prevzone = 103, \
+            pos_x = 676.363, \
+            pos_y = -15, \
+            pos_z = 230.873 \
         WHERE charid = 1;"
         )
 
@@ -205,7 +205,7 @@ def main():
             connect()
             if cur:
                 cur.execute(
-                    "UPDATE xidb.zone_settings SET zoneport = 54231 WHERE zoneid % 2 = 1;"
+                    "UPDATE xidb.zone_settings SET zoneport = 54231 WHERE zoneid % 2 = 1 AND zoneip <> '0';" ## so we don't run ci on disabled zones
                 )
                 db.commit()
                 processes.insert(

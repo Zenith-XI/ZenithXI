@@ -4,3 +4,13 @@
 [submodule "ximeshes"]
     path = ximeshes
     url = https://github.com/InoUno/ximeshes.git
+[submodule "mod-lqs"]
+    path = modules/LQS
+    url = https://github.com/LoxleyX/LQS.git
+    branch = main
+    ignore = dirty
+[submodule "mod-priv"]
+    path = modules/zenith-private
+    url = https://github.com/Zenith-XI/Modules.git
+    branch = main
+    ignore = all

@@ -1,0 +1,117 @@
+diff --git a/src/map/ai/ai_container.cpp b/src/map/ai/ai_container.cpp
+index ff9c8ed6bc..a1d0574463 100644
+--- a/src/map/ai/ai_container.cpp
++++ b/src/map/ai/ai_container.cpp
+@@ -461,6 +461,29 @@ void CAIContainer::Tick(timer::time_point _tick)
+             break;
+         }
+     }
++    auto* PChar = dynamic_cast<CCharEntity*>(PEntity);
++    if (
++        (m_queuedRangedAttack || m_queuedSpellTargId) &&
++        PChar &&
++        PChar->PAI &&
++        PChar->PAI->CanChangeState()
++    )
++    {
++        if (
++            m_queuedRangedAttack &&
++            _tick - PChar->m_LastRangedAttackTime > std::chrono::milliseconds(1100)
++        )
++        {
++            RangedAttack(m_queuedRangedAttack);
++            m_queuedRangedAttack = 0;
++        }
++        else if (m_queuedSpellTargId)
++        {
++            Cast(m_queuedSpellTargId, m_queuedSpell);
++            m_queuedSpell = (SpellID)0;
++            m_queuedSpellTargId = 0;
++        }
++    }
+ 
+     PEntity->PostTick();
+ }
+diff --git a/src/map/ai/ai_container.h b/src/map/ai/ai_container.h
+index ef3f629986..a5f00c6faa 100644
+--- a/src/map/ai/ai_container.h
++++ b/src/map/ai/ai_container.h
+@@ -133,6 +133,10 @@ public:
+     // pathfinder, not guaranteed to be implemented
+     std::unique_ptr<CPathFind> PathFind;
+ 
++    uint16 m_queuedRangedAttack = 0;
++    uint16 m_queuedSpellTargId = 0;
++    SpellID m_queuedSpell = (SpellID)0;
++
+ protected:
+     // input controller
+     std::unique_ptr<CController> Controller;
+diff --git a/src/map/ai/controllers/player_controller.cpp b/src/map/ai/controllers/player_controller.cpp
+index f78f912183..53f1df355c 100644
+--- a/src/map/ai/controllers/player_controller.cpp
++++ b/src/map/ai/controllers/player_controller.cpp
+@@ -25,6 +25,8 @@
+ #include "ai/ai_container.h"
+ #include "ai/states/death_state.h"
+ #include "ai/states/inactive_state.h"
++#include "ai/states/magic_state.h"
++#include "ai/states/range_state.h"
+ #include "entities/charentity.h"
+ #include "items/item_weapon.h"
+ #include "latent_effect_container.h"
+@@ -49,6 +51,26 @@ void CPlayerController::Tick(timer::time_point /*tick*/)
+ bool CPlayerController::Cast(uint16 targid, SpellID spellid)
+ {
+     auto* PChar = static_cast<CCharEntity*>(POwner);
++
++    // Check for spell queuing during animation phase
++    if (PChar->PAI->IsCurrentState<CMagicState>())
++    {
++        if (PChar->PAI->GetCurrentState()->IsCompleted())
++        {
++            // Queue the spell during animation phase
++            PChar->PAI->m_queuedSpellTargId = targid;
++            PChar->PAI->m_queuedSpell = spellid;
++            PChar->PAI->m_queuedRangedAttack = 0;
++            return true;
++        }
++        else
++        {
++            // Still casting, send wait message
++            PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::WaitLonger);
++            return false;
++        }
++    }
++
+     if (canAct() && !PChar->PRecastContainer->HasRecast(RECAST_MAGIC, static_cast<Recast>(spellid), 0s))
+     {
+         if (auto target = PChar->GetEntity(targid); target && target->PAI->IsUntargetable())
+@@ -155,7 +177,26 @@ bool CPlayerController::Ability(uint16 targid, uint16 abilityid)
+ bool CPlayerController::RangedAttack(uint16 targid)
+ {
+     auto* PChar = static_cast<CCharEntity*>(POwner);
+-    if (canAct() && PChar->PAI->CanChangeState())
++
++    // Check for ranged attack queuing during animation phase
++    if (PChar->PAI->IsCurrentState<CRangeState>())
++    {
++        if (PChar->PAI->GetCurrentState()->IsCompleted())
++        {
++            // Queue the ranged attack during animation phase
++            PChar->PAI->m_queuedRangedAttack = targid;
++            PChar->PAI->m_queuedSpell = (SpellID)0;
++            PChar->PAI->m_queuedSpellTargId = 0;
++            return true;
++        }
++        else
++        {
++            // Still shooting, send wait message
++            PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::WaitLonger);
++            return false;
++        }
++    }
++    else if (canAct() && PChar->PAI->CanChangeState())
+     {
+         if (auto target = PChar->GetEntity(targid); target && target->PAI->IsUntargetable())
+         {

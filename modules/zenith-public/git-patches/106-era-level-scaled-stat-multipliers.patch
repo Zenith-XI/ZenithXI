@@ -1,0 +1,203 @@
+Stat Multiplier Scaling
+Applies era stat bonus scaling up to level 37 and custom formula from 37 and above
+- Below level 37: returns startValue
+- At level 75+: returns endValue
+- Between 37-74: linearly interpolates
+
+This patch implements era-accurate stat-to-combat scaling for players based on level progression.
+---
+diff --git a/src/map/entities/battleentity.cpp b/src/map/entities/battleentity.cpp
+index 8dc0223259..44e4e8c24a 100644
+--- a/src/map/entities/battleentity.cpp
++++ b/src/map/entities/battleentity.cpp
+@@ -55,6 +55,20 @@
+ #include "utils/zoneutils.h"
+ #include "weapon_skill.h"
+ 
++static float GetEraScaledMultiplier(uint8 level, float startValue, float endValue)
++{
++    if (level < 37)
++    {
++        return startValue;
++    }
++    else if (level >= 75)
++    {
++        return endValue;
++    }
++
++    return startValue + (endValue - startValue) * ((level - 37) / 38.0f);
++}
++
+ CBattleEntity::CBattleEntity()
+ {
+     TracyZoneScoped;
+@@ -992,29 +1006,34 @@ uint16 CBattleEntity::ATT(SLOTTYPE slot)
+     float strMultiplier = 0.5;
+ 
+     // https://www.bg-wiki.com/ffxi/Strength
++    // Era-accurate level-based scaling for players
+     if (objtype != TYPE_PC)
+     {
+         strMultiplier = 0.5;
+     }
+-    else if (weapon && weapon->isTwoHanded()) // 2-handed weapon
+-    {
+-        strMultiplier = settings::get<float>("main.TWO_HANDED_STR_ATTACK_MULTIPLIER");
+-    }
+-    else if (weapon && weapon->isHandToHand()) // H2H Weapon
+-    {
+-        strMultiplier = settings::get<float>("main.HAND_TO_HAND_STR_ATTACK_MULTIPLIER");
+-    }
+-    else if (slot == SLOT_MAIN)
+-    {
+-        strMultiplier = settings::get<float>("main.ONE_HAND_MAIN_HAND_STR_ATTACK_MULTIPLIER");
+-    }
+-    else if (slot == SLOT_SUB)
+-    {
+-        strMultiplier = settings::get<float>("main.ONE_HAND_OFF_HAND_STR_ATTACK_MULTIPLIER");
+-    }
+-    else if (slot == SLOT_RANGED || slot == SLOT_AMMO) // 1-handed weapon in main slot, Ranged or ammo weapon.
++    else
+     {
+-        strMultiplier = settings::get<float>("main.RANGED_STR_ATTACK_MULTIPLIER");
++        uint8 level = GetMLevel();
++        if (weapon && weapon->isTwoHanded()) // 2-handed weapon
++        {
++            strMultiplier = GetEraScaledMultiplier(level, 0.75f, 0.75f); // Era: flat 0.75
++        }
++        else if (weapon && weapon->isHandToHand()) // H2H Weapon
++        {
++            strMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.625f); // Era: 0.5 -> 0.625
++        }
++        else if (slot == SLOT_MAIN)
++        {
++            strMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.75f); // Era: 0.5 -> 0.75
++        }
++        else if (slot == SLOT_SUB)
++        {
++            strMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.50f); // Era: flat 0.5
++        }
++        else if (slot == SLOT_RANGED || slot == SLOT_AMMO)
++        {
++            strMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.625f); // Era: 0.5 -> 0.625
++        }
+     }
+ 
+     ATT += STR() * strMultiplier;
+@@ -1076,7 +1095,8 @@ uint16 CBattleEntity::RATT(uint16 bonusAtt)
+ 
+     if (objtype == TYPE_PC)
+     {
+-        strMultiplier = settings::get<float>("main.RANGED_STR_ATTACK_MULTIPLIER");
++        // Era-accurate level-based scaling: 0.5 -> 0.625
++        strMultiplier = GetEraScaledMultiplier(GetMLevel(), 0.50f, 0.625f);
+         auto* weapon  = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_RANGED]);
+ 
+         // Return 0 if ranged weapon but no ammo
+@@ -1206,7 +1226,8 @@ uint16 CBattleEntity::RACC(uint16 bonusAcc)
+         RACC += getMod(Mod::RACC);
+         RACC += bonusAcc;
+         RACC += battleutils::GetRangedAccuracyBonuses(this);
+-        RACC += std::floor(AGI() * settings::get<float>("main.RANGED_AGI_ACCURACY_MULTIPLIER"));
++        // Era-accurate level-based scaling: 0.5 -> 0.75
++        RACC += std::floor(AGI() * GetEraScaledMultiplier(GetMLevel(), 0.50f, 0.75f));
+     }
+     else if (objtype & TYPE_PET && static_cast<CPetEntity*>(this)->getPetType() == PET_TYPE::AUTOMATON)
+     {
+@@ -1279,10 +1300,12 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint16 offsetAccuracy)
+         uint8  skill         = 0;
+         uint16 iLvlSkill     = 0;
+         auto*  PMainWeapon   = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_MAIN]);
++        uint8  level         = GetMLevel(); // Era-accurate level-based scaling
+ 
+         if (attackNumber == 0)
+         {
+-            dexMultiplier = settings::get<float>("main.ONE_HAND_MAIN_HAND_DEX_ACCURACY_MULTIPLIER");
++            // Era: One-Hand Main DEX->ACC: 0.5 -> 0.75
++            dexMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.75f);
+ 
+             if (PMainWeapon)
+             {
+@@ -1291,7 +1314,8 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint16 offsetAccuracy)
+                 if ((skill == SKILL_NONE && GetSkill(SKILL_HAND_TO_HAND) > 0) || PMainWeapon->isHandToHand())
+                 {
+                     skill         = SKILL_HAND_TO_HAND;
+-                    dexMultiplier = settings::get<float>("main.HAND_TO_HAND_DEX_ACCURACY_MULTIPLIER");
++                    // Era: H2H DEX->ACC: 0.5 -> 0.75
++                    dexMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.75f);
+                 }
+             }
+         }
+@@ -1299,7 +1323,8 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint16 offsetAccuracy)
+         {
+             if (auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_SUB]))
+             {
+-                dexMultiplier = settings::get<float>("main.ONE_HAND_OFF_HAND_DEX_ACCURACY_MULTIPLIER");
++                // Era: One-Hand Off DEX->ACC: 0.5 -> 0.75
++                dexMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.75f);
+                 skill         = weapon->getSkillType();
+                 iLvlSkill     = weapon->getILvlSkill();
+ 
+@@ -1309,7 +1334,8 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint16 offsetAccuracy)
+                     if (main_weapon && (main_weapon->getSkillType() == SKILL_NONE || main_weapon->getSkillType() == SKILL_HAND_TO_HAND))
+                     {
+                         skill         = SKILL_HAND_TO_HAND;
+-                        dexMultiplier = settings::get<float>("main.HAND_TO_HAND_DEX_ACCURACY_MULTIPLIER");
++                        // Era: H2H DEX->ACC: 0.5 -> 0.75
++                        dexMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.75f);
+                     }
+                 }
+             }
+@@ -1317,7 +1343,8 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint16 offsetAccuracy)
+             {
+                 iLvlSkill     = PMainWeapon->getILvlSkill();
+                 skill         = SKILL_HAND_TO_HAND;
+-                dexMultiplier = settings::get<float>("main.HAND_TO_HAND_DEX_ACCURACY_MULTIPLIER");
++                // Era: H2H DEX->ACC: 0.5 -> 0.75
++                dexMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.75f);
+             }
+         }
+         else if (attackNumber == 2)
+@@ -1327,7 +1354,8 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint16 offsetAccuracy)
+                 iLvlSkill = weapon->getILvlSkill();
+             }
+             skill         = SKILL_HAND_TO_HAND;
+-            dexMultiplier = settings::get<float>("main.HAND_TO_HAND_DEX_ACCURACY_MULTIPLIER");
++            // Era: H2H DEX->ACC: 0.5 -> 0.75
++            dexMultiplier = GetEraScaledMultiplier(level, 0.50f, 0.75f);
+         }
+ 
+         uint32_t skillLevel = GetSkill(skill) + iLvlSkill;
+@@ -1335,7 +1363,8 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint16 offsetAccuracy)
+ 
+         if (auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_MAIN]); weapon && weapon->isTwoHanded())
+         {
+-            dexMultiplier = settings::get<float>("main.TWO_HANDED_DEX_ACCURACY_MULTIPLIER");
++            // Era: Two-Handed DEX->ACC: flat 0.75
++            dexMultiplier = GetEraScaledMultiplier(level, 0.75f, 0.75f);
+ 
+             ACC += std::floor(DEX() * dexMultiplier);
+             ACC += m_modStat[Mod::TWOHAND_ACC];
+@@ -1434,12 +1463,19 @@ uint16 CBattleEntity::DEF()
+     // https://wiki.ffo.jp/html/35712.html
+     // https://forum.square-enix.com/ffxi/threads/51154-Aug.-3-2016-%28JST%29-Version-Update?p=583669&viewfull=1#post583669
+     int32 DEF       = 8;
+-    float vitFactor = settings::get<float>("main.PLAYER_ALLIES_VIT_DEF_MULTIPLIER");
++    float vitFactor = 0.5f;
+ 
+-    if (this->objtype == TYPE_MOB)
++    if (this->objtype == TYPE_PC)
++    {
++        // Era-accurate level-based scaling: 0.5 -> 1.0
++        vitFactor = GetEraScaledMultiplier(GetMLevel(), 0.50f, 1.0f);
++    }
++    else if (this->objtype != TYPE_MOB)
+     {
+-        vitFactor = 0.5f;
++        // Allies (trusts, pets, etc.) use the setting
++        vitFactor = settings::get<float>("main.PLAYER_ALLIES_VIT_DEF_MULTIPLIER");
+     }
++    // Mobs stay at 0.5 (default)
+ 
+     DEF = DEF + std::floor(VIT() * vitFactor);
+ 

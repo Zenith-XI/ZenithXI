@@ -1,0 +1,27 @@
+diff --git a/src/map/ai/controllers/player_controller.cpp b/src/map/ai/controllers/player_controller.cpp
+index 1c0df703fa..0e57d4a212 100644
+--- a/src/map/ai/controllers/player_controller.cpp
++++ b/src/map/ai/controllers/player_controller.cpp
+@@ -75,18 +75,11 @@ bool CPlayerController::Engage(uint16 targid)
+     {
+         if (distance(PChar->loc.p, PTarget->loc.p) < 30)
+         {
+-            if (m_lastAttackTime + std::chrono::milliseconds(PChar->GetWeaponDelay(false)) < timer::now())
++            if (CController::Engage(targid))
+             {
+-                if (CController::Engage(targid))
+-                {
+-                    PChar->PLatentEffectContainer->CheckLatentsWeaponDraw(true);
+-                    PChar->pushPacket<GP_SERV_COMMAND_ASSIST>(PChar, PTarget);
+-                    return true;
+-                }
+-            }
+-            else
+-            {
+-                errMsg = std::make_unique<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PTarget, 0, 0, MsgBasic::WaitLonger);
++                PChar->PLatentEffectContainer->CheckLatentsWeaponDraw(true);
++                PChar->pushPacket<GP_SERV_COMMAND_ASSIST>(PChar, PTarget);
++                return true;
+             }
+         }
+         else

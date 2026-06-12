@@ -1,0 +1,38 @@
+import os
+import subprocess
+
+# If launching from somewhere that isnt <root>/tools/, figure out where dbtool.py is located, and the server root.
+dbtool_dir_path = os.path.normpath(os.path.realpath(os.path.dirname(__file__)))
+patch_dirs = []
+
+# collects all "git-patches" directories in the modules folder
+for root, dirs, files in os.walk("../modules"):
+    for d in dirs:
+        if d == "git-patches":
+            patch_dirs.append(os.path.join(root, d))
+
+
+def apply_patches():
+    # Iterate through the patch dirs
+    for patch_dir in patch_dirs:
+        # Iterate through the patch files
+        for filename in sorted(os.listdir(patch_dir)):
+            if filename.endswith(".patch"):
+                patch_path = os.path.abspath(os.path.join(patch_dir, filename))
+                try:
+                    # Use subprocess to run the 'git apply' command
+                    # subprocess.run(["git", "apply", "-R", patch_path], cwd="../")
+                    subprocess.run(
+                        ["git", "apply", "--ignore-whitespace", "-v", patch_path],
+                        cwd="../",
+                        check=True
+                    )
+                    print(f"SUCCESS: Applied patch: {filename}")
+                except subprocess.CalledProcessError as e:
+                    print(f"ERROR: applying patch {filename}: {e}")
+                except Exception as e:
+                    print(f"ERROR: Unknown applying patch {filename}: {e}")
+
+
+if __name__ == "__main__":
+    apply_patches()

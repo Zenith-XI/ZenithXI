@@ -1,0 +1,102 @@
+name: Restrict to Allowed Paths
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - labeled
+      - unlabeled
+      - synchronize
+      - reopened
+
+jobs:
+  block-paths:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check source branch
+        shell: bash
+        id: check
+        run: |
+          PR_LABELS=$(jq -r '.pull_request.labels | map(.name) | join(",")' "$GITHUB_EVENT_PATH")
+          echo "Labels: $PR_LABELS"
+
+          if echo "$PR_LABELS" | grep -q "bypass block-paths"; then
+            echo "✅ Label found to not care where changes are for this PR"
+            echo "should_continue=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # technically zenith _is_ a fork of LSB, so we have to detect based on repo
+          HEAD_REPO="${{ github.event.pull_request.head.repo.full_name }}"
+          BASE_REPO="${{ github.repository }}"
+          FORK=true
+          BRANCH=""
+
+          if [ "$HEAD_REPO" = "$BASE_REPO" ]; then
+            FORK=false
+          fi
+
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            BRANCH="$GITHUB_REF_NAME"
+          elif [ "$GITHUB_EVENT_NAME" = "pull_request" ] || [ "$GITHUB_EVENT_NAME" = "pull_request_target" ]; then
+            BRANCH=$(jq -r '.pull_request.head.ref' "$GITHUB_EVENT_PATH")
+          fi
+
+          echo "Fork: $FORK"
+          echo "Branch: $BRANCH"
+
+          if [ "$FORK" = "false" ] && [ "$BRANCH" = "base" ]; then
+            echo "✅ 'base' branch is allowed to modify anything in the codebase"
+            echo "should_continue=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if [ "$FORK" = "false" ]; then
+            echo "All PRs should come from forks."
+            echo "Please fork this repository and inform someone about deleting this branch."
+            exit 1
+          fi
+
+          echo "should_continue=true" >> $GITHUB_OUTPUT
+
+      - name: Check out the code
+        if: steps.check.outputs.should_continue == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch fork branch
+        if: steps.check.outputs.should_continue == 'true'
+        run: |
+          # Add the fork as a remote, since we are using "pull_request_targets" instead of "pull_request"... the simplest thing to do is simply to fetch the fork directly
+          git remote add fork ${{ github.event.pull_request.head.repo.clone_url }}
+
+          # Fetch the fork's branch
+          git fetch fork ${{ github.event.pull_request.head.ref }}
+
+          echo "Fork: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "Branch: ${{ github.event.pull_request.head.ref }}"
+          echo "Commit: ${{ github.event.pull_request.head.sha }}"
+
+      - name: Check restricted path changes
+        if: steps.check.outputs.should_continue == 'true'
+        run: |
+          # Compare base branch with fork's branch
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          echo "Comparing $BASE_SHA...$HEAD_SHA"
+          # Get changed files (comma-separated for easy env export)
+          CHANGED_FILES=$(git diff --name-only "$BASE_SHA...$HEAD_SHA" | paste -sd "," -)
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES" | tr ',' '\n'
+
+          # Fail if any file is outside allowed directory
+          if echo "$CHANGED_FILES" | tr ',' '\n' | grep -qvE '^modules/zenith-public/'; then
+            echo "🚫 Changes to restricted paths detected! Only files inside modules/zenith-public/ are allowed."
+            exit 1
+          fi
+
+          echo "✅ No restricted changes."
+          echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV

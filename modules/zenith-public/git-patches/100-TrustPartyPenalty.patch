@@ -1,0 +1,40 @@
+This patch includes Trusts in the total player count to calculate party exp penalty.
+Each iterated player's own trusts are counted (not just the leader's), and only
+trusts that are alive, in the same zone, and within 100 yalms of the mob count.
+This keeps the existing per-player Signet/Sanction lookup intact, so the regionBuff
+multiplier table is selected based on each player's own status effect.
+---
+diff --git a/src/map/utils/charutils.cpp b/src/map/utils/charutils.cpp
+index 892a89d968..f6d310a953 100644
+--- a/src/map/utils/charutils.cpp
++++ b/src/map/utils/charutils.cpp
+@@ -82,6 +82,7 @@
+ #include "entities/charentity.h"
+ #include "entities/mobentity.h"
+ #include "entities/petentity.h"
++#include "entities/trustentity.h"
+ 
+ #include "battleutils.h"
+ #include "blueutils.h"
+@@ -4777,6 +4778,21 @@ namespace charutils
+                 {
+                     minlevel = PMember->GetMLevel();
+                 }
+                 pcinzone++;
++
++                // count active trusts in zone toward party share penalty
++                if (auto* PCharMember = dynamic_cast<CCharEntity*>(PMember))
++                {
++                    for (auto* PTrust : PCharMember->PTrusts)
++                    {
++                        if (PTrust != nullptr &&
++                            !PTrust->isDead() &&
++                            PTrust->getZone() == PMob->getZone() &&
++                            distance(PTrust->loc.p, PMob->loc.p) < 100)
++                        {
++                            pcinzone++;
++                        }
++                    }
++                }
+             }
+         });

@@ -89,12 +89,30 @@ jobs:
             fi
           done
           echo "SKIP_BUILD=$([[ $source_changes == false && ${{ inputs.optional_build }} == true ]] && echo 'true' || echo 'false')" >> $GITHUB_ENV
+          echo "source_changes=$source_changes" >> $GITHUB_OUTPUT
 
       - name: Checkout
         if: ${{ env.SKIP_BUILD != 'true' }}
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      - name: Include only public modules
+        if: ${{ !inputs.optional_build || steps.check-changes.outputs.source_changes == 'true' }}
+        shell: bash
+        run: |
+          sed -i.bak '/private/d' modules/init.txt && rm -f modules/init.txt.bak
+          git submodule update --init --remote --force modules/LQS || true
+      - name: Apply git Patches
+        if: ${{ !inputs.optional_build || steps.check-changes.outputs.source_changes == 'true' }}
+        shell: bash
+        run: |
+          cd tools
+          python3 apply_patches.py 2> git-patches.log || true
+          if grep -qi "warning\|error\|crash" git-patches.log; then
+              cat git-patches.log
+              exit -1
+          fi
 
       - name: Install dependencies (macOS)
         if: ${{ runner.os == 'macOS' && env.SKIP_BUILD != 'true' }}

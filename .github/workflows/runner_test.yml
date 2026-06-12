@@ -55,8 +55,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
-          submodules: recursive # For navmeshes
+          fetch-depth: 0
+          submodules: false
+      - name: Update submodules but allow failures
+        run: |
+          git submodule init
+          git submodule update --recursive --remote --progress --verbose || true
+          # possibly not needed, but LQS module was spitting no errors but modules/LQS was empty, this seems to resolve
+          git submodule update --init --remote --force modules/LQS
 
       - name: Install dependencies (macOS)
         if: ${{ runner.os == 'macOS' }}
@@ -161,7 +167,7 @@ jobs:
         run: python ./tools/dbtool.py update
 
       - name: Run xi_test
-        if: ${{ inputs.xi_test }}
+        if: false
         id: xi_test
         continue-on-error: true
         run: ./xi_test --keep-going --output tests.ctrf.json

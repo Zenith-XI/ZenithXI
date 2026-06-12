@@ -1,0 +1,48 @@
+ZenithXI Regime Restrictions Patch
+- Exposes getPageByRegimeId() globally for use by regime_restrictions.lua module
+- Disables prowess buffs for Grounds of Valor regimes
+- Reduces tab rewards to 1/3 of normal
+- Preserves [regime]lastReward in clearRegimeVars for daily completion tracking
+---
+diff --git a/scripts/globals/regimes.lua b/scripts/globals/regimes.lua
+index 5a4fee556e..zenith000001 100644
+--- a/scripts/globals/regimes.lua
++++ b/scripts/globals/regimes.lua
+@@ -944,8 +944,11 @@
+     end
+ 
+     return nil
+ end
+ 
++-- Expose getPageByRegimeId globally for module use
++xi.regime.getPageByRegimeId = getPageByRegimeId
++
+ local function getPageByNum(regimeType, zoneId, pageNum)
+     local info = regimeInfo[regimeType]
+     if not info then
+@@ -1050,7 +1053,7 @@
+     player:setCharVar('[regime]zone', 0)
+     player:setCharVar('[regime]id', 0)
+     player:setCharVar('[regime]repeat', 0)
+-    player:setCharVar('[regime]lastReward', 0)
++    -- ZenithXI: Preserve lastReward to maintain daily completion tracking
+ 
+     for i = 1, 4 do
+         player:setCharVar('[regime]needed' .. i, 0)
+@@ -1449,7 +1452,7 @@
+     end
+ 
+     -- prowess buffs from completing Grounds regimes
+-    if regimeType == xi.regime.type.GROUNDS then
++    if regimeType == xi.regime.type.GROUNDS and false then
+         addGovProwessBonusEffect(player)
+ 
+         -- repeat clears bonus
+@@ -1482,6 +1485,7 @@
+ 
+         -- tabs
+         local tabs = math.floor(reward / 10) * xi.settings.main.TABS_RATE
++        tabs       = math.floor(tabs / 3) -- ZenithXI: Reduced to 1/3 of normal
+         tabs       = utils.clamp(tabs, 0, 50000 - player:getCurrency('valor_point')) -- Retail caps players at 50000 tabs
+ 
+         player:addCurrency('valor_point', tabs)

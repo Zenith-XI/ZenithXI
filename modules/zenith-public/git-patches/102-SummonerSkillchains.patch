@@ -1,0 +1,26 @@
+Adds logic to the petskill "first" variable within OnPetSkillFinished
+This variable is used to determine if a mob has been interacted with for skillchaining, as even AoE skills can only SC a single mob
+
+This patch abuses that variable and sets it to false if the pet has a player owner and that owner does not have avatar's favor active
+---
+diff --git a/src/map/entities/petentity.cpp b/src/map/entities/petentity.cpp
+index fb85d967f6..f079c266d8 100644
+--- a/src/map/entities/petentity.cpp
++++ b/src/map/entities/petentity.cpp
+@@ -495,8 +495,15 @@ void CPetEntity::OnPetSkillFinished(CPetSkillState& state, action_t& action)
+     MsgBasic msg            = MsgBasic::None;
+     MsgBasic defaultMessage = PSkill->getMsg();
+ 
+-    bool first{ true };
++    bool canSkillchain = true;
++    if (auto* PChar = dynamic_cast<CCharEntity*>(this->PMaster); PChar && this->getPetType() == PET_TYPE::AVATAR)
++    {
++        // If pet is an avatar and pet's owner is a PC, lock skillchaining behind avatar's favor
++        canSkillchain = PChar->StatusEffectContainer->HasStatusEffect(EFFECT_AVATARS_FAVOR);
++    }
++    // this bool is only ever used for skillchain. If in the future it gets used for something else this logic will need to be adjusted.
++    bool first{ canSkillchain };
+     for (auto&& PTargetFound : PAI->TargetFind->m_targets)
+     {
+         action_target_t& actionTarget = action.addTarget(PTargetFound->id);
+         action_result_t& actionResult = actionTarget.addResult();

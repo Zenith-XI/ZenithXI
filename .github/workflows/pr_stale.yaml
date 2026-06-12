@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   Stale:
+    if: false
     name: Label and Close Stale PRs
     runs-on: ubuntu-latest
     steps:

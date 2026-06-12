@@ -8,6 +8,7 @@ on:
 
 jobs:
   Publish_Changelog:
+    if: false
     name: Generate and Publish Changelog
     runs-on: ubuntu-24.04
     steps:

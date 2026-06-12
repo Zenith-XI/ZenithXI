@@ -52,6 +52,7 @@ on:
 
 jobs:
   Docker_Build:
+    if: false
     name: ${{ format('docker-{0}, {1}{2}, {3}', inputs.os, inputs.compiler, inputs.compiler_version, inputs.build_type) }}
     runs-on: ubuntu-latest
     env:
