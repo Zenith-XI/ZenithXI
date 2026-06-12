@@ -20,6 +20,12 @@ end
 function CClientEntityPairActions:useSpell(target, spellId)
 end
 
+---Populate the player's BLU spell page from a list of spell IDs
+---@param spellIds xi.magic.spell[] List of BLU spell IDs to set
+---@return nil
+function CClientEntityPairActions:setBlueSpells(spellIds)
+end
+
 ---Use a weaponskill on a target
 ---@param target CBaseEntity Target entity
 ---@param wsId xi.weaponskill Weaponskill ID
@@ -90,6 +96,42 @@ end
 function CClientEntityPairActions:tradeNpc(npcQuery, items, expectedEvent)
 end
 
+---Request a trade with another player.
+---@param target CBaseEntity Trade target
+---@return nil
+function CClientEntityPairActions:tradeRequest(target)
+end
+
+---Accept the incoming trade request.
+---@return nil
+function CClientEntityPairActions:tradeAccept()
+end
+
+---Place an item in a trade slot.
+---@param tradeIndex integer Trade slot, 0..8
+---@param invSlot integer Inventory slot of the source item
+---@param itemId xi.item Item ID
+---@param quantity integer Amount
+---@return nil
+function CClientEntityPairActions:tradeOffer(tradeIndex, invSlot, itemId, quantity)
+end
+
+---Clear a trade slot.
+---@param tradeIndex integer Trade slot, 0..8
+---@return nil
+function CClientEntityPairActions:tradeClearSlot(tradeIndex)
+end
+
+---Lock in this side's offer. Trade goes through once both sides lock.
+---@return nil
+function CClientEntityPairActions:tradeMake()
+end
+
+---Cancel the trade.
+---@return nil
+function CClientEntityPairActions:tradeCancel()
+end
+
 ---Accept raise prompt
 ---@return nil
 function CClientEntityPairActions:acceptRaise()
@@ -106,4 +148,46 @@ end
 ---@param ... xi.weaponskill Weaponskill IDs to chain (requires at least 2)
 ---@return nil
 function CClientEntityPairActions:skillchain(target, ...)
+end
+
+---Move an item between containers or split a stack
+---@param srcContainer xi.inventoryLocation Source container
+---@param srcSlot integer Source slot index
+---@param dstContainer xi.inventoryLocation Destination container
+---@param quantity integer Quantity to move
+---@param dstSlot? integer Destination slot (omit for first free)
+---@return nil
+function CClientEntityPairActions:moveItem(srcContainer, srcSlot, dstContainer, quantity, dstSlot)
+end
+
+---Sort a container, merging partial stacks
+---@param container xi.inventoryLocation Container to sort
+---@return nil
+function CClientEntityPairActions:sortContainer(container)
+end
+
+---Drop an item (sends to recycle bin if enabled)
+---@param container xi.inventoryLocation Source container
+---@param slot integer Slot index
+---@param quantity integer Quantity to drop
+---@return nil
+function CClientEntityPairActions:dropItem(container, slot, quantity)
+end
+
+---@class LockstyleItem
+---@field itemId integer Item ID
+---@field slot xi.slot Equipment slot
+
+---Set lockstyle mode, optionally with item overrides
+---@param mode integer Lockstyle mode (0=disable, 3=set, 4=enable)
+---@param items? LockstyleItem[] Items to apply
+---@return nil
+function CClientEntityPairActions:setLockstyle(mode, items)
+end
+
+---Start a synthesis. Inventory slots are resolved automatically.
+---@param crystal xi.item Crystal item ID
+---@param ingredients xi.item[] Ingredient item IDs (1..8)
+---@return nil
+function CClientEntityPairActions:craft(crystal, ingredients)
 end

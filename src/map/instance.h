@@ -36,16 +36,16 @@ enum INSTANCE_STATUS
 
 struct zoneMusicOverride_t
 {
-    xi::optional<uint16> m_songDay;   // music (daytime)
-    xi::optional<uint16> m_songNight; // music (nighttime)
-    xi::optional<uint16> m_bSongS;    // battle music (solo)
-    xi::optional<uint16> m_bSongM;    // battle music (party)
+    Maybe<uint16> m_songDay;   // music (daytime)
+    Maybe<uint16> m_songNight; // music (nighttime)
+    Maybe<uint16> m_bSongS;    // battle music (solo)
+    Maybe<uint16> m_bSongM;    // battle music (party)
 };
 
 class CInstance : public CZoneEntities
 {
 public:
-    CInstance(CZone*, uint32 instanceid);
+    CInstance(Scheduler& scheduler, MapConfig config, CZone* zone, uint32 instanceid);
     ~CInstance();
 
     void RegisterChar(CCharEntity*);
@@ -86,6 +86,8 @@ public:
     uint16 GetBackgroundMusicDay();
     uint16 GetBackgroundMusicNight();
 
+    auto overlayId() const -> uint32;
+
 private:
     void LoadInstance();
 
@@ -107,8 +109,9 @@ private:
     INSTANCE_STATUS     m_status{ INSTANCE_NORMAL };
     std::vector<uint32> m_registeredChars;
     std::set<uint32>    m_enteredChars;
+    uint32              overlayId_{ 0 };
 
-    std::unordered_map<std::string, uint64_t> m_LocalVars;
+    std::unordered_map<std::string, uint64_t> localVars_;
 };
 
 #endif

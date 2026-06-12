@@ -27,6 +27,7 @@
 
 #include <asio.hpp> // for signal_set
 
+#include <chrono>
 #include <memory>
 #include <string>
 
@@ -83,12 +84,13 @@ public:
     // Runtime
     //
 
-    auto         isRunning() const -> bool;
-    virtual void requestExit();
-
     // Is expected to block until requestExit() is called and/or isRunning() returns false
     virtual void run();
 
+    void requestExit();
+    auto closeRequested() const -> bool;
+
+    auto isRunning() const -> bool;
     auto isRunningInCI() const -> bool;
 
     //
@@ -100,6 +102,8 @@ public:
     auto console() const -> ConsoleService&;
 
 protected:
+    std::chrono::steady_clock::time_point startTime_{ std::chrono::steady_clock::now() };
+
     Scheduler        scheduler_;
     asio::signal_set signals_;
 

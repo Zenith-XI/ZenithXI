@@ -10,12 +10,12 @@
 -- Effect with enhancing equipment (Note: these are latents on gear with the effect)
 -- Atk +40
 -- Def +40
--- Arcana Killer (guesstimated 5%)
+-- Aquan Killer +4
 -----------------------------------
 ---@type TItemFood
 local itemObject = {}
 
-itemObject.onItemCheck = function(target, item, param, caster)
+itemObject.onItemCheck = function(target, item, caster)
     return xi.itemUtils.foodOnItemCheck(target, xi.foodType.BASIC)
 end
 

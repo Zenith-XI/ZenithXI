@@ -7,6 +7,7 @@ local ID = zones[xi.zone.WEST_SARUTABARUTA]
 ---@type TMobEntity
 local entity = {}
 
+-- TODO: Support East/West Tom Tit Tat
 entity.spawnPoints =
 {
     { x =   31.149, y = -20.045, z =  358.265 },
@@ -63,8 +64,8 @@ entity.spawnPoints =
 
 entity.phList =
 {
-    [ID.mob.TOM_TIT_TAT - 2] = ID.mob.TOM_TIT_TAT, -- 77.509 -20.719 434.757
-    [ID.mob.TOM_TIT_TAT - 1] = ID.mob.TOM_TIT_TAT, -- 31.149 -20.045 358.265
+    [ID.mob.TOM_TIT_TAT[1] - 1] = ID.mob.TOM_TIT_TAT[1], -- Confirmed on retail
+    [ID.mob.TOM_TIT_TAT[2] - 1] = ID.mob.TOM_TIT_TAT[2], -- Confirmed on retail
 }
 
 entity.onMobDeath = function(mob, player, optParams)

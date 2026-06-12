@@ -80,6 +80,7 @@ global_objects=(
     BattlefieldQuest
     Limbus
     SeasonalEvent
+    InstanceAssault
 
     onBattlefieldHandlerInitialize
     applyResistanceAddEffect
@@ -101,7 +102,9 @@ global_objects=(
     BuildString
 
     GetFirstID
+    GetTableOfIDs
 
+    LoadExpDifficultyCurves
     ReloadSynthRecipes
 
     after_each

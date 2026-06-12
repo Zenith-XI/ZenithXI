@@ -55,6 +55,40 @@ session_t& get_authenticated_session(const std::string& ipAddr, const std::strin
     return authenticatedSessions_[ipAddr][sessionHash]; // NOTE: Will construct if doesn't exist
 }
 
+auto isZoneAtPlayerCap(uint16 zoneId, bool isGM) -> bool
+{
+    const auto cap = settings::get<uint16>("map.ZONE_PLAYER_CAP");
+    if (cap == 0)
+    {
+        return false;
+    }
+
+    const auto reserved  = settings::get<uint16>("map.ZONE_PLAYER_GM_RESERVED");
+    const auto threshold = isGM ? cap : static_cast<uint16>(cap > reserved ? cap - reserved : 0);
+
+    const auto rset = db::preparedStmt(
+        "SELECT z.zonetype, "
+        "  (SELECT COUNT(*) FROM accounts_sessions s "
+        "    JOIN chars c ON c.charid = s.charid "
+        "    WHERE c.pos_zone = ?) AS pop "
+        "FROM zone_settings z WHERE z.zoneid = ? LIMIT 1",
+        zoneId,
+        zoneId);
+
+    FOR_DB_SINGLE_RESULT(rset)
+    {
+        constexpr uint16 zoneTypeInstanced = 0x100;
+        if (rset->get<uint16>("zonetype") & zoneTypeInstanced)
+        {
+            return false;
+        }
+
+        return rset->get<uint32>("pop") >= threshold;
+    }
+
+    return false;
+}
+
 // https://github.com/atom0s/XiPackets/blob/main/lobby/S2C_0x0004_ResponseError.md
 void generateErrorMessage(uint8* packet, uint16 errorCode)
 {
@@ -213,7 +247,7 @@ int32 saveCharacter(uint32 accid, uint32 charid, char_mini* createchar)
     return 0;
 }
 
-int32 createCharacter(session_t& session, uint8* buf)
+int32 createCharacter(session_t& session, uint8* buf, lpkt_chr_info_sub2& charInfo)
 {
     char_mini createchar{};
 
@@ -303,6 +337,23 @@ int32 createCharacter(session_t& session, uint8* buf)
     {
         return -1;
     }
+
+    // The client expects to fill some data in on character creation. We never _see_ the character, so we don't need to set Race/Face/Model etc.
+    // We are making an assumption on what it wants - so for now just copy what is probably required (name, charid and some other stuff related to IDs.)
+    std::memcpy(&charInfo.character_name, charName.c_str(), std::min(charName.size(), sizeof(charInfo.character_name)));
+
+    uint8  worldId     = 0;      // Use when multiple worlds are supported.
+    uint32 contentId   = charID; // Reusing the character ID as the content ID (which is also the name of character folder within the USER directory) at the moment
+    uint16 charIdMain  = charID & 0xFFFF;
+    uint8  charIdExtra = (charID >> 16) & 0xFF;
+
+    charInfo.ffxi_id           = contentId;
+    charInfo.ffxi_id_world     = charIdMain;
+    charInfo.worldid           = worldId;
+    charInfo.status            = 1; // 0 = Invalid/Hidden, 1 = Available, 2 = Disabled (unpaid)
+    charInfo.race_change       = 0; // 0 = no race change service, 1 = race change service (gold star icon) (NOT YET SUPPORTED!)
+    charInfo.renamef           = 0; // 0 = no rename required, 1 = rename required (NOT YET SUPPORTED!)
+    charInfo.ffxi_id_world_tbl = charIdExtra;
 
     ShowDebug(fmt::format("char <{}> successfully saved", charName));
     return 0;

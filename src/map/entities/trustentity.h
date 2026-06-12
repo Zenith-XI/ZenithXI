@@ -38,12 +38,12 @@ public:
     explicit CTrustEntity(CCharEntity*);
     ~CTrustEntity() override;
 
+    auto getShieldSize() -> int8;
+
     void PostTick() override;
     void FadeOut() override;
     void Die() override;
     void Spawn() override;
-    void OnAbility(CAbilityState&, action_t&) override;
-    void OnRangedAttack(CRangeState&, action_t&) override;
     bool ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags) override;
     void OnDespawn(CDespawnState&) override;
 
@@ -51,7 +51,14 @@ public:
     void OnMobSkillFinished(CMobSkillState& state, action_t& action) override;
     void OnWeaponSkillFinished(CWeaponSkillState& state, action_t& action) override;
 
+    bool GetUntargetable() const override;
+
     uint32 m_TrustID{};
+    bool   isReleased       = false; // Track trust releasing (see c2s 0x01A action)
+    bool   m_isPassiveTrust = false;
+
+private:
+    static constexpr int8 m_defaultShieldSize = 3;
 };
 
 #endif

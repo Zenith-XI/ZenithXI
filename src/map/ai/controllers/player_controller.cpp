@@ -42,8 +42,9 @@ CPlayerController::CPlayerController(CCharEntity* _PChar)
 {
 }
 
-void CPlayerController::Tick(timer::time_point /*tick*/)
+auto CPlayerController::Tick(timer::time_point /*tick*/) -> Task<void>
 {
+    co_return;
 }
 
 bool CPlayerController::Cast(uint16 targid, SpellID spellid)
@@ -223,7 +224,7 @@ bool CPlayerController::WeaponSkill(uint16 targid, uint16 wsid)
             auto* ammo   = dynamic_cast<CItemWeapon*>(PChar->m_Weapons[SLOT_AMMO]);
 
             // before allowing ranged weapon skill...
-            if (PItem == nullptr || !weapon || !weapon->isRanged() || !ammo || !ammo->isRanged() || PChar->equip[SLOT_AMMO] == 0)
+            if (PItem == nullptr || !weapon || !weapon->isRanged() || !ammo || !ammo->isRanged() || !PChar->getEquip(SLOT_AMMO))
             {
                 PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::NoRangedWeapon);
                 return false;

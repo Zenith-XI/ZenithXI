@@ -24516,6 +24516,7 @@ INSERT INTO `item_mods` VALUES (14900,2,10);   -- HP: 10
 INSERT INTO `item_mods` VALUES (14900,9,6);    -- DEX: 6
 INSERT INTO `item_mods` VALUES (14900,11,6);   -- AGI: 6
 INSERT INTO `item_mods` VALUES (14900,425,10); -- SHADOW_BIND_EXT: 10
+INSERT INTO `item_mods` VALUES (14900,138,1);  -- BARRAGE_COUNT: 1
 
 -- Myochin Kote +1
 INSERT INTO `item_mods` VALUES (14901,1,21); -- DEF: 21
@@ -27651,9 +27652,10 @@ INSERT INTO `item_mods` VALUES (15464,22,7); -- DARK_MEVA: 7
 INSERT INTO `item_mods` VALUES (15464,68,7); -- EVA: 7
 
 -- Toreadors Cape
-INSERT INTO `item_mods` VALUES (15465,1,7);  -- DEF: 7
-INSERT INTO `item_mods` VALUES (15465,27,4); -- ENMITY: 4
-INSERT INTO `item_mods` VALUES (15465,68,9); -- EVA: 9
+INSERT INTO `item_mods` VALUES (15465,1,7);     -- DEF: 7
+INSERT INTO `item_mods` VALUES (15465,27,4);    -- ENMITY: 4
+INSERT INTO `item_mods` VALUES (15465,68,9);    -- EVA: 9
+INSERT INTO `item_mods` VALUES (15465,166,-50); -- CRITICAL_HIT_EVASION: -50
 
 -- Birdman Cape
 INSERT INTO `item_mods` VALUES (15466,1,7);   -- DEF: 7
@@ -33373,9 +33375,10 @@ INSERT INTO `item_mods` VALUES (16941,13,3); -- MND: 3
 INSERT INTO `item_mods` VALUES (16941,23,7); -- ATT: 7
 
 -- Balmung
-INSERT INTO `item_mods` VALUES (16942,3,-5);  -- HPP: -5
-INSERT INTO `item_mods` VALUES (16942,23,13); -- ATT: 13
-INSERT INTO `item_mods` VALUES (16942,25,5);  -- ACC: 5
+INSERT INTO `item_mods` VALUES (16942,3,-5);   -- HPP: -5
+INSERT INTO `item_mods` VALUES (16942,23,13);  -- ATT: 13
+INSERT INTO `item_mods` VALUES (16942,25,5);   -- ACC: 5
+INSERT INTO `item_mods` VALUES (16942,1181,1); -- ITEM_ADDEFFECT_SCRIPTED: 1
 
 -- Ascalon
 INSERT INTO `item_mods` VALUES (16943,8,3);  -- STR: 3
@@ -34107,6 +34110,7 @@ INSERT INTO `item_mods` VALUES (17272,24,7); -- RATT: 7
 -- Phineus Gun
 INSERT INTO `item_mods` VALUES (17273,11,5);  -- AGI: 5
 INSERT INTO `item_mods` VALUES (17273,359,1); -- RAPID_SHOT: 1
+INSERT INTO `item_mods` VALUES (17273,138,1); -- BARRAGE_COUNT: 1
 
 -- Coffinmaker
 INSERT INTO `item_mods` VALUES (17275,26,9);   -- RACC: 9
@@ -35369,6 +35373,9 @@ INSERT INTO `item_mods` VALUES (17650,501,10); -- ITEM_ADDEFFECT_CHANCE: 10
 INSERT INTO `item_mods` VALUES (17650,951,3);  -- ITEM_ADDEFFECT_STATUS: 3
 INSERT INTO `item_mods` VALUES (17650,952,4);  -- ITEM_ADDEFFECT_POWER: 4
 INSERT INTO `item_mods` VALUES (17650,953,30); -- ITEM_ADDEFFECT_DURATION: 30
+
+-- Dainslaif
+INSERT INTO `item_mods` VALUES (17651,1181,1); -- ITEM_ADDEFFECT_SCRIPTED: 1
 
 -- Joyeuse
 INSERT INTO `item_mods` VALUES (17652,22,14); -- DARK_MEVA: 14
@@ -36712,13 +36719,7 @@ INSERT INTO `item_mods` VALUES (18150,953,30);  -- ITEM_ADDEFFECT_DURATION: 30
 INSERT INTO `item_mods` VALUES (18150,950,8);   -- ITEM_ADDEFFECT_ELEMENT: 8
 
 -- Bloody Bolt
-INSERT INTO `item_mods` VALUES (18151,278,5);   -- ITEM_ADDEFFECT_LVADJUST: 5
-INSERT INTO `item_mods` VALUES (18151,280,12);  -- ITEM_ADDEFFECT_DSTAT: INT
-INSERT INTO `item_mods` VALUES (18151,431,5);   -- ITEM_ADDEFFECT_TYPE: 5
-INSERT INTO `item_mods` VALUES (18151,499,21);  -- ITEM_SUBEFFECT: 21
-INSERT INTO `item_mods` VALUES (18151,500,10);  -- ITEM_ADDEFFECT_DMG: 10
-INSERT INTO `item_mods` VALUES (18151,501,100); -- ITEM_ADDEFFECT_CHANCE: 100
-INSERT INTO `item_mods` VALUES (18151,950,8);   -- ITEM_ADDEFFECT_ELEMENT: 8
+INSERT INTO `item_mods` VALUES (18151,1181,1);  -- ITEM_ADDEFFECT_SCRIPTED: 1
 
 -- Venom Bolt
 INSERT INTO `item_mods` VALUES (18152,278,5);   -- ITEM_ADDEFFECT_LVADJUST: 5
@@ -36767,6 +36768,7 @@ INSERT INTO `item_mods` VALUES (18158,951,2);  -- ITEM_ADDEFFECT_STATUS: 2
 INSERT INTO `item_mods` VALUES (18158,953,25); -- ITEM_ADDEFFECT_DURATION: 25
 
 -- Demon Arrow
+INSERT INTO `item_mods` VALUES (18159,26,5);    -- RACC: 5
 INSERT INTO `item_mods` VALUES (18159,278,5);   -- ITEM_ADDEFFECT_LVADJUST: 5
 INSERT INTO `item_mods` VALUES (18159,431,2);   -- ITEM_ADDEFFECT_TYPE: DEBUFF
 INSERT INTO `item_mods` VALUES (18159,499,18);  -- ITEM_SUBEFFECT: 18
@@ -38686,10 +38688,22 @@ INSERT INTO `item_mods` VALUES (18707,23,6);  -- ATT: 6
 INSERT INTO `item_mods` VALUES (18707,25,6);  -- ACC: 6
 
 -- Snakeeye
-INSERT INTO `item_mods` VALUES (18708,370,1); -- REGEN: 1
+INSERT INTO `item_mods` VALUES (18708,370,1);   -- REGEN: 1
+INSERT INTO `item_mods` VALUES (18708,431,2);   -- ITEM_ADDEFFECT_TYPE: DEBUFF
+INSERT INTO `item_mods` VALUES (18708,499,10);  -- ITEM_SUBEFFECT: 10
+INSERT INTO `item_mods` VALUES (18708,501,100); -- ITEM_ADDEFFECT_CHANCE: 100 -- TODO: Effected by dLVL?
+INSERT INTO `item_mods` VALUES (18708,951,3);   -- ITEM_ADDEFFECT_STATUS: 3
+INSERT INTO `item_mods` VALUES (18708,952,4);   -- ITEM_ADDEFFECT_POWER: 2
+INSERT INTO `item_mods` VALUES (18708,953,30);  -- ITEM_ADDEFFECT_DURATION: 30
 
 -- Snakeeye +1
-INSERT INTO `item_mods` VALUES (18709,370,1); -- REGEN: 1
+INSERT INTO `item_mods` VALUES (18709,370,1);   -- REGEN: 1
+INSERT INTO `item_mods` VALUES (18709,431,2);   -- ITEM_ADDEFFECT_TYPE: DEBUFF
+INSERT INTO `item_mods` VALUES (18709,499,10);  -- ITEM_SUBEFFECT: 10
+INSERT INTO `item_mods` VALUES (18709,501,100); -- ITEM_ADDEFFECT_CHANCE: 100 -- TODO: Effected by dLVL?
+INSERT INTO `item_mods` VALUES (18709,951,3);   -- ITEM_ADDEFFECT_STATUS: 3
+INSERT INTO `item_mods` VALUES (18709,952,4);   -- ITEM_ADDEFFECT_POWER: 2
+INSERT INTO `item_mods` VALUES (18709,953,30);  -- ITEM_ADDEFFECT_DURATION: 30
 
 -- Seadog Gun +1
 INSERT INTO `item_mods` VALUES (18711,24,10); -- RATT: 10
@@ -44325,6 +44339,7 @@ INSERT INTO `item_mods` VALUES (21311,24,30); -- RATT: 30
 INSERT INTO `item_mods` VALUES (21311,26,30); -- RACC: 30
 INSERT INTO `item_mods` VALUES (21311,28,30); -- MATT: 30
 INSERT INTO `item_mods` VALUES (21311,30,20); -- MACC: 20
+INSERT INTO `item_mods` VALUES (21311,138,1); -- BARRAGE_COUNT: 1
 
 -- Abrasion Bolt
 INSERT INTO `item_mods` VALUES (21314,278,5);   -- ITEM_ADDEFFECT_LVADJUST: 5
@@ -50075,6 +50090,7 @@ INSERT INTO `item_mods` VALUES (23184,68,34);   -- EVA: 34
 INSERT INTO `item_mods` VALUES (23184,384,500); -- HASTE_GEAR: 500
 INSERT INTO `item_mods` VALUES (23184,420,22);  -- BARRAGE_ACC: 22
 INSERT INTO `item_mods` VALUES (23184,425,14);  -- SHADOW_BIND_EXT: 14
+INSERT INTO `item_mods` VALUES (23184,138,2);   -- BARRAGE_COUNT: 2
 
 -- Wakido Kote +2
 INSERT INTO `item_mods` VALUES (23185,1,113);   -- DEF: 113
@@ -55232,6 +55248,7 @@ INSERT INTO `item_mods` VALUES (23519,68,44);   -- EVA: 44
 INSERT INTO `item_mods` VALUES (23519,384,500); -- HASTE_GEAR: 500
 INSERT INTO `item_mods` VALUES (23519,420,32);  -- BARRAGE_ACC: 32
 INSERT INTO `item_mods` VALUES (23519,425,16);  -- SHADOW_BIND_EXT: 16
+INSERT INTO `item_mods` VALUES (23519,138,2);   -- BARRAGE_COUNT: 2
 
 -- Wakido Kote +3
 INSERT INTO `item_mods` VALUES (23520,1,123);   -- DEF: 123
@@ -56159,6 +56176,154 @@ INSERT INTO `item_mods` VALUES (23650,31,84);   -- MEVA: 84
 INSERT INTO `item_mods` VALUES (23650,68,69);   -- EVA: 69
 INSERT INTO `item_mods` VALUES (23650,384,300); -- HASTE_GEAR: 300
 INSERT INTO `item_mods` VALUES (23650,858,90);  -- ARCANE_CIRCLE_DURATION: 90
+
+-- Hebenus Gilet
+INSERT INTO `item_mods` VALUES (23871,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Hebenus Boxers
+INSERT INTO `item_mods` VALUES (23872,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Hebenus Top
+INSERT INTO `item_mods` VALUES (23873,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- Hebenus Shorts
+INSERT INTO `item_mods` VALUES (23874,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- Maxixi Tiara +4
+INSERT INTO `item_mods` VALUES (23913,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Maxixi Tiara +4
+INSERT INTO `item_mods` VALUES (23914,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- Maxixi Casaque +4
+INSERT INTO `item_mods` VALUES (23958,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Maxixi Casaque +4
+INSERT INTO `item_mods` VALUES (23959,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- Maxixi Bangles +4
+INSERT INTO `item_mods` VALUES (24003,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Maxixi Bangles +4
+INSERT INTO `item_mods` VALUES (24004,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- Maxixi Tights +4
+INSERT INTO `item_mods` VALUES (24048,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Maxixi Tights +4
+INSERT INTO `item_mods` VALUES (24049,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- Maxixi Toe Sh. +4
+INSERT INTO `item_mods` VALUES (24093,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Maxixi Toe Sh. +4
+INSERT INTO `item_mods` VALUES (24094,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- CS Tunic +1
+INSERT INTO `item_mods` VALUES (24276,276,1); -- EQUIPMENT_ONLY_RACE: Hume M
+
+-- CS Vest +1
+INSERT INTO `item_mods` VALUES (24277,276,2); -- EQUIPMENT_ONLY_RACE: Hume F
+
+-- MG Jerkin +1
+INSERT INTO `item_mods` VALUES (24278,276,4); -- EQUIPMENT_ONLY_RACE: Elvaan M
+
+-- MG Bodice +1
+INSERT INTO `item_mods` VALUES (24279,276,8); -- EQUIPMENT_ONLY_RACE: Elvaan F
+
+-- WN Kaftan +1
+INSERT INTO `item_mods` VALUES (24280,276,48); -- EQUIPMENT_ONLY_RACE: Tarutaru M, Tarutaru F
+
+-- SV Separates +1
+INSERT INTO `item_mods` VALUES (24281,276,64); -- EQUIPMENT_ONLY_RACE: Mithra
+
+-- EL Surcoat +1
+INSERT INTO `item_mods` VALUES (24282,276,128); -- EQUIPMENT_ONLY_RACE: Galka
+
+-- CSM Gloves +1
+INSERT INTO `item_mods` VALUES (24283,276,1); -- EQUIPMENT_ONLY_RACE: Hume M
+
+-- CSF Gloves +1
+INSERT INTO `item_mods` VALUES (24284,276,2); -- EQUIPMENT_ONLY_RACE: Hume F
+
+-- MG Gauntlets +1
+INSERT INTO `item_mods` VALUES (24285,276,4); -- EQUIPMENT_ONLY_RACE: Elvaan M
+
+-- MG Gloves +1
+INSERT INTO `item_mods` VALUES (24286,276,8); -- EQUIPMENT_ONLY_RACE: Elvaan F
+
+-- WN Mittens +1
+INSERT INTO `item_mods` VALUES (24287,276,48); -- EQUIPMENT_ONLY_RACE: Tarutaru M, Tarutaru F
+
+-- SV Gauntlets +1
+INSERT INTO `item_mods` VALUES (24288,276,64); -- EQUIPMENT_ONLY_RACE: Mithra
+
+-- EL Bracers +1
+INSERT INTO `item_mods` VALUES (24289,276,128); -- EQUIPMENT_ONLY_RACE: Galka
+
+-- CS Slacks +1
+INSERT INTO `item_mods` VALUES (24290,276,1); -- EQUIPMENT_ONLY_RACE: Hume M
+
+-- CS Pants +1
+INSERT INTO `item_mods` VALUES (24291,276,2); -- EQUIPMENT_ONLY_RACE: Hume F
+
+-- MGM Chausses +1
+INSERT INTO `item_mods` VALUES (24292,276,4); -- EQUIPMENT_ONLY_RACE: Elvaan M
+
+-- MGF Chausses +1
+INSERT INTO `item_mods` VALUES (24293,276,8); -- EQUIPMENT_ONLY_RACE: Elvaan F
+
+-- WN Braccae +1
+INSERT INTO `item_mods` VALUES (24294,276,48); -- EQUIPMENT_ONLY_RACE: Tarutaru M, Tarutaru F
+
+-- SV Loincloth +1
+INSERT INTO `item_mods` VALUES (24295,276,64); -- EQUIPMENT_ONLY_RACE: Mithra
+
+-- EL Braguette +1
+INSERT INTO `item_mods` VALUES (24296,276,128); -- EQUIPMENT_ONLY_RACE: Galka
+
+-- CSM Boots +1
+INSERT INTO `item_mods` VALUES (24297,276,1); -- EQUIPMENT_ONLY_RACE: Hume M
+
+-- CSF Boots +1
+INSERT INTO `item_mods` VALUES (24298,276,2); -- EQUIPMENT_ONLY_RACE: Hume F
+
+-- MGM Ledelsens +1
+INSERT INTO `item_mods` VALUES (24299,276,4); -- EQUIPMENT_ONLY_RACE: Elvaan M
+
+-- MGF Ledelsens +1
+INSERT INTO `item_mods` VALUES (24300,276,8); -- EQUIPMENT_ONLY_RACE: Elvaan F
+
+-- WN Clomps +1
+INSERT INTO `item_mods` VALUES (24301,276,48); -- EQUIPMENT_ONLY_RACE: Tarutaru M, Tarutaru F
+
+-- SV Gaiters +1
+INSERT INTO `item_mods` VALUES (24302,276,64); -- EQUIPMENT_ONLY_RACE: Mithra
+
+-- EL Sandals +1
+INSERT INTO `item_mods` VALUES (24303,276,128); -- EQUIPMENT_ONLY_RACE: Galka
+
+-- Fancy Gilet
+INSERT INTO `item_mods` VALUES (25774,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Fancy Top
+INSERT INTO `item_mods` VALUES (25775,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- Iratsugo Happi
+INSERT INTO `item_mods` VALUES (25777,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Iratsume Happi
+INSERT INTO `item_mods` VALUES (25778,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- Fancy Trunks
+INSERT INTO `item_mods` VALUES (25838,276,149); -- EQUIPMENT_ONLY_RACE: Hume M, Elvaan M, Tarutaru M, Galka
+
+-- Fancy Shorts
+INSERT INTO `item_mods` VALUES (25839,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
+-- Straw Hat
+INSERT INTO `item_mods` VALUES (27734,276,106); -- EQUIPMENT_ONLY_RACE: Hume F, Elvaan F, Tarutaru F, Mithra
+
 INSERT INTO `item_mods` VALUES (28230,1069,2);  -- ARCANE_CIRCLE_POTENCY: 2
 
 -- Totemic Gaiters +3
@@ -77788,6 +77953,7 @@ INSERT INTO `item_mods` VALUES (27953,31,25);   -- MEVA: 25
 INSERT INTO `item_mods` VALUES (27953,68,11);   -- EVA: 11
 INSERT INTO `item_mods` VALUES (27953,384,400); -- HASTE_GEAR: 400
 INSERT INTO `item_mods` VALUES (27953,425,6);   -- SHADOW_BIND_EXT: 6
+INSERT INTO `item_mods` VALUES (27953,138,2);   -- BARRAGE_COUNT: 2
 
 -- Wakido Kote
 INSERT INTO `item_mods` VALUES (27954,1,74);    -- DEF: 74
@@ -78159,6 +78325,7 @@ INSERT INTO `item_mods` VALUES (27974,31,37);   -- MEVA: 37
 INSERT INTO `item_mods` VALUES (27974,68,24);   -- EVA: 24
 INSERT INTO `item_mods` VALUES (27974,384,500); -- HASTE_GEAR: 500
 INSERT INTO `item_mods` VALUES (27974,425,12);  -- SHADOW_BIND_EXT: 12
+INSERT INTO `item_mods` VALUES (27974,138,2);   -- BARRAGE_COUNT: 2
 
 -- Wakido Kote +1
 INSERT INTO `item_mods` VALUES (27975,1,103);   -- DEF: 103

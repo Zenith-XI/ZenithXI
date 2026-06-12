@@ -10,12 +10,12 @@
 -- Effect with enhancing equipment (Note: these are latents on gear with the effect)
 -- Atk +50
 -- Def +30
--- Double Attack +5%
+-- Double Attack +2
 -----------------------------------
 ---@type TItemFood
 local itemObject = {}
 
-itemObject.onItemCheck = function(target, item, param, caster)
+itemObject.onItemCheck = function(target, item, caster)
     return xi.itemUtils.foodOnItemCheck(target, xi.foodType.BASIC)
 end
 

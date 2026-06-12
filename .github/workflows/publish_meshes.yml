@@ -5,8 +5,8 @@ on:
     branches:
       - base
     paths:
-      - './losmeshes/**'
       - './navmeshes/**'
+      - './ximeshes/**'
       - '.gitmodules'
   workflow_dispatch:
 

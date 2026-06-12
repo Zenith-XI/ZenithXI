@@ -24,15 +24,8 @@
 
 #include "common/cbasetypes.h"
 
+#include "exdata/linkshell.h"
 #include "item.h"
-
-struct lscolor_t
-{
-    uint8 R : 4;
-    uint8 G : 4;
-    uint8 B : 4;
-    uint8 A : 4;
-};
 
 // TODO: The LSTYPE definition is wrong here and values are off by 1 compared to what is actually passed
 // by the client. The correct values are listed in 0x0e2_set_lsmsg.h in GP_CLI_COMMAND_SET_LSMSG_WRITELEVEL
@@ -49,19 +42,18 @@ class CItemLinkshell : public CItem
 {
 public:
     CItemLinkshell(uint16);
+    CItemLinkshell(const CItemLinkshell& other);
     virtual ~CItemLinkshell();
 
     uint32            GetLSID();
     LSTYPE            GetLSType();
-    lscolor_t         GetLSColor();
+    Exdata::lscolor_t GetLSColor();
     uint16            GetLSRawColor();
     void              SetLSID(uint32 lsid);
     void              SetLSColor(uint16 color);
-    const std::string getSignature() override;
+    auto              getSignature() const -> const std::string override;
     void              setSignature(const std::string& signature) override;
     void              SetLSType(LSTYPE value);
-
-private:
 };
 
 #endif

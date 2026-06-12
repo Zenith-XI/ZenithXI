@@ -22,10 +22,8 @@
 #ifndef _LUAUTILS_H
 #define _LUAUTILS_H
 
-#include <optional>
-
-#include "common/cbasetypes.h"
-#include "common/task_manager.h"
+#include <common/cbasetypes.h>
+#include <common/types/maybe.h>
 
 #include "common/lua.h"
 extern sol::state lua;
@@ -210,13 +208,17 @@ void CacheLuaObjectFromFile(const std::string& filename, bool overwriteCurrentEn
 auto GetCacheEntryFromFilename(const std::string& filename) -> sol::table;
 void OnEntityLoad(CBaseEntity* PEntity);
 
-void PopulateIDLookupsByFilename(std::optional<std::string> maybeFilename = std::nullopt);
-void PopulateIDLookupsByZone(std::optional<uint16> maybeZoneId = std::nullopt);
+void LoadExpDifficultyCurves(const sol::table& expToDifficultyTable, const uint8 incrediblyEasyPreyLevel, const uint16 incrediblyEasyPreyMinExp);
+
+void PopulateIDLookupsByFilename(Maybe<std::string> maybeFilename = std::nullopt);
+void PopulateIDLookupsByZone(Maybe<uint16> maybeZoneId = std::nullopt);
 
 void SendEntityVisualPacket(uint32 npcId, const char* command);
 void InitInteractionGlobal();
 auto GetZone(uint16 zoneId) -> CZone*;
-auto GetItemByID(uint32 itemId) -> CItem*;
+auto GetItemByID(uint32 itemId) -> const CItem*;
+auto GetItemFlagsByID(uint32 itemId) -> ItemFlag;
+auto GetItemLevelRequirementsByID(uint32 itemId) -> uint8;
 auto GetNPCByID(uint32 npcid, const sol::object& instanceObj) -> CBaseEntity*;
 auto GetMobByID(uint32 mobid, const sol::object& instanceObj) -> CBaseEntity*;
 auto GetEntityByID(uint32 mobid, const sol::object& instanceObj, const sol::object& arg3) -> CBaseEntity*;
@@ -233,7 +235,7 @@ void  SendLuaFuncStringToZone(uint16 requestingZoneId, uint16 executorZoneId, co
 void UpdateSanrakusMobs(); // Update sanraku's (ZNM) subject of interest and recommended fauna
 void ZNMPopPriceDecay();   // Price of ZNM pop items decay over time
 
-auto GetReadOnlyItem(uint32 id) -> CItem*; // Returns a read only lookup item object of the specified ID
+auto GetReadOnlyItem(uint32 id) -> const CItem*; // Returns a read only lookup item object of the specified ID
 auto GetAbility(uint16 id) -> CAbility*;
 auto GetSpell(uint16 id) -> CSpell*;
 
@@ -247,6 +249,12 @@ void DrawIn(CLuaBaseEntity* PLuaBaseEntity, const sol::table& table, float offse
 
 uint32 GetSystemTime();
 uint32 JstMidnight();
+
+auto LoadLinkshellConciergeSlots(uint16 zoneId) -> sol::table;
+void SetLinkshellConciergeSlot(uint16 zoneId, uint8 slotIndex, const sol::table& data);
+void DeleteLinkshellConciergeSlot(uint16 zoneId, uint8 slotIndex);
+void DecrementLinkshellConciergeMembersGoal(uint16 zoneId, uint32 linkshellid);
+
 uint32 JstDayOfTheYear();
 uint32 JstDayOfTheMonth();
 uint32 JstDayOfTheWeek();
@@ -323,15 +331,15 @@ void OnEffectGain(CBattleEntity* PEntity, CStatusEffect* StatusEffect);
 void OnEffectTick(CBattleEntity* PEntity, CStatusEffect* StatusEffect);
 void OnEffectLose(CBattleEntity* PEntity, CStatusEffect* StatusEffect);
 
-void OnAttachmentEquip(CBattleEntity* PEntity, CItemPuppet* attachment);
-void OnAttachmentUnequip(CBattleEntity* PEntity, CItemPuppet* attachment);
-void OnManeuverGain(CBattleEntity* PEntity, CItemPuppet* attachment, uint8 maneuvers);
-void OnManeuverLose(CBattleEntity* PEntity, CItemPuppet* attachment, uint8 maneuvers);
-void OnUpdateAttachment(CBattleEntity* PEntity, CItemPuppet* attachment, uint8 maneuvers);
+void OnAttachmentEquip(CBattleEntity* PEntity, const CItemPuppet* attachment);
+void OnAttachmentUnequip(CBattleEntity* PEntity, const CItemPuppet* attachment);
+void OnManeuverGain(CBattleEntity* PEntity, const CItemPuppet* attachment, uint8 maneuvers);
+void OnManeuverLose(CBattleEntity* PEntity, const CItemPuppet* attachment, uint8 maneuvers);
+void OnUpdateAttachment(CBattleEntity* PEntity, const CItemPuppet* attachment, uint8 maneuvers);
 
 int32 OnItemUse(CBaseEntity* PUser, CBaseEntity* PTarget, CItem* PItem, action_t& action);
-auto  OnItemCheck(CBaseEntity* PTarget, CItem* PItem, ITEMCHECK param = ITEMCHECK::NONE, CBaseEntity* PCaster = nullptr) -> std::tuple<int32, int32, int32>;
-void  OnItemDrop(CBaseEntity* PUser, CItem* PItem);
+auto  OnItemCheck(CBaseEntity* PTarget, CItem* PItem, CBaseEntity* PCaster = nullptr) -> std::tuple<int32, int32, int32>;
+void  OnItemDrop(CBaseEntity* PUser, CItem* PItem, IsRecycleBin recycleBin = IsRecycleBin::No);
 void  OnItemEquip(CBaseEntity* PUser, CItem* PItem);
 void  OnItemUnequip(CBaseEntity* PUser, CItem* PItem);
 void  CheckForGearSet(CBaseEntity* PTarget);
@@ -341,7 +349,7 @@ int32 OnSpellCast(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell
 void  OnSpellPrecast(CBattleEntity* PCaster, CSpell* PSpell);
 void  OnSpellCastStart(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell);
 void  OnSpellInterrupted(CBattleEntity* PCaster, CSpell* PSpell);
-auto  OnMobSpellChoose(CBattleEntity* PCaster, CBattleEntity* PTarget, std::optional<SpellID> startingSpellId) -> std::tuple<std::optional<SpellID>, std::optional<CBattleEntity*>>;
+auto  OnMobSpellChoose(CBattleEntity* PCaster, CBattleEntity* PTarget, Maybe<SpellID> startingSpellId) -> std::tuple<Maybe<SpellID>, Maybe<CBattleEntity*>>;
 void  OnMagicHit(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell);
 void  OnWeaponskillHit(CBattleEntity* PMob, CBaseEntity* PAttacker, uint16 PWeaponskill);
 bool  OnTrustSpellCastCheckBattlefieldTrusts(CBattleEntity* PCaster); // Triggered if spell is a trust spell during onCast to determine to interrupt spell or not
@@ -386,7 +394,7 @@ uint16 OnMobMobskillChoose(CBattleEntity* PMob, CBattleEntity* PTarget, uint16 c
 int32  OnMobWeaponSkill(CBaseEntity* PMob, CBaseEntity* PTarget, CMobSkill* PMobSkill, action_t* action);
 int32  OnMobSkillCheck(CBaseEntity* PChar, CBaseEntity* PMob, CMobSkill* PMobSkill); // triggers before mob weapon skill is used, returns 0 if the move is valid
 auto   OnMobSkillTarget(CBattleEntity* PTarget, CBaseEntity* PMob, CMobSkill* PMobSkill) -> CBattleEntity*;
-auto   OnMobSkillReadyTime(CBattleEntity* PTarget, CBaseEntity* PMob, CMobSkill* PMobSkill) -> std::optional<timer::duration>;
+auto   OnMobSkillReadyTime(CBattleEntity* PTarget, CBaseEntity* PMob, CMobSkill* PMobSkill) -> Maybe<timer::duration>;
 void   OnMobSkillFinalize(CBaseEntity* PMob, CMobSkill* PMobSkill); // triggers when mob skill state cleanup runs
 int32  OnAutomatonAbilityCheck(CBaseEntity* PChar, CAutomatonEntity* PAutomaton, CMobSkill* PMobSkill);
 int32  OnAutomatonAbility(CBaseEntity* PTarget, CBaseEntity* PMob, CMobSkill* PMobSkill, CBaseEntity* PMobMaster, action_t* action);

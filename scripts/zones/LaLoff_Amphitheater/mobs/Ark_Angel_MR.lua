@@ -28,6 +28,7 @@ local function spawnArkAngelPet(mob)
     if xi.mob.callPets(mob, petId, callPetParams) then
         pet = GetMobByID(petId)
         if pet then
+            mob:setPet(pet)
             battlefield:insertEntity(pet:getTargID(), false, true)
 
             pet:addListener('DEATH', 'AAMR_PET_DEATH_' .. petId, function(petArg)
@@ -51,11 +52,13 @@ entity.onMobInitialize = function(mob)
 end
 
 entity.onMobSpawn = function(mob)
+    mob:setMobMod(xi.mobMod.BASE_DAMAGE_MULTIPLIER, 150)
+
     xi.mix.jobSpecial.config(mob,
     {
         specials =
         {
-            { id = xi.jsa.PERFECT_DODGE },
+            { id = xi.mobSkill.PERFECT_DODGE_1 },
         },
     })
 end
@@ -73,6 +76,12 @@ entity.onMobFight = function(mob, target)
     local battlefield = mob:getBattlefield()
     if battlefield then
         local respawnTime = battlefield:getLocalVar('petRespawnMR')
+        local pet = mob:getPet()
+
+        if pet and pet:isAlive() then
+            return
+        end
+
         if
             respawnTime ~= 0 and
             respawnTime <= GetSystemTime()

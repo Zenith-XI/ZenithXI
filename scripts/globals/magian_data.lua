@@ -224,9 +224,9 @@ xi.magian.trials =
             itemId = xi.item.ATHAME,
         },
 
-        textOffset     = 69,
-        mobSuperFamily = set{ xi.mobSuperFamily.HIPPOGRYPH },
-        numRequired    = 300,
+        textOffset  = 69,
+        mobFamily   = set{ xi.mobFamily.HIPPOGRYPH },
+        numRequired = 300,
 
         rewardItem =
         {
@@ -375,7 +375,7 @@ xi.magian.trials =
 
         rewardItem =
         {
-            itemId = xi.item.SIMIAN_FISTS,
+            itemId       = xi.item.SIMIAN_FISTS,
             itemAugments =
             {
                 [1] = { 25, 4 }, -- Attack+5
@@ -417,7 +417,7 @@ xi.magian.trials =
 
         rewardItem =
         {
-            itemId = xi.item.MANTIS,
+            itemId       = xi.item.MANTIS,
             itemAugments =
             {
                 [1] = { 25, 2 }, -- Attack+3
@@ -442,7 +442,7 @@ xi.magian.trials =
 
         rewardItem =
         {
-            itemId = xi.item.MANTIS,
+            itemId       = xi.item.MANTIS,
             itemAugments =
             {
                 [1] = { 25, 4 }, -- Attack+5
@@ -492,7 +492,7 @@ xi.magian.trials =
 
         rewardItem =
         {
-            itemId = xi.item.MANTIS,
+            itemId       = xi.item.MANTIS,
             itemAugments =
             {
                 [1] = { 45, 6 }, -- DMG:+7
@@ -508,11 +508,11 @@ xi.magian.trials =
             itemId = xi.item.PUGILISTS,
         },
 
-        textOffset     = 99,
-        dayWeather     = xi.magianElement.ANY,
-        defeatMob      = true,
-        mobSuperFamily = set{ xi.mobSuperFamily.SKELETON },
-        numRequired    = 50,
+        textOffset  = 99,
+        dayWeather  = xi.magianElement.ANY,
+        defeatMob   = true,
+        mobFamily   = set{ xi.mobFamily.SKELETON },
+        numRequired = 50,
 
         rewardItem =
         {
@@ -4544,7 +4544,7 @@ xi.magian.trials =
 
     [1200] = -- Tammuz x8
     {
-        previousTrial = 156,
+        previousTrial = 157,
         requiredItem  =
         {
             itemId       = xi.item.NOBILIS,
@@ -4564,6 +4564,28 @@ xi.magian.trials =
             {
                 [1] = { 45, 7 }, -- DMG:+8
             },
+        },
+    },
+
+    [1201] =
+    {
+        previousTrial = 1200,
+        requiredItem  =
+        {
+            itemId       = xi.item.NOBILIS,
+            itemAugments =
+            {
+                [1] = { 45, 7 }, -- DMG:+8
+            },
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.HELM_OF_BRIAREUS,
+        numRequired = 50,
+
+        rewardItem =
+        {
+            itemId = xi.item.ALMACE,
         },
     },
 
@@ -4714,6 +4736,28 @@ xi.magian.trials =
             {
                 [1] = { 45, 7 }, -- DMG:+8
             },
+        },
+    },
+
+    [1509] =
+    {
+        previousTrial = 1508,
+        requiredItem  =
+        {
+            itemId = xi.item.MOZU,
+            itemAugments =
+            {
+                [1] = { 45, 7 }, -- DMG:+8
+            },
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.HELM_OF_BRIAREUS,
+        numRequired = 50,
+
+        rewardItem =
+        {
+            itemId = xi.item.KANNAGI,
         },
     },
 
@@ -6307,6 +6351,42 @@ xi.magian.trials =
         },
     },
 
+    [1940] =
+    {
+        previousTrial = 1201,
+        requiredItem  =
+        {
+            itemId = xi.item.ALMACE,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.SOBEKS_SKIN,
+        numRequired = 50,
+
+        rewardItem =
+        {
+            itemId = xi.item.ALMACE_85,
+        },
+    },
+
+    [2094] =
+    {
+        previousTrial = 1509,
+        requiredItem  =
+        {
+            itemId = xi.item.KANNAGI,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.SOBEKS_SKIN,
+        numRequired = 50,
+
+        rewardItem =
+        {
+            itemId = xi.item.KANNAGI_85,
+        },
+    },
+
     [2247] =
     {
         previousTrial = 1786,
@@ -6676,6 +6756,42 @@ xi.magian.trials =
         rewardItem =
         {
             itemId = xi.item.VERETHRAGNA_90,
+        },
+    },
+
+    [2339] =
+    {
+        previousTrial = 1940,
+        requiredItem  =
+        {
+            itemId = xi.item.ALMACE_85,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.APADEMAKS_HORN,
+        numRequired = 75,
+
+        rewardItem =
+        {
+            itemId = xi.item.ALMACE_90,
+        },
+    },
+
+    [2499] =
+    {
+        previousTrial = 2094,
+        requiredItem  =
+        {
+            itemId = xi.item.KANNAGI_85,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.APADEMAKS_HORN,
+        numRequired = 75,
+
+        rewardItem =
+        {
+            itemId = xi.item.KANNAGI_90,
         },
     },
 
@@ -7077,6 +7193,42 @@ xi.magian.trials =
         },
     },
 
+    [2772] =
+    {
+        previousTrial = 2339,
+        requiredItem  =
+        {
+            itemId = xi.item.ALMACE_90,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.PLATE_OF_HEAVY_METAL,
+        numRequired = 1500,
+
+        rewardItem =
+        {
+            itemId = xi.item.ALMACE_95,
+        },
+    },
+
+    [2932] =
+    {
+        previousTrial = 2499,
+        requiredItem  =
+        {
+            itemId = xi.item.KANNAGI_90,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.PLATE_OF_HEAVY_METAL,
+        numRequired = 1500,
+
+        rewardItem =
+        {
+            itemId = xi.item.KANNAGI_95,
+        },
+    },
+
     [3093] =
     {
         previousTrial = 2660,
@@ -7347,6 +7499,42 @@ xi.magian.trials =
         rewardItem =
         {
             itemId = xi.item.VERETHRAGNA_99,
+        },
+    },
+
+    [3235] =
+    {
+        previousTrial = 2772,
+        requiredItem  =
+        {
+            itemId = xi.item.ALMACE_95,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.PINCH_OF_RIFTCINDER,
+        numRequired = 60,
+
+        rewardItem =
+        {
+            itemId = xi.item.ALMACE_99,
+        },
+    },
+
+    [3395] =
+    {
+        previousTrial = 2932,
+        requiredItem  =
+        {
+            itemId = xi.item.KANNAGI_95,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.PINCH_OF_RIFTCINDER,
+        numRequired = 60,
+
+        rewardItem =
+        {
+            itemId = xi.item.KANNAGI_99,
         },
     },
 
@@ -7635,6 +7823,42 @@ xi.magian.trials =
         rewardItem =
         {
             itemId = xi.item.VERETHRAGNA_99_II,
+        },
+    },
+
+    [3594] =
+    {
+        previousTrial = 3235,
+        requiredItem  =
+        {
+            itemId = xi.item.ALMACE_99,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.PINCH_OF_RIFTCINDER,
+        numRequired = 3000,
+
+        rewardItem =
+        {
+            itemId = xi.item.ALMACE_99_II,
+        },
+    },
+
+    [3600] =
+    {
+        previousTrial = 3395,
+        requiredItem  =
+        {
+            itemId = xi.item.KANNAGI_99,
+        },
+
+        textOffset  = 70,
+        tradeItem   = xi.item.PINCH_OF_RIFTCINDER,
+        numRequired = 3000,
+
+        rewardItem =
+        {
+            itemId = xi.item.KANNAGI_99_II,
         },
     },
 
@@ -10469,7 +10693,7 @@ xi.magian.trials =
         previousTrial = 0,
         requiredItem  =
         {
-            itemId = xi.item.ORISON_BLIAUD,
+            itemId = xi.item.ORISON_BLIAUT,
         },
 
         textOffset  = 1051,
@@ -10478,7 +10702,7 @@ xi.magian.trials =
 
         rewardItem =
         {
-            itemId = xi.item.ORISON_BLIAUD_P1,
+            itemId = xi.item.ORISON_BLIAUT_P1,
         },
     },
 
@@ -11189,7 +11413,7 @@ xi.magian.trials =
         previousTrial = 4338,
         requiredItem  =
         {
-            itemId = xi.item.ORISON_BLIAUD_P1,
+            itemId = xi.item.ORISON_BLIAUT_P1,
         },
 
         textOffset  = 1052,
@@ -11198,7 +11422,7 @@ xi.magian.trials =
 
         rewardItem =
         {
-            itemId = xi.item.ORISON_BLIAUD_P2,
+            itemId = xi.item.ORISON_BLIAUT_P2,
         },
     },
 

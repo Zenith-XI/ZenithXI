@@ -166,8 +166,8 @@ timer::duration CBattlefield::GetLastTimeUpdate() const
 
 uint64_t CBattlefield::GetLocalVar(const std::string& name) const
 {
-    auto var = m_LocalVars.find(name);
-    return var != m_LocalVars.end() ? var->second : 0;
+    auto var = localVars_.find(name);
+    return var != localVars_.end() ? var->second : 0;
 }
 
 size_t CBattlefield::GetMaxParticipants() const
@@ -254,7 +254,7 @@ void CBattlefield::SetLevelCap(uint8 cap)
 
 void CBattlefield::SetLocalVar(const std::string& name, uint64_t value)
 {
-    m_LocalVars[name] = value;
+    localVars_[name] = value;
 }
 
 void CBattlefield::SetLastTimeUpdate(timer::duration time)
@@ -283,6 +283,7 @@ void CBattlefield::ApplyLevelRestrictions(CCharEntity* PChar) const
         }
 
         PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DISPELABLE, EffectNotice::Silent);
+        PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_RERAISE);
         PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEVEL_RESTRICTION, EFFECT_LEVEL_RESTRICTION, cap, 0s, 0s));
     }
     else
@@ -706,6 +707,7 @@ bool CBattlefield::RemoveEntity(CBaseEntity* PEntity, uint8 leavecode)
 void CBattlefield::onTick(timer::time_point time)
 {
     TracyZoneScoped;
+
     if (!m_Attacked)
     {
         CheckInProgress();

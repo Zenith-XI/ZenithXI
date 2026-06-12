@@ -55,6 +55,7 @@ CPetEntity::CPetEntity(PET_TYPE petType)
 , m_jugDuration(timer::duration{})
 {
     TracyZoneScoped;
+
     objtype                     = TYPE_PET;
     m_EcoSystem                 = ECOSYSTEM::UNCLASSIFIED;
     allegiance                  = ALLEGIANCE_TYPE::PLAYER;
@@ -70,7 +71,7 @@ CPetEntity::~CPetEntity()
     TracyZoneScoped;
 }
 
-PET_TYPE CPetEntity::getPetType()
+PET_TYPE CPetEntity::getPetType() const
 {
     return m_PetType;
 }
@@ -85,7 +86,7 @@ void CPetEntity::setSpawnLevel(uint8 level)
     m_spawnLevel = level;
 }
 
-bool CPetEntity::isBstPet()
+bool CPetEntity::isBstPet() const
 {
     return getPetType() == PET_TYPE::JUG_PET || objtype == TYPE_MOB;
 }
@@ -351,6 +352,8 @@ void CPetEntity::OnAbility(CAbilityState& state, action_t& action)
     {
         ActionInterrupts::AbilityInterrupt(this);
     }
+
+    this->processActionEffectFlags(action);
 }
 
 bool CPetEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
@@ -382,6 +385,7 @@ bool CPetEntity::CanAttack(CBattleEntity* PTarget, std::unique_ptr<CBasicPacket>
 void CPetEntity::OnPetSkillFinished(CPetSkillState& state, action_t& action)
 {
     TracyZoneScoped;
+
     auto* PSkill  = state.GetPetSkill();
     auto* PTarget = dynamic_cast<CBattleEntity*>(state.GetTarget());
 
@@ -591,11 +595,6 @@ void CPetEntity::OnPetSkillFinished(CPetSkillState& state, action_t& action)
             }
         }
 
-        if (PSkill->getValidTargets() & TARGET_ENEMY)
-        {
-            PTargetFound->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
-        }
-
         if (PTargetFound->isDead())
         {
             battleutils::ClaimMob(PTargetFound, this);
@@ -620,4 +619,6 @@ void CPetEntity::OnPetSkillFinished(CPetSkillState& state, action_t& action)
         }
         battleutils::DirtyExp(PTarget, this);
     }
+
+    this->processActionEffectFlags(action);
 }

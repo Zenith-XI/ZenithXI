@@ -70,7 +70,7 @@ void auctionutils::SellingItems(CCharEntity* PChar, GP_AUC_PARAM_ASKCOMMIT param
         return;
     }
 
-    if (PItem->getID() == param.ItemNo && !PItem->isSubType(ITEM_LOCKED) && !(PItem->getFlag() & ITEM_FLAG_NOAUCTION))
+    if (PItem->getID() == param.ItemNo && !PItem->isSubType(ITEM_LOCKED) && !PItem->hasFlag(ItemFlag::NoAuction))
     {
         if (isPartiallyUsed(PItem))
         {
@@ -143,7 +143,7 @@ void auctionutils::ProofOfPurchase(CCharEntity* PChar, GP_AUC_PARAM_LOT param)
 
     CItem* PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(param.ItemWorkIndex);
 
-    if (PItem && !(PItem->isSubType(ITEM_LOCKED)) && PItem->getReserve() == 0 && !(PItem->getFlag() & ITEM_FLAG_NOAUCTION) && PItem->getQuantity() >= param.ItemStacks)
+    if (PItem && !(PItem->isSubType(ITEM_LOCKED)) && PItem->getReserve() == 0 && !PItem->hasFlag(ItemFlag::NoAuction) && PItem->getQuantity() >= param.ItemStacks)
     {
         if (isPartiallyUsed(PItem))
         {
@@ -233,11 +233,11 @@ auto auctionutils::PurchasingItems(CCharEntity* PChar, GP_AUC_PARAM_BID param) -
     }
     else
     {
-        const CItem* PItem = itemutils::GetItemPointer(param.ItemNo);
+        const CItem* PItem = xi::items::lookup(param.ItemNo);
 
         if (PItem != nullptr)
         {
-            if (PItem->getFlag() & ITEM_FLAG_RARE)
+            if (PItem->hasFlag(ItemFlag::Rare))
             {
                 for (uint8 LocID = 0; LocID < CONTAINER_ID::MAX_CONTAINER_ID; ++LocID)
                 {
@@ -310,7 +310,7 @@ void auctionutils::CancelSale(CCharEntity* PChar, int8_t AucWorkIndex)
                                                    canceledItem.price);
                 if (rset && rset->rowsAffected())
                 {
-                    if (const CItem* PDelItem = itemutils::GetItemPointer(canceledItem.itemid))
+                    if (const CItem* PDelItem = xi::items::lookup(canceledItem.itemid))
                     {
                         if (charutils::AddItem(PChar, LOC_INVENTORY, canceledItem.itemid, (canceledItem.stack != 0 ? PDelItem->getStackSize() : 1), true) != ERROR_SLOTID)
                         {

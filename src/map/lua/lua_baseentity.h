@@ -33,6 +33,7 @@ enum class QuestLog : uint8_t;
 enum class POSMODE : uint8;
 enum class MusicSlot : uint16_t;
 enum class ChocoboColor : uint8_t;
+enum class TerrainType : uint8;
 class CBaseEntity;
 class CCharEntity;
 class CLuaBattlefield;
@@ -76,6 +77,7 @@ public:
     // Variables
     int32  getCharVar(const std::string& varName);
     auto   getCharVarsWithPrefix(const std::string& prefix) -> sol::table;
+    auto   getCharVarsWithSuffix(const std::string& suffix) -> sol::table;
     void   setCharVar(const std::string& varname, int32 value, const sol::object& expiry);
     void   setCharVarExpiration(const std::string& varName, uint32 expiry); // Sets character variable expiration timestamp
     void   incrementCharVar(const std::string& varname, int32 value);       // Increments/decrements/sets a character variable
@@ -94,6 +96,7 @@ public:
     void entityVisualPacket(const std::string& command, const sol::object& entity) const;
     void entityAnimationPacket(const char* command, const sol::object& target);
     void sendDebugPacket(const sol::table& packetData);
+    void sendLinkshellConcierge(const sol::table& data) const;
 
     void       StartEventHelper(int32 EventID, sol::variadic_args va, EVENT_TYPE eventType);
     EventInfo* ParseEvent(int32 EventID, sol::variadic_args va, EventPrep* eventPreparation, EVENT_TYPE eventType);
@@ -157,6 +160,9 @@ public:
     // int32 RoamAround(lua_Stat* L);       // pick a random point to walk to
     // int32 LimitDistance(lua_Stat* L);    // limits the current path distance to given max distance
     void setCarefulPathing(bool careful);
+
+    bool canSee(const CLuaBaseEntity* PTarget);
+    bool inWater();
 
     void openDoor(const sol::object& seconds);
     void closeDoor(const sol::object& seconds);
@@ -231,6 +237,11 @@ public:
     auto   getTeleportMenu(uint8 type) -> sol::table;
     void   setHomePoint();
 
+    void learnMazeVoucher(uint8 voucherId);
+    auto hasMazeVoucher(uint8 voucherId) -> bool;
+    void learnMazeRune(uint16 runeId);
+    auto hasMazeRune(uint16 runeId) -> bool;
+
     void resetPlayer(const char* charName);
 
     void gotoEntity(uint32 targetID, const sol::object& option);
@@ -243,25 +254,23 @@ public:
     bool   hasEquipped(uint16 equipmentID); // Returns true if item is equipped in any slot
     bool   hasItem(uint16 itemID, const sol::object& location);
     uint32 getItemCount(uint16 itemID);
-    bool   addItem(sol::variadic_args va);
+    auto   addItem(sol::variadic_args va) const -> CItem*;
     bool   delItem(uint16 itemID, int32 quantity, const sol::object& containerID);
     bool   delItemAt(uint16 itemID, int32 quantity, uint8 containerId, uint8 slotId);
     bool   delContainerItems(const sol::object& containerID);
     bool   addUsedItem(uint16 itemID);
     bool   addTempItem(uint16 itemID, const sol::object& arg1);
-    uint8  getWornUses(uint16 itemID);                                     // Check if the item is already worn
-    uint8  incrementItemWear(uint16 itemID);                               // Increment the item's worn value and returns it
+    auto   getWornUses(uint16 itemID) const -> uint8;                      // Check if the item is already worn
+    auto   incrementItemWear(uint16 itemID) const -> uint8;                // Increment the item's worn value and returns it
     auto   findItem(uint16 itemID, const sol::object& location) -> CItem*; // Like hasItem, but returns the item object (nil if not found)
     auto   findItems(uint16 itemID, const sol::object& location) -> sol::table;
     auto   getItems(const sol::object& location) -> sol::table;
 
     void createShop(uint8 size, const sol::object& arg1);
-    void addShopItem(uint16 itemID, double rawPrice, const sol::object& arg2, const sol::object& arg3);
+    void addShopItem(uint16 itemID, double rawPrice, sol::optional<sol::table> requirements) const;
     auto getCurrentGPItem(uint8 guildId) const -> std::tuple<uint16, uint16>;
     bool breakLinkshell(const std::string& lsname);
     bool addLinkpearl(const std::string& lsname, bool equip);
-
-    auto addSoulPlate(const std::string& name, uint32 interestData, uint8 zeni, uint16 skillIndex, uint8 fp) -> CItem*;
 
     // Trading
     uint8 getContainerSize(uint8 locationID);
@@ -424,12 +433,12 @@ public:
     bool   getEminenceCompleted(uint16 recordID);
     uint16 getNumEminenceCompleted();
     bool   setEminenceProgress(uint16 recordID, uint32 progress, const sol::object& arg2);
-    auto   getEminenceProgress(uint16 recordID) -> std::optional<uint32>;
+    auto   getEminenceProgress(uint16 recordID) -> Maybe<uint32>;
     bool   hasEminenceRecord(uint16 recordID);
     void   triggerRoeEvent(uint8 eventNum, const sol::object& reqTable);
     void   setUnityLeader(uint8 leaderID);
     uint8  getUnityLeader();
-    auto   getUnityRank(const sol::object& unityObj) -> std::optional<uint8>;
+    auto   getUnityRank(const sol::object& unityObj) -> Maybe<uint8>;
     auto   getClaimedDeedMask() -> sol::table;
     void   toggleReceivedDeedRewards();
     void   setClaimedDeed(uint16 deedBitNum);
@@ -652,8 +661,8 @@ public:
     bool   isDualWielding();
     bool   isUsingH2H();
     uint16 getBaseWeaponDelay(uint16 slot); // get base delay of weapon
-    uint16 getBaseDelay();                  // get base delay of entity, melee only
-    uint16 getBaseRangedDelay();            // get base delay of entity, ranged only
+    auto   getBaseDelay() -> uint16;        // get base delay of entity, melee only
+    auto   getBaseRangedDelay() -> uint16;  // get base delay of entity, ranged only
 
     float checkLiementAbsorb(uint16 damageType); // return 1.0 if did not absorb, return >= -1.0 if did absorb
 
@@ -675,6 +684,7 @@ public:
     bool  hasClaim(CLuaBaseEntity* PTarget);
     bool  hasEnmity();
     auto  getNotorietyList() -> sol::table;
+    auto  getMasterThreatMob(const sol::object& rangeOverride) -> CBaseEntity*;
     void  clearEnmityForEntity(CLuaBaseEntity* PEntity);
 
     // Status Effects
@@ -692,6 +702,7 @@ public:
 
     bool   delStatusEffect(uint16 StatusID, const sol::object& SubType, const sol::object& SourceType, const sol::object& SourceTypeParam);
     void   delStatusEffectsByFlag(uint32 flag, const sol::object& silent);
+    void   delStatusEffectsByType(uint16 type);
     bool   delStatusEffectSilent(uint16 StatusID); // Removes Status Effect, suppresses message
     uint16 eraseStatusEffect();
     uint8  eraseAllStatusEffect();
@@ -810,16 +821,16 @@ public:
     void delPetMod(uint16 modID, int16 amount);
 
     auto hasAttachment(uint16 itemID) const -> bool;
+    auto hasAttachmentSet(uint16 itemID) const -> bool;
     auto getAutomatonName() const -> std::string;
-    auto getAutomatonFrame() const -> std::optional<AutomatonFrame>;
+    auto getAutomatonFrame() const -> Maybe<AutomatonFrame>;
     void setAutomatonFrame(AutomatonFrame frame) const;
-    auto getAutomatonHead() const -> std::optional<AutomatonHead>;
+    auto getAutomatonHead() const -> Maybe<AutomatonHead>;
     void setAutomatonHead(AutomatonHead head) const;
     auto unlockAttachment(uint16 itemID) const -> bool;
     auto getActiveManeuverCount() const -> uint8;
     void removeOldestManeuver() const;
     void removeAllManeuvers() const;
-    auto getAttachment(uint8 slotId) const -> CItem*;
     auto getAttachments() const -> sol::table;
     void setAttachment(uint8 attachmentItemID, uint8 slotID) const;
     void updateAttachments() const;
@@ -836,9 +847,11 @@ public:
 
     // Mob Entity-Specific
     void   setMobLevel(uint8 level, sol::optional<bool> recover);
+    uint8  getStatRank(uint8 statType);
+    void   setStatRank(uint8 statType, uint8 rank);
     uint8  getEcosystem();
-    uint16 getSuperFamily();
     uint16 getFamily();
+    uint16 getSpecies();
     auto   isMobType(uint8 mobType) const -> bool; // True if mob is of type passed to function
     bool   isUndead();
     bool   isNM();
@@ -852,6 +865,7 @@ public:
     uint32 getMobFlags();
 
     void setNpcFlags(uint32 flags);
+    void setNpcAlwaysRelevant(bool alwaysRelevant);
 
     void spawn(const sol::object& despawnSec, const sol::object& respawnSec);
     bool isSpawned();
@@ -881,6 +895,8 @@ public:
     auto hasSpellList() const -> bool;
     void setSpellList(uint16 spellListId) const;
     void setAutoAttackEnabled(bool state);   // halts/resumes auto attack of entity
+    void setRangedAttackEnabled(bool state); // halts/resumes ranged auto attack of entity
+    bool isRangedAttackEnabled();            // returns whether ranged auto attack is enabled
     void setMagicCastingEnabled(bool state); // halt/resumes casting magic
     void setMobAbilityEnabled(bool state);   // halt/resumes mob skills
     void setMobSkillAttack(int16 listId);    // enable/disable using mobskills as regular attacks
@@ -892,6 +908,7 @@ public:
 
     uint32 getBattleTime();
     auto   getCrystalElement() const -> ELEMENT;
+    void   setCrystalElement(ELEMENT crystalElement);
 
     uint16 getBehavior();
     void   setBehavior(uint16 behavior);
@@ -930,8 +947,8 @@ public:
     uint16 getStealItem();
     uint16 getDespoilItem();                // gets ItemID of droplist despoil item from mob (steal item if no despoil item)
     uint16 getDespoilDebuff(uint16 itemID); // gets the status effect id to apply to the mob on successful despoil
-    bool   itemStolen();                    // sets mob's ItemStolen var = true
-    bool   itemDespoiled();                 // sets mob's ItemDespoiled var = true
+    void   itemStolen(bool stolen);         // sets mob's ItemStolen var
+    void   itemDespoiled(bool despoiled);   // sets mob's ItemDespoiled var
     int16  getTHlevel();                    // Returns the Monster's current Treasure Hunter Tier
     void   setTHlevel(int16 newLevel);      // Sets the Monster's current Treasure Hunter Tier
 
@@ -961,9 +978,6 @@ public:
     auto   getContestRewardStatus() -> sol::table;
     auto   getContestRankHistory() -> sol::table;
     void   claimContestReward();
-
-    void addPacketMod(uint16 packetId, uint16 offset, uint8 value);
-    void clearPacketMods();
 
     bool operator==(const CLuaBaseEntity& other) const
     {

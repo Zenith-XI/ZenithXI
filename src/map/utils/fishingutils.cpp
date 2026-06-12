@@ -69,6 +69,7 @@ namespace fishingutils
 uint16                                            MessageOffset[MAX_ZONEID];
 fishing_area_pool                                 FishingPools[MAX_ZONEID];
 std::map<uint32, fish_t*>                         FishList;
+std::map<uint16, std::vector<uint32>>             ChestList;
 std::map<uint16, rod_t*>                          FishingRods;
 std::map<uint16, bait_t*>                         FishingBaits;
 std::map<uint16, std::map<uint32, fishmob_t*>>    FishZoneMobList;       // zoneid, mobid, mob
@@ -437,7 +438,7 @@ uint8 CalculateRegen(uint8 fishingSkill, rod_t* rod, FISHINGCATCHTYPE catchType,
     {
         if (fishingSkill > catchSkill)
         {
-            regen -= std::max<uint8>((uint8)xirand::GetRandomNumber(3, 5), regen);
+            regen -= (uint8)std::floor((fishingSkill - catchSkill) / 5);
         }
     }
 
@@ -1124,39 +1125,35 @@ std::vector<fishmob_t*> GetMobPool(uint16 zoneId)
     return pool;
 }
 
+std::vector<uint32> GetChestPool(uint16 zoneId)
+{
+    std::vector<uint32> pool;
+
+    if (!ChestList[zoneId].empty())
+    {
+        for (uint32 chestId : ChestList[zoneId])
+        {
+            pool.emplace_back(chestId);
+        }
+    }
+
+    return pool;
+}
+
 uint16 GetMessageOffset(uint16 ZoneID)
 {
     return MessageOffset[ZoneID];
 }
 
-bool IsFish(CItem* fish)
+auto IsFish(const CItem* fish) -> bool
 {
-    if (fish != nullptr && !FishList.empty())
-    {
-        auto f = FishList.find(fish->getID());
-
-        if (f != FishList.end())
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return fish && FishList.contains(fish->getID());
 }
 
-fish_t* GetFish(uint32 fishId)
+auto GetFish(const uint32 fishId) -> fish_t*
 {
-    if (!FishList.empty())
-    {
-        auto f = FishList.find(fishId);
-
-        if (f != FishList.end())
-        {
-            return f->second;
-        }
-    }
-
-    return nullptr;
+    const auto f = FishList.find(fishId);
+    return f != FishList.end() ? f->second : nullptr;
 }
 
 /************************************************************************
@@ -1488,7 +1485,7 @@ int32 CatchFish(CCharEntity* PChar, uint16 FishID, BigFish bigFish, uint16 lengt
 
     if (PChar->getStorage(LOC_INVENTORY)->GetFreeSlotsCount() != 0)
     {
-        CItemFish* Fish = GetFish(FishID);
+        auto Fish = GetFish(FishID);
 
         if (Fish == nullptr)
         {
@@ -1506,7 +1503,7 @@ int32 CatchFish(CCharEntity* PChar, uint16 FishID, BigFish bigFish, uint16 lengt
         }
 
         Fish->setQuantity(Count);
-        charutils::AddItem(PChar, LOC_INVENTORY, Fish);
+        charutils::AddItem(PChar, LOC_INVENTORY, std::move(Fish));
 
         if (Count > 1)
         {
@@ -1535,9 +1532,7 @@ int32 CatchItem(CCharEntity* PChar, uint16 ItemID, uint8 Count = 1)
 
     if (PChar->getStorage(LOC_INVENTORY)->GetFreeSlotsCount() != 0)
     {
-        CItem* Item = itemutils::GetItem(ItemID);
-
-        if (Item == nullptr)
+        if (xi::items::lookup(ItemID) == nullptr)
         {
             ShowError("Invalid ItemID %i for fished item", ItemID);
             PChar->animation = ANIMATION_FISHING_STOP;
@@ -1631,13 +1626,10 @@ int32 CatchMonster(CCharEntity* PChar, uint32 MobID)
 
 int32 CatchChest(CCharEntity* PChar, uint32 NpcID, uint8 distance, int8 angle)
 {
-    /* Disabled catching Chests until further notice.
+    uint16      MessageOffset = GetMessageOffset(PChar->getZone());
+    CNpcEntity* Chest         = dynamic_cast<CNpcEntity*>(zoneutils::GetEntity(NpcID, TYPE_NPC));
 
-    uint16 MessageOffset = GetMessageOffset(PChar->getZone());
-    // @todo: get chest npc (i.e. jade etui)
-    CNpcEntity* Chest = dynamic_cast<CNpcEntity*>(zoneutils::GetEntity(NpcID, TYPE_NPC));
-
-    if (Chest == nullptr || (Chest != nullptr && Chest->GetLocalVar("catchable") == 0))
+    if (Chest == nullptr)
     {
         ShowError("Invalid NpcID %i for fished chest", NpcID);
         PChar->animation = ANIMATION_FISHING_STOP;
@@ -1658,14 +1650,11 @@ int32 CatchChest(CCharEntity* PChar, uint32 NpcID, uint8 distance, int8 angle)
     m.z                = p.z + distance * (float)sin(Radians);
     m.rotation         = p.rotation; // getangle(m, p);
 
-    Chest->loc.p  = m; // This line is returning an error in CI, and I don't know how to fix it. Probably has to do with that "todo" above.
+    Chest->loc.p  = m;
     Chest->status = STATUS_TYPE::NORMAL;
     Chest->SetLocalVar("owner", PChar->id);
     Chest->updatemask |= UPDATE_COMBAT;
     return 1;
-    */
-
-    return 0; // Remove when catching chests is enabled.
 }
 
 /************************************************************************
@@ -2065,9 +2054,7 @@ void ReelInCatch(CCharEntity* PChar)
                 break;
             case FISHINGCATCHTYPE_CHEST:
                 PChar->hookedFish->successtype = FISHINGSUCCESSTYPE_CATCHCHEST;
-
-                // TODO: Below function is currently not implemented.
-                // CatchChest(PChar, PChar->hookedFish->catchid, PChar->hookedFish->distance, PChar->hookedFish->angle);
+                CatchChest(PChar, PChar->hookedFish->catchid, PChar->hookedFish->distance, PChar->hookedFish->angle);
                 break;
         }
     }
@@ -2168,14 +2155,15 @@ fishresponse_t* FishingCheck(CCharEntity* PChar, uint8 fishingSkill, rod_t* rod,
     int8   ChestAngle     = 0;
 
     // Get Fish and Item Lists
-    std::map<fish_t*, uint16>                FishPool;
-    std::vector<fish_t*>                     ItemPool;
-    std::vector<fishmob_t*>                  MobPool;
-    std::map<uint32, std::map<uint16, int8>> ChestPool;
+    std::map<fish_t*, uint16> FishPool;
+    std::vector<fish_t*>      ItemPool;
+    std::vector<fishmob_t*>   MobPool;
+    std::vector<uint32>       ChestPool;
 
-    FishPool = GetFishPool(PChar->getZone(), area->areaId, bait->baitID);
-    ItemPool = GetItemPool(PChar->getZone(), area->areaId);
-    MobPool  = GetMobPool(PChar->getZone());
+    FishPool  = GetFishPool(PChar->getZone(), area->areaId, bait->baitID);
+    ItemPool  = GetItemPool(PChar->getZone(), area->areaId);
+    MobPool   = GetMobPool(PChar->getZone());
+    ChestPool = GetChestPool(PChar->getZone());
 
     std::set<uint32> RemoveList;
     std::set<uint32> NoCatchList;
@@ -2421,6 +2409,26 @@ fishresponse_t* FishingCheck(CCharEntity* PChar, uint8 fishingSkill, rod_t* rod,
         ItemPoolWeight = 0;
     }
 
+    if (PChar->getZone() == ZONE_BUBURIMU_PENINSULA && PChar->GetLocalVar("bChartActive") == 1)
+    {
+        MobHookPool.clear();
+
+        for (auto fishmob : FishZoneMobList[PChar->getZone()])
+        {
+            if (fishmob.second->mobName == "Puffer_Pugil_Brigand")
+            {
+                CMobEntity* PMob = dynamic_cast<CMobEntity*>(zoneutils::GetEntity(fishmob.second->mobId, TYPE_MOB));
+                if (PMob != nullptr && PMob->GetLocalVar("hooked") == 0 && !PMob->isAlive())
+                {
+                    auto* mob = fishmob.second;
+                    MobHookPool.insert(std::make_pair(mob, 100));
+                }
+
+                break;
+            }
+        }
+    }
+
     // Select mob
     if (!MobHookPool.empty())
     {
@@ -2437,16 +2445,44 @@ fishresponse_t* FishingCheck(CCharEntity* PChar, uint8 fishingSkill, rod_t* rod,
 
     if (!ChestPool.empty())
     {
-        uint16 hookSelect = xirand::GetRandomNumber((uint16)ChestPool.size());
-        auto   chestItr   = ChestPool.begin();
-        std::advance(chestItr, hookSelect);
-        ChestSelection = chestItr->first;
-        ChestAngle     = chestItr->second.begin()->second;
+        // Brigand's Chart Quest
+        if (PChar->getZone() == ZONE_BUBURIMU_PENINSULA && PChar->GetLocalVar("bChartActive") == 1)
+        {
+            for (uint32 chestId : ChestPool)
+            {
+                CNpcEntity* Chest = dynamic_cast<CNpcEntity*>(zoneutils::GetEntity(chestId, TYPE_NPC));
+                if (Chest != nullptr && Chest->GetLocalVar("owner") == 0)
+                {
+                    ChestSelection = chestId;
+                    break;
+                }
+            }
+        }
     }
     else
     {
         NoCatchWeight += ChestPoolWeight;
         ChestPoolWeight = 0;
+    }
+
+    // Pirate's Chart quest pool weighting: Catch items.
+    if (PChar->getZone() == ZONE_VALKURM_DUNES && PChar->GetLocalVar("pChartActive") == 1 && area->areaId == 2)
+    {
+        FishPoolWeight  = 0;
+        ItemPoolWeight  = 100;
+        MobPoolWeight   = 0;
+        ChestPoolWeight = 0;
+        NoCatchWeight   = 0;
+    }
+
+    // Brigand's Chart quest pool weighting: Catch chests.
+    else if (PChar->getZone() == ZONE_BUBURIMU_PENINSULA && PChar->GetLocalVar("bChartActive") == 1)
+    {
+        FishPoolWeight  = 0;
+        ItemPoolWeight  = 0;
+        MobPoolWeight   = !MobHookPool.empty() ? 25 : 0;
+        ChestPoolWeight = ChestSelection > 0 ? 75 : 0;
+        NoCatchWeight   = 0;
     }
 
     if (FishPoolWeight == 0 && ItemPoolWeight == 0 && MobPoolWeight == 0 && ChestPoolWeight == 0)
@@ -2672,6 +2708,15 @@ void FishingAction(CCharEntity* PChar, const GP_CLI_COMMAND_FISHING_2_MODE mode,
             fishingarea_t*  fishingArea = GetFishingArea(PChar);
             fishresponse_t* response    = nullptr;
 
+            if (PChar->getZone() == ZONE_VALKURM_DUNES && PChar->GetLocalVar("pChartActive") == 1)
+            {
+                fishingArea = FishingAreaList[ZONE_VALKURM_DUNES][2];
+            }
+            else if (PChar->getZone() == ZONE_BUBURIMU_PENINSULA && PChar->GetLocalVar("bChartActive") == 1)
+            {
+                fishingArea = FishingAreaList[ZONE_BUBURIMU_PENINSULA][2];
+            }
+
             if (PChar->hookedFish != nullptr)
             {
                 destroy(PChar->hookedFish);
@@ -2885,14 +2930,13 @@ void FishingAction(CCharEntity* PChar, const GP_CLI_COMMAND_FISHING_2_MODE mode,
     }
 }
 
-CItemFish* GetFish(uint16 itemid)
+auto GetFish(uint16 itemid) -> std::unique_ptr<CItemFish>
 {
-    CItem* PItem = itemutils::GetItemPointer(itemid);
+    const CItem* PItem = xi::items::lookup(itemid);
 
     if (PItem && FishList[itemid])
     {
-        // CItemFish constructor uses `const CItem&` input so this is ok
-        return new CItemFish(*PItem);
+        return std::make_unique<CItemFish>(*PItem);
     }
     return nullptr;
 }
@@ -3025,6 +3069,20 @@ void LoadFishItems()
         fish->contest      = rset->get<bool>("contest");
 
         FishList[fish->fishID] = fish;
+    }
+}
+
+void LoadChests()
+{
+    const auto rset = db::preparedStmt("SELECT distinct "
+                                       "npcid, (npcid & 0xFFF000) >> 12 as zoneid "
+                                       "FROM npc_list "
+                                       "WHERE name = 'Jade_Etui'");
+    FOR_DB_MULTIPLE_RESULTS(rset)
+    {
+        uint32 chestId = rset->get<uint32>("npcid");
+        uint16 zoneId  = rset->get<uint32>("zoneid");
+        ChestList[zoneId].emplace_back(chestId);
     }
 }
 
@@ -3171,6 +3229,7 @@ void InitializeFishingSystem()
     LoadFishingMessages();
     LoadFishItems();
     LoadFishMobs();
+    LoadChests();
     LoadFishingRods();
     LoadFishingBaits();
     LoadFishingBaitAffinities();

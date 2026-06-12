@@ -1,11 +1,19 @@
 -----------------------------------
 -- Cannibal Blade
+-- Description: Delivers a single hit attack. Additional Effect: Convert damage dealt to HP.
+-- SE claims this has a 1.0 MND wSC modifier. At this time it does not appear to have any scaling outside of Automaton Skill.
+-- Cannot miss, cannot double attack, ignores PDIF, but is affected by Slashing/Physical DT modifiers.
+-- Despite behaving like a magic ability, does not go through shadows.
+-- Returns 0 TP.
+-- TODO: Refine formula if more retail data becomes available.
+-- Automaton Skill / 9.2 is very close, but not exact. Retail appears to use non-linear scaling or hidden stepping.
 -----------------------------------
 ---@type TAbilityAutomaton
 local abilityObject = {}
 
 abilityObject.onAutomatonAbilityCheck = function(target, automaton, skill)
     local master = automaton:getMaster()
+
     if not master then
         return
     end
@@ -14,43 +22,38 @@ abilityObject.onAutomatonAbilityCheck = function(target, automaton, skill)
 end
 
 abilityObject.onAutomatonAbility = function(target, automaton, skill, master, action)
-    local params =
-    {
-        numHits = 1,
-        atkmulti = 20.0,
-        accBonus = 1000,
-        weaponDamage = automaton:getSkillLevel(xi.skill.AUTOMATON_MELEE),
-        weaponType = xi.skill.SWORD,
-        ftpMod = { 0.25, 0.4, 0.6 },
-        ignoredDefense = { 0.5, 0.5, 0.5 },
-    }
+    local params = {}
+
+    params.baseDamage         = automaton:getSkillLevel(xi.skill.AUTOMATON_MELEE) / 9.2
+    params.numHits            = 1
+    params.fTP                = { 11.0, 12.5, 14.0 }
+    params.attackType         = xi.attackType.PHYSICAL
+    params.damageType         = xi.damageType.SLASHING
+    params.shadowBehavior     = xi.mobskills.shadowBehavior.NUMSHADOWS_1
+    params.guaranteedFirstHit = true
+    params.skipFSTR           = true
+    params.skipPDIF           = true
 
     if xi.settings.main.USE_ADOULIN_WEAPON_SKILL_CHANGES then
-        params.weaponDamage = nil
-        params.ftpMod = { 16.0, 23.5, 31.5 }
-        params.mnd_wsc = 1.0
+        params.fTP        = { 16.0, 23.5, 31.0 }
     end
 
-    if automaton:checkDistance(target) > 7 then
-        if params.weaponDamage then
-            params.weaponDamage = params.weaponDamage / 4
-        else
-            params.ftpMod[1] = params.ftpMod[1] / 4
-            params.ftpMod[2] = params.ftpMod[2] / 4
-            params.ftpMod[3] = params.ftpMod[3] / 4
-        end
-    end
+    xi.automaton.applyFlameHolder(automaton, params.fTP)
 
-    local damage = xi.autows.doAutoPhysicalWeaponskill(automaton, target, 0, skill:getTP(), true, action, false, params, skill)
+    local info = xi.mobskills.mobPhysicalMove(automaton, target, skill, action, params)
 
-    if damage > 0 then
+    if xi.mobskills.processDamage(automaton, target, skill, action, info) then
+        target:takeDamage(info.damage, automaton, info.attackType, info.damageType)
+
         if not target:isUndead() then
-            automaton:addHP(damage)
-            skill:setMsg(xi.msg.basic.SKILL_DRAIN_HP)
+            automaton:addHP(info.damage)
         end
     end
 
-    return damage
+    -- Does not return TP.
+    automaton:setTP(0)
+
+    return info.damage
 end
 
 return abilityObject

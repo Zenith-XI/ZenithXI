@@ -46,8 +46,8 @@ const std::set validContainers = {
 
 auto GP_CLI_COMMAND_ITEM_USE::validate(MapSession* PSession, const CCharEntity* PChar) const -> PacketValidationResult
 {
-    return PacketValidator()
-        .isNotMonstrosity(PChar)
+    return PacketValidator(PChar)
+        .blockedBy({ BlockedState::InEvent, BlockedState::Monstrosity })
         .mustEqual(PChar->inMogHouse(), false, "Player is in moghouse")
         .mustEqual(this->ItemNum, 0, "ItemNum not 0")
         .oneOf("Category", static_cast<CONTAINER_ID>(this->Category), validContainers);
@@ -81,7 +81,8 @@ void GP_CLI_COMMAND_ITEM_USE::process(MapSession* PSession, CCharEntity* PChar) 
     {
         for (uint8 slot = 0; slot < 18; ++slot)
         {
-            if (PChar->equipLoc[slot] == this->Category && PChar->equip[slot] == this->PropertyItemIndex)
+            auto eloc = PChar->equipLocation(slot);
+            if (eloc && static_cast<uint8>(eloc->Container) == this->Category && eloc->Slot == this->PropertyItemIndex)
             {
                 return true;
             }

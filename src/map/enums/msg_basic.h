@@ -63,6 +63,7 @@ enum class MsgBasic : uint16_t
     LoseSight                       = 36,  // You lose sight of <target>.
     TooFarForExp                    = 37,  // You are too far from the battle to gain experience.
     SkillGain                       = 38,  // <target>'s <skill> skill rises X points.
+    NeedDualWield                   = 39,  // You need the Dual Wield ability to equip <name of item> as a sub-weapon
     CannotInThisArea                = 40,  // cannot use in this area
     ReadiesWeaponskill              = 43,  // <entity> readies <skill>.
     SpikesEffectDmg                 = 44,  // <target>'s spikes deal <number> damage to <attacker>
@@ -98,6 +99,7 @@ enum class MsgBasic : uint16_t
     SkillRecoversHP                 = 103, // The <player> uses .. <target> recovers .. HP.
     IsIntimidated                   = 106, // The <player> is intimidated by <target>'s presence.
     UsesAbilityTakesDamage          = 110, // <user> uses <ability>. <target> takes <amount> points of damage.
+    MagicFail                       = 114, // <caster> casts <spell> on <target>, but the spell fails to take effect
     UsesAbilityFortifiedUndead      = 131, // <user> uses <ability>. <target> is fortified against undead.
     SpikesEffectHPDrain             = 132, // <target>'s spikes drain <number> HP from the <attacker>.
     UsesAbilityFortifiedArcana      = 134, // <user> uses <ability>. <target> is fortified against arcana.
@@ -158,6 +160,7 @@ enum class MsgBasic : uint16_t
     TargetRecoversHP2               = 263, // <target> recovers <amount> HP.
     TargetTakesDamage               = 264, // <target> takes <amount> points of damage.
     TargetGainsEffect               = 266, // <target> gains the effect of <status>.
+    TargetReceivesEffectAbility     = 267, // <target> receives the effect of <status>.
     TargetTeleport                  = 273, // <target> vanishes.
     MagicBurstDrainsHP              = 274, // <caster> casts <spell>. Magic Burst! <amount> HP drained from <target>.
     TargetRecoversMP                = 276, // <target> recovers <amount> MP.
@@ -178,6 +181,8 @@ enum class MsgBasic : uint16_t
     UsesJobAbilityTakeDamage        = 317, // The <player> uses .. <target> takes .. points of damage.
     UsesItemRecoversHPAreaOfEffect2 = 318, // <user> uses <item>. <target> recovers <amount> HP.
     UsesAbilityGainsEffect          = 319, // <user> uses <ability>. <target> gains the effect of <status>.
+    UsesAbilityReceivesEffect       = 320, // <user> uses <ability>. <target> receives the effect of <status>.
+    UsesAbilityNoEffect             = 323, // <user> uses <ability>. No effect on <target>.
     UsesButMisses                   = 324, // The <player> uses .. but misses <target>.
     ReadiesSkill                    = 326, // <entity> readies <skill>.
     StartsCastingTarget             = 327, // <entity> starts casting <spell> on <target>.
@@ -246,6 +251,7 @@ enum class MsgBasic : uint16_t
     PerfectCounterMiss              = 592, // <player> attempts to counter <target>'s attack, but misses.
     TreasureHunterUp                = 603, // Additional effect: Treasure Hunter effectiveness against <target> increases to ..
     CounterAbsorbedDmg              = 606, // The <target> absorbs <player>'s counter. The <target> recovers .. HP.
+    MagicCompleteResist             = 655, // <caster> casts <spell>. <target> completely resists the spell.
     SameEffectLuopan                = 660, // The same effect is already active on that luopan!
     LuopanAlreadyPlaced             = 661, // <player> has already placed a luopan. Unable to use ability.
     RequireLuopan                   = 662, // This action requires a luopan.

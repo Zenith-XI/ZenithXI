@@ -21,8 +21,9 @@
 
 #pragma once
 
-#include "common/cbasetypes.h"
-#include "common/ipp.h"
+#include <common/cbasetypes.h>
+#include <common/ipp.h>
+#include <common/types/flag.h>
 
 #include "zone.h"
 
@@ -45,12 +46,18 @@ struct LazyLoadState
 
 } // namespace detail
 
-void LoadZones(const std::vector<uint16>& zoneIds);
-void LoadZoneList(IPP mapIPP);
-void Initialize(IPP mapIPP, bool lazyLoading, bool asyncMode);
-void ProcessLoadQueue();
+auto LoadZones(Scheduler& scheduler, MapConfig config, const std::vector<uint16>& zoneIds) -> Task<void>;
+auto LoadZoneList(Scheduler& scheduler, MapConfig config) -> Task<void>;
+auto Initialize(Scheduler& scheduler, MapConfig config) -> Task<void>;
+auto ProcessLoadQueue(Scheduler& scheduler, MapConfig config) -> Task<void>;
+
 auto IsLazyLoadingEnabled() -> bool;
-auto IsZoneReady(uint16 zoneId) -> bool;
+
+// TODO:
+// This shouldn't have side effects, it should be const and the caller should be responsible
+// for requesting the zone is loaded if it isn't ready.
+auto IsZoneReady(Scheduler& scheduler, MapConfig config, uint16 zoneId) -> Task<bool>;
+
 auto GetManagedZones() -> std::vector<std::pair<uint16, std::string>>;
 void FreeZoneList();
 void InitializeWeather();
@@ -63,7 +70,6 @@ auto GetCurrentContinent(uint16 zoneId) -> CONTINENT_TYPE;
 auto GetWeatherElement(Weather weather) -> int;
 
 auto GetZone(uint16 zoneId) -> CZone*;
-auto GetTrigger(uint16 targId, uint16 zoneId) -> CNpcEntity*;
 auto GetEntity(uint32 id, uint8 filter = -1) -> CBaseEntity*;
 auto GetCharByName(const std::string& name) -> CCharEntity*;
 auto GetCharFromWorld(uint32 charId, uint16 targId) -> CCharEntity*;  // returns pointer to character by id and target id
@@ -74,6 +80,7 @@ auto IsZoneAssignedToThisProcess(IPP mapIPP, ZONEID zoneId) -> bool;
 void ForEachZone(const std::function<void(CZone*)>& func);
 void ForEachZone(const std::vector<uint16>& zoneIds, const std::function<void(CZone*)>& func);
 auto GetZoneIPP(uint16 zoneId) -> uint64;                    // returns IPP for zone ID
+auto IsZoneAtPlayerCap(uint16 zoneId, bool isGM) -> bool;    // returns true if the zone is at capacity and the entry should be denied
 auto IsResidentialArea(const CCharEntity* PChar) -> bool;    // returns whether or not the area is a residential zone
 auto IsAlwaysOutOfNationControl(REGION_TYPE region) -> bool; // returns true if a region should never trigger "in areas outside own nation's control" latent effect; false otherwise.
 

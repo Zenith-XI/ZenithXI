@@ -8,12 +8,12 @@
 -- hHP +2
 -- Effect with enhancing equipment (Note: these are latents on gear with the effect)
 -- Def +50
--- Beast Killer (guesstimated 5%)
+-- Beast Killer +4
 -----------------------------------
 ---@type TItemFood
 local itemObject = {}
 
-itemObject.onItemCheck = function(target, item, param, caster)
+itemObject.onItemCheck = function(target, item, caster)
     return xi.itemUtils.foodOnItemCheck(target, xi.foodType.BASIC)
 end
 

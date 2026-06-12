@@ -7,14 +7,35 @@ xi.combat.tp = xi.combat.tp or {}
 -- "Local" functions only used here.
 -----------------------------------
 
+-- USED IN CORE (If you add/remove function params, they must be mirrored in core)
 -- https://www.bg-wiki.com/ffxi/Tactical_Points
 -- Gainee is the target who is going to gain the TP.
 -- For instance, if a player attacks a mob, the mob uses the mob formula when gaining TP from the returned hit.
 -- This appears to be a measure to not buff mobs when players were buffed with the new TP gain formula.
+--- @params gainee CBaseEntity
+--- @params delay integer
+--- @return integer
 xi.combat.tp.calculateTPReturn = function(gainee, delay)
     local tpReturn = 0
+    local isCharmedPCPet = false
 
-    if gainee and gainee:getObjType() ~= xi.objType.MOB then -- Pets and PCs have been observed to use this formula
+    -- Charmed pets controlled by the player are not caught by isPet() and are considered mobs still.
+    -- However once charmed, they convert to use the PC delay formula.
+    if
+        gainee:getObjType() == xi.objType.MOB and
+        gainee:getMaster() ~= nil and
+        gainee:getMaster():isPC() and
+        gainee:isCharmed()
+    then
+        isCharmedPCPet = true
+    end
+
+    if
+        gainee and
+        gainee:getObjType() ~= xi.objType.MOB or
+        isCharmedPCPet
+
+    then -- Pets and PCs have been observed to use this formula
         if delay > 900 then
             tpReturn = 173 + (delay - 900) * 28 / 360
         elseif delay > 720 then
@@ -53,7 +74,7 @@ xi.combat.tp.getModifiedDelayAndCanZanshin = function(actor, delay)
     if actor:isDualWielding() then -- NOTE: this 'isDualWielding' may trip on non-PCs even if they are 'using h2h'. If this is rectified in core in the future this should fall through correctly.
         modifiedDelay = (delay * (100 - actor:getMod(xi.mod.DUAL_WIELD)) / 100) / 2
     elseif actor:isUsingH2H() then
-        if actor:getObjType() == xi.objType.PC then            -- handle h2h with > 1 swing only on PC
+        if actor:getObjType() == xi.objType.PC then -- handle h2h with > 1 swing only on PC
             if
                 actor:getEquippedItem(xi.slot.SUB) ~= nil or   -- equipped shield = one swing
                 actor:getSkillRank(xi.skill.HAND_TO_HAND) == 0 -- zero h2h rank skill = one swing
@@ -63,6 +84,8 @@ xi.combat.tp.getModifiedDelayAndCanZanshin = function(actor, delay)
             else
                 modifiedDelay = math.max((delay - actor:getMod(xi.mod.MARTIAL_ARTS)) / 2, 48) -- min delay of 96 total so 96/2 per fist, https://www.bg-wiki.com/ffxi/Attack_Speed
             end
+        elseif actor:getObjType() == xi.objType.MOB then
+            modifiedDelay = math.max(delay / 2, 48) -- Mobs are not affected at all by Martial Arts.
         else
             -- TODO: handle the corner case where a PC-like entity is using h2h but is only hitting with one 'fist'. Perhaps they have a shield with no main weapon.
             -- elseif actor:getAutoAttackHits() > 1
@@ -135,7 +158,6 @@ xi.combat.tp.getSingleWeaponTPReturn = function(actor, slot)
     return math.floor(tpReturn * storeTPModifier)
 end
 
--- UNUSED.
 -- Returns a single ranged hit's TP return
 xi.combat.tp.getSingleRangedHitTPReturn = function(actor)
     if actor:hasStatusEffect(xi.effect.MEIKYO_SHISUI) then
@@ -152,7 +174,13 @@ xi.combat.tp.getSingleRangedHitTPReturn = function(actor)
     return math.floor(xi.combat.tp.calculateTPReturn(actor, delay) * storeTPModifier)
 end
 
+-- This function calculates how much TP a target(The defender) will gain upon being hit by a physical attack.
 -- TODO: does Ikishoten factor into this as a bonus to baseTPGain if it procs on the hit? Needs verification.
+--- @params actor CBaseEntity
+--- @params target CBaseEntity
+--- @params totalDamage integer
+--- @params delay integer
+--- @return integer
 xi.combat.tp.calculateTPGainOnPhysicalDamage = function(actor, target, totalDamage, delay)
     if not actor or not target then
         return 0
@@ -168,7 +196,7 @@ xi.combat.tp.calculateTPGainOnPhysicalDamage = function(actor, target, totalDama
 
     -- TODO: does dAGI penalty work against/for Trusts/Pets? Nothing is documented for this. Currently assuming mob only.
     local attackOutput       = xi.combat.tp.getModifiedDelayAndCanZanshin(actor, delay)
-    local baseTPGain         = xi.combat.tp.calculateTPReturn(target, attackOutput.modifiedDelay)
+    local baseTPGain         = xi.combat.tp.calculateTPReturn(actor, attackOutput.modifiedDelay)
     local dAGI               = actor:getStat(xi.mod.AGI) - target:getStat(xi.mod.AGI)
     local inhibitTPModifier  = (100 - target:getMod(xi.mod.INHIBIT_TP)) / 100                    -- no known cap: https://www.bg-wiki.com/ffxi/Monster_TP_gain#Inhibit_TP
     local dAGIModifier       = utils.clamp(200 - (dAGI + 30) / 200, 0.5, 1)                      -- 50% reduction at +70 dAGI: https://www.bg-wiki.com/ffxi/Monster_TP_gain

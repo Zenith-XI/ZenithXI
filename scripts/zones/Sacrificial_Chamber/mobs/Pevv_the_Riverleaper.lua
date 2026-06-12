@@ -13,14 +13,13 @@ entity.onMobInitialize = function(mob)
     xi.pet.setMobPet(mob, 2, 'Sahagins_Wyvern')
     mob:setMod(xi.mod.LIGHT_SLEEP_RES_RANK, 4)
     mob:setMod(xi.mod.DARK_SLEEP_RES_RANK, 4)
-    mob:setMobMod(xi.mobMod.SUPERLINK, 1)
 end
 
 entity.onMobSpawn = function(mob)
     xi.mix.jobSpecial.config(mob, {
         specials =
         {
-            { id = xi.jsa.CALL_WYVERN, hpp = 75 },
+            { id = xi.mobSkill.CALL_WYVERN_1, hpp = 75 },
         },
     })
 end

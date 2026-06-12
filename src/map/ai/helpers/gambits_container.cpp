@@ -30,6 +30,7 @@
 #include "ai/states/weaponskill_state.h"
 #include "enmity_container.h"
 #include "mobskill.h"
+#include "notoriety_container.h"
 #include "spell.h"
 #include "utils/battleutils.h"
 #include "utils/trustutils.h"
@@ -37,7 +38,8 @@
 
 #include "ai/controllers/player_controller.h"
 #include "ai/controllers/trust_controller.h"
-#include "weapon_skill.h"
+
+#include "packets/s2c/0x038_schedulor.h"
 
 #include <algorithm>
 #include <ranges>
@@ -65,15 +67,21 @@ std::string CGambitsContainer::AddGambit(const Gambit_t& gambit)
             if (!spell::CanUseSpell(static_cast<CBattleEntity*>(POwner), static_cast<SpellID>(action.select_arg)))
             {
                 available = false;
+                break;
             }
         }
     }
-    if (available)
+
+    if (!available)
     {
-        gambits.emplace_back(gambit);
-        return gambit.identifier;
+        return "";
     }
-    return "";
+
+    // Make a modifiable copy, assign a new identifier and store it
+    Gambit_t stored   = gambit;
+    stored.identifier = NewGambitIdentifier(stored);
+    gambits.emplace_back(std::move(stored));
+    return gambits.back().identifier;
 }
 
 void CGambitsContainer::RemoveGambit(const std::string& id)
@@ -87,24 +95,31 @@ void CGambitsContainer::RemoveGambit(const std::string& id)
                 return gambit.identifier == id;
             }),
         gambits.end());
+
+    const auto prefix = fmt::format("{}:", id);
+    std::erase_if(m_timerConditionLastTrigger, [&](const auto& kv)
+                  {
+                      return kv.first.rfind(prefix, 0) == 0;
+                  });
 }
 
 void CGambitsContainer::RemoveAllGambits()
 {
     gambits.clear();
+    m_timerConditionLastTrigger.clear();
 }
 
-void CGambitsContainer::Tick(timer::time_point tick)
+auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
 {
     TracyZoneScoped;
 
     auto* controller      = static_cast<CTrustController*>(POwner->PAI->GetController());
     uint8 currentPartyPos = controller->GetPartyPosition();
-    auto  position_offset = static_cast<std::chrono::milliseconds>(currentPartyPos * 10);
+    auto  position_offset = static_cast<std::chrono::milliseconds>(currentPartyPos * 100);
 
     if ((tick + position_offset) < m_lastAction)
     {
-        return;
+        co_return;
     }
 
     // TODO: Is this necessary?
@@ -113,17 +128,17 @@ void CGambitsContainer::Tick(timer::time_point tick)
         POwner->PAI->IsCurrentState<CWeaponSkillState>() || POwner->PAI->IsCurrentState<CMobSkillState>() ||
         POwner->PAI->IsCurrentState<CPetSkillState>())
     {
-        return;
+        co_return;
     }
 
-    auto random_offset = static_cast<std::chrono::milliseconds>(xirand::GetRandomNumber(1000, 2500));
+    auto random_offset = static_cast<std::chrono::milliseconds>(xirand::GetRandomNumber(2000, 3000));
     m_lastAction       = tick + random_offset;
 
     // Deal with TP skills before any gambits
     // TODO: Should this be its own special gambit?
     if (POwner->health.tp >= 1000 && TryTrustSkill())
     {
-        return;
+        co_return;
     }
 
     // Didn't WS/MS, go for other Gambits
@@ -152,6 +167,15 @@ void CGambitsContainer::Tick(timer::time_point tick)
             potentialTargets.push_back(POwner);
         }
         else if (targetType == G_TARGET::TARGET)
+        {
+            auto* mob = POwner->GetBattleTarget();
+            potentialTargets.push_back(mob);
+        }
+        else if (targetType == G_TARGET::TRIGGER_SELF_ACTION_TARGET)
+        {
+            potentialTargets.push_back(POwner);
+        }
+        else if (targetType == G_TARGET::TRIGGER_TARGET_ACTION_SELF)
         {
             auto* mob = POwner->GetBattleTarget();
             potentialTargets.push_back(mob);
@@ -277,9 +301,10 @@ void CGambitsContainer::Tick(timer::time_point tick)
         {
             // All predicate groups must resolve successfully for the target to be considered
             bool targetMatchAllPredicates = true;
-            for (auto& predicateGroup : gambit.predicate_groups)
+            for (size_t predicateGroupIndex = 0; predicateGroupIndex < gambit.predicate_groups.size(); ++predicateGroupIndex)
             {
-                if (!CheckTrigger(potentialTarget, predicateGroup))
+                auto& predicateGroup = gambit.predicate_groups[predicateGroupIndex];
+                if (!CheckTrigger(potentialTarget, gambit, predicateGroupIndex, predicateGroup))
                 {
                     targetMatchAllPredicates = false;
                 }
@@ -287,6 +312,16 @@ void CGambitsContainer::Tick(timer::time_point tick)
 
             if (targetMatchAllPredicates)
             {
+                if (gambit.target_selector == G_TARGET::TRIGGER_SELF_ACTION_TARGET)
+                {
+                    target = POwner->GetBattleTarget(); // switch back to target before action for correct target selection in actions
+                    break;
+                }
+                else if (gambit.target_selector == G_TARGET::TRIGGER_TARGET_ACTION_SELF)
+                {
+                    target = POwner; // switch to self before action for correct target selection in actions
+                    break;
+                }
                 target = potentialTarget;
                 break;
             }
@@ -298,198 +333,414 @@ void CGambitsContainer::Tick(timer::time_point tick)
             continue;
         }
 
-        // Execute all actions defined on the Gambit
-        // TODO: When multiple actions are defined:
-        // - Recast of all actions should be considered before executing
-        // - Casting 2 spells in a row does not yet work
-        for (auto& action : gambit.actions)
+        // Pre resolve actions and perform simple recast/availability checks.
+        // This prevents attempting to cast multiple spells in the same tick (which doesn't work)
+        // and ensures all actions are available before starting.
+        std::vector<bool>           canExecute(gambit.actions.size(), true);
+        std::vector<Maybe<SpellID>> resolvedSpells(gambit.actions.size(), std::nullopt);
+
+        // Helper to resolve a spell action to a valid SpellID if possible.
+        auto ResolveMA = [&](const Action_t& action, CBattleEntity* resolvedTarget) -> Maybe<SpellID>
         {
-            if (action.reaction == G_REACTION::RATTACK)
+            if (action.select == G_SELECT::SPECIFIC)
             {
-                controller->RangedAttack(target->targid);
+                return POwner->SpellContainer->GetAvailable(static_cast<SpellID>(action.select_arg));
             }
-            else if (action.reaction == G_REACTION::MA)
+            else if (action.select == G_SELECT::HIGHEST)
             {
-                if (action.select == G_SELECT::SPECIFIC)
-                {
-                    auto spell_id = POwner->SpellContainer->GetAvailable(static_cast<SpellID>(action.select_arg));
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(target->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::HIGHEST)
-                {
-                    auto spell_id = POwner->SpellContainer->GetBestAvailable(static_cast<SPELLFAMILY>(action.select_arg));
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(target->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::LOWEST)
-                {
-                    // TODO
-                    // auto spell_id = POwner->SpellContainer->GetWorstAvailable(static_cast<SPELLFAMILY>(gambit.action.select_arg));
-                    // if (spell_id.has_value())
-                    //{
-                    //    controller->Cast(target->targid, static_cast<SpellID>(spell_id.value()));
-                    //}
-                }
-                else if (action.select == G_SELECT::BEST_INDI)
-                {
-                    auto* PMaster  = static_cast<CCharEntity*>(POwner->PMaster);
-                    auto  spell_id = POwner->SpellContainer->GetBestIndiSpell(PMaster);
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(target->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::ENTRUSTED)
-                {
-                    auto* PMaster  = static_cast<CCharEntity*>(POwner->PMaster);
-                    auto  spell_id = POwner->SpellContainer->GetBestEntrustedSpell(PMaster);
-                    target         = PMaster;
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(target->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::BEST_AGAINST_TARGET)
-                {
-                    auto spell_to_cast = static_cast<SpellID>(action.select_arg);
-                    auto spell_id      = POwner->SpellContainer->GetBestAgainstTargetWeakness(target, spell_to_cast);
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(target->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::DEF_BAR_ELEMENT)
-                {
-                    auto maybeSpellId = POwner->SpellContainer->GetAvailable(SpellID::Barfire);
-                    auto element      = POwner->GetLocalVar("[Gambit]CastElement");
+                return POwner->SpellContainer->GetBestAvailable(static_cast<SPELLFAMILY>(action.select_arg));
+            }
+            else if (action.select == G_SELECT::LOWEST)
+            {
+                // Not implemented yet: treat as unavailable
+                return std::nullopt;
+            }
+            else if (action.select == G_SELECT::BEST_INDI)
+            {
+                auto* PMaster = static_cast<CCharEntity*>(POwner->PMaster);
+                return POwner->SpellContainer->GetBestIndiSpell(PMaster);
+            }
+            else if (action.select == G_SELECT::ENTRUSTED)
+            {
+                auto* PMaster = static_cast<CCharEntity*>(POwner->PMaster);
+                // Entrusted spells target master
+                return POwner->SpellContainer->GetBestEntrustedSpell(PMaster);
+            }
+            else if (action.select == G_SELECT::BEST_AGAINST_TARGET)
+            {
+                auto spell_to_cast = static_cast<SpellID>(action.select_arg);
+                return POwner->SpellContainer->GetBestAgainstTargetWeakness(resolvedTarget, spell_to_cast);
+            }
+            else if (action.select == G_SELECT::DEF_BAR_ELEMENT)
+            {
+                auto maybeSpellId = POwner->SpellContainer->GetAvailable(SpellID::Barfire);
+                auto element      = POwner->GetLocalVar("[Gambit]CastElement");
 
-                    if (element != 0)
+                if (element != 0)
+                {
+                    switch (element)
                     {
-                        switch (element)
+                        case ELEMENT_FIRE:
+                            maybeSpellId = SpellID::Barfire;
+                            break;
+                        case ELEMENT_ICE:
+                            maybeSpellId = SpellID::Barblizzard;
+                            break;
+                        case ELEMENT_WIND:
+                            maybeSpellId = SpellID::Baraero;
+                            break;
+                        case ELEMENT_EARTH:
+                            maybeSpellId = SpellID::Barstone;
+                            break;
+                        case ELEMENT_THUNDER:
+                            maybeSpellId = SpellID::Barthunder;
+                            break;
+                        case ELEMENT_WATER:
+                            maybeSpellId = SpellID::Barwater;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                return maybeSpellId;
+            }
+            else if (action.select == G_SELECT::STORM_DAY)
+            {
+                return POwner->SpellContainer->GetStormDay();
+            }
+            else if (action.select == G_SELECT::HELIX_DAY)
+            {
+                return POwner->SpellContainer->GetHelixDay();
+            }
+            else if (action.select == G_SELECT::EN_MOB_WEAKNESS)
+            {
+                CBattleEntity* battleTarget = POwner->GetBattleTarget();
+                return POwner->SpellContainer->EnSpellAgainstTargetWeakness(battleTarget);
+            }
+            else if (action.select == G_SELECT::STORM_MOB_WEAKNESS)
+            {
+                return POwner->SpellContainer->StormDayAgainstTargetWeakness(resolvedTarget);
+            }
+            else if (action.select == G_SELECT::HELIX_MOB_WEAKNESS)
+            {
+                return POwner->SpellContainer->StormDayAgainstTargetWeakness(resolvedTarget);
+            }
+            else if (action.select == G_SELECT::RANDOM)
+            {
+                return POwner->SpellContainer->GetSpell();
+            }
+            else if (action.select == G_SELECT::MB_ELEMENT)
+            {
+                CStatusEffect* PSCEffect = resolvedTarget->StatusEffectContainer->GetStatusEffect(EFFECT_SKILLCHAIN, 0);
+                if (PSCEffect == nullptr)
+                {
+                    return std::nullopt;
+                }
+
+                std::list<SKILLCHAIN_ELEMENT> resonanceProperties;
+                if (uint16 power = PSCEffect->GetPower())
+                {
+                    resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power & 0xF));
+                    resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power >> 4 & 0xF));
+                    resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power >> 8));
+                }
+
+                Maybe<SpellID> spell_id;
+                for (auto& resonance_element : resonanceProperties)
+                {
+                    for (auto& chain_element : battleutils::GetSkillchainMagicElement(resonance_element))
+                    {
+                        for (size_t ii = POwner->SpellContainer->m_damageList.size(); ii > 0; --ii)
                         {
-                            case ELEMENT_FIRE:
-                                maybeSpellId = SpellID::Barfire;
-                                break;
-                            case ELEMENT_ICE:
-                                maybeSpellId = SpellID::Barblizzard;
-                                break;
-                            case ELEMENT_WIND:
-                                maybeSpellId = SpellID::Baraero;
-                                break;
-                            case ELEMENT_EARTH:
-                                maybeSpellId = SpellID::Barstone;
-                                break;
-                            case ELEMENT_THUNDER:
-                                maybeSpellId = SpellID::Barthunder;
-                                break;
-                            case ELEMENT_WATER:
-                                maybeSpellId = SpellID::Barwater;
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if (maybeSpellId.has_value())
-                        {
-                            controller->Cast(target->targid, maybeSpellId.value());
-                        }
-                    }
-                }
-                else if (action.select == G_SELECT::STORM_DAY)
-                {
-                    auto spell_id = POwner->SpellContainer->GetStormDay();
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(target->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::HELIX_DAY)
-                {
-                    auto spell_id = POwner->SpellContainer->GetHelixDay();
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(target->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::EN_MOB_WEAKNESS)
-                {
-                    CBattleEntity* battleTarget = POwner->GetBattleTarget();
-                    auto           spell_id     = POwner->SpellContainer->EnSpellAgainstTargetWeakness(battleTarget);
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(POwner->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::STORM_MOB_WEAKNESS)
-                {
-                    auto spell_id = POwner->SpellContainer->StormDayAgainstTargetWeakness(target);
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(POwner->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::HELIX_MOB_WEAKNESS)
-                {
-                    auto spell_id = POwner->SpellContainer->StormDayAgainstTargetWeakness(target);
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(target->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::RANDOM)
-                {
-                    auto spell_id = POwner->SpellContainer->GetSpell();
-                    if (spell_id.has_value())
-                    {
-                        controller->Cast(target->targid, spell_id.value());
-                    }
-                }
-                else if (action.select == G_SELECT::MB_ELEMENT)
-                {
-                    CStatusEffect* PSCEffect = target->StatusEffectContainer->GetStatusEffect(EFFECT_SKILLCHAIN, 0);
-
-                    if (PSCEffect == nullptr)
-                    {
-                        ShowError("G_SELECT::MB_ELEMENT: PSCEffect was null.");
-                        return;
-                    }
-
-                    std::list<SKILLCHAIN_ELEMENT> resonanceProperties;
-                    if (uint16 power = PSCEffect->GetPower())
-                    {
-                        resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power & 0xF));
-                        resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power >> 4 & 0xF));
-                        resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power >> 8));
-                    }
-
-                    std::optional<SpellID> spell_id;
-                    for (auto& resonance_element : resonanceProperties)
-                    {
-                        for (auto& chain_element : battleutils::GetSkillchainMagicElement(resonance_element))
-                        {
-                            // TODO: SpellContianer->GetBestByElement(ELEMENT)
-                            // NOTE: Iterating this list in reverse guarantees finding the best match
-                            for (size_t i = POwner->SpellContainer->m_damageList.size(); i > 0; --i)
+                            auto spell         = POwner->SpellContainer->m_damageList[ii - 1];
+                            auto spell_element = spell::GetSpell(spell)->getElement();
+                            if (spell_element == chain_element)
                             {
-                                auto spell         = POwner->SpellContainer->m_damageList[i - 1];
-                                auto spell_element = spell::GetSpell(spell)->getElement();
-                                if (spell_element == chain_element)
-                                {
-                                    spell_id = spell;
-                                    break;
-                                }
+                                spell_id = spell;
+                                break;
                             }
                         }
                     }
+                }
+                return spell_id;
+            }
 
-                    if (spell_id.has_value())
+            return std::nullopt;
+        };
+
+        // First pass: validate availability and prevent executing multiple spells in the same tick.
+        int firstMAIndex = -1;
+        for (size_t i = 0; i < gambit.actions.size(); ++i)
+        {
+            const auto& action = gambit.actions[i];
+            if (action.reaction == G_REACTION::MA)
+            {
+                if (firstMAIndex == -1)
+                {
+                    firstMAIndex    = static_cast<int>(i);
+                    auto maybeSpell = ResolveMA(action, target);
+                    if (!maybeSpell.has_value())
                     {
-                        controller->Cast(target->targid, spell_id.value());
+                        // Couldn't resolve first spell -> cannot use this gambit now
+                        canExecute[i] = false;
+                    }
+                    else
+                    {
+                        resolvedSpells[i] = maybeSpell;
+                    }
+                }
+                else
+                {
+                    // More than one spell present: skip additional spells to avoid casting two spells in a row.
+                    canExecute[i] = false;
+                }
+            }
+            else if (action.reaction == G_REACTION::JA)
+            {
+                // Basic validation: SPECIFIC must exist
+                if (action.select == G_SELECT::SPECIFIC)
+                {
+                    if (ability::GetAbility(action.select_arg) == nullptr)
+                    {
+                        canExecute[i] = false;
+                    }
+                }
+                // Other JA selects rely on TP checks; allow for now.
+            }
+            else if (action.reaction == G_REACTION::MS)
+            {
+                if (action.select == G_SELECT::SPECIFIC)
+                {
+                    // No further pre-check available here; assume ok.
+                }
+            }
+            else if (action.reaction == G_REACTION::RATTACK)
+            {
+                // Always available
+            }
+        }
+
+        // If none of the actions are executable, skip this gambit
+        bool anyExecutable = std::ranges::any_of(canExecute, [](bool v)
+                                                 {
+                                                     return v;
+                                                 });
+        if (!anyExecutable)
+        {
+            continue;
+        }
+
+        // Execute actions that passed the pre-checks. Use resolvedSpells for spells where available.
+        bool executedAnyAction = false;
+        for (size_t i = 0; i < gambit.actions.size(); ++i)
+        {
+            if (!canExecute[i])
+            {
+                continue;
+            }
+
+            const auto& action = gambit.actions[i];
+
+            if (action.reaction == G_REACTION::RATTACK)
+            {
+                controller->RangedAttack(target->targid);
+                executedAnyAction = true;
+            }
+            else if (action.reaction == G_REACTION::MA)
+            {
+                // Use the pre resolved spell if present, otherwise fall back
+                if (resolvedSpells[i].has_value())
+                {
+                    controller->Cast(target->targid, resolvedSpells[i].value());
+                    executedAnyAction = true;
+                }
+                else
+                {
+                    // Fallback to original, keeps existing behavior for selection
+                    if (action.select == G_SELECT::SPECIFIC)
+                    {
+                        auto spell_id = POwner->SpellContainer->GetAvailable(static_cast<SpellID>(action.select_arg));
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::HIGHEST)
+                    {
+                        auto spell_id = POwner->SpellContainer->GetBestAvailable(static_cast<SPELLFAMILY>(action.select_arg));
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::BEST_INDI)
+                    {
+                        auto* PMaster  = static_cast<CCharEntity*>(POwner->PMaster);
+                        auto  spell_id = POwner->SpellContainer->GetBestIndiSpell(PMaster);
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::ENTRUSTED)
+                    {
+                        auto* PMaster  = static_cast<CCharEntity*>(POwner->PMaster);
+                        auto  spell_id = POwner->SpellContainer->GetBestEntrustedSpell(PMaster);
+                        target         = PMaster;
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::BEST_AGAINST_TARGET)
+                    {
+                        auto spell_to_cast = static_cast<SpellID>(action.select_arg);
+                        auto spell_id      = POwner->SpellContainer->GetBestAgainstTargetWeakness(target, spell_to_cast);
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::DEF_BAR_ELEMENT)
+                    {
+                        auto maybeSpellId = POwner->SpellContainer->GetAvailable(SpellID::Barfire);
+                        auto element      = POwner->GetLocalVar("[Gambit]CastElement");
+
+                        if (element != 0)
+                        {
+                            switch (element)
+                            {
+                                case ELEMENT_FIRE:
+                                    maybeSpellId = SpellID::Barfire;
+                                    break;
+                                case ELEMENT_ICE:
+                                    maybeSpellId = SpellID::Barblizzard;
+                                    break;
+                                case ELEMENT_WIND:
+                                    maybeSpellId = SpellID::Baraero;
+                                    break;
+                                case ELEMENT_EARTH:
+                                    maybeSpellId = SpellID::Barstone;
+                                    break;
+                                case ELEMENT_THUNDER:
+                                    maybeSpellId = SpellID::Barthunder;
+                                    break;
+                                case ELEMENT_WATER:
+                                    maybeSpellId = SpellID::Barwater;
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            if (maybeSpellId.has_value())
+                            {
+                                controller->Cast(target->targid, maybeSpellId.value());
+                                executedAnyAction = true;
+                            }
+                        }
+                    }
+                    else if (action.select == G_SELECT::STORM_DAY)
+                    {
+                        auto spell_id = POwner->SpellContainer->GetStormDay();
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::HELIX_DAY)
+                    {
+                        auto spell_id = POwner->SpellContainer->GetHelixDay();
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::EN_MOB_WEAKNESS)
+                    {
+                        CBattleEntity* battleTarget = POwner->GetBattleTarget();
+                        auto           spell_id     = POwner->SpellContainer->EnSpellAgainstTargetWeakness(battleTarget);
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(POwner->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::STORM_MOB_WEAKNESS)
+                    {
+                        auto spell_id = POwner->SpellContainer->StormDayAgainstTargetWeakness(target);
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(POwner->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::HELIX_MOB_WEAKNESS)
+                    {
+                        auto spell_id = POwner->SpellContainer->StormDayAgainstTargetWeakness(target);
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::RANDOM)
+                    {
+                        auto spell_id = POwner->SpellContainer->GetSpell();
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
+                    }
+                    else if (action.select == G_SELECT::MB_ELEMENT)
+                    {
+                        CStatusEffect* PSCEffect = target->StatusEffectContainer->GetStatusEffect(EFFECT_SKILLCHAIN, 0);
+
+                        if (PSCEffect == nullptr)
+                        {
+                            ShowError("G_SELECT::MB_ELEMENT: PSCEffect was null.");
+                            co_return;
+                        }
+
+                        std::list<SKILLCHAIN_ELEMENT> resonanceProperties;
+                        if (uint16 power = PSCEffect->GetPower())
+                        {
+                            resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power & 0xF));
+                            resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power >> 4 & 0xF));
+                            resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power >> 8));
+                        }
+
+                        Maybe<SpellID> spell_id;
+                        for (auto& resonance_element : resonanceProperties)
+                        {
+                            for (auto& chain_element : battleutils::GetSkillchainMagicElement(resonance_element))
+                            {
+                                // NOTE: Iterating this list in reverse guarantees finding the best match
+                                for (size_t ii = POwner->SpellContainer->m_damageList.size(); ii > 0; --ii)
+                                {
+                                    auto spell         = POwner->SpellContainer->m_damageList[ii - 1];
+                                    auto spell_element = spell::GetSpell(spell)->getElement();
+                                    if (spell_element == chain_element)
+                                    {
+                                        spell_id = spell;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (spell_id.has_value())
+                        {
+                            controller->Cast(target->targid, spell_id.value());
+                            executedAnyAction = true;
+                        }
                     }
                 }
             }
@@ -498,7 +749,8 @@ void CGambitsContainer::Tick(timer::time_point tick)
                 auto* PAbility = ability::GetAbility(action.select_arg);
                 if (PAbility == nullptr)
                 {
-                    return;
+                    // If SPECIFIC was validated earlier this shouldn't happen; skip this action.
+                    continue;
                 }
 
                 auto mLevel = POwner->GetMLevel();
@@ -556,6 +808,7 @@ void CGambitsContainer::Tick(timer::time_point tick)
                             {
                                 PAbility = PWaltzAbility;
                                 controller->Ability(target->targid, PAbility->getID());
+                                executedAnyAction = true;
                             }
                         }
                     }
@@ -572,7 +825,11 @@ void CGambitsContainer::Tick(timer::time_point tick)
 
                 if (action.select == G_SELECT::SPECIFIC)
                 {
-                    controller->Ability(target->targid, PAbility->getID());
+                    if (target != nullptr)
+                    {
+                        controller->Ability(target->targid, PAbility->getID());
+                        executedAnyAction = true;
+                    }
                 }
 
                 if (action.select == G_SELECT::BEST_SAMBA)
@@ -641,6 +898,7 @@ void CGambitsContainer::Tick(timer::time_point tick)
                     if (tpCost != 0 && (currentTP >= tpCost))
                     {
                         controller->Ability(target->targid, PAbility->getID());
+                        executedAnyAction = true;
                     }
                 }
                 else if (action.select == G_SELECT::RUNE_DAY)
@@ -685,6 +943,7 @@ void CGambitsContainer::Tick(timer::time_point tick)
                             break;
                     }
                     controller->Ability(target->targid, ability);
+                    executedAnyAction = true;
                 }
             }
             else if (action.reaction == G_REACTION::MS)
@@ -692,28 +951,86 @@ void CGambitsContainer::Tick(timer::time_point tick)
                 if (action.select == G_SELECT::SPECIFIC)
                 {
                     controller->MobSkill(target->targid, action.select_arg, std::nullopt);
+                    executedAnyAction = true;
+                }
+            }
+            else if (action.reaction == G_REACTION::ANIM_STRING)
+            {
+                static constexpr std::array<const char*, 5> animationList = {
+                    "sp00",
+                    "sp10",
+                    "sp20",
+                    "sp30",
+                    "sp40"
+                };
+
+                if (POwner->loc.zone == nullptr || !POwner->PMaster || POwner->PAI->PathFind->IsFollowingPath())
+                {
+                    continue;
+                }
+
+                if (action.select == G_SELECT::RANDOM_ANIMATION)
+                {
+                    // action.select_arg is the number of animations to include from the animationList.
+                    // Clamp to [1, animationList.size()].
+                    size_t usableCount = static_cast<size_t>(action.select_arg);
+                    usableCount        = std::clamp<size_t>(usableCount, 1, animationList.size());
+
+                    const auto  randomIndex = xirand::GetRandomNumber<size_t>(0, usableCount);
+                    const auto* animString  = animationList[randomIndex];
+
+                    POwner->loc.zone->PushPacket(
+                        POwner,
+                        CHAR_INRANGE,
+                        std::make_unique<GP_SERV_COMMAND_SCHEDULOR>(POwner, target, animString));
+
+                    executedAnyAction = true;
+                }
+                else if (action.select == G_SELECT::SPECIFIC)
+                {
+                    size_t animIndex = static_cast<size_t>(action.select_arg);
+
+                    if (animIndex >= animationList.size())
+                    {
+                        animIndex = xirand::GetRandomNumber<size_t>(0, 3);
+                    }
+
+                    const auto* animString = animationList[animIndex];
+
+                    POwner->loc.zone->PushPacket(
+                        POwner,
+                        CHAR_INRANGE,
+                        std::make_unique<GP_SERV_COMMAND_SCHEDULOR>(POwner, target, animString));
+
+                    executedAnyAction = true;
                 }
             }
         }
 
-        // Assume success
-        if (gambit.retry_delay != 0)
+        // If we executed any action and the gambit has a retry_delay, set last_used
+        if (executedAnyAction && gambit.retry_delay != 0)
         {
             gambit.last_used = tick;
         }
     }
 }
 
-bool CGambitsContainer::CheckTrigger(const CBattleEntity* triggerTarget, PredicateGroup_t& predicateGroup)
+bool CGambitsContainer::CheckTrigger(const CBattleEntity* triggerTarget, const Gambit_t& gambit, size_t predicateGroupIndex, PredicateGroup_t& predicateGroup)
 {
     TracyZoneScoped;
+
+    if (triggerTarget == nullptr)
+    {
+        return false;
+    }
 
     auto*             controller = static_cast<CTrustController*>(POwner->PAI->GetController());
     std::vector<bool> predicateResults;
 
     // Iterate and collect results from all predicates in the group
-    for (auto& predicate : predicateGroup.predicates)
+    for (size_t predicateIndex = 0; predicateIndex < predicateGroup.predicates.size(); ++predicateIndex)
     {
+        auto& predicate = predicateGroup.predicates[predicateIndex];
         switch (predicate.condition)
         {
             case G_CONDITION::ALWAYS:
@@ -759,6 +1076,52 @@ bool CGambitsContainer::CheckTrigger(const CBattleEntity* triggerTarget, Predica
             case G_CONDITION::NOT_STATUS:
             {
                 predicateResults.push_back(!triggerTarget->StatusEffectContainer->HasStatusEffect(static_cast<EFFECT>(predicate.condition_arg)));
+                continue;
+            }
+            case G_CONDITION::TIMER:
+            {
+                if (predicate.condition_arg == 0)
+                {
+                    predicateResults.push_back(true);
+                    continue;
+                }
+
+                const auto key      = fmt::format("{}:{}:{}", gambit.identifier, predicateGroupIndex, predicateIndex);
+                const auto interval = std::chrono::seconds(predicate.condition_arg);
+                const auto now      = timer::now();
+
+                auto [it, inserted] = m_timerConditionLastTrigger.try_emplace(key, now);
+
+                if (inserted)
+                {
+                    // first evaluation is true, then gated by interval
+                    predicateResults.push_back(true);
+                }
+                else if (now - it->second >= interval)
+                {
+                    it->second = now;
+                    predicateResults.push_back(true);
+                }
+                else
+                {
+                    predicateResults.push_back(false);
+                }
+                continue;
+            }
+            case G_CONDITION::JA_ON_COOLDOWN:
+            {
+                auto* PAbility = ability::GetAbility(static_cast<ABILITY>(predicate.condition_arg));
+                predicateResults.push_back(PAbility->getRecastTime() > 0s);
+                continue;
+            }
+            case G_CONDITION::LVL_LT:
+            {
+                predicateResults.push_back(triggerTarget->GetMLevel() < predicate.condition_arg);
+                continue;
+            }
+            case G_CONDITION::LVL_GTE:
+            {
+                predicateResults.push_back(triggerTarget->GetMLevel() >= predicate.condition_arg);
                 continue;
             }
             case G_CONDITION::HAS_RUNES:
@@ -945,13 +1308,31 @@ bool CGambitsContainer::CheckTrigger(const CBattleEntity* triggerTarget, Predica
                 predicateResults.push_back(triggerTarget->PAI->IsCurrentState<CMagicState>());
                 continue;
             }
+            case G_CONDITION::CASTING_DEBUFF:
+            {
+                // Check if the target is currently casting a debuff magic spell
+                bool isDebuff = false;
+                if (triggerTarget->PAI->IsCurrentState<CMagicState>())
+                {
+                    auto spell = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell();
+
+                    if (spell->isDebuff())
+                    {
+                        isDebuff = true;
+                    }
+                }
+                predicateResults.push_back(isDebuff);
+                continue;
+            }
             case G_CONDITION::CASTING_ELE_MA_AOE:
             {
                 bool isAOE = false;
                 if (triggerTarget->PAI->IsCurrentState<CMagicState>())
                 {
-                    auto spellFamily = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell()->getSpellFamily();
-                    if (spellFamily >= SPELLFAMILY::SPELLFAMILY_FIRAGA && spellFamily <= SPELLFAMILY::SPELLFAMILY_WATERGA)
+                    auto spellElement  = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell()->getElement();
+                    auto isElementalMA = spellElement >= ELEMENT_FIRE && spellElement <= ELEMENT_WATER;
+                    auto spellAOEType  = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell()->getAOE();
+                    if (isElementalMA && spellAOEType == SPELLAOE_RADIAL)
                     {
                         isAOE = true;
                     }
@@ -964,8 +1345,8 @@ bool CGambitsContainer::CheckTrigger(const CBattleEntity* triggerTarget, Predica
                 bool isElementalMA = false;
                 if (triggerTarget->PAI->IsCurrentState<CMagicState>())
                 {
-                    auto spellFamily = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell()->getSpellFamily();
-                    isElementalMA    = spellFamily >= SPELLFAMILY::SPELLFAMILY_FIRE && spellFamily <= SPELLFAMILY::SPELLFAMILY_FLOOD;
+                    auto spellElement = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell()->getElement();
+                    isElementalMA     = spellElement >= ELEMENT_FIRE && spellElement <= ELEMENT_WATER;
                 }
                 predicateResults.push_back(isElementalMA);
                 continue;
@@ -975,9 +1356,9 @@ bool CGambitsContainer::CheckTrigger(const CBattleEntity* triggerTarget, Predica
                 bool isElementalMAOnSelf = false;
                 if (triggerTarget->PAI->IsCurrentState<CMagicState>())
                 {
-                    auto spellFamily   = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell()->getSpellFamily();
+                    auto spellElement  = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell()->getElement();
                     auto targetID      = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetTarget()->id;
-                    bool isElementalMA = spellFamily >= SPELLFAMILY::SPELLFAMILY_FIRE && spellFamily <= SPELLFAMILY::SPELLFAMILY_FLOOD;
+                    bool isElementalMA = spellElement >= ELEMENT_FIRE && spellElement <= ELEMENT_WATER;
                     if (targetID == POwner->id && isElementalMA)
                     {
                         isElementalMAOnSelf = true;
@@ -991,50 +1372,34 @@ bool CGambitsContainer::CheckTrigger(const CBattleEntity* triggerTarget, Predica
                 bool needBarEffect = false;
                 if (triggerTarget->PAI->IsCurrentState<CMagicState>())
                 {
-                    auto   spellFamily = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell()->getSpellFamily();
-                    auto   targetID    = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetTarget()->id;
-                    uint32 element     = 0;
-                    if (targetID == POwner->id && (spellFamily >= SPELLFAMILY::SPELLFAMILY_FIRE && spellFamily <= SPELLFAMILY::SPELLFAMILY_FLOOD))
+                    auto spellElement = static_cast<CMagicState*>(triggerTarget->PAI->GetCurrentState())->GetSpell()->getElement();
+
+                    switch (spellElement)
                     {
-                        switch (spellFamily)
-                        {
-                            case SPELLFAMILY::SPELLFAMILY_FIRE:
-                            case SPELLFAMILY::SPELLFAMILY_FLARE:
-                                needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARFIRE);
-                                element       = ELEMENT_FIRE;
-                                break;
-                            case SPELLFAMILY::SPELLFAMILY_BLIZZARD:
-                            case SPELLFAMILY::SPELLFAMILY_FREEZE:
-                                needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARBLIZZARD);
-                                element       = ELEMENT_ICE;
-                                break;
-                            case SPELLFAMILY::SPELLFAMILY_AERO:
-                            case SPELLFAMILY::SPELLFAMILY_TORNADO:
-                                needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARAERO);
-                                element       = ELEMENT_WIND;
-                                break;
-                            case SPELLFAMILY::SPELLFAMILY_STONE:
-                            case SPELLFAMILY::SPELLFAMILY_QUAKE:
-                                needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARSTONE);
-                                element       = ELEMENT_EARTH;
-                                break;
-                            case SPELLFAMILY::SPELLFAMILY_THUNDER:
-                            case SPELLFAMILY::SPELLFAMILY_BURST:
-                                needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARTHUNDER);
-                                element       = ELEMENT_THUNDER;
-                                break;
-                            case SPELLFAMILY::SPELLFAMILY_WATER:
-                            case SPELLFAMILY::SPELLFAMILY_FLOOD:
-                                needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARWATER);
-                                element       = ELEMENT_WATER;
-                                break;
-                            default:
-                                needBarEffect = false;
-                                element       = battleutils::GetDayElement();
-                                break;
-                        }
-                        POwner->SetLocalVar("[Gambit]CastElement", element);
+                        case ELEMENT_FIRE:
+                            needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARFIRE);
+                            break;
+                        case ELEMENT_ICE:
+                            needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARBLIZZARD);
+                            break;
+                        case ELEMENT_WIND:
+                            needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARAERO);
+                            break;
+                        case ELEMENT_EARTH:
+                            needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARSTONE);
+                            break;
+                        case ELEMENT_THUNDER:
+                            needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARTHUNDER);
+                            break;
+                        case ELEMENT_WATER:
+                            needBarEffect = !POwner->StatusEffectContainer->HasStatusEffect(EFFECT_BARWATER);
+                            break;
+                        default:
+                            needBarEffect = false;
+                            spellElement  = (uint16)battleutils::GetDayElement();
+                            break;
                     }
+                    POwner->SetLocalVar("[Gambit]CastElement", spellElement);
                 }
                 predicateResults.push_back(needBarEffect);
                 continue;
@@ -1052,6 +1417,73 @@ bool CGambitsContainer::CheckTrigger(const CBattleEntity* triggerTarget, Predica
             case G_CONDITION::HP_MISSING:
             {
                 predicateResults.push_back((triggerTarget->health.maxhp - triggerTarget->health.hp) >= (int16)predicate.condition_arg);
+                continue;
+            }
+            case G_CONDITION::SUB_ANIMATION:
+            {
+                predicateResults.push_back(triggerTarget->animationsub == predicate.condition_arg);
+                continue;
+            }
+            case G_CONDITION::VAL_URIEL_CHECK:
+            {
+                bool  canUseUriel = false;
+                auto* PMaster     = dynamic_cast<CCharEntity*>(POwner->PMaster);
+                auto* PMob        = dynamic_cast<CMobEntity*>(PMaster->GetBattleTarget());
+
+                if (PMob != nullptr && PMob->PEnmityContainer != nullptr)
+                {
+                    bool masterHasEnmity         = PMob->PEnmityContainer->HasID(PMaster->id);
+                    bool valHasEnmity            = PMob->PEnmityContainer->HasID(POwner->id);
+                    bool valHasTopEnmity         = (controller->GetTopEnmity()) ? controller->GetTopEnmity()->targid == POwner->targid : false;
+                    bool masterHasOffTargetAggro = false;
+
+                    if (PMaster->PNotorietyContainer != nullptr && PMaster->PNotorietyContainer->hasEnmity())
+                    {
+                        for (auto it = PMaster->PNotorietyContainer->begin(); it != PMaster->PNotorietyContainer->end(); ++it)
+                        {
+                            if (masterHasOffTargetAggro)
+                            {
+                                break;
+                            }
+
+                            auto* PZoneMob = dynamic_cast<CMobEntity*>(*it);
+                            if (!PZoneMob || !PZoneMob->isAlive())
+                            {
+                                continue;
+                            }
+
+                            if (distance(POwner->loc.p, PZoneMob->loc.p) > 10.0f)
+                            {
+                                continue;
+                            }
+
+                            const bool targetingMaster        = (PZoneMob->GetBattleTargetID() == PMaster->targid);
+                            const bool isMastersCurrentTarget = (PZoneMob->id == PMob->id);
+                            const bool hostile                = (PZoneMob->allegiance != PMaster->allegiance);
+
+                            if (targetingMaster && !isMastersCurrentTarget && hostile)
+                            {
+                                masterHasOffTargetAggro = true;
+                            }
+                        }
+                    }
+
+                    if ((masterHasEnmity && !valHasTopEnmity) || masterHasOffTargetAggro)
+                    {
+                        auto   timeNow          = std::chrono::system_clock::now();
+                        uint32 lastUrielTime    = POwner->GetLocalVar("[Gambit]LastUrielTime");
+                        auto   distanceToTarget = distance(POwner->loc.p, PMob->loc.p);
+
+                        auto lastTimePoint = std::chrono::time_point<std::chrono::system_clock>(std::chrono::seconds(lastUrielTime));
+                        auto timeDiff      = timeNow - lastTimePoint;
+                        bool longCooldown  = (timeDiff >= std::chrono::seconds(30)); // Standard Cooldown
+                        bool shortCooldown = (timeDiff >= std::chrono::seconds(5));  // New Target Cooldown
+
+                        canUseUriel = (distanceToTarget <= 10.0f) &&
+                                      ((valHasEnmity && longCooldown) || (!valHasEnmity && shortCooldown) || (masterHasOffTargetAggro && longCooldown));
+                    }
+                }
+                predicateResults.push_back(canUseUriel);
                 continue;
             }
             default:
@@ -1112,17 +1544,37 @@ bool CGambitsContainer::TryTrustSkill()
                 return true;
                 break;
             }
+            case G_TP_TRIGGER::RANDOM:
+            {
+                bool result = false;
+                // clang-format off
+                if (tp_value <= 1000) // If the value provided by the script is missing or too low
+                {
+                    tp_value = 1000; // Apply the minimum TP Hold Threshold
+                }
+                if (POwner->health.tp >= tp_value && xirand::GetRandomNumber<uint16>(10000) < tp_value)
+                {
+                    result = true;
+                }
+                // clang-format on
+                return result;
+                break;
+            }
             case G_TP_TRIGGER::OPENER:
             {
                 bool result = false;
                 // clang-format off
-                    static_cast<CCharEntity*>(POwner->PMaster)->ForPartyWithTrusts([&](CBattleEntity* PMember)
+                static_cast<CCharEntity*>(POwner->PMaster)->ForPartyWithTrusts([&](CBattleEntity* PMember)
+                {
+                    if (tp_value <= 1000) // If the value provided by the script is missing or too low
                     {
-                        if (PMember->health.tp >= 1000 && PMember != POwner)
-                        {
-                            result = true;
-                        }
-                    });
+                        tp_value = 1000; // Apply the minimum TP Hold Threshold
+                    }
+                    if (PMember->health.tp >= tp_value && PMember != POwner)
+                    {
+                        result = true;
+                    }
+                });
                 // clang-format on
                 return result;
                 break;
@@ -1161,15 +1613,47 @@ bool CGambitsContainer::TryTrustSkill()
         }
     };
 
-    std::optional<TrustSkill_t> chosen_skill;
-    SKILLCHAIN_ELEMENT          chosen_skillchain = SC_NONE;
+    Maybe<TrustSkill_t> chosen_skill;
+    SKILLCHAIN_ELEMENT  chosen_skillchain = SC_NONE;
     if (checkTPTrigger() && !tp_skills.empty())
     {
         switch (tp_select)
         {
             case G_SELECT::RANDOM:
             {
-                chosen_skill = xirand::GetRandomElement(tp_skills);
+                auto* PSCEffect = target->StatusEffectContainer->GetStatusEffect(EFFECT_SKILLCHAIN);
+
+                if (!PSCEffect) // Opener, if no skillchain available select a random ws
+                {
+                    chosen_skill = xirand::GetRandomElement(tp_skills);
+                    break;
+                }
+
+                // Closer, if a skillchain is available select a random ws that can close it, if multiple are available select the one that creates the best skillchain
+                for (auto& skill : tp_skills)
+                {
+                    std::list<SKILLCHAIN_ELEMENT> resonanceProperties;
+                    if (uint16 power = PSCEffect->GetPower())
+                    {
+                        resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power & 0xF));
+                        resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power >> 4 & 0xF));
+                        resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)(power >> 8));
+                    }
+
+                    std::list<SKILLCHAIN_ELEMENT> skillProperties;
+                    skillProperties.emplace_back((SKILLCHAIN_ELEMENT)skill.primary);
+                    skillProperties.emplace_back((SKILLCHAIN_ELEMENT)skill.secondary);
+                    skillProperties.emplace_back((SKILLCHAIN_ELEMENT)skill.tertiary);
+                    if (SKILLCHAIN_ELEMENT possible_skillchain = battleutils::FormSkillchain(resonanceProperties, skillProperties);
+                        possible_skillchain != SC_NONE)
+                    {
+                        if (possible_skillchain >= chosen_skillchain)
+                        {
+                            chosen_skill      = skill;
+                            chosen_skillchain = possible_skillchain;
+                        }
+                    }
+                }
                 break;
             }
             case G_SELECT::HIGHEST: // Form the best possible skillchain
@@ -1245,6 +1729,74 @@ bool CGambitsContainer::TryTrustSkill()
                 {
                     chosen_skill = tp_skills.at(tp_skills.size() - 1);
                 }
+
+                break;
+            }
+            case G_SELECT::SPECIAL_AUGUST:
+            {
+                static const uint32                     NO_QUARTER  = 3658;
+                static const std::unordered_set<uint32> daybreak_ws = { 3656, 3657 };
+                static const std::unordered_set<uint32> regular_ws  = { 3653, 3654, 3655 };
+
+                bool   maybeDaybreakActive = POwner->animationsub == 5; // Daybreak active is sub animation 5, retail does the same thing.
+                uint32 lastSkillUsed       = POwner->GetLocalVar("[Gambit]LastDaybreakSkill");
+
+                std::vector<TrustSkill_t> candidates;
+
+                if (maybeDaybreakActive)
+                {
+                    // Only trigger No Quarter if the last skill used was ACTUALLY a Daybreak opener
+                    if (daybreak_ws.count(lastSkillUsed))
+                    {
+                        for (auto const& tskill : tp_skills)
+                        {
+                            if (tskill.skill_id == NO_QUARTER)
+                            {
+                                chosen_skill = tskill;
+                                break;
+                            }
+                        }
+                    }
+
+                    // If we didn't pick No Quarter (either lastSkill was 0 or a regular skill)
+                    if (!chosen_skill)
+                    {
+                        for (auto const& tskill : tp_skills)
+                        {
+                            if (daybreak_ws.count(tskill.skill_id))
+                            {
+                                candidates.push_back(tskill);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Normal state: use standard rotation
+                    for (auto const& tskill : tp_skills)
+                    {
+                        if (regular_ws.count(tskill.skill_id))
+                        {
+                            candidates.push_back(tskill);
+                        }
+                    }
+                    // Clear the localVar so the next Daybreak starts fresh
+                    if (lastSkillUsed != 0)
+                    {
+                        POwner->SetLocalVar("[Gambit]LastDaybreakSkill", 0);
+                    }
+                }
+
+                if (!candidates.empty() && !chosen_skill)
+                {
+                    chosen_skill = xirand::GetRandomElement(candidates);
+                }
+
+                // Only update the localVar if actually picked a skill
+                applyTo(chosen_skill, [&](const TrustSkill_t& skill)
+                        {
+                            POwner->SetLocalVar("[Gambit]LastDaybreakSkill", skill.skill_id);
+                        });
 
                 break;
             }

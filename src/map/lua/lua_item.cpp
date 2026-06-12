@@ -22,15 +22,32 @@
 #include "lua_item.h"
 
 #include "common/logging.h"
+#include "items/exdata.h"
 #include "items/item.h"
 #include "items/item_equipment.h"
+#include "items/item_fish.h"
+#include "items/item_flowerpot.h"
 #include "items/item_furnishing.h"
 #include "items/item_general.h"
+#include "items/item_linkshell.h"
+#include "items/item_usable.h"
 #include "items/item_weapon.h"
+#include "map/enums/item_state.h"
 #include "utils/itemutils.h"
 
 CLuaItem::CLuaItem(CItem* PItem)
-: m_PLuaItem(PItem)
+: m_readItem(PItem)
+, m_writeItem(PItem)
+{
+    if (PItem == nullptr)
+    {
+        ShowError("CLuaItem created with nullptr instead of valid CItem*!");
+    }
+}
+
+CLuaItem::CLuaItem(const CItem* PItem)
+: m_readItem(PItem)
+, m_writeItem(nullptr)
 {
     if (PItem == nullptr)
     {
@@ -40,98 +57,113 @@ CLuaItem::CLuaItem(CItem* PItem)
 
 uint16 CLuaItem::getID()
 {
-    return m_PLuaItem->getID();
+    return m_readItem->getID();
 }
 
 uint16 CLuaItem::getSubID()
 {
-    return m_PLuaItem->getSubID();
+    return m_readItem->getSubID();
 }
 
-uint16 CLuaItem::getFlag()
+auto CLuaItem::getFlag() const -> ItemFlag
 {
-    return m_PLuaItem->getFlag();
+    return m_readItem->getFlag();
 }
 
 uint8 CLuaItem::getAHCat()
 {
-    return m_PLuaItem->getAHCat();
+    return m_readItem->getAHCat();
 }
 
 uint32 CLuaItem::getQuantity()
 {
-    return m_PLuaItem->getQuantity();
+    return m_readItem->getQuantity();
 }
 
 uint32 CLuaItem::getBasePrice()
 {
-    return m_PLuaItem->getBasePrice();
+    return m_readItem->getBasePrice();
 }
 
 uint8 CLuaItem::getLocationID()
 {
-    return m_PLuaItem->getLocationID();
+    return m_readItem->getLocationID();
 }
 
 uint8 CLuaItem::getSlotID()
 {
-    return m_PLuaItem->getSlotID();
+    return m_readItem->getSlotID();
 }
 
 uint16 CLuaItem::getTrialNumber()
 {
-    return static_cast<CItemEquipment*>(m_PLuaItem)->getTrialNumber();
+    return static_cast<const CItemEquipment*>(m_readItem)->getTrialNumber();
 }
 
 uint8 CLuaItem::getWornUses()
 {
-    return m_PLuaItem->m_extra[0];
+    return m_readItem->exdata<Exdata::WornItem>().UseCount;
 }
 
 bool CLuaItem::isType(uint8 type)
 {
-    return m_PLuaItem->isType(static_cast<ITEM_TYPE>(type));
+    return m_readItem->isType(static_cast<ITEM_TYPE>(type));
 }
 
 void CLuaItem::setSubType(uint8 subtype)
 {
-    m_PLuaItem->setSubType(static_cast<ITEM_SUBTYPE>(subtype));
+    if (!m_writeItem)
+    {
+        return;
+    }
+
+    m_writeItem->setSubType(static_cast<ITEM_SUBTYPE>(subtype));
 }
 
 bool CLuaItem::isSubType(uint8 subtype)
 {
-    return m_PLuaItem->isSubType(static_cast<ITEM_SUBTYPE>(subtype));
+    return m_readItem->isSubType(static_cast<ITEM_SUBTYPE>(subtype));
+}
+
+auto CLuaItem::state() const -> ItemState
+{
+    return m_readItem->state();
 }
 
 void CLuaItem::setReservedValue(uint8 reserved)
 {
-    m_PLuaItem->setReserve(reserved);
+    if (!m_writeItem)
+    {
+        return;
+    }
+
+    m_writeItem->setReserve(reserved);
 }
 
 uint8 CLuaItem::getReservedValue()
 {
-    return m_PLuaItem->getReserve();
+    return m_readItem->getReserve();
 }
 
 auto CLuaItem::getName() -> std::string
 {
     // TODO: Fix c-style cast
-    return m_PLuaItem->getName();
+    return m_readItem->getName();
 }
 
 uint16 CLuaItem::getILvl()
 {
-    return static_cast<CItemEquipment*>(m_PLuaItem)->getILvl();
+    return static_cast<const CItemEquipment*>(m_readItem)->getILvl();
 }
 
 uint16 CLuaItem::getReqLvl()
 {
-    return static_cast<CItemEquipment*>(m_PLuaItem)->getReqLvl();
+    return static_cast<const CItemEquipment*>(m_readItem)->getReqLvl();
 }
 
 int16 CLuaItem::getMod(uint16 modID)
 {
-    auto* PItem = static_cast<CItemEquipment*>(m_PLuaItem);
+    auto* PItem = static_cast<const CItemEquipment*>(m_readItem);
     Mod   mod   = static_cast<Mod>(modID);
 
     return PItem->getModifier(mod);
@@ -139,23 +171,25 @@ int16 CLuaItem::getMod(uint16 modID)
 
 void CLuaItem::addMod(uint16 modID, int16 power)
 {
-    auto* PItem = static_cast<CItemEquipment*>(m_PLuaItem);
-
-    // Checks if this item is just a pointer created by GetItem()
-    // All item-modifying functions in this file should check this!
-    if (itemutils::IsItemPointer(PItem))
+    if (!m_writeItem)
     {
         return;
     }
 
-    Mod mod = static_cast<Mod>(modID);
+    auto* PItem = static_cast<CItemEquipment*>(m_writeItem);
+    Mod   mod   = static_cast<Mod>(modID);
 
     PItem->addModifier(CModifier(mod, power));
 }
 
 void CLuaItem::delMod(uint16 modID, int16 power)
 {
-    auto* PItem = static_cast<CItemEquipment*>(m_PLuaItem);
+    if (!m_writeItem)
+    {
+        return;
+    }
+
+    auto* PItem = static_cast<CItemEquipment*>(m_writeItem);
     Mod   mod   = static_cast<Mod>(modID);
 
     PItem->addModifier(CModifier(mod, -power));
@@ -163,7 +197,7 @@ void CLuaItem::delMod(uint16 modID, int16 power)
 
 auto CLuaItem::getAugment(uint8 slot) -> sol::table
 {
-    auto* PItem = static_cast<CItemEquipment*>(m_PLuaItem);
+    auto* PItem = static_cast<const CItemEquipment*>(m_readItem);
 
     uint16 augment    = PItem->getAugment(slot);
     uint16 augmentId  = (uint16)unpackBitsBE((uint8*)(&augment), 0, 11);
@@ -178,13 +212,13 @@ auto CLuaItem::getAugment(uint8 slot) -> sol::table
 
 uint8 CLuaItem::getSkillType()
 {
-    auto* PItem = dynamic_cast<CItemWeapon*>(m_PLuaItem);
+    auto* PItem = dynamic_cast<const CItemWeapon*>(m_readItem);
     return PItem ? PItem->getSkillType() : -1;
 }
 
 uint16 CLuaItem::getWeaponskillPoints()
 {
-    auto* PItem = dynamic_cast<CItemWeapon*>(m_PLuaItem);
+    auto* PItem = dynamic_cast<const CItemWeapon*>(m_readItem);
 
     if (PItem)
     {
@@ -196,7 +230,12 @@ uint16 CLuaItem::getWeaponskillPoints()
 
 void CLuaItem::setWeaponskillPointsNeeded(uint16 points)
 {
-    auto* PItem = dynamic_cast<CItemWeapon*>(m_PLuaItem);
+    if (!m_writeItem)
+    {
+        return;
+    }
+
+    auto* PItem = dynamic_cast<CItemWeapon*>(m_writeItem);
 
     if (PItem)
     {
@@ -206,7 +245,7 @@ void CLuaItem::setWeaponskillPointsNeeded(uint16 points)
 
 uint16 CLuaItem::getWeaponskillPointsNeeded()
 {
-    auto* PItem = dynamic_cast<CItemWeapon*>(m_PLuaItem);
+    auto* PItem = dynamic_cast<const CItemWeapon*>(m_readItem);
 
     if (PItem)
     {
@@ -218,7 +257,7 @@ uint16 CLuaItem::getWeaponskillPointsNeeded()
 
 bool CLuaItem::isTwoHanded()
 {
-    if (CItemWeapon* PWeapon = dynamic_cast<CItemWeapon*>(m_PLuaItem))
+    if (const CItemWeapon* PWeapon = dynamic_cast<const CItemWeapon*>(m_readItem))
     {
         return PWeapon->isTwoHanded();
     }
@@ -232,7 +271,7 @@ bool CLuaItem::isTwoHanded()
 
 bool CLuaItem::isHandToHand()
 {
-    if (CItemWeapon* PWeapon = dynamic_cast<CItemWeapon*>(m_PLuaItem))
+    if (const CItemWeapon* PWeapon = dynamic_cast<const CItemWeapon*>(m_readItem))
     {
         return PWeapon->isHandToHand();
     }
@@ -246,7 +285,7 @@ bool CLuaItem::isHandToHand()
 
 bool CLuaItem::isShield()
 {
-    if (CItemEquipment* PArmor = dynamic_cast<CItemEquipment*>(m_PLuaItem))
+    if (const CItemEquipment* PArmor = dynamic_cast<const CItemEquipment*>(m_readItem))
     {
         return PArmor->IsShield();
     }
@@ -260,7 +299,7 @@ bool CLuaItem::isShield()
 
 uint8 CLuaItem::getShieldSize()
 {
-    if (CItemEquipment* PArmor = dynamic_cast<CItemEquipment*>(m_PLuaItem))
+    if (const CItemEquipment* PArmor = dynamic_cast<const CItemEquipment*>(m_readItem))
     {
         if (PArmor->IsShield())
         {
@@ -281,7 +320,7 @@ uint8 CLuaItem::getShieldSize()
 
 uint8 CLuaItem::getShieldAbsorptionRate()
 {
-    if (CItemEquipment* PArmor = dynamic_cast<CItemEquipment*>(m_PLuaItem))
+    if (const CItemEquipment* PArmor = dynamic_cast<const CItemEquipment*>(m_readItem))
     {
         if (PArmor->IsShield())
         {
@@ -302,23 +341,12 @@ uint8 CLuaItem::getShieldAbsorptionRate()
 
 auto CLuaItem::getSignature() -> std::string
 {
-    char signature[DecodeStringLength] = {};
-
-    if (m_PLuaItem->isType(ITEM_LINKSHELL))
-    {
-        DecodeStringLinkshell(m_PLuaItem->getSignature(), signature);
-    }
-    else
-    {
-        DecodeStringSignature(m_PLuaItem->getSignature(), signature);
-    }
-
-    return signature;
+    return m_readItem->getSignature();
 }
 
 uint8 CLuaItem::getCurrentCharges()
 {
-    if (auto* PUsableItem = dynamic_cast<CItemUsable*>(m_PLuaItem))
+    if (auto* PUsableItem = dynamic_cast<const CItemUsable*>(m_readItem))
     {
         return PUsableItem->getCurrentCharges();
     }
@@ -328,68 +356,129 @@ uint8 CLuaItem::getCurrentCharges()
 
 uint8 CLuaItem::getAppraisalID()
 {
-    return m_PLuaItem->m_extra[0x16];
+    return m_readItem->getAppraisalID();
 }
 
 void CLuaItem::setAppraisalID(uint8 id)
 {
-    m_PLuaItem->m_extra[0x16] = id;
+    if (!m_writeItem)
+    {
+        return;
+    }
+
+    m_writeItem->setAppraisalID(id);
 }
 
 bool CLuaItem::isInstalled()
 {
-    if (!m_PLuaItem->isType(ITEM_FURNISHING))
+    if (!m_readItem->isType(ITEM_FURNISHING))
     {
         return false;
     }
-    auto* PFurnishing = static_cast<CItemFurnishing*>(m_PLuaItem);
+    auto* PFurnishing = static_cast<const CItemFurnishing*>(m_readItem);
     return PFurnishing->isInstalled();
 }
 
-void CLuaItem::setSoulPlateData(const std::string& name, uint32 interestData, uint8 zeni, uint16 skillIndex, uint8 fp)
-{
-    m_PLuaItem->setSoulPlateData(name, interestData, zeni, skillIndex, fp);
-}
-
-auto CLuaItem::getSoulPlateData() -> sol::table
-{
-    auto       data  = m_PLuaItem->getSoulPlateData();
-    sol::table table = lua.create_table();
-
-    table["name"]         = std::get<0>(data);
-    table["interestData"] = std::get<1>(data);
-    table["zeni"]         = std::get<2>(data);
-    table["skillIndex"]   = std::get<3>(data);
-    table["fp"]           = std::get<4>(data);
-
-    return table;
-}
-
-auto CLuaItem::getExData() -> sol::table
+/************************************************************************
+ *  Function: getExData()
+ *  Purpose : Returns the item's extra data as a typed table.
+ *  Example : item:getExData() -- typed table (e.g. ExdataLegionPass)
+ ************************************************************************/
+auto CLuaItem::getExData() const -> sol::table
 {
     sol::table table = lua.create_table();
-    for (std::size_t idx = 0; idx < m_PLuaItem->extra_size; ++idx)
+
+    if (Exdata::toTable(m_readItem, table))
     {
-        table[idx] = m_PLuaItem->m_extra[idx];
+        return table;
+    }
+
+    for (std::size_t idx = 0; idx < m_readItem->extra_size; ++idx)
+    {
+        table[idx] = m_readItem->m_extra[idx];
     }
     return table;
 }
 
-void CLuaItem::setExData(const sol::table& newData)
+/************************************************************************
+ *  Function: setExData()
+ *  Purpose : Writes the item's extra data from a typed table.
+ *  Example : item:setExData({ timestamp = t, title = 1 })
+ ************************************************************************/
+void CLuaItem::setExData(const sol::table& data) const
 {
-    for (const auto& [keyObj, valObj] : newData)
+    if (!m_writeItem)
     {
-        uint8 key = keyObj.as<uint8>();
-        uint8 val = valObj.as<uint8>();
+        return;
+    }
+
+    if (Exdata::fromTable(m_writeItem, data))
+    {
+        m_writeItem->setDirty(true);
+        return;
+    }
+
+    for (const auto& [keyObj, valObj] : data)
+    {
+        uint8       key = keyObj.as<uint8>();
+        const uint8 val = valObj.as<uint8>();
 
         if (key >= CItem::extra_size)
         {
-            ShowWarning("Tried to write to key too large for item exdata array: %s[%i]", m_PLuaItem->getName(), key);
+            ShowWarning("setExData: key too large for exdata array: %s[%i]", m_writeItem->getName(), key);
             continue;
         }
 
-        m_PLuaItem->m_extra[key] = val;
+        m_writeItem->m_extra[key] = val;
     }
+
+    m_writeItem->setDirty(true);
+}
+
+/************************************************************************
+ *  Function: getExDataRaw()
+ *  Purpose : Returns the item's extra data as a 0-indexed byte table.
+ *  Example : item:getExDataRaw()
+ *  Notes   : Keys are 0-indexed to be in line with the underlying C++ data.
+ ************************************************************************/
+auto CLuaItem::getExDataRaw() const -> sol::table
+{
+    sol::table table = lua.create_table();
+    for (std::size_t idx = 0; idx < m_readItem->extra_size; ++idx)
+    {
+        table[idx] = m_readItem->m_extra[idx];
+    }
+    return table;
+}
+
+/************************************************************************
+ *  Function: setExDataRaw()
+ *  Purpose : Writes the item's extra data from a 0-indexed byte table.
+ *  Example : item:setExDataRaw({ [0] = 5, [1] = 10 })
+ *  Notes   : Keys are 0-indexed byte offsets into m_extra.
+ ************************************************************************/
+void CLuaItem::setExDataRaw(const sol::table& data) const
+{
+    if (!m_writeItem)
+    {
+        return;
+    }
+
+    for (const auto& [keyObj, valObj] : data)
+    {
+        uint8       key = keyObj.as<uint8>();
+        const uint8 val = valObj.as<uint8>();
+
+        if (key >= CItem::extra_size)
+        {
+            ShowWarning("setExDataRaw: key too large for exdata array: %s[%i]", m_writeItem->getName(), key);
+            continue;
+        }
+
+        m_writeItem->m_extra[key] = val;
+    }
+
+    m_writeItem->setDirty(true);
 }
 
 //==========================================================//
@@ -410,6 +499,7 @@ void CLuaItem::Register()
     SOL_REGISTER("isType", CLuaItem::isType);
     SOL_REGISTER("setSubType", CLuaItem::setSubType);
     SOL_REGISTER("isSubType", CLuaItem::isSubType);
+    SOL_REGISTER("state", CLuaItem::state);
     SOL_REGISTER("setReservedValue", CLuaItem::setReservedValue);
     SOL_REGISTER("getReservedValue", CLuaItem::getReservedValue);
     SOL_REGISTER("getName", CLuaItem::getName);
@@ -433,15 +523,15 @@ void CLuaItem::Register()
     SOL_REGISTER("setAppraisalID", CLuaItem::setAppraisalID);
     SOL_REGISTER("getCurrentCharges", CLuaItem::getCurrentCharges);
     SOL_REGISTER("isInstalled", CLuaItem::isInstalled);
-    SOL_REGISTER("setSoulPlateData", CLuaItem::setSoulPlateData);
-    SOL_REGISTER("getSoulPlateData", CLuaItem::getSoulPlateData);
     SOL_REGISTER("getExData", CLuaItem::getExData);
     SOL_REGISTER("setExData", CLuaItem::setExData);
+    SOL_REGISTER("getExDataRaw", CLuaItem::getExDataRaw);
+    SOL_REGISTER("setExDataRaw", CLuaItem::setExDataRaw);
 }
 
 std::ostream& operator<<(std::ostream& os, const CLuaItem& item)
 {
-    std::string id = item.m_PLuaItem ? std::to_string(item.m_PLuaItem->getID()) : "nullptr";
+    std::string id = item.m_readItem ? std::to_string(item.m_readItem->getID()) : "nullptr";
     return os << "CLuaItem(" << id << ")";
 }
 

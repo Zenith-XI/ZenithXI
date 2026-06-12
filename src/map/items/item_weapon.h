@@ -26,11 +26,13 @@
 #include "entities/battleentity.h"
 
 #include "item_equipment.h"
+#include "items/exdata.h"
 
 class CItemWeapon : public CItemEquipment
 {
 public:
     CItemWeapon(uint16);
+    CItemWeapon(const CItemWeapon& other);
     virtual ~CItemWeapon();
 
     uint8       getSkillType() const;
@@ -46,7 +48,7 @@ public:
     uint8       getHitCount() const;
     double      getDPS() const;
     uint16      getTotalUnlockPointsNeeded() const;
-    uint16      getCurrentUnlockPoints();
+    auto        getCurrentUnlockPoints() const -> uint16;
     void        resetDelay();
     bool        addWsPoints(uint16 points);
 

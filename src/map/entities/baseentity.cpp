@@ -27,9 +27,10 @@
 
 #include "battlefield.h"
 #include "instance.h"
-#include "los/zone_los.h"
-#include "navmesh.h"
+#include "map/navmesh/navmesh.h"
 #include "zone.h"
+
+#include <map/ximesh/ximesh.h>
 
 #include <cstring>
 
@@ -55,6 +56,7 @@ CBaseEntity::CBaseEntity()
 , m_nextUpdateTimer(timer::now())
 {
     TracyZoneScoped;
+
     speed          = baseSpeed;
     animationSpeed = static_cast<uint8>(std::clamp<float>((baseSpeed / settings::get<float>("map.ANIMATION_SPEED_DIVISOR")), std::numeric_limits<uint8>::min(), std::numeric_limits<uint8>::max()));
 }
@@ -62,6 +64,7 @@ CBaseEntity::CBaseEntity()
 CBaseEntity::~CBaseEntity()
 {
     TracyZoneScoped;
+
     if (PBattlefield)
     {
         PBattlefield->RemoveEntity(this, BATTLEFIELD_LEAVE_CODE_WARPDC);
@@ -171,23 +174,22 @@ bool CBaseEntity::isWideScannable()
     return status != STATUS_TYPE::DISAPPEAR && !IsNameHidden() && !GetUntargetable();
 }
 
-bool CBaseEntity::CanSeeTarget(CBaseEntity* target, bool fallbackNavMesh)
+bool CBaseEntity::CanSeeTarget(CBaseEntity* target)
 {
-    return CanSeeTarget(target->loc.p, fallbackNavMesh);
+    return CanSeeTarget(target->loc.p);
 }
 
-bool CBaseEntity::CanSeeTarget(const position_t& targetPointBase, bool fallbackNavMesh)
+bool CBaseEntity::CanSeeTarget(const position_t& targetPointBase)
 {
-    if (loc.zone->lineOfSight)
-    {
-        return loc.zone->lineOfSight->CanEntitySee(this, targetPointBase);
-    }
-    else if (fallbackNavMesh && loc.zone->m_navMesh)
-    {
-        return loc.zone->m_navMesh->raycast(loc.p, targetPointBase);
-    }
+    constexpr float ENTITY_HEIGHT = 2.0f;
 
-    return true;
+    // TODO: Handle:
+    // if (GetTypeMask() & ZONE_TYPE::CITY || (m_miscMask & MISC_LOS_OFF))
+    // -> Skip cities and zones with line of sight turned off
+
+    const auto src = Vector3{ loc.p.x, loc.p.y - ENTITY_HEIGHT, loc.p.z };
+    const auto dst = Vector3{ targetPointBase.x, targetPointBase.y - ENTITY_HEIGHT, targetPointBase.z };
+    return !this->loc.zone->xiMesh()->rayIntersect(src, dst);
 }
 
 CBaseEntity* CBaseEntity::GetEntity(uint16 targid, uint8 filter) const
@@ -213,22 +215,22 @@ void CBaseEntity::SendZoneUpdate()
 
 void CBaseEntity::ResetLocalVars()
 {
-    m_localVars.clear();
+    localVars_.clear();
 }
 
 uint32 CBaseEntity::GetLocalVar(const std::string& var)
 {
-    return m_localVars[var];
+    return localVars_[var];
 }
 
 std::map<std::string, uint32>& CBaseEntity::GetLocalVars()
 {
-    return m_localVars;
+    return localVars_;
 }
 
 void CBaseEntity::SetLocalVar(const std::string& var, uint32 val)
 {
-    m_localVars[var] = val;
+    localVars_[var] = val;
 }
 
 void CBaseEntity::SetModelId(uint16 modelid)

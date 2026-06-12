@@ -36,7 +36,7 @@ entity.onMobSpawn = function(mob)
     xi.mix.jobSpecial.config(mob, {
         specials =
         {
-            { id = xi.jsa.MIGHTY_STRIKES, cooldown = 90, hpp = math.random(85, 95) }, -- 'May use Mighty Strikes multiple times.'
+            { id = xi.mobSkill.MIGHTY_STRIKES_1, cooldown = 90, hpp = math.random(85, 95) }, -- 'May use Mighty Strikes multiple times.'
         },
     })
 
@@ -100,7 +100,15 @@ entity.onMobWeaponSkill = function(mob, target, skill, action)
 end
 
 entity.onAdditionalEffect = function(mob, target, damage)
-    return xi.mob.onAddEffect(mob, target, damage, xi.mob.ae.STUN, { chance = 65, duration = math.random(4, 8) })
+    local pTable =
+    {
+        chance   = 65,
+        effectId = xi.effect.STUN,
+        element  = xi.element.THUNDER,
+        duration = math.random(4, 8),
+    }
+
+    return xi.combat.action.executeAddEffectEnfeeblement(mob, target, pTable)
 end
 
 entity.onMobDeath = function(mob, player, optParams)

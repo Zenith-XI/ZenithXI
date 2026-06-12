@@ -9,6 +9,11 @@ local CZone = {}
 function CZone:getLocalVar(key)
 end
 
+---@nodiscard
+---@return table
+function CZone:getLocalVars()
+end
+
 ---@param key string
 ---@param value integer
 ---@return nil
@@ -91,10 +96,27 @@ end
 function CZone:reloadNavmesh()
 end
 
+---@param config table
+---@return nil
+function CZone:rebuildNavmesh(config)
+end
+
 ---@nodiscard
 ---@param position table
 ---@return boolean
 function CZone:isNavigablePoint(position)
+end
+
+---@nodiscard
+---@param position table
+---@return xi.terrain
+function CZone:getTerrainType(position)
+end
+
+---@nodiscard
+---@param position table
+---@return integer
+function CZone:getFloorId(position)
 end
 
 ---@class dynamicEntityParams

@@ -25,17 +25,20 @@
 #include "common/cbasetypes.h"
 #include "luautils.h"
 
+enum class ItemState : uint8;
 class CItem;
 class CLuaItem
 {
-    CItem* m_PLuaItem;
+    const CItem* m_readItem;  // observer; always set
+    CItem*       m_writeItem; // null when wrapping a read-only template
 
 public:
     CLuaItem(CItem*);
+    CLuaItem(const CItem*);
 
-    CItem* GetItem() const
+    auto GetItem() const -> const CItem*
     {
-        return m_PLuaItem;
+        return m_readItem;
     }
 
     friend std::ostream& operator<<(std::ostream& out, const CLuaItem& item);
@@ -43,8 +46,8 @@ public:
     uint16 getID();    // get the item's id
     uint16 getSubID(); // get the item's subid
 
-    uint16 getFlag();  // get the item flag
-    uint8  getAHCat(); // get the ah category
+    auto  getFlag() const -> ItemFlag; // get the item flag
+    uint8 getAHCat();                  // get the ah category
 
     uint32 getQuantity(); // get the quantity of item
 
@@ -58,6 +61,7 @@ public:
     void setSubType(uint8 subtype); // set the item's sub type
     bool isSubType(uint8 subtype);  // check the item's sub type
 
+    auto  state() const -> ItemState;       // current ItemState (xi.itemState.*)
     void  setReservedValue(uint8 reserved); // set the item's reserved value
     uint8 getReservedValue();               // get the item's reserved value
 
@@ -92,15 +96,14 @@ public:
 
     bool isInstalled();
 
-    void setSoulPlateData(const std::string& name, uint32 interestData, uint8 zeni, uint16 skillIndex, uint8 fp);
-    auto getSoulPlateData() -> sol::table;
-
-    auto getExData() -> sol::table;            // NOTE: This is 0-indexed, to be in line with the underlying C++ data
-    void setExData(const sol::table& newData); // NOTE: This is 0-indexed, to be in line with the underlying C++ data
+    auto getExData() const -> sol::table;
+    void setExData(const sol::table& data) const;
+    auto getExDataRaw() const -> sol::table;         // NOTE: 0-indexed, to be in line with the underlying C++ data
+    void setExDataRaw(const sol::table& data) const; // NOTE: 0-indexed, to be in line with the underlying C++ data
 
     bool operator==(const CLuaItem& other) const
     {
-        return this->m_PLuaItem == other.m_PLuaItem;
+        return this->m_readItem == other.m_readItem;
     }
 
     static void Register();

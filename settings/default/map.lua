@@ -17,6 +17,10 @@ xi.settings.map =
 
     MAX_TIME_LASTUPDATE = 60,
 
+    -- Per-zone player cap. 0 disables. GMs reserve the top GM_RESERVED slots.
+    ZONE_PLAYER_CAP         = 700,
+    ZONE_PLAYER_GM_RESERVED = 5,
+
     -- --------------------------------
     -- SQL settings
     -- --------------------------------
@@ -28,10 +32,6 @@ xi.settings.map =
     -- --------------------------------
     -- Game settings
     -- --------------------------------
-
-    -- PacketGuard will block and report any packets that aren't in the allow-list for a
-    -- player's current state.
-    PACKETGUARD_ENABLED = true,
 
     -- Minimal number of 0x3A packets which uses for detect lightluggage (set 0 for disable)
     LIGHTLUGGAGE_BLOCK = 4,
@@ -215,6 +215,9 @@ xi.settings.map =
     -- Adjust the recast time for abilities. Acts as a multiplier, so default is 1
     ABILITY_RECAST_MULTIPLIER = 1.0,
 
+    -- Maximum spell recast reduction percentage. Current retail is 80. Older eras used 50.
+    SPELL_RECAST_REDUCTION_CAP = 80,
+
     -- Enable/disable shared blood pact timer
     BLOOD_PACT_SHARED_TIMER = false,
 
@@ -290,6 +293,9 @@ xi.settings.map =
     AUDIT_PLAYER_BAZAAR = false,
     AUDIT_PLAYER_DBOX   = false,
     AUDIT_PLAYER_VENDOR = false,
+
+    -- Maximum number of in-flight items (slots) allowed in a player's delivery box for PC-to-PC transfers.
+    DELIVERY_BOX_MAX_INFLIGHT = 128,
 
     -- Seconds between healing ticks. Default is 10
     HEALING_TICK_DELAY = 10,

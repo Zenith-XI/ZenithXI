@@ -23,6 +23,8 @@
 
 #include "common/cbasetypes.h"
 
+#include <memory>
+
 #include "entities/charentity.h"
 #include "items/item_equipment.h"
 #include "zone.h"
@@ -72,7 +74,8 @@ namespace charutils
 {
 
 void LoadExpTable();
-auto LoadChar(uint32 charId) -> std::unique_ptr<CCharEntity>;
+void SetExpDifficultyCurve(std::vector<std::pair<uint16, EMobDifficulty>>& curve, std::pair<uint16, uint8>& incrediblyEasyPreyData);
+auto LoadChar(Scheduler& scheduler, MapConfig config, uint32 charId) -> std::unique_ptr<CCharEntity>;
 void LoadSpells(CCharEntity* PChar);
 void LoadInventory(CCharEntity* PChar);
 void LoadEquip(CCharEntity* PChar);
@@ -101,7 +104,7 @@ void DelExperiencePoints(CCharEntity* PChar, float retainpct, uint16 forcedXpLos
 void DistributeExperiencePoints(CCharEntity* PChar, CMobEntity* PMob);
 void DistributeGil(CCharEntity* PChar, CMobEntity* PMob);
 void DistributeItem(CCharEntity* PChar, CBaseEntity* PEntity, uint16 itemid, uint16 droprate);
-void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMob, uint32 exp, EMobDifficulty mobCheck = EMobDifficulty::TooWeak, bool isexpchain = false);
+void AddExperiencePoints(bool expFromRaise, bool awardRegionPoints, bool fromScripts, CCharEntity* PChar, CBaseEntity* PMob, uint32 exp, EMobDifficulty mobCheck = EMobDifficulty::TooWeak, bool isexpchain = false);
 
 uint16 AddCapacityBonus(CCharEntity* PChar, uint16 capacityPoints);
 void   AddCapacityPoints(CCharEntity* PChar, CBaseEntity* PMob, uint32 capacityPoints, int16 levelDiff = 0, bool isCapacityChain = false);
@@ -122,13 +125,12 @@ bool CanTrade(CCharEntity* PChar, CCharEntity* PTarget);
 void   CheckWeaponSkill(CCharEntity* PChar, uint8 skill);
 bool   HasItem(CCharEntity* PChar, uint16 ItemID);
 uint32 getItemCount(CCharEntity* PChar, uint16 ItemID);
-uint8  AddItem(CCharEntity* PChar, uint8 LocationID, CItem* PItem, bool silence = false);
+auto   AddItem(CCharEntity* PChar, uint8 LocationID, std::unique_ptr<CItem> PItem, bool silence = false) -> uint8;
 uint8  AddItem(CCharEntity* PChar, uint8 LocationID, uint16 itemID, uint32 quantity = 1, bool silence = false);
 uint8  MoveItem(CCharEntity* PChar, uint8 LocationID, uint8 SlotID, uint8 NewSlotID);
 uint32 UpdateItem(CCharEntity* PChar, uint8 LocationID, uint8 slotID, int32 quantity, bool force = false);
 void   DropItem(CCharEntity* PChar, uint8 container, uint8 slotID, int32 quantity, uint16 ItemID);
 void   CheckValidEquipment(CCharEntity* PChar);
-void   CheckEquipLogic(CCharEntity* PChar, SCRIPTTYPE ScriptType, uint32 param);
 void   SaveJobChangeGear(CCharEntity* PChar);
 void   LoadJobChangeGear(CCharEntity* PChar);
 void   EquipItem(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 containerID);
@@ -215,6 +217,7 @@ void SaveCampaignAllegiance(const CCharEntity* PChar);          // save the char
 void SaveCharMoghancement(const CCharEntity* PChar);            // save the character's current moghancement
 void SaveCharSkills(const CCharEntity* PChar, uint8 skillID);   // save the character's skills
 void SaveTeleport(CCharEntity* PChar, TELEPORT_TYPE type);      // save the character's teleports (homepoints, outposts, maws, etc)
+void SaveMazeUnlocks(CCharEntity* PChar);                       // save the character's learned Moblin Maze Mongers vouchers and runes
 void SaveDeathTime(CCharEntity* PChar);                         // save when this character last died
 void SavePlayTime(CCharEntity* PChar);                          // save this character's total play time
 void SaveLastLogout(const CCharEntity* PChar);                  // save the last logout time of this character
@@ -251,11 +254,11 @@ void  SetPoints(CCharEntity* PChar, const char* type, int32 amount);
 int32 GetPoints(CCharEntity* PChar, const char* type);
 void  SetUnityLeader(CCharEntity* PChar, uint8 leaderID);
 auto  GetConquestPointsName(CCharEntity* PChar) -> std::string;
-void  SendToZone(CCharEntity* PChar, uint16 zoneId);
+auto  SendToZone(CCharEntity* PChar, uint16 zoneId) -> bool;
 void  SendDisconnect(CCharEntity* PChar);
 void  ForceLogout(CCharEntity* PChar);
 void  ForceRezone(CCharEntity* PChar);
-void  HomePoint(CCharEntity* PChar, bool resetHPMP);
+auto  HomePoint(CCharEntity* PChar, bool resetHPMP) -> bool;
 bool  AddWeaponSkillPoints(CCharEntity*, SLOTTYPE, int);
 
 int32 GetCharVar(CCharEntity* PChar, const std::string& var);

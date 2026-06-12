@@ -24,28 +24,33 @@
 #include "common/cbasetypes.h"
 #include "common/database.h"
 #include "common/ipp.h"
+#include "common/scheduler.h"
+
+#include "map_config.h"
+
+#include <set>
 
 class CInstanceLoader;
 class CCharEntity;
 
 struct InstanceData_t
 {
-    uint16                id;
-    std::string           instance_name;
-    uint16                instance_zone;
-    std::string           instance_zone_name;
-    uint16                entrance_zone;
-    std::string           entrance_zone_name;
-    uint16                time_limit;
-    float                 start_x;
-    float                 start_y;
-    float                 start_z;
-    uint16                start_rot;
-    std::optional<uint16> music_day{ std::nullopt };
-    std::optional<uint16> music_night{ std::nullopt };
-    std::optional<uint16> battlesolo{ std::nullopt };
-    std::optional<uint16> battlemulti{ std::nullopt };
-    std::string           filename;
+    uint16        id;
+    std::string   instance_name;
+    uint16        instance_zone;
+    std::string   instance_zone_name;
+    uint16        entrance_zone;
+    std::string   entrance_zone_name;
+    uint16        time_limit;
+    float         start_x;
+    float         start_y;
+    float         start_z;
+    uint16        start_rot;
+    Maybe<uint16> music_day{ std::nullopt };
+    Maybe<uint16> music_night{ std::nullopt };
+    Maybe<uint16> battlesolo{ std::nullopt };
+    Maybe<uint16> battlemulti{ std::nullopt };
+    std::string   filename;
 
     InstanceData_t()
     : id(0)
@@ -66,11 +71,21 @@ struct InstanceData_t
 
 namespace instanceutils
 {
+namespace detail
+{
 
-void LoadInstanceList(IPP mapIPP);
-void CheckInstance(); // Called at the end of every tick by time_server
-void LoadInstance(uint32 instanceid, CCharEntity* PRequester);
+struct LazyLoadState
+{
+    bool             enabled{ false };
+    std::set<uint16> managedInstances{};
+};
+
+} // namespace detail
+
+auto Initialize(MapConfig config) -> void;
+auto CheckInstance(Scheduler& scheduler, MapConfig config) -> Task<void>; // Called at the end of every tick by time_server
+auto LoadInstance(uint32 instanceid, CCharEntity* PRequester) -> void;
 auto GetInstanceData(uint32 instanceid) -> InstanceData_t;
-bool IsValidInstanceID(uint32 instanceid);
+auto IsValidInstanceID(uint32 instanceid) -> bool;
 
 }; // namespace instanceutils

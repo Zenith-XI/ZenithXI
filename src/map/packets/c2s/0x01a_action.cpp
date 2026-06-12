@@ -53,115 +53,103 @@ const auto actionToStr = [](const GP_CLI_COMMAND_ACTION_ACTIONID actionIn)
 
 auto GP_CLI_COMMAND_ACTION::validate(MapSession* PSession, const CCharEntity* PChar) const -> PacketValidationResult
 {
-    return PacketValidator()
+    return PacketValidator(PChar)
         .oneOf<GP_CLI_COMMAND_ACTION_ACTIONID>(this->ActionID)
-        .custom([&](PacketValidator& pv)
+        .custom(
+            [&](PacketValidator& pv)
+            {
+                switch (this->ActionID)
                 {
-                    switch (this->ActionID)
+                    // Assist, /blockaid and /help are almost never blocked.
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Assist:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Blockaid:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Help:
                     {
-                        // Assist, /blockaid and /help are almost never blocked.
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Assist:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Blockaid:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Help:
-                        {
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Talk:
-                        {
-                            // Talking to NPC has several blocked states checked a little later as they send a release packet.
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::AttackOff:
-                        {
-                            // You can disengage while slept.
-                            pv.isEngaged(PChar)
-                                .isNotCharmed(PChar);
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::ChangeTarget:
-                        {
-                            pv.isEngaged(PChar)
-                                .isNotPreventedAction(PChar);
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::HomepointMenu:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::RaiseMenu:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::TractorMenu:
-                        {
-                            pv.mustEqual(PChar->isDead(), true, "Character is not dead.");
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Attack:
-                        {
-                            pv.isNotResting(PChar)
-                                .isNotSitting(PChar)
-                                .isNotCrafting(PChar)
-                                .isNotFishing(PChar) // Note: It is possible to attack while fishing on retail and is disabled here on purpose.
-                                .isNotPreventedAction(PChar);
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::CastMagic:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::JobAbility:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Shoot:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Weaponskill:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::MonsterSkill: // MonsterSkill is entirely assumed
-                        {
-                            pv.isNotResting(PChar)
-                                .isNotCrafting(PChar)
-                                .isNotFishing(PChar)
-                                .isNotPreventedAction(PChar)
-                                .isNotMounted(PChar)
-                                .mustEqual(PChar->animation == ANIMATION_NONE || PChar->animation == ANIMATION_ATTACK, true, "Character in invalid animation state.");
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Fish:
-                        {
-                            pv.isNotResting(PChar)
-                                .isNotSitting(PChar)
-                                .isNotCrafting(PChar)
-                                .isNotFishing(PChar)
-                                .isNotPreventedAction(PChar)
-                                .isNotMounted(PChar);
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Mount:
-                        {
-                            pv.isNotResting(PChar)
-                                .isNotSitting(PChar)
-                                .isNotCrafting(PChar)
-                                .isNotFishing(PChar);
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Dismount:
-                        {
-                            pv.isNotPreventedAction(PChar)
-                                .mustEqual(PChar->isMounted(), true, "Character is not mounted.");
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::ChocoboDig:
-                        {
-                            pv.isNotPreventedAction(PChar)
-                                .mustEqual(PChar->isMounted(), true, "Character is not mounted.");
-                            break;
-                        }
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::SendResRdy:
-                        {
-                            break;
-                        }
-                        // Unimplemented Ballista actions
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Quarry:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Sprint:
-                        case GP_CLI_COMMAND_ACTION_ACTIONID::Scout:
-                        {
-                            break;
-                        }
+                        break;
                     }
-                });
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Talk:
+                    {
+                        // Talking to NPC has several blocked states checked a little later as they send a release packet.
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::AttackOff:
+                    {
+                        // You can disengage while slept.
+                        pv.blockedBy({ BlockedState::Charmed })
+                            .isEngaged();
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::ChangeTarget:
+                    {
+                        pv.blockedBy({ BlockedState::PreventAction })
+                            .isEngaged();
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::HomepointMenu:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::RaiseMenu:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::TractorMenu:
+                    {
+                        pv.mustEqual(PChar->isDead(), true, "Character is not dead.");
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Attack:
+                    {
+                        // Note: It is possible to attack while fishing on retail and is disabled here on purpose.
+                        pv.blockedBy({ BlockedState::Healing, BlockedState::Sitting, BlockedState::Crafting, BlockedState::Fishing, BlockedState::PreventAction });
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::CastMagic:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::JobAbility:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Shoot:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Weaponskill:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::MonsterSkill: // MonsterSkill is entirely assumed
+                    {
+                        pv.blockedBy({ BlockedState::Healing, BlockedState::Crafting, BlockedState::Fishing, BlockedState::PreventAction, BlockedState::Mounted })
+                            .mustEqual(PChar->animation == ANIMATION_NONE || PChar->animation == ANIMATION_ATTACK, true, "Character in invalid animation state.");
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Fish:
+                    {
+                        pv.blockedBy({ BlockedState::Healing, BlockedState::Sitting, BlockedState::Crafting, BlockedState::Fishing, BlockedState::PreventAction, BlockedState::Mounted });
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Mount:
+                    {
+                        pv.blockedBy({ BlockedState::Healing, BlockedState::Sitting, BlockedState::Crafting, BlockedState::Fishing });
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Dismount:
+                    {
+                        pv.blockedBy({ BlockedState::PreventAction })
+                            .mustEqual(PChar->isMounted(), true, "Character is not mounted.");
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::ChocoboDig:
+                    {
+                        pv.blockedBy({ BlockedState::PreventAction })
+                            .mustEqual(PChar->isMounted(), true, "Character is not mounted.");
+                        break;
+                    }
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::SendResRdy:
+                    {
+                        break;
+                    }
+                    // Unimplemented Ballista actions
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Quarry:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Sprint:
+                    case GP_CLI_COMMAND_ACTION_ACTIONID::Scout:
+                    {
+                        break;
+                    }
+                }
+            });
 }
 
 void GP_CLI_COMMAND_ACTION::process(MapSession* PSession, CCharEntity* PChar) const
 {
-    const auto actionStr = fmt::format("Player Action: {}: {} -> ActIndex: {}", PChar->getName(), actionToStr(static_cast<GP_CLI_COMMAND_ACTION_ACTIONID>(ActionID)), ActIndex);
+    LogWith({ "action", { { "type", static_cast<GP_CLI_COMMAND_ACTION_ACTIONID>(this->ActionID) }, { "target_id", this->ActIndex } } });
+
+    const auto actionStr = fmt::format("Player Action: {}: {} -> ActIndex: {}", PChar->getName(), actionToStr(static_cast<GP_CLI_COMMAND_ACTION_ACTIONID>(this->ActionID)), this->ActIndex);
     ShowTrace(actionStr);
     DebugActions(actionStr);
 
@@ -170,7 +158,7 @@ void GP_CLI_COMMAND_ACTION::process(MapSession* PSession, CCharEntity* PChar) co
     {
         for (uint8 equipSlotID = 0; equipSlotID < 16; ++equipSlotID)
         {
-            if (PChar->equip[equipSlotID] != 0)
+            if (PChar->getEquip(static_cast<SLOTTYPE>(equipSlotID)))
             {
                 PChar->PLatentEffectContainer->CheckLatentsEquip(equipSlotID);
             }
@@ -216,9 +204,37 @@ void GP_CLI_COMMAND_ACTION::process(MapSession* PSession, CCharEntity* PChar) co
             }
 
             // Releasing a trust
-            if (auto* PTrust = dynamic_cast<CTrustEntity*>(PNpc))
+            if (auto* PTrust = dynamic_cast<CTrustEntity*>(PNpc); PTrust && !PTrust->isReleased)
             {
-                PChar->RemoveTrust(PTrust);
+                uint32_t trustTargId = PTrust->targid;
+
+                PTrust->isReleased = true;
+
+                // Emit despawn message
+                // TODO: probably change off OnMobDespawn to a listener or a trust specific OnPartyLeave callback
+                // note: this will get called a second time later, but PTrust->PMaster is nullptr by the time that happens so the despawn message is never emitted.
+                luautils::OnMobDespawn(PTrust);
+
+                PChar->PAI->QueueAction(
+                    queueAction_t(
+                        2s,
+                        false,
+                        [trustTargId](CBaseEntity* CharEntity)
+                        {
+                            // We can't trust using a pointer here in case somehow the trust has been usurped
+                            // So use the POD of the trusts's targID, look it back up, and check the PChar is still it's master
+                            auto PDelayedTrust = dynamic_cast<CTrustEntity*>(CharEntity->GetEntity(trustTargId, TYPE_TRUST));
+                            auto PDelayedChar  = dynamic_cast<CCharEntity*>(CharEntity);
+
+                            if (PDelayedTrust && PDelayedChar && PDelayedTrust->PMaster == PDelayedChar)
+                            {
+                                // For some reason they use ANIMATION_DEATH to play the special despawn.
+                                PDelayedTrust->animation = ANIMATION_DEATH;
+                                PDelayedTrust->updatemask |= UPDATE_HP;
+
+                                PDelayedChar->RemoveTrust(PDelayedTrust);
+                            }
+                        }));
                 return;
             }
 

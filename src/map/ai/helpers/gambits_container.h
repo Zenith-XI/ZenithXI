@@ -38,18 +38,20 @@ namespace gambits
 
 enum class G_TARGET : uint16
 {
-    SELF        = 0,
-    PARTY       = 1,
-    TARGET      = 2,
-    MASTER      = 3,
-    TANK        = 4,
-    MELEE       = 5,
-    RANGED      = 6,
-    CASTER      = 7,
-    TOP_ENMITY  = 8,
-    CURILLA     = 9, // Special case for Rainemard
-    PARTY_DEAD  = 10,
-    PARTY_MULTI = 11,
+    SELF                       = 0,
+    PARTY                      = 1,
+    TARGET                     = 2,
+    MASTER                     = 3,
+    TANK                       = 4,
+    MELEE                      = 5,
+    RANGED                     = 6,
+    CASTER                     = 7,
+    TOP_ENMITY                 = 8,
+    CURILLA                    = 9, // Special case for Rainemard
+    PARTY_DEAD                 = 10,
+    PARTY_MULTI                = 11,
+    TRIGGER_SELF_ACTION_TARGET = 12,
+    TRIGGER_TARGET_ACTION_SELF = 13,
 };
 
 enum class G_LOGIC : uint16
@@ -67,42 +69,50 @@ enum class G_CONDITION : uint16
     MPP_GTE            = 4,
     TP_LT              = 5,
     TP_GTE             = 6,
-    STATUS             = 7,
-    NOT_STATUS         = 8,
-    STATUS_FLAG        = 9,
-    HAS_TOP_ENMITY     = 10,
-    NOT_HAS_TOP_ENMITY = 11,
-    SC_AVAILABLE       = 12,
-    NOT_SC_AVAILABLE   = 13,
-    MB_AVAILABLE       = 14,
-    READYING_WS        = 15,
-    READYING_MS        = 16,
-    READYING_JA        = 17,
-    CASTING_MA         = 18,
-    RANDOM             = 19,
-    NO_SAMBA           = 20,
-    NO_STORM           = 21,
-    PT_HAS_TANK        = 22,
-    NOT_PT_HAS_TANK    = 23,
-    IS_ECOSYSTEM       = 24,
-    HP_MISSING         = 25,
-    CASTING_ELEMENT_MA = 26,
-    CAST_ELE_MA_SELF   = 27,
-    CASTING_ELE_MA_AOE = 28,
-    NEED_ELE_BAREFFECT = 29,
-    NO_MAX_RUNE        = 30,
-    HAS_RUNES          = 31,
-    LUNGE_MB_AVAILABLE = 32,
+    LVL_LT             = 7,
+    LVL_GTE            = 8,
+    STATUS             = 9,
+    NOT_STATUS         = 10,
+    STATUS_FLAG        = 11,
+    HAS_TOP_ENMITY     = 12,
+    NOT_HAS_TOP_ENMITY = 13,
+    SC_AVAILABLE       = 14,
+    NOT_SC_AVAILABLE   = 15,
+    MB_AVAILABLE       = 16,
+    READYING_WS        = 17,
+    READYING_MS        = 18,
+    READYING_JA        = 19,
+    CASTING_MA         = 20,
+    CASTING_DEBUFF     = 21,
+    RANDOM             = 22,
+    NO_SAMBA           = 23,
+    NO_STORM           = 24,
+    PT_HAS_TANK        = 25,
+    NOT_PT_HAS_TANK    = 26,
+    IS_ECOSYSTEM       = 27,
+    HP_MISSING         = 28,
+    CASTING_ELEMENT_MA = 29,
+    CAST_ELE_MA_SELF   = 30,
+    CASTING_ELE_MA_AOE = 31,
+    NEED_ELE_BAREFFECT = 32,
+    NO_MAX_RUNE        = 33,
+    HAS_RUNES          = 34,
+    LUNGE_MB_AVAILABLE = 35,
+    SUB_ANIMATION      = 36,
+    JA_ON_COOLDOWN     = 37,
+    VAL_URIEL_CHECK    = 38,
+    TIMER              = 39, // condition_arg in seconds
 };
 
 enum class G_REACTION : uint16
 {
-    ATTACK  = 0,
-    RATTACK = 1,
-    MA      = 2,
-    JA      = 3,
-    WS      = 4,
-    MS      = 5,
+    ATTACK      = 0,
+    RATTACK     = 1,
+    MA          = 2,
+    JA          = 3,
+    WS          = 4,
+    MS          = 5,
+    ANIM_STRING = 6,
 };
 
 enum class G_SELECT : uint16
@@ -113,18 +123,20 @@ enum class G_SELECT : uint16
     RANDOM              = 3,
     MB_ELEMENT          = 4,
     SPECIAL_AYAME       = 5,
-    BEST_AGAINST_TARGET = 6,
-    BEST_SAMBA          = 7,
-    HIGHEST_WALTZ       = 8,
-    ENTRUSTED           = 9,
-    BEST_INDI           = 10,
-    STORM_DAY           = 11,
-    HELIX_DAY           = 12,
-    EN_MOB_WEAKNESS     = 13,
-    STORM_MOB_WEAKNESS  = 14,
-    HELIX_MOB_WEAKNESS  = 15,
-    DEF_BAR_ELEMENT     = 16,
-    RUNE_DAY            = 17,
+    SPECIAL_AUGUST      = 6,
+    BEST_AGAINST_TARGET = 7,
+    BEST_SAMBA          = 8,
+    HIGHEST_WALTZ       = 9,
+    ENTRUSTED           = 10,
+    BEST_INDI           = 11,
+    STORM_DAY           = 12,
+    HELIX_DAY           = 13,
+    EN_MOB_WEAKNESS     = 14,
+    STORM_MOB_WEAKNESS  = 15,
+    HELIX_MOB_WEAKNESS  = 16,
+    DEF_BAR_ELEMENT     = 17,
+    RUNE_DAY            = 18,
+    RANDOM_ANIMATION    = 19,
 };
 
 enum class G_TP_TRIGGER : uint16
@@ -286,7 +298,7 @@ public:
     auto AddGambit(const Gambit_t& gambit) -> std::string;
     void RemoveGambit(const std::string& id);
     void RemoveAllGambits();
-    void Tick(timer::time_point tick);
+    auto Tick(timer::time_point tick) -> Task<void>;
 
     // TODO: make private
     std::vector<TrustSkill_t> tp_skills;
@@ -295,7 +307,7 @@ public:
     uint16                    tp_value;
 
 private:
-    bool CheckTrigger(const CBattleEntity* triggerTarget, PredicateGroup_t& predicateGroup);
+    bool CheckTrigger(const CBattleEntity* triggerTarget, const Gambit_t& gambit, size_t predicateGroupIndex, PredicateGroup_t& predicateGroup);
     bool TryTrustSkill();
     bool PartyHasHealer();
     bool PartyHasTank();
@@ -303,6 +315,8 @@ private:
     CTrustEntity*         POwner;
     timer::time_point     m_lastAction;
     std::vector<Gambit_t> gambits;
+
+    std::unordered_map<std::string, timer::time_point> m_timerConditionLastTrigger;
 
     std::set<JOBTYPE> melee_jobs = {
         JOB_WAR,

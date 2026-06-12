@@ -23,8 +23,6 @@
 
 #include "ai/ai_container.h"
 
-#include "common/task_manager.h"
-
 #include "packets/entity_update.h"
 
 #include "utils/zoneutils.h"
@@ -41,6 +39,7 @@ CNpcEntity::CNpcEntity()
 , widescan(1)
 {
     TracyZoneScoped;
+
     objtype    = TYPE_NPC;
     look.face  = 0x32;
     allegiance = ALLEGIANCE_TYPE::MOB;

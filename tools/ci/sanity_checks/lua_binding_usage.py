@@ -39,8 +39,10 @@ def main():
     function_names.append("begin")
     function_names.append("progress")
     function_names.append("cutscene")
+    function_names.append("optionalCutscene")
     function_names.append("progressEvent")
     function_names.append("progressCutscene")
+    function_names.append("progressOptionalCutscene")
     function_names.append("importantOnce")
     function_names.append("perform")
     function_names.append("addNext")
@@ -112,6 +114,11 @@ def main():
     function_names.append("find")
     function_names.append("sub")
     function_names.append("getStatusEffectBySource")
+    function_names.append("afterInstanceRegister")
+    function_names.append("onInstanceCreated")
+    function_names.append("onAssaultFail")
+    function_names.append("onInstanceProgressUpdate")
+    function_names.append("onInstanceComplete")
 
     # root_dir needs a trailing slash (i.e. /root/dir/)
     for filename in glob.iglob("./scripts/" + "**/*.lua", recursive=True):

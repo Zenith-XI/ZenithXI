@@ -66,6 +66,10 @@ CInstance* CInstanceLoader::LoadInstance() const
 {
     TracyZoneScoped;
 
+    const auto realZoneId      = m_PZone->GetID();
+    const auto overlayId       = m_PInstance->overlayId();
+    const auto effectiveZoneId = (overlayId != 0) ? overlayId : static_cast<uint32>(realZoneId);
+
     auto rset = db::preparedStmt("SELECT mobname, mobid, pos_rot, pos_x, pos_y, pos_z, "
                                  "respawntime, spawntype, dropid, mob_groups.HP, mob_groups.MP, minLevel, maxLevel, "
                                  "modelid, mJob, sJob, cmbSkill, cmbDmgMult, cmbDelay, behavior, links, mobType, immunity, "
@@ -75,17 +79,22 @@ CInstance* CInstanceLoader::LoadInstance() const
                                  "magical_sdt, fire_sdt, ice_sdt, wind_sdt, earth_sdt, lightning_sdt, water_sdt, light_sdt, dark_sdt, "
                                  "fire_res_rank, ice_res_rank, wind_res_rank, earth_res_rank, lightning_res_rank, water_res_rank, light_res_rank, dark_res_rank, "
                                  "paralyze_res_rank, bind_res_rank, silence_res_rank, slow_res_rank, poison_res_rank, light_sleep_res_rank, dark_sleep_res_rank, blind_res_rank, "
-                                 "Element, mob_pools.familyid, name_prefix, entityFlags, animationsub, "
-                                 "(mob_family_system.HP / 100) AS hp_scale, (mob_family_system.MP / 100) AS mp_scale, hasSpellScript, spellList, mob_groups.poolid, "
+                                 "Element, mob_pools.speciesid, name_prefix, entityFlags, animationsub, "
+                                 "(mob_species_system.HP / 100) AS hp_scale, (mob_species_system.MP / 100) AS mp_scale, hasSpellScript, spellList, mob_groups.poolid, "
                                  "allegiance, namevis, aggro, mob_pools.skill_list_id, mob_pools.true_detection, detects, "
-                                 "mob_family_system.charmable, mob_pools.modelSize, mob_pools.modelHitboxSize "
-                                 "FROM instance_entities INNER JOIN mob_spawn_points ON instance_entities.id = mob_spawn_points.mobid "
-                                 "INNER JOIN mob_groups ON mob_groups.groupid = mob_spawn_points.groupid AND mob_groups.zoneid=((mob_spawn_points.mobid>>12)&0xFFF) "
+                                 "mob_species_system.charmable, mob_pools.modelSize, mob_pools.modelHitboxSize "
+                                 "FROM instance_entities "
+                                 "INNER JOIN mob_spawn_points ON instance_entities.id = mob_spawn_points.mobid "
+                                 "INNER JOIN mob_groups ON mob_groups.groupid = mob_spawn_points.groupid AND mob_groups.zoneid = ? "
                                  "INNER JOIN mob_pools ON mob_groups.poolid = mob_pools.poolid "
                                  "INNER JOIN mob_resistances ON mob_resistances.resist_id = mob_pools.resist_id "
-                                 "INNER JOIN mob_family_system ON mob_pools.familyid = mob_family_system.familyID "
-                                 "WHERE instanceid = ? AND NOT (pos_x = 0 AND pos_y = 0 AND pos_z = 0)",
-                                 m_PInstance->GetID());
+                                 "INNER JOIN mob_species_system ON mob_pools.speciesid = mob_species_system.speciesID "
+                                 "WHERE instanceid = ? "
+                                 "  AND ((mob_spawn_points.mobid >> 12) & 0xFFF) = ? "
+                                 "  AND NOT (pos_x = 0 AND pos_y = 0 AND pos_z = 0)",
+                                 realZoneId,
+                                 m_PInstance->GetID(),
+                                 effectiveZoneId);
 
     if (!m_PInstance->Failed())
     {
@@ -123,8 +132,8 @@ CInstance* CInstanceLoader::LoadInstance() const
             static_cast<CItemWeapon*>(PMob->m_Weapons[SLOT_MAIN])->setMaxHit(1);
             static_cast<CItemWeapon*>(PMob->m_Weapons[SLOT_MAIN])->setSkillType(rset->get<uint8>("cmbSkill"));
             PMob->m_dmgMult = rset->get<uint16>("cmbDmgMult");
-            static_cast<CItemWeapon*>(PMob->m_Weapons[SLOT_MAIN])->setDelay((rset->get<uint16>("cmbDelay") * 1000) / 60);
-            static_cast<CItemWeapon*>(PMob->m_Weapons[SLOT_MAIN])->setBaseDelay((rset->get<uint16>("cmbDelay") * 1000) / 60);
+            static_cast<CItemWeapon*>(PMob->m_Weapons[SLOT_MAIN])->setDelay(rset->get<uint16>("cmbDelay"));
+            static_cast<CItemWeapon*>(PMob->m_Weapons[SLOT_MAIN])->setBaseDelay(rset->get<uint16>("cmbDelay"));
 
             PMob->m_Behavior  = rset->get<uint16>("behavior");
             PMob->m_Link      = rset->get<uint8>("links");
@@ -183,7 +192,7 @@ CInstance* CInstanceLoader::LoadInstance() const
             PMob->setModifier(Mod::BLIND_RES_RANK, rset->get<int8>("blind_res_rank"));
 
             PMob->m_Element     = rset->get<uint8>("Element");
-            PMob->m_Family      = rset->get<uint16>("familyid");
+            PMob->m_Species     = rset->get<uint16>("speciesid");
             PMob->m_name_prefix = rset->get<uint8>("name_prefix");
             PMob->m_flags       = rset->get<uint32>("entityFlags");
 
@@ -231,7 +240,7 @@ CInstance* CInstanceLoader::LoadInstance() const
             m_PInstance->InsertMOB(PMob);
         }
 
-        const uint32 zoneMin = (m_PZone->GetID() << 12) + 0x1000000;
+        const uint32 zoneMin = (effectiveZoneId << 12) + 0x1000000;
         const uint32 zoneMax = zoneMin + 1024;
 
         rset = db::preparedStmt("SELECT npcid, name, pos_rot, pos_x, pos_y, pos_z, "

@@ -24,6 +24,7 @@
 
 #include "common/cbasetypes.h"
 #include "common/mmo.h"
+#include "common/scheduler.h"
 #include "common/timer.h"
 #include "spell.h"
 
@@ -38,7 +39,7 @@ public:
     virtual ~CController()
     {
     }
-    virtual void Tick(timer::time_point tick) = 0;
+    virtual auto Tick(timer::time_point tick) -> Task<void> = 0;
     virtual void Despawn();
     virtual void Reset();
     virtual bool Cast(uint16 targid, SpellID spellid);
@@ -46,6 +47,7 @@ public:
     virtual bool ChangeTarget(uint16 targid);
     virtual bool Disengage();
     virtual bool WeaponSkill(uint16 targid, uint16 wsid);
+    virtual bool RangedAttack(uint16 targid);
     virtual bool Ability(uint16 targid, uint16 abilityid)
     {
         return false;
@@ -53,6 +55,8 @@ public:
 
     bool IsAutoAttackEnabled() const;
     void SetAutoAttackEnabled(bool);
+    bool IsRangedAttackEnabled() const;
+    void SetRangedAttackEnabled(bool);
     bool IsWeaponSkillEnabled() const;
     void SetWeaponSkillEnabled(bool);
     bool IsMagicCastingEnabled() const;
@@ -64,6 +68,7 @@ protected:
     timer::time_point m_Tick;
     CBattleEntity*    POwner;
     bool              m_AutoAttackEnabled{ true };
+    bool              m_RangedAttackEnabled{ false };
     bool              m_WeaponSkillEnabled{ true };
     bool              m_MagicCastingEnabled{ true };
 };

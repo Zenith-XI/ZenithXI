@@ -106,21 +106,31 @@ end)
 -- end)
 
 -----------------------------------
--- Dark Knight
+-- Paladin
 -----------------------------------
 
--- Dread Spikes: Revert duration from 3 minutes to 1 minute.
--- Source: https://forum.square-enix.com/ffxi/threads/48564-Sep-16-2015-%28JST%29-Version-Update
-m:addOverride('xi.effects.dread_spikes.onEffectGain', function(target, effect)
-    super(target, effect)
-    effect:setDuration(60000)
+-- Rampart: Revert to a magical damage stoneskin effect for party members
+m:addOverride('xi.job_utils.paladin.useRampart', function(player, target, ability)
+    local duration    = 30 + player:getMod(xi.mod.RAMPART_DURATION)
+    local stoneskinHP = player:getStat(xi.mod.VIT) * 2
+    local defense     = player:getMainLvl() == 75 and 23 or 21
+
+    -- Apply STONESKIN effect but display as RAMPART icon
+    -- TODO: subType 2 not yet implemented for magical only stoneskin
+    target:addStatusEffect(xi.effect.STONESKIN, { power = defense, duration = duration, origin   = player, icon = xi.effect.RAMPART, subType  = 2, subPower = stoneskinHP })
+
+    return xi.effect.RAMPART
 end)
 
--- TODO Absorb-STAT: Add decay tick and set 90 second duration to boost effects
--- TODO Drain II: Set duration of max HP boost to 60 seconds.
--- Source:
---   Decay Removal: http://forum.square-enix.com/ffxi/threads/46531-Mar-26-2015-%28JST%29-Version-Update
---   Duration Change: https://forum.square-enix.com/ffxi/threads/48564-Sep-16-2015-%28JST%29-Version-Update
+-- Stoneskin onEffectGain: Add defense buff when displayed as RAMPART
+m:addOverride('xi.effects.stoneskin.onEffectGain', function(target, effect)
+    if effect:getIcon() == xi.effect.RAMPART then
+        effect:addMod(xi.mod.STONESKIN, effect:getSubPower())
+        effect:addMod(xi.mod.DEF, effect:getPower())
+    else
+        effect:addMod(xi.mod.STONESKIN, effect:getPower())
+    end
+end)
 
 -----------------------------------
 -- Ranger
@@ -180,33 +190,6 @@ m:addOverride('xi.effects.yonin.onEffectGain', function(target, effect)
     effect:addMod(xi.mod.ENMITY, effect:getPower())
 end)
 
--- San Spells: Add +5 Magic Attack and +5 Magic Accuracy per merit rank
--- Source: https://forum.square-enix.com/ffxi/threads/55525-June.-10-2019-%28JST%29-Version-Update
-local sanSpellOverrides =
-{
-    { path = 'xi.actions.spells.ninjutsu.katon_san.onSpellCast',  merit = xi.merit.KATON_SAN  },
-    { path = 'xi.actions.spells.ninjutsu.hyoton_san.onSpellCast', merit = xi.merit.HYOTON_SAN },
-    { path = 'xi.actions.spells.ninjutsu.huton_san.onSpellCast',  merit = xi.merit.HUTON_SAN  },
-    { path = 'xi.actions.spells.ninjutsu.doton_san.onSpellCast',  merit = xi.merit.DOTON_SAN  },
-    { path = 'xi.actions.spells.ninjutsu.raiton_san.onSpellCast', merit = xi.merit.RAITON_SAN },
-    { path = 'xi.actions.spells.ninjutsu.suiton_san.onSpellCast', merit = xi.merit.SUITON_SAN },
-}
-
-for _, entry in ipairs(sanSpellOverrides) do
-    m:addOverride(entry.path, function(caster, target, spell)
-        local meritBonus = caster:getMerit(entry.merit)
-        caster:addMod(xi.mod.MATT, meritBonus)
-        caster:addMod(xi.mod.MACC, meritBonus)
-
-        local damage = super(caster, target, spell)
-
-        caster:delMod(xi.mod.MATT, meritBonus)
-        caster:delMod(xi.mod.MACC, meritBonus)
-
-        return damage
-    end)
-end
-
 -----------------------------------
 -- Dragoon
 -----------------------------------
@@ -260,6 +243,16 @@ m:addOverride('xi.job_utils.dragoon.useHealingBreath', function(wyvern, target, 
     end
 
     return totalHPRestored
+end)
+
+-- Elemental Breath: Revert to consume TP on breath usage
+-- Source: https://forum.square-enix.com/ffxi/threads/48564-Sep-16-2015-%28JST%29-Version-Update
+m:addOverride('xi.job_utils.dragoon.useDamageBreath', function(wyvern, target, skill, action, damageType)
+    local result = super(wyvern, target, skill, action, damageType)
+
+    wyvern:setTP(0)
+
+    return result
 end)
 
 -- Spirit Link: Revert to pre-September 2015 healing formula.

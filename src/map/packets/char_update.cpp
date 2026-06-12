@@ -285,7 +285,7 @@ void CCharUpdatePacket::updateWith(CCharEntity* PChar, ENTITYUPDATE type, uint8 
         packet->ModelHitboxSize = static_cast<uint8_t>(PChar->modelHitboxSize * 10); // TODO: verify this value and if it changes (Monstrosity?)
 
         packet->Flags1.MonsterFlag = false; // TODO: Is this ever set for Monstrosity PVP?
-        packet->Flags1.HideFlag    = false;
+        packet->Flags1.HideFlag    = PChar->m_zoneInCutscene;
         packet->Flags1.SleepFlag   = 0;                                                                // Something to do with events. // TODO: figure out when/if this is set. Probably when you're in a cutscene?
         packet->Flags1.unknown_0_3 = PChar->loc.zone ? PChar->loc.zone->CanUseMisc(MISC_TREASURE) : 0; // Set global treasure pool
         packet->Flags1.unknown_0_4 = 0;
@@ -319,7 +319,7 @@ void CCharUpdatePacket::updateWith(CCharEntity* PChar, ENTITYUPDATE type, uint8 
 
         if (linkshell && linkshell->isType(ITEM_LINKSHELL))
         {
-            const lscolor_t LSColor = linkshell->GetLSColor();
+            const Exdata::lscolor_t LSColor = linkshell->GetLSColor();
 
             // This seems wrong, but displays correctly?
             packet->Flags2.r = (LSColor.R << 4) + 15;

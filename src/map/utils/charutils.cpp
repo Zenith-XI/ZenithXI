@@ -47,12 +47,15 @@
 #include "packets/s2c/0x020_item_attr.h"
 #include "packets/s2c/0x026_item_subcontainer.h"
 #include "packets/s2c/0x02d_battle_message2.h"
+#include "packets/s2c/0x04f_equip_clear.h"
 #include "packets/s2c/0x050_equip_list.h"
 #include "packets/s2c/0x051_grap_list.h"
+#include "packets/s2c/0x053_systemmes.h"
 #include "packets/s2c/0x055_scenarioitem.h"
 #include "packets/s2c/0x061_clistatus.h"
 #include "packets/s2c/0x062_clistatus2.h"
 #include "packets/s2c/0x0ac_command_data.h"
+#include "packets/s2c/0x0ad_dungeon.h"
 #include "packets/s2c/0x0e0_group_comlink.h"
 #include "packets/s2c/0x119_abil_recast.h"
 
@@ -67,6 +70,7 @@
 #include "linkshell.h"
 #include "map_networking.h"
 #include "mob_modifier.h"
+#include "nominate_manager.h"
 #include "recast_container.h"
 #include "roe.h"
 #include "spell.h"
@@ -77,6 +81,7 @@
 #include "unitychat.h"
 #include "universal_container.h"
 #include "weapon_skill.h"
+#include "zone.h"
 
 #include "entities/automatonentity.h"
 #include "entities/charentity.h"
@@ -87,6 +92,7 @@
 #include "blueutils.h"
 #include "charutils.h"
 #include "enums/item_lockflg.h"
+#include "items/transactions/synth.h"
 #include "itemutils.h"
 #include "job_points.h"
 #include "map_engine.h"
@@ -127,6 +133,23 @@
 static constexpr int32                               ExpTableRowCount = 60;
 std::array<std::array<uint16, 20>, ExpTableRowCount> g_ExpTable;
 std::array<uint16, 100>                              g_ExpPerLevel;
+
+std::vector<std::pair<uint16, EMobDifficulty>> ExpToDifficultyTable = {};
+// Eventually loaded as something like...
+/*
+    //  { EXP value, check result }
+    { 400, EMobDifficulty::IncrediblyTough },
+    { 350, EMobDifficulty::VeryTough },
+    { 220, EMobDifficulty::Tough },
+    { 200, EMobDifficulty::EvenMatch },
+    { 160, EMobDifficulty::DecentChallenge },
+    { 60, EMobDifficulty::EasyPrey },
+*/
+
+std::pair<uint16, uint8> IncrediblyEasyPreyCheck = { 1, 56 };
+// { EXP value, mob level }
+// { 1, 56 }
+// Must gain more than 1 exp but less than the lowest of ExpToDifficultyTable and greater than or equal to mob level
 
 namespace
 {
@@ -394,7 +417,7 @@ void CalculateStats(CCharEntity* PChar)
  *                                                                       *
  ************************************************************************/
 
-auto LoadChar(const uint32 charId) -> std::unique_ptr<CCharEntity>
+auto LoadChar(Scheduler& scheduler, MapConfig config, const uint32 charId) -> std::unique_ptr<CCharEntity>
 {
     TracyZoneScoped;
 
@@ -863,7 +886,8 @@ auto LoadChar(const uint32 charId) -> std::unique_ptr<CCharEntity>
     // LoadFromCharUnlocksSQL
     fmtQuery = "SELECT outpost_sandy, outpost_bastok, outpost_windy, runic_portal, maw, "
                "campaign_sandy, campaign_bastok, campaign_windy, homepoints, survivals, "
-               "abyssea_conflux, waypoints, eschan_portals, claimed_deeds, unique_event "
+               "abyssea_conflux, waypoints, eschan_portals, claimed_deeds, unique_event, "
+               "maze_vouchers, maze_runes "
                "FROM char_unlocks "
                "WHERE charid = ?";
 
@@ -886,6 +910,8 @@ auto LoadChar(const uint32 charId) -> std::unique_ptr<CCharEntity>
         db::extractFromBlob(rset, "eschan_portals", PChar->teleport.eschanPortal);
         db::extractFromBlob(rset, "claimed_deeds", PChar->m_claimedDeeds);
         db::extractFromBlob(rset, "unique_event", PChar->m_uniqueEvents);
+        db::extractFromBlob(rset, "maze_vouchers", PChar->maze().vouchers);
+        db::extractFromBlob(rset, "maze_runes", PChar->maze().runes);
     }
 
     // TODO: Remove raw new's
@@ -947,9 +973,12 @@ auto LoadChar(const uint32 charId) -> std::unique_ptr<CCharEntity>
     PChar->UpdateHealth();
 
     // Lazy loading: ensure initial zone is loaded synchronously before OnZoneIn
+    // TODO: Hoist his block out of LoadChar() so we're guaranteeing that a char's zone exists
+    //     : before we try to put them in it.
     if (zoneutils::IsLazyLoadingEnabled() && !zoneutils::GetZone(PChar->loc.destination))
     {
-        zoneutils::LoadZones({ PChar->loc.destination });
+        // TODO: Remove this usage of blockOnMain, it's here to help with xi_test
+        scheduler.blockOnMainThread(zoneutils::LoadZones(scheduler, config, { PChar->loc.destination }));
     }
 
     luautils::OnZoneIn(PChar);
@@ -969,7 +998,7 @@ void LoadSpells(CCharEntity* PChar)
 
     // Compile a list of all enabled expansions
     std::vector<std::string> enabledExpansions;
-    for (const auto& expansion : { "COP", "TOAU", "WOTG", "ACP", "AMK", "ASA", "ABYSSEA", "SOA", "ROV", "TVR", "VOIDWATCH" })
+    for (const auto& expansion : { "ROTZ", "COP", "TOAU", "WOTG", "ACP", "AMK", "ASA", "ABYSSEA", "SOA", "ROV", "TVR", "VOIDWATCH" })
     {
         if (luautils::IsContentEnabled(expansion))
         {
@@ -1007,6 +1036,28 @@ void LoadSpells(CCharEntity* PChar)
             }
         }
     }
+
+    // Handle trust spells that are enabled via settings.
+    bool hasTrustPermit =
+        charutils::hasKeyItem(PChar, KeyItem::WINDURST_TRUST_PERMIT) ||
+        charutils::hasKeyItem(PChar, KeyItem::BASTOK_TRUST_PERMIT) ||
+        charutils::hasKeyItem(PChar, KeyItem::SAN_DORIA_TRUST_PERMIT);
+
+    if (hasTrustPermit)
+    {
+        static const std::unordered_map<uint8, uint16> trustSpells = {
+            { 1, 1002 }, // Cornelia
+            { 2, 1003 }, // Matsui-P
+        }; // This can be expanded if more trust spells are added as settings options.
+
+        uint8 trustSetting = settings::get<uint8>("main.ENABLE_LIMITED_TIME_TRUST");
+
+        auto it = trustSpells.find(trustSetting);
+        if (it != trustSpells.end())
+        {
+            PChar->m_SpellList.set(it->second);
+        }
+    }
 }
 
 /************************************************************************
@@ -1036,7 +1087,7 @@ void LoadInventory(CCharEntity* PChar)
     {
         while (rset->next())
         {
-            CItem* PItem = itemutils::GetItem(rset->get<uint16>("itemid"));
+            auto PItem = xi::items::spawn(rset->get<uint16>("itemid"));
             if (PItem != nullptr)
             {
                 PItem->setLocationID(rset->get<uint8>("location"));
@@ -1053,22 +1104,19 @@ void LoadInventory(CCharEntity* PChar)
 
                 if (PItem->isType(ITEM_LINKSHELL))
                 {
-                    if (static_cast<CItemLinkshell*>(PItem)->GetLSType() == 0)
+                    auto* PLink = static_cast<CItemLinkshell*>(PItem.get());
+                    if (PLink->GetLSType() == 0)
                     {
-                        static_cast<CItemLinkshell*>(PItem)->SetLSType((LSTYPE)(PItem->getID() - 0x200));
+                        PLink->SetLSType((LSTYPE)(PItem->getID() - 0x200));
                     }
-                    char EncodedString[LinkshellStringLength] = {};
-                    EncodeStringLinkshell(rset->get<std::string>("signature").c_str(), EncodedString);
-                    PItem->setSignature(EncodedString);
+                    PItem->setSignature(rset->get<std::string>("signature"));
                 }
-                else if (PItem->getFlag() & (ITEM_FLAG_INSCRIBABLE))
+                else if (PItem->hasFlag(ItemFlag::Inscribable))
                 {
-                    char EncodedString[SignatureStringLength] = {};
-                    EncodeStringSignature(rset->get<std::string>("signature").c_str(), EncodedString);
-                    PItem->setSignature(EncodedString);
+                    PItem->setSignature(rset->get<std::string>("signature"));
                 }
 
-                if (auto PItemUsable = dynamic_cast<CItemUsable*>(PItem))
+                if (auto* PItemUsable = dynamic_cast<CItemUsable*>(PItem.get()))
                 {
                     uint32 useTime = 0;
                     std::memcpy(&useTime, PItemUsable->m_extra + 0x04, sizeof(useTime));
@@ -1080,12 +1128,14 @@ void LoadInventory(CCharEntity* PChar)
 
                 if (PItem->isType(ITEM_FURNISHING) && (PItem->getLocationID() == LOC_MOGSAFE || PItem->getLocationID() == LOC_MOGSAFE2))
                 {
-                    if (((CItemFurnishing*)PItem)->isInstalled()) // Check if furniture (furnishing) item is actually installed
+                    if (static_cast<CItemFurnishing*>(PItem.get())->isInstalled()) // Check if furniture (furnishing) item is actually installed
                     {
-                        PChar->getStorage(LOC_STORAGE)->AddBuff(((CItemFurnishing*)PItem)->getStorage());
+                        PChar->getStorage(LOC_STORAGE)->AddBuff(static_cast<CItemFurnishing*>(PItem.get())->getStorage());
                     }
                 }
-                PChar->getStorage(PItem->getLocationID())->InsertItem(PItem, PItem->getSlotID());
+                const uint8 locID  = PItem->getLocationID();
+                const uint8 slotID = PItem->getSlotID();
+                PChar->getStorage(locID)->InsertItem(std::move(PItem), slotID);
             }
         }
     }
@@ -1170,8 +1220,11 @@ void LoadEquip(CCharEntity* PChar)
                 if ((PItem != nullptr) && PItem->isType(ITEM_LINKSHELL))
                 {
                     PItem->setSubType(ITEM_LOCKED);
-                    PChar->equip[equipSlotId]    = inventoryLoc.first;
-                    PChar->equipLoc[equipSlotId] = inventoryLoc.second;
+                    if (!PChar->bindEquip(equipSlotId, PItem))
+                    {
+                        continue;
+                    }
+
                     if (equipSlotId == SLOT_LINK1)
                     {
                         PLinkshell1 = (CItemLinkshell*)PItem;
@@ -1198,7 +1251,7 @@ void LoadEquip(CCharEntity* PChar)
                 uint8 SlotID     = PLinkshell1->getSlotID();
                 uint8 LocationID = PLinkshell1->getLocationID();
                 PLinkshell1->setSubType(ITEM_UNLOCKED);
-                PChar->equip[SLOT_LINK1] = 0;
+                PChar->clearEquip(SLOT_LINK1);
                 db::preparedStmt("DELETE char_equip FROM char_equip WHERE charid = ? AND slotid = ? AND containerid = ? LIMIT 1",
                                  PChar->id,
                                  SlotID,
@@ -1218,7 +1271,7 @@ void LoadEquip(CCharEntity* PChar)
                 uint8 SlotID     = PLinkshell2->getSlotID();
                 uint8 LocationID = PLinkshell2->getLocationID();
                 PLinkshell2->setSubType(ITEM_UNLOCKED);
-                PChar->equip[SLOT_LINK2] = 0;
+                PChar->clearEquip(SLOT_LINK2);
                 db::preparedStmt("DELETE char_equip FROM char_equip WHERE charid = ? AND slotid = ? AND containerid = ? LIMIT 1",
                                  PChar->id,
                                  SlotID,
@@ -1501,8 +1554,9 @@ void SendInventory(CCharEntity* PChar)
     if (PItem != nullptr)
     {
         PItem->setSubType(ITEM_LOCKED);
+        auto eloc1 = PChar->equipLocation(SLOT_LINK1);
 
-        PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItem, static_cast<CONTAINER_ID>(PChar->equipLoc[SLOT_LINK1]), PChar->equip[SLOT_LINK1]);
+        PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItem, *eloc1);
         PChar->pushPacket<GP_SERV_COMMAND_ITEM_LIST>(PItem, ItemLockFlg::Linkshell);
         PChar->pushPacket<GP_SERV_COMMAND_GROUP_COMLINK>(PChar, 1);
     }
@@ -1511,8 +1565,9 @@ void SendInventory(CCharEntity* PChar)
     if (PItem != nullptr)
     {
         PItem->setSubType(ITEM_LOCKED);
+        auto eloc2 = PChar->equipLocation(SLOT_LINK2);
 
-        PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItem, static_cast<CONTAINER_ID>(PChar->equipLoc[SLOT_LINK2]), PChar->equip[SLOT_LINK2]);
+        PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItem, *eloc2);
         PChar->pushPacket<GP_SERV_COMMAND_ITEM_LIST>(PItem, ItemLockFlg::Linkshell);
         PChar->pushPacket<GP_SERV_COMMAND_GROUP_COMLINK>(PChar, 2);
     }
@@ -1662,15 +1717,15 @@ uint8 AddItem(CCharEntity* PChar, uint8 LocationID, uint16 ItemID, uint32 quanti
         return ERROR_SLOTID;
     }
 
-    CItem* PItem = itemutils::GetItem(ItemID);
-
-    if (PItem != nullptr)
+    auto PItem = xi::items::spawn(ItemID);
+    if (PItem == nullptr)
     {
-        PItem->setQuantity(quantity);
-        return AddItem(PChar, LocationID, PItem, silence);
+        ShowWarning("AddItem: Item <%i> is not found in a database", ItemID);
+        return ERROR_SLOTID;
     }
-    ShowWarning("AddItem: Item <%i> is not found in a database", ItemID);
-    return ERROR_SLOTID;
+
+    PItem->setQuantity(quantity);
+    return AddItem(PChar, LocationID, std::move(PItem), silence);
 }
 
 /************************************************************************
@@ -1679,69 +1734,54 @@ uint8 AddItem(CCharEntity* PChar, uint8 LocationID, uint16 ItemID, uint32 quanti
  *                                                                       *
  ************************************************************************/
 
-uint8 AddItem(CCharEntity* PChar, uint8 LocationID, CItem* PItem, bool silence)
+auto AddItem(CCharEntity* PChar, uint8 LocationID, std::unique_ptr<CItem> PItem, bool silence) -> uint8
 {
     if (PItem->isType(ITEM_CURRENCY))
     {
         UpdateItem(PChar, LocationID, 0, PItem->getQuantity());
-        destroy(PItem);
         return 0;
     }
 
-    if (PItem->getFlag() & ITEM_FLAG_RARE)
+    if (PItem->hasFlag(ItemFlag::Rare) && HasItem(PChar, PItem->getID()))
     {
-        if (HasItem(PChar, PItem->getID()))
+        if (!silence)
         {
-            if (!silence)
-            {
-                PChar->pushPacket<GP_SERV_COMMAND_MESSAGE>(PChar, PItem->getID(), 0, MsgStd::ItemEx);
-            }
-            destroy(PItem);
-            return ERROR_SLOTID;
+            PChar->pushPacket<GP_SERV_COMMAND_MESSAGE>(PChar, PItem->getID(), 0, MsgStd::ItemEx);
         }
+        return ERROR_SLOTID;
     }
 
-    uint8 SlotID = PChar->getStorage(LocationID)->InsertItem(PItem);
-
-    if (SlotID != ERROR_SLOTID)
-    {
-        const char* Query = "INSERT INTO char_inventory("
-                            "charid, "
-                            "location, "
-                            "slot, "
-                            "itemId, "
-                            "quantity, "
-                            "signature, "
-                            "extra) "
-                            "VALUES(?, ?, ?, ?, ?, ?, ?) "
-                            "LIMIT 1";
-
-        char signature[DecodeStringLength];
-        if (PItem->isType(ITEM_LINKSHELL))
-        {
-            DecodeStringLinkshell(PItem->getSignature().c_str(), signature);
-        }
-        else
-        {
-            DecodeStringSignature(PItem->getSignature().c_str(), signature);
-        }
-
-        if (!db::preparedStmt(Query, PChar->id, LocationID, SlotID, PItem->getID(), PItem->getQuantity(), signature, PItem->m_extra))
-        {
-            ShowError("AddItem: Cannot insert item to database");
-            PChar->getStorage(LocationID)->InsertItem(nullptr, SlotID);
-            destroy(PItem);
-            return ERROR_SLOTID;
-        }
-
-        PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItem, static_cast<CONTAINER_ID>(LocationID), SlotID);
-        PChar->pushPacket<GP_SERV_COMMAND_ITEM_SAME>(PChar);
-    }
-    else
+    auto* PStorage = PChar->getStorage(LocationID);
+    uint8 SlotID   = PStorage->InsertItem(std::move(PItem));
+    if (SlotID == ERROR_SLOTID)
     {
         ShowDebug("AddItem: Location %i is full", LocationID);
-        destroy(PItem);
+        return SlotID;
     }
+
+    auto* PInserted = PStorage->GetItem(SlotID);
+
+    const char* Query = "INSERT INTO char_inventory("
+                        "charid, "
+                        "location, "
+                        "slot, "
+                        "itemId, "
+                        "quantity, "
+                        "signature, "
+                        "extra) "
+                        "VALUES(?, ?, ?, ?, ?, ?, ?) "
+                        "LIMIT 1";
+
+    if (!db::preparedStmt(Query, PChar->id, LocationID, SlotID, PInserted->getID(), PInserted->getQuantity(), PInserted->getSignature(), PInserted->m_extra))
+    {
+        ShowError("AddItem: Cannot insert item to database");
+        PStorage->RemoveItem(SlotID);
+        return ERROR_SLOTID;
+    }
+
+    PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PInserted, static_cast<CONTAINER_ID>(LocationID), SlotID);
+    PChar->pushPacket<GP_SERV_COMMAND_ITEM_SAME>(PChar);
+
     return SlotID;
 }
 
@@ -1833,42 +1873,53 @@ uint8 MoveItem(CCharEntity* PChar, uint8 LocationID, uint8 SlotID, uint8 NewSlot
 {
     CItemContainer* PItemContainer = PChar->getStorage(LocationID);
 
-    if (PItemContainer->GetFreeSlotsCount() != 0)
+    if (PItemContainer->GetFreeSlotsCount() == 0)
     {
-        if (NewSlotID == ERROR_SLOTID)
-        {
-            NewSlotID = PItemContainer->InsertItem(PItemContainer->GetItem(SlotID));
-        }
-        else
-        {
-            if (PItemContainer->GetItem(NewSlotID) != nullptr)
-            {
-                NewSlotID = ERROR_SLOTID;
-            }
-        }
-        if (NewSlotID != ERROR_SLOTID)
-        {
-            const auto rset = db::preparedStmt("UPDATE char_inventory "
-                                               "SET slot = ? "
-                                               "WHERE charid = ? AND location = ? AND slot = ? LIMIT 1",
-                                               NewSlotID,
-                                               PChar->id,
-                                               LocationID,
-                                               SlotID);
-
-            if (rset && rset->rowsAffected())
-            {
-                PItemContainer->InsertItem(nullptr, SlotID);
-
-                PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(nullptr, static_cast<CONTAINER_ID>(LocationID), SlotID, PItemContainer->GetItem(NewSlotID));
-                PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItemContainer->GetItem(NewSlotID), static_cast<CONTAINER_ID>(LocationID), NewSlotID);
-                return NewSlotID;
-            }
-            PItemContainer->InsertItem(nullptr, NewSlotID); // We cancel all changes in the container
-        }
+        ShowError("charutils::MoveItem: item can't be moved");
+        return ERROR_SLOTID;
     }
-    ShowError("charutils::MoveItem: item can't be moved");
-    return ERROR_SLOTID;
+
+    if (NewSlotID != ERROR_SLOTID && PItemContainer->GetItem(NewSlotID) != nullptr)
+    {
+        ShowError("charutils::MoveItem: item can't be moved");
+        return ERROR_SLOTID;
+    }
+
+    auto PMoving = PItemContainer->RemoveItem(SlotID);
+    if (PMoving == nullptr)
+    {
+        ShowError("charutils::MoveItem: item can't be moved");
+        return ERROR_SLOTID;
+    }
+
+    NewSlotID = (NewSlotID == ERROR_SLOTID)
+                    ? PItemContainer->InsertItem(std::move(PMoving))
+                    : PItemContainer->InsertItem(std::move(PMoving), NewSlotID);
+
+    if (NewSlotID == ERROR_SLOTID)
+    {
+        ShowError("charutils::MoveItem: item can't be moved");
+        return ERROR_SLOTID;
+    }
+
+    const auto rset = db::preparedStmt("UPDATE char_inventory "
+                                       "SET slot = ? "
+                                       "WHERE charid = ? AND location = ? AND slot = ? LIMIT 1",
+                                       NewSlotID,
+                                       PChar->id,
+                                       LocationID,
+                                       SlotID);
+
+    if (!rset || !rset->rowsAffected())
+    {
+        PItemContainer->MoveItemTo(NewSlotID, *PItemContainer, SlotID);
+        ShowError("charutils::MoveItem: item can't be moved");
+        return ERROR_SLOTID;
+    }
+
+    PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(nullptr, static_cast<CONTAINER_ID>(LocationID), SlotID, PItemContainer->GetItem(NewSlotID));
+    PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItemContainer->GetItem(NewSlotID), static_cast<CONTAINER_ID>(LocationID), NewSlotID);
+    return NewSlotID;
 }
 
 /************************************************************************
@@ -1907,6 +1958,20 @@ uint32 UpdateItem(CCharEntity* PChar, uint8 LocationID, uint8 slotID, int32 quan
         }
     }
 
+    // Equipped ammo decrements its stack on consumption without leaving the slot.
+    const bool isEquippedAmmo = PItem->state() == ItemState::Equipped &&
+                                PChar->getEquip(SLOT_AMMO) == PItem;
+    if (PItem->isBusy() && !isEquippedAmmo && !force)
+    {
+        ShowWarningFmt("UpdateItem: refusing to mutate busy item {} in state {} (loc={}, slot={}, char={})",
+                       ItemID,
+                       magic_enum::enum_name(PItem->state()),
+                       LocationID,
+                       slotID,
+                       PChar->getName());
+        return 0;
+    }
+
     uint32 newQuantity = PItem->getQuantity() + quantity;
 
     if (newQuantity > PItem->getStackSize())
@@ -1933,7 +1998,8 @@ uint32 UpdateItem(CCharEntity* PChar, uint8 LocationID, uint8 slotID, int32 quan
                          PChar->id,
                          LocationID,
                          slotID);
-        PChar->getStorage(LocationID)->InsertItem(nullptr, slotID);
+        // Hold the extracted item alive until end of scope
+        auto PRemoved = PChar->getStorage(LocationID)->RemoveItem(slotID);
         PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(nullptr, static_cast<CONTAINER_ID>(LocationID), slotID);
 
         if (PChar->getStyleLocked() && !HasItem(PChar, ItemID))
@@ -1968,7 +2034,9 @@ uint32 UpdateItem(CCharEntity* PChar, uint8 LocationID, uint8 slotID, int32 quan
             }
         }
         luautils::OnItemDrop(PChar, PItem);
-        destroy(PItem);
+
+        // Remove soon to be stale PItem pointer from sync state
+        PChar->inventorySyncState().removeEquipChange(PItem);
     }
     return ItemID;
 }
@@ -1978,7 +2046,7 @@ void DropItem(CCharEntity* PChar, uint8 container, uint8 slotID, int32 quantity,
 {
     if (charutils::UpdateItem(PChar, container, slotID, -quantity) != 0)
     {
-        ShowInfo("Player %s DROPPING itemID: %s (%u) quantity: %u", PChar->getName(), itemutils::GetItemPointer(ItemID)->getName(), ItemID, quantity);
+        ShowInfo("Player %s DROPPING itemID: %s (%u) quantity: %u", PChar->getName(), xi::items::lookup(ItemID)->getName(), ItemID, quantity);
         PChar->pushPacket<GP_SERV_COMMAND_MESSAGE>(nullptr, ItemID, quantity, MsgStd::ThrowAway);
         PChar->pushPacket<GP_SERV_COMMAND_ITEM_SAME>(PChar);
     }
@@ -2007,7 +2075,7 @@ bool CanTrade(CCharEntity* PChar, CCharEntity* PTarget)
     {
         CItem* PItem = PChar->UContainer->GetItem(slotid);
 
-        if (PItem != nullptr && PItem->getFlag() & ITEM_FLAG_RARE)
+        if (PItem != nullptr && PItem->hasFlag(ItemFlag::Rare))
         {
             if (HasItem(PTarget, PItem->getID()))
             {
@@ -2037,10 +2105,10 @@ void DoTrade(CCharEntity* PChar, CCharEntity* PTarget)
         {
             if (PItem->getStackSize() == 1 && PItem->getReserve() == 1)
             {
-                CItem* PNewItem = itemutils::GetItem(PItem);
+                auto PNewItem = xi::items::clone(*PItem);
                 ShowDebug("Adding %s to %s inventory stacksize 1", PNewItem->getName(), PTarget->getName());
                 PNewItem->setReserve(0);
-                AddItem(PTarget, LOC_INVENTORY, PNewItem);
+                AddItem(PTarget, LOC_INVENTORY, std::move(PNewItem));
             }
             else
             {
@@ -2121,16 +2189,9 @@ void UnequipItem(CCharEntity* PChar, uint8 equipSlotID, Recalculate recalculate)
             }
         }
 
-        // Call the LUA event before actually "unequipping" the item so the script can do stuff with it first
-        if (((CItemEquipment*)PItem)->getScriptType() & SCRIPT_EQUIP || ((CItemEquipment*)PItem)->isType(ITEM_USABLE))
-        {
-            luautils::OnItemCheck(PChar, PItem, ITEMCHECK::UNEQUIP, nullptr);
-        }
-
         // todo: issues as item 0 reference is being handled as a real equipment piece
         //      thought to be source of nin bug
-        PChar->equip[equipSlotID]    = 0;
-        PChar->equipLoc[equipSlotID] = 0;
+        PChar->clearEquip(equipSlotID);
 
         if (((CItemEquipment*)PItem)->getScriptType() & SCRIPT_EQUIP)
         {
@@ -2185,7 +2246,7 @@ void UnequipItem(CCharEntity* PChar, uint8 equipSlotID, Recalculate recalculate)
             case SLOT_SUB:
             {
                 PChar->look.sub            = 0;
-                PChar->m_Weapons[SLOT_SUB] = itemutils::GetUnarmedItem(); // << equips "nothing" in the sub slot to prevent multi attack exploit
+                PChar->m_Weapons[SLOT_SUB] = xi::items::unarmed(); // << equips "nothing" in the sub slot to prevent multi attack exploit
                 PChar->health.tp           = 0;
                 PChar->StatusEffectContainer->DelStatusEffect(EFFECT_AFTERMATH);
                 BuildingCharWeaponSkills(PChar);
@@ -2194,7 +2255,7 @@ void UnequipItem(CCharEntity* PChar, uint8 equipSlotID, Recalculate recalculate)
             break;
             case SLOT_AMMO:
             {
-                if (PChar->equip[SLOT_RANGED] == 0)
+                if (!PChar->getEquip(SLOT_RANGED))
                 {
                     PChar->look.ranged = 0;
                 }
@@ -2204,7 +2265,7 @@ void UnequipItem(CCharEntity* PChar, uint8 equipSlotID, Recalculate recalculate)
             break;
             case SLOT_RANGED:
             {
-                if (PChar->equip[SLOT_RANGED] == 0)
+                if (!PChar->getEquip(SLOT_RANGED))
                 {
                     PChar->look.ranged = 0;
                 }
@@ -2529,7 +2590,7 @@ bool EquipArmor(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 conta
                             UnequipItem(PChar, SLOT_RANGED, Recalculate::No);
                         }
                     }
-                    if (PChar->equip[SLOT_RANGED] == 0)
+                    if (!PChar->getEquip(SLOT_RANGED))
                     {
                         PChar->look.ranged = PItem->getModelId();
                     }
@@ -2565,8 +2626,10 @@ bool EquipArmor(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 conta
             break;
         }
 
-        PChar->equip[equipSlotID]    = slotID;
-        PChar->equipLoc[equipSlotID] = containerID;
+        if (!PChar->bindEquip(equipSlotID, PItem))
+        {
+            return false;
+        }
 
         // Changed visible equipment
         if (equipSlotID >= SLOT_HEAD && equipSlotID <= SLOT_FEET)
@@ -2582,7 +2645,7 @@ bool EquipArmor(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 conta
     return true;
 }
 
-bool canEquipItemOnAnyJob(CCharEntity* PChar, CItemEquipment* PItem)
+auto canEquipItemOnAnyJob(CCharEntity* PChar, const CItemEquipment* PItem) -> bool
 {
     if (PItem == nullptr)
     {
@@ -2600,7 +2663,7 @@ bool canEquipItemOnAnyJob(CCharEntity* PChar, CItemEquipment* PItem)
     return false;
 }
 
-bool hasValidStyle(CCharEntity* PChar, CItemEquipment* PItem, CItemEquipment* AItem)
+auto hasValidStyle(CCharEntity* PChar, const CItemEquipment* PItem, const CItemEquipment* AItem) -> bool
 {
     if (AItem && PItem)
     {
@@ -2610,8 +2673,8 @@ bool hasValidStyle(CCharEntity* PChar, CItemEquipment* PItem, CItemEquipment* AI
             return HasItem(PChar, AItem->getID()) && canEquipItemOnAnyJob(PChar, AItem);
         }
 
-        CItemWeapon* PWeapon = dynamic_cast<CItemWeapon*>(PItem);
-        CItemWeapon* AWeapon = dynamic_cast<CItemWeapon*>(AItem);
+        const auto* PWeapon = dynamic_cast<const CItemWeapon*>(PItem);
+        const auto* AWeapon = dynamic_cast<const CItemWeapon*>(AItem);
 
         // Marvelous Cheer special case
         // It is not technically a Wind Instrument, but it can lockstyle one.
@@ -2661,8 +2724,8 @@ void UpdateWeaponStyle(CCharEntity* PChar, uint8 equipSlotID, CItemEquipment* PI
         return;
     }
 
-    CItemEquipment* appearance      = dynamic_cast<CItemEquipment*>(itemutils::GetItemPointer(PChar->styleItems[equipSlotID]));
-    uint16          appearanceModel = 0;
+    const CItemEquipment* appearance      = xi::items::lookup<CItemEquipment>(PChar->styleItems[equipSlotID]);
+    uint16                appearanceModel = 0;
     if (appearance)
     {
         appearanceModel = appearance->getModelId();
@@ -2739,9 +2802,9 @@ void UpdateArmorStyle(CCharEntity* PChar, uint8 equipSlotID)
         return;
     }
 
-    uint16          itemID          = PChar->styleItems[equipSlotID];
-    CItemEquipment* appearance      = dynamic_cast<CItemEquipment*>(itemutils::GetItemPointer(itemID));
-    uint16          appearanceModel = 0;
+    uint16                itemID          = PChar->styleItems[equipSlotID];
+    const CItemEquipment* appearance      = xi::items::lookup<CItemEquipment>(itemID);
+    uint16                appearanceModel = 0;
 
     if (appearance && HasItem(PChar, itemID))
     {
@@ -2794,7 +2857,7 @@ void UpdateRemovedSlotsLookForLockStyle(CCharEntity* PChar)
             continue;
         }
 
-        auto PItem = dynamic_cast<CItemEquipment*>(itemutils::GetItem(items[i]));
+        const auto* PItem = xi::items::lookup<CItemEquipment>(items[i]);
         if (!PItem)
         {
             continue;
@@ -2885,71 +2948,87 @@ void UpdateRemovedSlotsLook(CCharEntity* PChar)
 
 void AddItemToRecycleBin(CCharEntity* PChar, uint32 container, uint8 slotID, uint8 quantity)
 {
-    CItem* PItem          = PChar->getStorage(container)->GetItem(slotID);
-    auto*  RecycleBin     = PChar->getStorage(LOC_RECYCLEBIN);
-    auto*  OtherContainer = PChar->getStorage(container);
+    auto* RecycleBin     = PChar->getStorage(LOC_RECYCLEBIN);
+    auto* OtherContainer = PChar->getStorage(container);
 
-    if (PItem == nullptr)
+    auto* PSrcItem = OtherContainer->GetItem(slotID);
+    if (PSrcItem == nullptr)
     {
         return;
     }
 
-    // Try and insert
-    uint8 NewSlotID = PChar->getStorage(LOC_RECYCLEBIN)->InsertItem(PItem);
-    if (NewSlotID != ERROR_SLOTID)
+    if (PSrcItem->isBusy())
     {
+        ShowWarningFmt("AddItemToRecycleBin: refusing to move busy item {} (state={}, char={})",
+                       PSrcItem->getID(),
+                       magic_enum::enum_name(PSrcItem->state()),
+                       PChar->getName());
+        return;
+    }
+
+    const uint16 itemID   = PSrcItem->getID();
+    const auto   itemName = PSrcItem->getName();
+
+    if (RecycleBin->GetFreeSlotsCount() > 0)
+    {
+        const uint8 NewSlotID = OtherContainer->MoveItemTo(slotID, *RecycleBin);
+        if (NewSlotID == ERROR_SLOTID)
+        {
+            return;
+        }
+
         const auto rset = db::preparedStmt("UPDATE char_inventory SET location = ?, slot = ? WHERE charid = ? AND location = ? AND slot = ? LIMIT 1",
                                            LOC_RECYCLEBIN,
                                            NewSlotID,
                                            PChar->id,
                                            container,
                                            slotID);
-        if (rset && rset->rowsAffected())
+        if (!rset || !rset->rowsAffected())
         {
-            // Move successful, delete original item
-            OtherContainer->InsertItem(nullptr, slotID);
+            RecycleBin->MoveItemTo(NewSlotID, *OtherContainer, slotID);
+            return;
+        }
 
-            // Send update packets
-            PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(nullptr, static_cast<CONTAINER_ID>(container), slotID);
-            PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItem, LOC_RECYCLEBIN, NewSlotID);
-            PChar->pushPacket<GP_SERV_COMMAND_MESSAGE>(nullptr, PItem->getID(), quantity, MsgStd::ThrowAway);
-        }
-        else
-        {
-            // Move not successful, put things back how they were
-            RecycleBin->InsertItem(nullptr, NewSlotID);
-            OtherContainer->InsertItem(PItem, slotID);
-        }
+        auto* PInserted = RecycleBin->GetItem(NewSlotID);
+        PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(nullptr, static_cast<CONTAINER_ID>(container), slotID);
+        PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PInserted, LOC_RECYCLEBIN, NewSlotID);
+        PChar->pushPacket<GP_SERV_COMMAND_MESSAGE>(nullptr, itemID, quantity, MsgStd::ThrowAway);
+        luautils::OnItemDrop(PChar, PInserted, IsRecycleBin::Yes);
     }
     else // Bin is full
     {
         // Evict recycle bin slot 1
-        RecycleBin->InsertItem(nullptr, 1);
+        auto PEvictedItem = RecycleBin->RemoveItem(1);
         db::preparedStmt("DELETE FROM char_inventory WHERE charid = ? AND location = ? AND slot = ? LIMIT 1",
                          PChar->id,
                          LOC_RECYCLEBIN,
                          1);
 
-        // Move everything around to accomodate
+        if (PEvictedItem)
+        {
+            luautils::OnItemDrop(PChar, PEvictedItem.get());
+        }
+
+        // Slide slots 2..10 down to 1..9
         for (int i = 2; i <= 10; ++i)
         {
-            // Update storage
-            CItem* PMovingItem = RecycleBin->GetItem(i);
-            RecycleBin->InsertItem(PMovingItem, i - 1);
+            if (RecycleBin->GetItem(i) == nullptr)
+            {
+                continue;
+            }
+            RecycleBin->MoveItemTo(i, *RecycleBin, i - 1);
 
-            // Update db
             const auto rset = db::preparedStmt("UPDATE char_inventory SET location = ?, slot = ? WHERE charid = ? AND location = ? AND slot = ? LIMIT 1", LOC_RECYCLEBIN, i - 1, PChar->id, LOC_RECYCLEBIN, i);
             if (!rset || !rset->rowsAffected())
             {
-                ShowError("Problem moving Recycle Bin items! (%s - %s)", PChar->getName(), PItem->getName());
+                ShowError("Problem moving Recycle Bin items! (%s - %s)", PChar->getName(), itemName);
             }
         }
 
-        // Move item from original container to recycle bin
-        OtherContainer->InsertItem(nullptr, slotID);
-        RecycleBin->InsertItem(PItem, 10);
+        // Move new item from source container into freed slot 10
+        OtherContainer->MoveItemTo(slotID, *RecycleBin, 10);
+        auto* PInserted = RecycleBin->GetItem(10);
 
-        // Update db
         const auto rset = db::preparedStmt("UPDATE char_inventory SET location = ?, slot = ? WHERE charid = ? AND location = ? AND slot = ? LIMIT 1",
                                            LOC_RECYCLEBIN,
                                            10,
@@ -2958,17 +3037,17 @@ void AddItemToRecycleBin(CCharEntity* PChar, uint32 container, uint8 slotID, uin
                                            slotID);
         if (!rset || !rset->rowsAffected())
         {
-            ShowError("Problem moving Recycle Bin items! (%s - %s)", PChar->getName(), PItem->getName());
+            ShowError("Problem moving Recycle Bin items! (%s - %s)", PChar->getName(), itemName);
         }
 
-        // Send update packets
         PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(nullptr, static_cast<CONTAINER_ID>(container), slotID);
         for (int i = 1; i <= 10; ++i)
         {
             CItem* PUpdatedItem = RecycleBin->GetItem(i);
             PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PUpdatedItem, LOC_RECYCLEBIN, i);
         }
-        PChar->pushPacket<GP_SERV_COMMAND_MESSAGE>(nullptr, PItem->getID(), quantity, MsgStd::ThrowAway);
+        PChar->pushPacket<GP_SERV_COMMAND_MESSAGE>(nullptr, itemID, quantity, MsgStd::ThrowAway);
+        luautils::OnItemDrop(PChar, PInserted, IsRecycleBin::Yes);
     }
     PChar->pushPacket<GP_SERV_COMMAND_ITEM_SAME>(PChar);
 }
@@ -2978,6 +3057,15 @@ void EmptyRecycleBin(CCharEntity* PChar)
     TracyZoneScoped;
 
     CItemContainer* recycleBin = PChar->getStorage(LOC_RECYCLEBIN);
+
+    for (uint8 slotID = 1; slotID <= recycleBin->GetSize(); ++slotID)
+    {
+        if (CItem* PItem = recycleBin->GetItem(slotID))
+        {
+            luautils::OnItemDrop(PChar, PItem);
+        }
+    }
+
     db::preparedStmt("DELETE FROM char_inventory WHERE charid = ? AND location = 17", PChar->id);
     recycleBin->Clear();
 }
@@ -3011,30 +3099,61 @@ void SaveJobChangeGear(CCharEntity* PChar)
     uint16 ring2  = getEquipIdFromSlot(PChar, SLOT_RING2);
     uint16 back   = getEquipIdFromSlot(PChar, SLOT_BACK);
 
-    db::preparedStmt("REPLACE INTO char_equip_saved SET "
-                     "charid = ?, jobid = ?, main = ?, sub = ?, "
-                     "ranged = ?, ammo = ?, head = ?, body = ?, "
-                     "hands = ?, legs = ?, feet = ?, neck = ?, "
-                     "waist = ?, ear1 = ?, ear2 = ?, ring1 = ?, "
-                     "ring2 = ?, back = ?",
-                     PChar->id,
-                     PChar->GetMJob(),
-                     main,
-                     sub,
-                     ranged,
-                     ammo,
-                     head,
-                     body,
-                     hands,
-                     legs,
-                     feet,
-                     neck,
-                     waist,
-                     ear1,
-                     ear2,
-                     ring1,
-                     ring2,
-                     back);
+    db::preparedStmt(
+        "INSERT INTO char_equip_saved SET "
+        "charid = ?, "
+        "jobid = ?, "
+        "main = ?, "
+        "sub = ?, "
+        "ranged = ?, "
+        "ammo = ?, "
+        "head = ?, "
+        "body = ?, "
+        "hands = ?, "
+        "legs = ?, "
+        "feet = ?, "
+        "neck = ?, "
+        "waist = ?, "
+        "ear1 = ?, "
+        "ear2 = ?, "
+        "ring1 = ?, "
+        "ring2 = ?, "
+        "back = ? "
+        "ON DUPLICATE KEY UPDATE "
+        "main = VALUES(main), "
+        "sub = VALUES(sub), "
+        "ranged = VALUES(ranged), "
+        "ammo = VALUES(ammo), "
+        "head = VALUES(head), "
+        "body = VALUES(body), "
+        "hands = VALUES(hands), "
+        "legs = VALUES(legs), "
+        "feet = VALUES(feet), "
+        "neck = VALUES(neck), "
+        "waist = VALUES(waist), "
+        "ear1 = VALUES(ear1), "
+        "ear2 = VALUES(ear2), "
+        "ring1 = VALUES(ring1), "
+        "ring2 = VALUES(ring2), "
+        "back = VALUES(back)",
+        PChar->id,
+        PChar->GetMJob(),
+        main,
+        sub,
+        ranged,
+        ammo,
+        head,
+        body,
+        hands,
+        legs,
+        feet,
+        neck,
+        waist,
+        ear1,
+        ear2,
+        ring1,
+        ring2,
+        back);
 }
 
 void LoadJobChangeGear(CCharEntity* PChar)
@@ -3120,7 +3239,72 @@ void EquipItem(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 contai
         return;
     }
 
-    // if player attempts to change thier ranged weapon during a ranged state then prevent equip
+    // slotID of zero = unequip
+    if (slotID > 0)
+    {
+        // skip the rest of the function if we are trying to equip the same item to a different slot
+        switch (static_cast<SLOTTYPE>(equipSlotID))
+        {
+            case SLOT_MAIN:
+            {
+                auto PSub = PChar->getEquip(SLOT_SUB);
+                if (PItem == PSub)
+                {
+                    return;
+                }
+                break;
+            }
+            case SLOT_SUB:
+            {
+                auto PMain = PChar->getEquip(SLOT_MAIN);
+                if (PItem == PMain)
+                {
+                    return;
+                }
+                break;
+            }
+            case SLOT_EAR1:
+            {
+                auto PEar2 = PChar->getEquip(SLOT_EAR2);
+                if (PItem == PEar2)
+                {
+                    return;
+                }
+                break;
+            }
+            case SLOT_EAR2:
+            {
+                auto PEar1 = PChar->getEquip(SLOT_EAR1);
+                if (PItem == PEar1)
+                {
+                    return;
+                }
+                break;
+            }
+            case SLOT_RING1:
+            {
+                auto PRing2 = PChar->getEquip(SLOT_RING2);
+                if (PItem == PRing2)
+                {
+                    return;
+                }
+                break;
+            }
+            case SLOT_RING2:
+            {
+                auto PRing1 = PChar->getEquip(SLOT_RING1);
+                if (PItem == PRing1)
+                {
+                    return;
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    // if player attempts to change their ranged weapon during a ranged state then prevent equip
     // this prevents players from starting a RA with short delay x-bow and ending with high dmg longbow
     if (equipSlotID == SLOT_RANGED || (equipSlotID == SLOT_AMMO && !PChar->getEquip(SLOT_RANGED)))
     {
@@ -3134,10 +3318,28 @@ void EquipItem(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 contai
     {
         auto PItemWeapon = dynamic_cast<CItemWeapon*>(PItem);
         auto PMainItem   = dynamic_cast<CItemWeapon*>(PChar->getEquip(SLOT_MAIN));
+
         if (PItemWeapon && PItemWeapon->getSkillType() == SKILL_NONE && (!PMainItem || !PMainItem->isTwoHanded()))
         {
             PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::Requires2HForGrip);
             return;
+        }
+
+        if (PItemWeapon && PItemWeapon->getSkillType() != SKILL_NONE)
+        {
+            // Don't attempt to equip item in equip menu if you don't have dual wield trait (client sees BLU, THF, DNC, NIN, /DNC or /NIN etc as able to equip sub weapons even if sub is too low or no trait on BLU)
+            if (!PChar->hasTrait(TRAIT_DUAL_WIELD))
+            {
+                PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, PItemWeapon->getID(), 0, MsgBasic::NeedDualWield);
+                return;
+            }
+
+            // Don't allow Dual Wield injections to offhand when you dont have a mainahdn (this was visual only)
+            // Don't allow non-shields in offhand with no weapon
+            if ((PMainItem && PMainItem->isTwoHanded()) || !PMainItem)
+            {
+                return;
+            }
         }
 
         // Disallow everything but shields if you're using H2H
@@ -3167,9 +3369,9 @@ void EquipItem(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 contai
             {
                 if (PItem->getScriptType() & SCRIPT_EQUIP)
                 {
-                    luautils::OnItemCheck(PChar, PItem, ITEMCHECK::EQUIP, nullptr);
                     PChar->m_EquipFlag |= PItem->getScriptType();
                 }
+
                 if (PItem->isType(ITEM_USABLE) && ((CItemUsable*)PItem)->getCurrentCharges() != 0)
                 {
                     PItem->setAssignTime(timer::now());
@@ -3180,6 +3382,7 @@ void EquipItem(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 contai
 
                     PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItem, static_cast<CONTAINER_ID>(containerID), slotID);
                 }
+
                 PItem->setSubType(ITEM_LOCKED);
 
                 if (equipSlotID == SLOT_SUB)
@@ -3196,8 +3399,14 @@ void EquipItem(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 contai
                 PChar->PLatentEffectContainer->CheckLatentsEquip(equipSlotID);
                 PChar->addPetModifiers(&PItem->petModList);
 
-                // Only call the lua onEquip if its a valid equip - e.g. has passed EquipArmor and other checks above
+                // Only call the lua onEquip if it's a valid equip - e.g. has passed EquipArmor and other checks above
                 luautils::OnItemEquip(PChar, PItem);
+
+                // queue look update on valid equip
+                if (PItem != nullptr && PItem->isType(ITEM_EQUIPMENT))
+                {
+                    PChar->inventorySyncState().queueEquipChange(static_cast<CONTAINER_ID>(containerID), slotID, static_cast<SLOTTYPE>(equipSlotID), PItem, Equipping::Yes);
+                }
             }
         }
     }
@@ -3213,7 +3422,7 @@ void EquipItem(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 contai
         }
 
         if (!PChar->getEquip(SLOT_MAIN) || !PChar->getEquip(SLOT_MAIN)->isType(ITEM_EQUIPMENT) ||
-            PChar->m_Weapons[SLOT_MAIN] == itemutils::GetUnarmedH2HItem())
+            PChar->m_Weapons[SLOT_MAIN] == xi::items::unarmedH2H())
         {
             CheckUnarmedWeapon(PChar);
         }
@@ -3223,11 +3432,6 @@ void EquipItem(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 contai
 
     charutils::BuildingCharSkillsTable(PChar);
     PChar->UpdateHealth();
-
-    if (PItem != nullptr && PItem->isType(ITEM_EQUIPMENT))
-    {
-        PChar->inventorySyncState().queueEquipChange(static_cast<CONTAINER_ID>(containerID), slotID, static_cast<SLOTTYPE>(equipSlotID), PItem, Equipping::Yes);
-    }
 
     PChar->updatemask |= UPDATE_HP;
     PChar->updatemask |= UPDATE_LOOK;
@@ -3275,7 +3479,7 @@ void CheckValidEquipment(CCharEntity* PChar)
         UnequipItem(PChar, slotID);
     }
     // Unarmed H2H weapon check
-    if (!PChar->getEquip(SLOT_MAIN) || !PChar->getEquip(SLOT_MAIN)->isType(ITEM_EQUIPMENT) || PChar->m_Weapons[SLOT_MAIN] == itemutils::GetUnarmedH2HItem())
+    if (!PChar->getEquip(SLOT_MAIN) || !PChar->getEquip(SLOT_MAIN)->isType(ITEM_EQUIPMENT) || PChar->m_Weapons[SLOT_MAIN] == xi::items::unarmedH2H())
     {
         CheckUnarmedWeapon(PChar);
     }
@@ -3302,37 +3506,6 @@ void RemoveAllEquipment(CCharEntity* PChar)
 
     BuildingCharWeaponSkills(PChar);
     PChar->RequestPersist(CHAR_PERSIST::EQUIP);
-}
-
-/************************************************************************
- *                                                                       *
- *  Check the logic of all character equipment                           *
- *                                                                       *
- ************************************************************************/
-
-// Later will need to make equipment in the structure,
-// where to add a bit field indicating in which cell is the equipment with the condition
-// To begin with, this field will save us from checking cells in characters without equipment with the condition
-
-void CheckEquipLogic(CCharEntity* PChar, SCRIPTTYPE ScriptType, uint32 param)
-{
-    if (!(PChar->m_EquipFlag & ScriptType))
-    {
-        return;
-    }
-
-    for (uint8 slotID = 0; slotID < 16; ++slotID)
-    {
-        CItem* PItem = PChar->getEquip((SLOTTYPE)slotID);
-
-        if ((PItem != nullptr) && PItem->isType(ITEM_EQUIPMENT))
-        {
-            if (((CItemEquipment*)PItem)->getScriptType() & ScriptType)
-            {
-                luautils::OnItemCheck(PChar, PItem, static_cast<ITEMCHECK>(param), nullptr);
-            }
-        }
-    }
 }
 
 /************************************************************************
@@ -4478,8 +4651,29 @@ void LoadExpTable()
             g_ExpPerLevel[level] = rset->get<uint16>("exp");
         }
     }
+
+    // run the function to fetch the /check difficulty curve.
+    auto expDifficultyCurveFunction = lua["xi"]["expDifficultyCurve"]["loadExpDifficultyCurve"];
+
+    if (!expDifficultyCurveFunction.valid())
+    {
+        ShowCritical("xi.expDifficultyCurve.loadExpDifficultyCurve function is not valid. Terminating.");
+        std::terminate();
+    }
+
+    auto res = expDifficultyCurveFunction();
+    if (!res.valid())
+    {
+        ShowCritical("xi.expDifficultyCurve.loadExpDifficultyCurve function failed to execute. Terminating.");
+        std::terminate();
+    }
 }
 
+void SetExpDifficultyCurve(std::vector<std::pair<uint16, EMobDifficulty>>& curve, std::pair<uint16, uint8>& incrediblyEasyPreyData)
+{
+    ExpToDifficultyTable    = curve;
+    IncrediblyEasyPreyCheck = incrediblyEasyPreyData;
+}
 /************************************************************************
  *                                                                       *
  *  Return mob difficulty according to level difference                  *
@@ -4492,31 +4686,29 @@ EMobDifficulty CheckMob(uint8 charlvl, CBattleEntity* PMob)
 
     uint32 baseExp = GetBaseExp(charlvl, moblvl);
 
-    if (baseExp >= 400)
+    if (baseExp == 0)
     {
-        return EMobDifficulty::IncrediblyTough;
+        return EMobDifficulty::TooWeak;
     }
-    if (baseExp >= 350)
+
+    // Iterate over exp  difficulty table, populated similarly to
+    // { 400, EMobDifficulty::IncrediblyTough }
+    // { 350, EMobDifficulty::EMobDifficulty::VeryTough }
+    for (auto& entry : ExpToDifficultyTable)
     {
-        return EMobDifficulty::VeryTough;
+        auto exp = entry.first;
+
+        if (baseExp >= exp)
+        {
+            auto difficulty = entry.second;
+            return difficulty;
+        }
     }
-    if (baseExp >= 220)
-    {
-        return EMobDifficulty::Tough;
-    }
-    if (baseExp >= 200)
-    {
-        return EMobDifficulty::EvenMatch;
-    }
-    if (baseExp >= 160)
-    {
-        return EMobDifficulty::DecentChallenge;
-    }
-    if (baseExp >= 60)
-    {
-        return EMobDifficulty::EasyPrey;
-    }
-    if (baseExp >= 1 && moblvl > 55)
+
+    auto IEPLevel = IncrediblyEasyPreyCheck.first;
+    auto IEPExp   = IncrediblyEasyPreyCheck.second;
+
+    if (baseExp >= IEPExp && moblvl >= IEPLevel)
     {
         return EMobDifficulty::IncrediblyEasyPrey;
     }
@@ -5111,7 +5303,7 @@ void DistributeExperiencePoints(CCharEntity* PChar, CMobEntity* PMob)
 
                     exp = charutils::AddExpBonus(PMember, exp);
 
-                    charutils::AddExperiencePoints(false, PMember, PMob, (uint32)exp, mobCheck, chainactive);
+                    charutils::AddExperiencePoints(false, true, false, PMember, PMob, (uint32)exp, mobCheck, chainactive);
                 }
             }
         });
@@ -5431,7 +5623,7 @@ void DelExperiencePoints(CCharEntity* PChar, float retainPercent, uint16 forcedX
  *                                                                       *
  ************************************************************************/
 
-void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMob, uint32 exp, EMobDifficulty mobCheck, bool isexpchain)
+void AddExperiencePoints(bool expFromRaise, bool awardRegionPoints, bool fromScripts, CCharEntity* PChar, CBaseEntity* PMob, uint32 exp, EMobDifficulty mobCheck, bool isexpchain)
 {
     TracyZoneScoped;
 
@@ -5440,7 +5632,8 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
         return;
     }
 
-    if (!expFromRaise)
+    // Scripts have their own settings in main.lua settings. This is for exp from combat.
+    if (!expFromRaise && !fromScripts)
     {
         exp = (uint32)(exp * settings::get<float>("map.EXP_RATE"));
     }
@@ -5516,7 +5709,7 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
         PChar->jobs.exp[PChar->GetMJob()] += exp;
     }
 
-    if (!expFromRaise)
+    if (!expFromRaise && !fromScripts && awardRegionPoints)
     {
         REGION_TYPE region = PChar->loc.zone->GetRegionID();
 
@@ -5533,6 +5726,8 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
             charutils::AddPoints(PChar, "imperial_standing", (int32)(exp * 0.1f));
             PChar->pushPacket<GP_SERV_COMMAND_CONQUEST>(PChar);
         }
+
+        // TODO: WOTG Expansion Sigil
 
         // Cruor Drops in Abyssea zones.
         uint16 Pzone = PChar->getZone();
@@ -5694,14 +5889,15 @@ void SaveCharLinkshells(CCharEntity* PChar)
 {
     for (uint8 lsSlot = 16; lsSlot < 18; ++lsSlot)
     {
-        if (PChar->equip[lsSlot] == 0)
+        auto eloc = PChar->equipLocation(lsSlot);
+        if (!eloc)
         {
             sql->Query("DELETE FROM char_linkshells WHERE charid = %u AND lsslot = %u LIMIT 1", PChar->id, lsSlot);
         }
         else
         {
             const char* fmtQuery = "INSERT INTO char_linkshells SET charid = %u, lsslot = %u, location = %u, slot = %u ON DUPLICATE KEY UPDATE location = %u, slot = %u";
-            sql->Query(fmtQuery, PChar->id, lsSlot, PChar->equipLoc[lsSlot], PChar->equip[lsSlot], PChar->equipLoc[lsSlot], PChar->equip[lsSlot]);
+            sql->Query(fmtQuery, PChar->id, lsSlot, static_cast<uint8>(eloc->Container), eloc->Slot, static_cast<uint8>(eloc->Container), eloc->Slot);
         }
     }
 }
@@ -5951,7 +6147,8 @@ void SaveCharEquip(CCharEntity* PChar)
 
     for (uint8 i = 0; i < 18; ++i)
     {
-        if (PChar->equip[i] == 0)
+        auto eloc = PChar->equipLocation(i);
+        if (!eloc)
         {
             db::preparedStmt("DELETE FROM char_equip WHERE charid = ? AND equipslotid = ? LIMIT 1", PChar->id, i);
         }
@@ -5962,10 +6159,10 @@ void SaveCharEquip(CCharEntity* PChar)
                              "ON DUPLICATE KEY UPDATE slotid  = ?, containerid = ?",
                              PChar->id,
                              i,
-                             PChar->equip[i],
-                             PChar->equipLoc[i],
-                             PChar->equip[i],
-                             PChar->equipLoc[i]);
+                             eloc->Slot,
+                             static_cast<uint8>(eloc->Container),
+                             eloc->Slot,
+                             static_cast<uint8>(eloc->Container));
         }
     }
 }
@@ -6024,7 +6221,7 @@ void SaveCharStats(CCharEntity* PChar)
                      PChar->health.mp,
                      PChar->profile.mhflag,
                      PChar->GetMJob(),
-                     PChar->GetSJob(),
+                     PChar->GetSJob(true),
                      PChar->petZoningInfo.petID,
                      static_cast<uint8>(PChar->petZoningInfo.petType),
                      PChar->petZoningInfo.petHP,
@@ -6512,6 +6709,18 @@ void SaveTeleport(CCharEntity* PChar, TELEPORT_TYPE type)
     }
 }
 
+void SaveMazeUnlocks(CCharEntity* PChar)
+{
+    TracyZoneScoped;
+
+    db::preparedStmt("UPDATE char_unlocks SET maze_vouchers = ?, maze_runes = ? WHERE charid = ? LIMIT 1",
+                     PChar->maze().vouchers,
+                     PChar->maze().runes,
+                     PChar->id);
+
+    PChar->pushPacket<GP_SERV_COMMAND_DUNGEON>(PChar);
+}
+
 void SaveLastLogout(const CCharEntity* PChar)
 {
     TracyZoneScoped;
@@ -6657,12 +6866,12 @@ void CheckUnarmedWeapon(CCharEntity* PChar)
     if ((battleutils::GetSkillRank(SKILL_HAND_TO_HAND, PChar->GetMJob()) > 0 || battleutils::GetSkillRank(SKILL_HAND_TO_HAND, PChar->GetSJob()) > 0) &&
         (!PSubslot || !PSubslot->isType(ITEM_EQUIPMENT)))
     {
-        PChar->m_Weapons[SLOT_MAIN] = itemutils::GetUnarmedH2HItem();
+        PChar->m_Weapons[SLOT_MAIN] = xi::items::unarmedH2H();
         PChar->look.main            = 21; // The secret to H2H animations.  setModelId for UnarmedH2H didn't work.
     }
     else
     {
-        PChar->m_Weapons[SLOT_MAIN] = itemutils::GetUnarmedItem();
+        PChar->m_Weapons[SLOT_MAIN] = xi::items::unarmed();
         PChar->look.main            = 0;
     }
     BuildingCharWeaponSkills(PChar);
@@ -7096,20 +7305,26 @@ std::string GetConquestPointsName(CCharEntity* PChar)
     }
 }
 
-void SendToZone(CCharEntity* PChar, uint16 zoneId)
+auto SendToZone(CCharEntity* PChar, uint16 zoneId) -> bool
 {
     TracyZoneScoped;
 
     if (PChar->PSession->blowfish.status == BLOWFISH_PENDING_ZONE)
     {
-        return;
+        return false;
     }
 
     auto ipp = IPP(zoneutils::GetZoneIPP(zoneId));
     if (ipp.getIP() == 0)
     {
         ShowErrorFmt("charutils::SendToZone : Invalid zoneId {}", zoneId);
-        return;
+        return false;
+    }
+
+    if (zoneutils::IsZoneAtPlayerCap(zoneId, PChar->m_GMlevel > 0))
+    {
+        ShowInfoFmt("charutils::SendToZone : zone {} at player cap, denying {} (gm={})", zoneId, PChar->name, PChar->m_GMlevel);
+        return false;
     }
 
     auto ip   = ipp.getIP();
@@ -7146,7 +7361,7 @@ void SendToZone(CCharEntity* PChar, uint16 zoneId)
     }
 
     // If player somehow gets zoned, force crit fail their synth
-    if (PChar->CraftContainer && PChar->CraftContainer->getItemsCount() > 0)
+    if (PChar->activeTransaction<SynthTransaction>())
     {
         charutils::forceSynthCritFail("SendToZone", PChar);
     }
@@ -7164,6 +7379,8 @@ void SendToZone(CCharEntity* PChar, uint16 zoneId)
     {
         PChar->setPetZoningInfo();
     }
+
+    return true;
 }
 
 void SendDisconnect(CCharEntity* PChar)
@@ -7209,9 +7426,16 @@ void ForceRezone(CCharEntity* PChar)
     }
 }
 
-void HomePoint(CCharEntity* PChar, bool resetHPMP)
+auto HomePoint(CCharEntity* PChar, bool resetHPMP) -> bool
 {
     TracyZoneScoped;
+
+    if (zoneutils::IsZoneAtPlayerCap(PChar->profile.home_point.destination, PChar->m_GMlevel > 0))
+    {
+        PChar->pushPacket<GP_SERV_COMMAND_SYSTEMMES>(0, 0, MsgStd::CouldNotEnter);
+        PChar->requestedWarp = false;
+        return false;
+    }
 
     // player initiated warp/warp 2 or otherwise
     if (resetHPMP)
@@ -7235,7 +7459,7 @@ void HomePoint(CCharEntity* PChar, bool resetHPMP)
     PChar->updatemask |= UPDATE_HP;
 
     PChar->clearPacketList();
-    SendToZone(PChar, PChar->loc.destination);
+    return SendToZone(PChar, PChar->loc.destination);
 }
 
 bool AddWeaponSkillPoints(CCharEntity* PChar, SLOTTYPE slotid, int wspoints)
@@ -7254,12 +7478,6 @@ bool AddWeaponSkillPoints(CCharEntity* PChar, SLOTTYPE slotid, int wspoints)
             PChar->pushPacket<GP_SERV_COMMAND_CLISTATUS>(PChar);
             PChar->pushPacket<GP_SERV_COMMAND_COMMAND_DATA>(PChar);
         }
-
-        db::preparedStmt("UPDATE char_inventory SET extra = ? WHERE charid = ? AND location = ? AND slot = ? LIMIT 1",
-                         PWeapon->m_extra,
-                         PChar->id,
-                         PWeapon->getLocationID(),
-                         PWeapon->getSlotID());
 
         return true;
     }
@@ -7603,26 +7821,53 @@ void WriteHistory(const CCharEntity* PChar)
         return;
     }
 
-    // Replace will also handle insert if it doesn't exist
-    db::preparedStmt("REPLACE INTO char_history "
-                     "(charid, enemies_defeated, times_knocked_out, mh_entrances, joined_parties, joined_alliances, spells_cast, "
-                     "abilities_used, ws_used, items_used, chats_sent, npc_interactions, battles_fought, gm_calls, distance_travelled) "
-                     "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                     PChar->id,
-                     PChar->m_charHistory.enemiesDefeated,
-                     PChar->m_charHistory.timesKnockedOut,
-                     PChar->m_charHistory.mhEntrances,
-                     PChar->m_charHistory.joinedParties,
-                     PChar->m_charHistory.joinedAlliances,
-                     PChar->m_charHistory.spellsCast,
-                     PChar->m_charHistory.abilitiesUsed,
-                     PChar->m_charHistory.wsUsed,
-                     PChar->m_charHistory.itemsUsed,
-                     PChar->m_charHistory.chatsSent,
-                     PChar->m_charHistory.npcInteractions,
-                     PChar->m_charHistory.battlesFought,
-                     PChar->m_charHistory.gmCalls,
-                     PChar->m_charHistory.distanceTravelled);
+    db::preparedStmt(
+        "INSERT INTO char_history SET "
+        "charid = ?, "
+        "enemies_defeated = ?, "
+        "times_knocked_out = ?, "
+        "mh_entrances = ?, "
+        "joined_parties = ?, "
+        "joined_alliances = ?, "
+        "spells_cast = ?, "
+        "abilities_used = ?, "
+        "ws_used = ?, "
+        "items_used = ?, "
+        "chats_sent = ?, "
+        "npc_interactions = ?, "
+        "battles_fought = ?, "
+        "gm_calls = ?, "
+        "distance_travelled = ? "
+        "ON DUPLICATE KEY UPDATE "
+        "enemies_defeated = VALUES(enemies_defeated), "
+        "times_knocked_out = VALUES(times_knocked_out), "
+        "mh_entrances = VALUES(mh_entrances), "
+        "joined_parties = VALUES(joined_parties), "
+        "joined_alliances = VALUES(joined_alliances), "
+        "spells_cast = VALUES(spells_cast), "
+        "abilities_used = VALUES(abilities_used), "
+        "ws_used = VALUES(ws_used), "
+        "items_used = VALUES(items_used), "
+        "chats_sent = VALUES(chats_sent), "
+        "npc_interactions = VALUES(npc_interactions), "
+        "battles_fought = VALUES(battles_fought), "
+        "gm_calls = VALUES(gm_calls), "
+        "distance_travelled = VALUES(distance_travelled)",
+        PChar->id,
+        PChar->m_charHistory.enemiesDefeated,
+        PChar->m_charHistory.timesKnockedOut,
+        PChar->m_charHistory.mhEntrances,
+        PChar->m_charHistory.joinedParties,
+        PChar->m_charHistory.joinedAlliances,
+        PChar->m_charHistory.spellsCast,
+        PChar->m_charHistory.abilitiesUsed,
+        PChar->m_charHistory.wsUsed,
+        PChar->m_charHistory.itemsUsed,
+        PChar->m_charHistory.chatsSent,
+        PChar->m_charHistory.npcInteractions,
+        PChar->m_charHistory.battlesFought,
+        PChar->m_charHistory.gmCalls,
+        PChar->m_charHistory.distanceTravelled);
 }
 
 uint8 getMaxItemLevel(CCharEntity* PChar)
@@ -7790,10 +8035,8 @@ void forceSynthCritFail(const std::string& sourceFunction, CCharEntity* PChar)
     // The broken rod can never be lost in a normal failed synth. It will only be lost if the synth is
     // interrupted in some way, such as by being attacked or moving to another area (e.g. ship docking).
 
-    ShowWarning("%s: %s attempting to zone in the middle of a synth, failing their synth!", sourceFunction, PChar->getName());
+    ShowWarning("%s: Force crit-failing %s synthesis!", sourceFunction, PChar->getName());
     synthutils::doSynthCriticalFail(PChar);
-
-    PChar->CraftContainer->Clean(); // Clean to reset m_ItemCount to 0
 }
 
 void removeCharFromZone(CCharEntity* PChar)
@@ -7806,6 +8049,14 @@ void removeCharFromZone(CCharEntity* PChar)
 
     PChar->TradePending.clean();
     PChar->InvitePending.clean();
+
+    if (PChar->loc.zone != nullptr)
+    {
+        if (auto* manager = PChar->loc.zone->nominateManager())
+        {
+            manager->onCharLeavingZone(PChar);
+        }
+    }
 
     PChar->WideScanTarget = std::nullopt;
 
@@ -7872,7 +8123,6 @@ void removeCharFromZone(CCharEntity* PChar)
     {
         PChar->PSession->shuttingDown = 2;
         db::preparedStmt("UPDATE char_stats SET zoning = 1 WHERE charid = ?", PChar->id);
-        charutils::CheckEquipLogic(PChar, SCRIPT_CHANGEZONE, PChar->getZone());
     }
 
     if (PChar->loc.zone != nullptr)
@@ -7915,18 +8165,6 @@ void loadDeathTimestamp(CCharEntity* PChar)
     }
 }
 
-void loadZoningFlag(CCharEntity* PChar)
-{
-    const auto rset = db::preparedStmt("SELECT pos_prevzone FROM chars WHERE charid = ? LIMIT 1", PChar->id);
-    if (rset && rset->rowsCount() && rset->next())
-    {
-        if (PChar->getZone() == rset->get<uint16>("pos_prevzone"))
-        {
-            PChar->loc.zoning = true;
-        }
-    }
-}
-
 bool isOrchestrionPlaced(CCharEntity* PChar)
 {
     for (auto safeContainerId : { LOC_MOGSAFE, LOC_MOGSAFE2 })
@@ -7951,30 +8189,6 @@ bool isOrchestrionPlaced(CCharEntity* PChar)
 
 void updateMannequins(CCharEntity* PChar)
 {
-    // Build Mannequin model id list
-    auto getModelIdFromStorageSlot = [](CCharEntity* PChar, uint8 slot) -> uint16
-    {
-        uint16 modelId = 0x0000;
-
-        if (slot == 0)
-        {
-            return modelId;
-        }
-
-        auto* PItem = PChar->getStorage(LOC_STORAGE)->GetItem(slot);
-        if (PItem == nullptr)
-        {
-            return modelId;
-        }
-
-        if (auto* PItemEquipment = dynamic_cast<CItemEquipment*>(PItem))
-        {
-            modelId = PItemEquipment->getModelId();
-        }
-
-        return modelId;
-    };
-
     for (auto safeContainerId : { LOC_MOGSAFE, LOC_MOGSAFE2 })
     {
         CItemContainer* PContainer = PChar->getStorage(safeContainerId);
@@ -7986,27 +8200,14 @@ void updateMannequins(CCharEntity* PChar)
                 auto* PFurnishing = static_cast<CItemFurnishing*>(PContainerItem);
                 if (PFurnishing->isInstalled() && PFurnishing->isMannequin())
                 {
-                    auto* PMannequin = PFurnishing;
+                    auto& mannequin = PFurnishing->exdata<Exdata::Mannequin>();
 
-                    uint16 mainId  = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 0]);
-                    uint16 subId   = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 1]);
-                    uint16 rangeId = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 2]);
-                    uint16 headId  = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 3]);
-                    uint16 bodyId  = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 4]);
-                    uint16 handsId = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 5]);
-                    uint16 legId   = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 6]);
-                    uint16 feetId  = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 7]);
-                    uint8  race    = PMannequin->m_extra[10 + 8];
-                    uint8  pose    = PMannequin->m_extra[10 + 9];
-
-                    std::ignore = pose;
-
-                    if (race == 0)
+                    if (mannequin.Race == 0)
                     {
                         ShowWarning("Invalid Mannequin placed (race of 0 in exdata, when races start at 1). It will be unusable.");
                     }
 
-                    PChar->pushPacket<GP_SERV_COMMAND_ITEM_SUBCONTAINER>(safeContainerId, slotIndex, headId, bodyId, handsId, legId, feetId, mainId, subId, rangeId);
+                    PChar->pushPacket<GP_SERV_COMMAND_ITEM_SUBCONTAINER>(PChar, safeContainerId, slotIndex, mannequin);
                 }
             }
         }
@@ -8071,6 +8272,13 @@ void ApplyAbilityRecast(CCharEntity* PChar, const CAbility* PAbility, const Char
     if (settings::get<bool>("map.BLOOD_PACT_SHARED_TIMER") && (recastId == Recast::BloodPactRage || recastId == Recast::BloodPactWard))
     {
         PChar->PRecastContainer->Add(RECAST_ABILITY, (recastId == Recast::BloodPactRage ? Recast::BloodPactWard : Recast::BloodPactRage), recastTime);
+    }
+
+    // Yonin (recastId 146) and Innin share a server-side timer via the SQL recastId update.
+    // Also add Innin's original client-facing recast ID (147) so the client greys out Innin.
+    if (recastId == static_cast<Recast>(146))
+    {
+        PChar->PRecastContainer->Add(RECAST_ABILITY, static_cast<Recast>(147), recastTime);
     }
 
     PChar->pushPacket<GP_SERV_COMMAND_ABIL_RECAST>(PChar);

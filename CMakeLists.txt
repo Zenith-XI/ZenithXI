@@ -72,6 +72,22 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
+CPMAddPackage(
+    NAME ZLIB
+    GITHUB_REPOSITORY madler/zlib
+    GIT_TAG v1.3.1
+    OPTIONS "ZLIB_BUILD_EXAMPLES OFF"
+)
+if(ZLIB_ADDED)
+    add_library(ZLIB::ZLIB ALIAS zlibstatic)
+endif()
+
+CPMAddPackage(
+    NAME utfcpp
+    GITHUB_REPOSITORY nemtrif/utfcpp
+    GIT_TAG v4.0.8
+)
+
 # Find Python (defines ${Python_EXECUTABLE})
 find_package(Python REQUIRED)
 message(STATUS "Python_EXECUTABLE: ${Python_EXECUTABLE}")
@@ -97,6 +113,8 @@ find_package(OpenSSLlibcrypto REQUIRED)
 find_package(OpenSSLlibssl REQUIRED)
 
 if(UNIX AND NOT APPLE)
+# zstd is sometimes a prereq for binutils
+    find_package(Zstd REQUIRED)
     find_package(Binutils REQUIRED)
 endif()
 
@@ -111,14 +129,12 @@ set_project_warnings(project_warnings)
 # Globally define SOL_ALL_SAFETIES_ON so sol can be included anywhere
 # If SOL_NO_CHECK_NUMBER_PRECISION is defined, turns off number precision and integer
 # precision fitting when pushing numbers into sol
-# RC_FAST_MATH informs recastnavigation to not try to use infinity because we use -ffast-math
 # add_compile_definitions() comes with CMake 3.12
 add_definitions(
     -DSOL_ALL_SAFETIES_ON=1
     -DSOL_NO_CHECK_NUMBER_PRECISION=1
     -DSOL_DEFAULT_PASS_ON_ERROR=1
     -DSOL_PRINT_ERRORS=0
-    -DRC_FAST_MATH=1
     -DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_DEBUG
 )
 

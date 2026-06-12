@@ -32,27 +32,11 @@ UPDATE merits SET value = 150 WHERE name = 'martyr';
 UPDATE merits SET value = 150 WHERE name = 'devotion';
 
 -- Animus Solace: Disable merit upgrades
+-- Source: https://forum.square-enix.com/ffxi/threads/55360?_ga=2.195400239.203489549.1557463710-808700183.1440009048
 UPDATE merits SET upgrade = 0 WHERE name = 'animus_solace';
 
 -- Animus Misery: Disable merit upgrades
 UPDATE merits SET upgrade = 0 WHERE name = 'animus_misery';
-
-------------------------------------
--- WHM Spell Cast Times
--- Source: https://www.bg-wiki.com/ffxi/Version_Update_(02/13/2012)
-------------------------------------
-
--- Esuna: Revert cast time from 1 to 3 seconds
-UPDATE spell_list SET castTime = 3000 WHERE name = 'esuna';
-
--- Sacrifice: Revert cast time from 1 to 1.5 seconds
-UPDATE spell_list SET castTime = 1500 WHERE name = 'sacrifice';
-
--- Blindna: Revert cast time from 1 to 3 seconds
-UPDATE spell_list SET castTime = 3000 WHERE name = 'blindna';
-
--- Cursna: Revert cast time from 1 to 3 seconds
-UPDATE spell_list SET castTime = 3000 WHERE name = 'cursna';
 
 ------------------------------------
 -- Thief
@@ -101,6 +85,35 @@ UPDATE abilities SET recastTime = 900 WHERE name = 'diabolic_eye';
 UPDATE merits SET value = 150 WHERE name = 'diabolic_eye';
 
 ------------------------------------
+-- Paladin
+------------------------------------
+
+-- Holy Circle: Revert recast from 5 to 10 minutes
+-- Source: https://www.bg-wiki.com/ffxi/Version_Update_(02/13/2012)
+UPDATE abilities SET recastTime = 600 WHERE name = 'holy_circle';
+
+-- Holy Circle merit: Revert value to 20 seconds per level
+UPDATE merits SET value = 20 WHERE name = 'holy_circle_recast';
+
+-- Chivalry: Revert recast from 10 to 20 minutes
+UPDATE abilities SET recastTime = 1200 WHERE name = 'chivalry';
+
+-- Fealty: Revert recast from 10 to 20 minutes
+UPDATE abilities SET recastTime = 1200 WHERE name = 'fealty';
+
+-- Chivalry merit: Revert value to 150 seconds per level
+UPDATE merits SET value = 150 WHERE name = 'chivalry';
+
+-- Fealty merit: Revert value to 150 seconds per level
+UPDATE merits SET value = 150 WHERE name = 'fealty';
+
+-- Shield Bash: Revert recast from 3 to 5 minutes
+UPDATE abilities SET recastTime = 300 WHERE name = 'shield_bash';
+
+-- Shield Bash merit: Revert value to 10 seconds per level
+UPDATE merits SET value = 10 WHERE name = 'shield_bash_recast';
+
+------------------------------------
 -- Beastmaster
 ------------------------------------
 
@@ -124,6 +137,21 @@ UPDATE abilities SET recastTime = 900 WHERE name = 'killer_instinct';
 
 -- Killer Instinct merit: Revert value to 150 seconds per level
 UPDATE merits SET value = 150 WHERE name = 'killer_instinct';
+
+-- Mazurka: Revert to town/field only
+-- Source: https://www.bg-wiki.com/ffxi/Version_Update_(09/08/2010)
+SET @TYPE_CITY     = 1;
+SET @TYPE_OUTDOORS = 2;
+SET @MISC_MAZURKA  = 8;
+
+-- Remove mazurka from all zones
+UPDATE zone_settings
+SET misc = misc & ~@MISC_MAZURKA;
+
+-- Reapply to cities and outdoor zones
+UPDATE zone_settings
+SET misc = misc | @MISC_MAZURKA
+WHERE (zonetype & (@TYPE_CITY | @TYPE_OUTDOORS)) <> 0;
 
 ------------------------------------
 -- Samurai
@@ -180,13 +208,6 @@ UPDATE abilities SET recastTime = 300 WHERE name = 'yonin';
 
 -- Innin: Revert recast from 3 minutes to 5 minutes and add shared cooldown with Yonin
 UPDATE abilities SET recastTime = 300, recastId = 146 WHERE name = 'innin';
-
--- Tonko: Ichi: Revert cast time from 1.5 to 4 seconds
--- Source: https://www.bg-wiki.com/ffxi/Version_Update_(02/13/2012)
-UPDATE spell_list SET castTime = 4000 WHERE name = 'tonko_ichi';
-
--- Monomi: Ichi: Revert cast time from 1.5 to 4 seconds
-UPDATE spell_list SET castTime = 4000 WHERE name = 'monomi_ichi';
 
 -----------------------------------
 -- Dragoon

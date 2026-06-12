@@ -23,25 +23,27 @@
 #define _CTRADECONTAINER_H
 
 #include "common/cbasetypes.h"
+#include <variant>
 #include <vector>
 
 #define CONTAINER_SIZE       17
 #define TRADE_CONTAINER_SIZE 8
 
-/************************************************************************
- *                                                                       *
- *                                                                       *
- *                                                                       *
- ************************************************************************/
+class CItem;
 
-enum CRAFT_TYPE
+struct JobRestriction
 {
-    CRAFT_SYNTHESIS         = 0,
-    CRAFT_DESYNTHESIS       = 1,
-    CRAFT_SYNTHESIS_NO_LOSS = 2,
+    uint8 jobId{};
+    uint8 level{};
 };
 
-class CItem;
+struct GuildRestriction
+{
+    uint8  guildId{};
+    uint16 rank{};
+};
+
+using SlotRestriction = std::variant<std::monostate, JobRestriction, GuildRestriction>;
 
 class CTradeContainer
 {
@@ -49,12 +51,10 @@ public:
     CTradeContainer();
 
     uint8  getType() const;
-    uint8  getCraftType() const;
     uint8  getItemsCount() const;
     uint8  getSlotCount();     // Number of occupied cells
     uint32 getTotalQuantity(); // Total number of items (gil counts as 1)
-    uint8  getGuildID(uint8 slotID);
-    uint16 getGuildRank(uint8 slotID);
+    auto   getRestriction(uint8 slotID) const -> SlotRestriction;
     CItem* getItem(uint8 slotID);
     uint16 getItemID(uint8 slotID);
     uint8  getInvSlotID(uint8 slotID);
@@ -65,11 +65,9 @@ public:
     uint8  getExSize() const;
 
     void setType(uint8 type);
-    void setCraftType(uint8 craftType);
     void setItemsCount(uint8 count);
     void setItem(uint8 slotID, CItem* item);
-    void setGuildID(uint8 slotID, uint8 guildID);
-    void setGuildRank(uint8 slotID, uint16 guildRank);
+    void setRestriction(uint8 slotID, SlotRestriction restriction);
     void setItemID(uint8 slotID, uint16 itemID);
     void setInvSlotID(uint8 slotID, uint8 invSlotID);
     void setQuantity(uint8 slotID, uint32 quantity);
@@ -83,17 +81,15 @@ public:
 
 private:
     uint8 m_type{};       // Container type (crystal type, store nation, etc.)
-    uint8 m_craftType{};  // The craft synthesis type (CRAFT_TYPE)
     uint8 m_ItemsCount{}; // The number of items in the container (set by yourself)
     uint8 m_exSize{};     // Can be used as a custom delineation point inside a container
 
-    std::vector<CItem*> m_PItem;
-    std::vector<uint8>  m_slotID;
-    std::vector<uint16> m_itemID;
-    std::vector<uint32> m_quantity;
-    std::vector<uint32> m_confirmed;
-    std::vector<uint8>  m_guildID;
-    std::vector<uint16> m_guildRank;
+    std::vector<CItem*>          m_PItem;
+    std::vector<uint8>           m_slotID;
+    std::vector<uint16>          m_itemID;
+    std::vector<uint32>          m_quantity;
+    std::vector<uint32>          m_confirmed;
+    std::vector<SlotRestriction> restrictions_;
 };
 
 #endif

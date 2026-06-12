@@ -29,17 +29,18 @@
 
 auto GP_CLI_COMMAND_GROUP_COMLINK_MAKE::validate(MapSession* PSession, const CCharEntity* PChar) const -> PacketValidationResult
 {
-    return PacketValidator()
-        .mustEqual(State, 0, "State not 0")
-        .oneOf<GP_CLI_COMMAND_GROUP_COMLINK_MAKE_LINKSHELLID>(LinkshellId)
-        .hasLinkshellRank(PChar, LinkshellId, LSTYPE_PEARLSACK);
+    return PacketValidator(PChar)
+        .blockedBy({ BlockedState::InEvent })
+        .mustEqual(this->State, 0, "State not 0")
+        .oneOf<GP_CLI_COMMAND_GROUP_COMLINK_MAKE_LINKSHELLID>(this->LinkshellId)
+        .hasLinkshellRank(this->LinkshellId, LSTYPE_PEARLSACK);
 }
 
 void GP_CLI_COMMAND_GROUP_COMLINK_MAKE::process(MapSession* PSession, CCharEntity* PChar) const
 {
     const CItemLinkshell* PItemLinkshell = nullptr;
 
-    switch (static_cast<GP_CLI_COMMAND_GROUP_COMLINK_MAKE_LINKSHELLID>(LinkshellId))
+    switch (static_cast<GP_CLI_COMMAND_GROUP_COMLINK_MAKE_LINKSHELLID>(this->LinkshellId))
     {
         case GP_CLI_COMMAND_GROUP_COMLINK_MAKE_LINKSHELLID::Linkshell1:
             PItemLinkshell = reinterpret_cast<CItemLinkshell*>(PChar->getEquip(SLOT_LINK1));
@@ -55,12 +56,13 @@ void GP_CLI_COMMAND_GROUP_COMLINK_MAKE::process(MapSession* PSession, CCharEntit
     }
 
     // Make a new Linkpearl
-    auto* PItemLinkPearl = static_cast<CItemLinkshell*>(itemutils::GetItem(ITEMID::LINKPEARL));
-    if (PItemLinkPearl)
+    auto PItem = xi::items::spawn(ITEMID::LINKPEARL);
+    if (PItem)
     {
+        auto* PItemLinkPearl = static_cast<CItemLinkshell*>(PItem.get());
         PItemLinkPearl->setQuantity(1);
         std::memcpy(PItemLinkPearl->m_extra, PItemLinkshell->m_extra, 24);
         PItemLinkPearl->SetLSType(LSTYPE_LINKPEARL);
-        charutils::AddItem(PChar, LOC_INVENTORY, PItemLinkPearl);
+        charutils::AddItem(PChar, LOC_INVENTORY, std::move(PItem));
     }
 }

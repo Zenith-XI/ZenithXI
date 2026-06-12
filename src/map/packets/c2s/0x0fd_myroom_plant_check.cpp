@@ -36,30 +36,48 @@ const std::set<uint8_t> validPlantCategories = { LOC_MOGSAFE, LOC_MOGSAFE2 };
 
 auto GP_CLI_COMMAND_MYROOM_PLANT_CHECK::validate(MapSession* PSession, const CCharEntity* PChar) const -> PacketValidationResult
 {
-    return PacketValidator()
-        .mustNotEqual(MyroomPlantItemNo, 0, "MyroomPlantItemNo must not be 0")
-        .oneOf("MyroomPlantCategory", MyroomPlantCategory, validPlantCategories);
+    return PacketValidator(PChar)
+        .blockedBy({ BlockedState::InEvent })
+        .mustNotEqual(this->MyroomPlantItemNo, 0, "MyroomPlantItemNo must not be 0")
+        .oneOf("MyroomPlantCategory", this->MyroomPlantCategory, validPlantCategories);
 }
 
 void GP_CLI_COMMAND_MYROOM_PLANT_CHECK::process(MapSession* PSession, CCharEntity* PChar) const
 {
-    CItemContainer* PItemContainer = PChar->getStorage(MyroomPlantCategory);
-    auto*           PItem          = static_cast<CItemFlowerpot*>(PItemContainer->GetItem(MyroomPlantItemIndex));
-    if (PItem == nullptr)
+    CItemContainer* PItemContainer = PChar->getStorage(this->MyroomPlantCategory);
+    auto*           PItem          = PItemContainer->GetItem(this->MyroomPlantItemIndex);
+    auto*           PPotItem       = dynamic_cast<CItemFlowerpot*>(PItem);
+
+    if (PPotItem == nullptr)
     {
+        if (PItem)
+        {
+            ShowWarning(fmt::format("GP_CLI_COMMAND_MYROOM_PLANT_CHECK::process: {} has tried to use invalid gardening pot {} ({})",
+                                    PChar->getName(),
+                                    PItem->getID(),
+                                    PItem->getName()));
+            return;
+        }
+        else
+        {
+            ShowWarning(fmt::format("GP_CLI_COMMAND_MYROOM_PLANT_CHECK::process: {} has tried to use invalid gardening pot item (MyroomPlantCategory = {}, MyroomPlantItemIndex = {})",
+                                    PChar->getName(),
+                                    this->MyroomPlantCategory,
+                                    this->MyroomPlantItemIndex));
+        }
         return;
     }
 
-    if (PItem->isPlanted())
+    if (PPotItem->isPlanted())
     {
-        PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, CItemFlowerpot::getSeedID(PItem->getPlant()), 0, MsgBasic::GardeningSeedSown);
-        if (PItem->isTree())
+        PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, CItemFlowerpot::getSeedID(PPotItem->getPlant()), 0, MsgBasic::GardeningSeedSown);
+        if (PPotItem->isTree())
         {
-            if (PItem->getStage() > FLOWERPOT_STAGE_FIRST_SPROUTS_CRYSTAL)
+            if (PPotItem->getStage() > FLOWERPOT_STAGE_FIRST_SPROUTS_CRYSTAL)
             {
-                if (PItem->getExtraCrystalFeed() != FLOWERPOT_ELEMENT_NONE)
+                if (PPotItem->getExtraCrystalFeed() != FLOWERPOT_ELEMENT_NONE)
                 {
-                    PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, CItemFlowerpot::getItemFromElement(PItem->getExtraCrystalFeed()), 0, MsgBasic::GardeningCrystalUsed);
+                    PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, CItemFlowerpot::getItemFromElement(PPotItem->getExtraCrystalFeed()), 0, MsgBasic::GardeningCrystalUsed);
                 }
                 else
                 {
@@ -67,11 +85,11 @@ void GP_CLI_COMMAND_MYROOM_PLANT_CHECK::process(MapSession* PSession, CCharEntit
                 }
             }
         }
-        if (PItem->getStage() > FLOWERPOT_STAGE_SECOND_SPROUTS_CRYSTAL)
+        if (PPotItem->getStage() > FLOWERPOT_STAGE_SECOND_SPROUTS_CRYSTAL)
         {
-            if (PItem->getCommonCrystalFeed() != FLOWERPOT_ELEMENT_NONE)
+            if (PPotItem->getCommonCrystalFeed() != FLOWERPOT_ELEMENT_NONE)
             {
-                PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, CItemFlowerpot::getItemFromElement(PItem->getCommonCrystalFeed()), 0, MsgBasic::GardeningCrystalUsed);
+                PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, CItemFlowerpot::getItemFromElement(PPotItem->getCommonCrystalFeed()), 0, MsgBasic::GardeningCrystalUsed);
             }
             else
             {
@@ -79,17 +97,17 @@ void GP_CLI_COMMAND_MYROOM_PLANT_CHECK::process(MapSession* PSession, CCharEntit
             }
         }
 
-        if (!PItem->wasExamined())
+        if (!PPotItem->wasExamined())
         {
-            PItem->markExamined();
+            PPotItem->markExamined();
 
             db::preparedStmt("UPDATE char_inventory SET extra = ? WHERE charid = ? AND location = ? AND slot = ? LIMIT 1",
-                             PItem->m_extra,
+                             PPotItem->m_extra,
                              PChar->id,
-                             PItem->getLocationID(),
-                             PItem->getSlotID());
+                             PPotItem->getLocationID(),
+                             PPotItem->getSlotID());
         }
     }
 
-    PChar->pushPacket<GP_SERV_COMMAND_MYROOM_OPERATION>(PItem, static_cast<CONTAINER_ID>(MyroomPlantCategory), MyroomPlantItemIndex);
+    PChar->pushPacket<GP_SERV_COMMAND_MYROOM_OPERATION>(PPotItem, static_cast<CONTAINER_ID>(this->MyroomPlantCategory), this->MyroomPlantItemIndex);
 }

@@ -111,8 +111,7 @@ const auto isValidMovement = [](const CCharEntity* PChar, const CONTAINER_ID fro
 {
     const CItem* PItem = PChar->getStorage(from)->GetItem(itemIndex);
 
-    // Always disallowed to move locked items or Gil.
-    if (!PItem || PItem->isSubType(ITEM_LOCKED) || PItem->getID() == ITEMID::GIL)
+    if (!PItem || PItem->isSubType(ITEM_LOCKED) || PItem->isBusy() || PItem->getID() == ITEMID::GIL)
     {
         return false;
     }
@@ -150,54 +149,56 @@ auto GP_CLI_COMMAND_ITEM_MOVE::validate(MapSession* PSession, const CCharEntity*
 {
     const auto validContainersForChar = validContainers(PChar);
 
-    return PacketValidator()
-        .oneOf("Category1", static_cast<CONTAINER_ID>(Category1), validContainersForChar)
-        .oneOf("Category2", static_cast<CONTAINER_ID>(Category2), validContainersForChar)
+    return PacketValidator(PChar)
+        .blockedBy({ BlockedState::InEvent })
+        .oneOf("Category1", static_cast<CONTAINER_ID>(this->Category1), validContainersForChar)
+        .oneOf("Category2", static_cast<CONTAINER_ID>(this->Category2), validContainersForChar)
         .mustEqual(isValidMovement(PChar,
-                                   static_cast<CONTAINER_ID>(Category1),
-                                   static_cast<CONTAINER_ID>(Category2),
-                                   ItemIndex1),
+                                   static_cast<CONTAINER_ID>(this->Category1),
+                                   static_cast<CONTAINER_ID>(this->Category2),
+                                   this->ItemIndex1),
                    true,
                    "Illegal movement");
 }
 
 void GP_CLI_COMMAND_ITEM_MOVE::process(MapSession* PSession, CCharEntity* PChar) const
 {
-    CItem* PItem = PChar->getStorage(Category1)->GetItem(ItemIndex1);
+    CItem* PItem = PChar->getStorage(this->Category1)->GetItem(this->ItemIndex1);
 
     if (!PItem)
     {
         return;
     }
 
-    if (PItem->getQuantity() - PItem->getReserve() < ItemNum)
+    if (PItem->getQuantity() - PItem->getReserve() < this->ItemNum)
     {
-        ShowWarning("GP_CLI_COMMAND_ITEM_MOVE: Trying to move too much quantity from location %u slot %u", Category1, ItemIndex1);
+        ShowWarning("GP_CLI_COMMAND_ITEM_MOVE: Trying to move too much quantity from location %u slot %u", this->Category1, this->ItemIndex1);
         return;
     }
 
-    if (const uint32 newQty = PItem->getQuantity() - ItemNum; newQty != 0) // split item stack
+    if (const uint32 newQty = PItem->getQuantity() - this->ItemNum; newQty != 0) // split item stack
     {
-        if (charutils::AddItem(PChar, Category2, PItem->getID(), ItemNum) != ERROR_SLOTID)
+        if (charutils::AddItem(PChar, this->Category2, PItem->getID(), this->ItemNum) != ERROR_SLOTID)
         {
-            charutils::UpdateItem(PChar, Category1, ItemIndex1, -static_cast<int32>(ItemNum));
+            charutils::UpdateItem(PChar, this->Category1, this->ItemIndex1, -static_cast<int32>(this->ItemNum));
         }
     }
     else // move stack / combine items into stack
     {
-        if (ItemIndex2 < 82) // 80 + 1
+        if (this->ItemIndex2 < 82) // 80 + 1
         {
-            ShowDebug("GP_CLI_COMMAND_ITEM_MOVE: Trying to unite items", Category1, ItemIndex1);
-            const CItem* PItem2 = PChar->getStorage(Category2)->GetItem(ItemIndex2);
+            ShowDebug("GP_CLI_COMMAND_ITEM_MOVE: Trying to unite items", this->Category1, this->ItemIndex1);
+            const CItem* PItem2 = PChar->getStorage(this->Category2)->GetItem(this->ItemIndex2);
 
             if (!PItem2 || PItem2->getID() != PItem->getID() ||
                 PItem2->isSubType(ITEM_LOCKED) ||
+                PItem2->isBusy() ||
                 PItem2->getReserve() > 0)
             {
                 ShowWarning("GP_CLI_COMMAND_ITEM_MOVE: Trying to unite items with invalid item %i at location %u slot %u",
                             PItem2 ? PItem2->getID() : 0,
-                            Category2,
-                            ItemIndex2);
+                            this->Category2,
+                            this->ItemIndex2);
                 return;
             }
 
@@ -216,51 +217,52 @@ void GP_CLI_COMMAND_ITEM_MOVE::process(MapSession* PSession, CCharEntity* PChar)
                 }
                 if (moveQty > 0)
                 {
-                    charutils::UpdateItem(PChar, Category2, ItemIndex2, moveQty);
-                    charutils::UpdateItem(PChar, Category1, ItemIndex1, -static_cast<int32>(moveQty));
+                    charutils::UpdateItem(PChar, this->Category2, this->ItemIndex2, moveQty);
+                    charutils::UpdateItem(PChar, this->Category1, this->ItemIndex1, -static_cast<int32>(moveQty));
                 }
             }
 
             return;
         }
 
-        if (uint8 newSlotId = PChar->getStorage(Category2)->InsertItem(PItem); newSlotId != ERROR_SLOTID)
+        auto* PSrc      = PChar->getStorage(this->Category1);
+        auto* PDst      = PChar->getStorage(this->Category2);
+        uint8 newSlotId = PSrc->MoveItemTo(this->ItemIndex1, *PDst);
+        if (newSlotId != ERROR_SLOTID)
         {
             const auto rset = db::preparedStmt("UPDATE char_inventory SET location = ?, slot = ? WHERE charid = ? AND location = ? AND slot = ?",
-                                               Category2,
+                                               this->Category2,
                                                newSlotId,
                                                PChar->id,
-                                               Category1,
-                                               ItemIndex1);
+                                               this->Category1,
+                                               this->ItemIndex1);
             if (rset && rset->rowsAffected())
             {
-                PChar->getStorage(Category1)->InsertItem(nullptr, ItemIndex1);
-
-                PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(nullptr, static_cast<CONTAINER_ID>(Category1), ItemIndex1, PItem);
-                PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PItem, static_cast<CONTAINER_ID>(Category2), newSlotId);
+                auto* PInserted = PDst->GetItem(newSlotId);
+                PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(nullptr, static_cast<CONTAINER_ID>(this->Category1), this->ItemIndex1, PInserted);
+                PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PInserted, static_cast<CONTAINER_ID>(this->Category2), newSlotId);
             }
             else
             {
-                PChar->getStorage(Category2)->InsertItem(nullptr, newSlotId);
-                PChar->getStorage(Category1)->InsertItem(PItem, ItemIndex1);
+                PDst->MoveItemTo(newSlotId, *PSrc, this->ItemIndex1);
             }
         }
         else
         {
             // Client assumed the location was not full when it is
             // Resend the packets to inform the client of the storage sizes
-            const uint8 size = PChar->getStorage(Category2)->GetSize();
+            const uint8 size = PChar->getStorage(this->Category2)->GetSize();
             for (uint8 slotID = 0; slotID <= size; ++slotID)
             {
                 if (CItem* PSlotItem = PChar->getStorage(Category2)->GetItem(slotID); PSlotItem != nullptr)
                 {
-                    PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PSlotItem, static_cast<CONTAINER_ID>(Category2), slotID);
+                    PChar->pushPacket<GP_SERV_COMMAND_ITEM_ATTR>(PSlotItem, static_cast<CONTAINER_ID>(this->Category2), slotID);
                 }
             }
 
             PChar->pushPacket<GP_SERV_COMMAND_ITEM_SAME>(PChar);
 
-            ShowError("GP_CLI_COMMAND_ITEM_MOVE: Location %u Slot %u is full", Category2, ItemIndex2);
+            ShowError("GP_CLI_COMMAND_ITEM_MOVE: Location %u Slot %u is full", this->Category2, this->ItemIndex2);
             return;
         }
     }

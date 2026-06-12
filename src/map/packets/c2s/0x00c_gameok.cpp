@@ -36,6 +36,7 @@
 #include "packets/s2c/0x08e_alter_ego_points.h"
 #include "packets/s2c/0x0aa_magic_data.h"
 #include "packets/s2c/0x0ac_command_data.h"
+#include "packets/s2c/0x0ad_dungeon.h"
 #include "packets/s2c/0x0ae_mount_data.h"
 #include "packets/s2c/0x0b4_config.h"
 #include "packets/s2c/0x0ca_inspect_message.h"
@@ -46,7 +47,7 @@
 
 auto GP_CLI_COMMAND_GAMEOK::validate(MapSession* PSession, const CCharEntity* PChar) const -> PacketValidationResult
 {
-    return PacketValidator()
+    return PacketValidator(PChar)
         .mustEqual(ClientState, 0, "ClientState not 0")
         .mustEqual(DebugClientFlg, 0, "DebugClientFlg not 0");
 }
@@ -78,6 +79,7 @@ void GP_CLI_COMMAND_GAMEOK::process(MapSession* PSession, CCharEntity* PChar) co
     charutils::SendRecordsOfEminenceLog(PChar);
     PChar->pushPacket<GP_SERV_COMMAND_MAGIC_DATA>(PChar);
     PChar->pushPacket<GP_SERV_COMMAND_MOUNT_DATA>(PChar);
+    PChar->pushPacket<GP_SERV_COMMAND_DUNGEON>(PChar);
     PChar->pushPacket<GP_SERV_COMMAND_COMMAND_DATA>(PChar);
     PChar->pushPacket<CCharSyncPacket>(PChar);
     PChar->pushPacket<GP_SERV_COMMAND_INSPECT_MESSAGE>(PChar);

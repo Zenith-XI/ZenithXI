@@ -25,7 +25,6 @@
 #include "common/logging.h"
 #include "common/timer.h"
 #include "common/utils.h"
-#include "enums/packet_c2s.h"
 #include "lua/helpers/lua_client_entity_pair_entities.h"
 #include "lua/helpers/lua_client_entity_pair_events.h"
 #include "lua/helpers/lua_client_entity_pair_packets.h"
@@ -37,10 +36,19 @@
 #include "map/enums/party_kind.h"
 #include "map/lua/lua_baseentity.h"
 #include "map/packets/c2s/0x01a_action.h"
+#include "map/packets/c2s/0x028_item_dump.h"
+#include "map/packets/c2s/0x029_item_move.h"
+#include "map/packets/c2s/0x032_trade_req.h"
+#include "map/packets/c2s/0x033_trade_res.h"
+#include "map/packets/c2s/0x034_trade_list.h"
 #include "map/packets/c2s/0x036_item_transfer.h"
 #include "map/packets/c2s/0x037_item_use.h"
+#include "map/packets/c2s/0x03a_item_stack.h"
+#include "map/packets/c2s/0x053_lockstyle.h"
 #include "map/packets/c2s/0x06e_group_solicit_req.h"
 #include "map/packets/c2s/0x074_group_solicit_res.h"
+#include "map/packets/c2s/0x096_combine_ask.h"
+#include "map/packets/c2s/0x102_extended_job.h"
 #include "map/spell.h"
 #include "map/status_effect_container.h"
 #include "packets/c2s/0x015_pos.h"
@@ -61,7 +69,7 @@ CLuaClientEntityPairActions::CLuaClientEntityPairActions(CLuaClientEntityPair* p
 
 void CLuaClientEntityPairActions::move(const float x, const float y, const float z, sol::optional<uint8_t> rot) const
 {
-    const auto packet    = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_POS);
+    const auto packet    = parent_->packets().createPacket<GP_CLI_COMMAND_POS>();
     auto*      posPacket = packet->as<GP_CLI_COMMAND_POS>();
     posPacket->x         = x;
     posPacket->z         = y;
@@ -86,7 +94,7 @@ void CLuaClientEntityPairActions::useSpell(CLuaBaseEntity* target, const SpellID
         return;
     }
 
-    const auto packet               = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ACTION);
+    const auto packet               = parent_->packets().createPacket<GP_CLI_COMMAND_ACTION>();
     auto*      actionPacket         = packet->as<GP_CLI_COMMAND_ACTION>();
     actionPacket->UniqueNo          = target->getID();
     actionPacket->ActIndex          = target->getTargID();
@@ -94,6 +102,36 @@ void CLuaClientEntityPairActions::useSpell(CLuaBaseEntity* target, const SpellID
     actionPacket->CastMagic.SpellId = static_cast<uint32_t>(spellId);
 
     parent_->packets().sendBasicPacket(*packet);
+}
+
+/************************************************************************
+ *  Function: setBlueSpells()
+ *  Purpose : Populates the player's BLU spell page from a list of spell IDs.
+ *  Example : player.actions:setBlueSpells({ xi.magic.spell.HEAVY_STRIKE })
+ ************************************************************************/
+
+void CLuaClientEntityPairActions::setBlueSpells(const sol::table& spellIds) const
+{
+    uint8 slot = 0;
+
+    for (auto& kv : spellIds)
+    {
+        if (slot >= 20)
+        {
+            break;
+        }
+
+        const auto spellId                   = kv.second.as<uint16>();
+        const auto offsettedId               = static_cast<uint8>(spellId - 0x200);
+        const auto packet                    = parent_->packets().createPacket<GP_CLI_COMMAND_EXTENDED_JOB>();
+        auto*      bluPacket                 = packet->as<GP_CLI_COMMAND_EXTENDED_JOB>();
+        bluPacket->Data.bluData.JobIndex     = JOB_BLU;
+        bluPacket->Data.bluData.SpellId      = offsettedId;
+        bluPacket->Data.bluData.Spells[slot] = offsettedId;
+
+        parent_->packets().sendBasicPacket(*packet);
+        ++slot;
+    }
 }
 
 /************************************************************************
@@ -111,7 +149,7 @@ void CLuaClientEntityPairActions::useWeaponskill(CLuaBaseEntity* target, const u
         return;
     }
 
-    const auto packet                 = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ACTION);
+    const auto packet                 = parent_->packets().createPacket<GP_CLI_COMMAND_ACTION>();
     auto*      actionPacket           = packet->as<GP_CLI_COMMAND_ACTION>();
     actionPacket->UniqueNo            = target->getID();
     actionPacket->ActIndex            = target->getTargID();
@@ -136,7 +174,7 @@ void CLuaClientEntityPairActions::useAbility(CLuaBaseEntity* target, const ABILI
         return;
     }
 
-    const auto packet                = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ACTION);
+    const auto packet                = parent_->packets().createPacket<GP_CLI_COMMAND_ACTION>();
     auto*      actionPacket          = packet->as<GP_CLI_COMMAND_ACTION>();
     actionPacket->UniqueNo           = target->getID();
     actionPacket->ActIndex           = target->getTargID();
@@ -161,7 +199,7 @@ void CLuaClientEntityPairActions::changeTarget(CLuaBaseEntity* target) const
         return;
     }
 
-    const auto packet       = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ACTION);
+    const auto packet       = parent_->packets().createPacket<GP_CLI_COMMAND_ACTION>();
     auto*      actionPacket = packet->as<GP_CLI_COMMAND_ACTION>();
     actionPacket->UniqueNo  = target->getID();
     actionPacket->ActIndex  = target->getTargID();
@@ -185,7 +223,7 @@ void CLuaClientEntityPairActions::rangedAttack(CLuaBaseEntity* target) const
         return;
     }
 
-    const auto packet       = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ACTION);
+    const auto packet       = parent_->packets().createPacket<GP_CLI_COMMAND_ACTION>();
     auto*      actionPacket = packet->as<GP_CLI_COMMAND_ACTION>();
     actionPacket->UniqueNo  = target->getID();
     actionPacket->ActIndex  = target->getTargID();
@@ -209,7 +247,7 @@ void CLuaClientEntityPairActions::useItem(CLuaBaseEntity* target, const uint8 sl
         return;
     }
 
-    const auto packet             = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ITEM_USE);
+    const auto packet             = parent_->packets().createPacket<GP_CLI_COMMAND_ITEM_USE>();
     auto*      itemPacket         = packet->as<GP_CLI_COMMAND_ITEM_USE>();
     itemPacket->UniqueNo          = target->getID();
     itemPacket->ItemNum           = 0;
@@ -235,7 +273,7 @@ void CLuaClientEntityPairActions::trigger(CLuaBaseEntity* target, sol::optional<
         return;
     }
 
-    const auto packet       = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ACTION);
+    const auto packet       = parent_->packets().createPacket<GP_CLI_COMMAND_ACTION>();
     auto*      actionPacket = packet->as<GP_CLI_COMMAND_ACTION>();
     actionPacket->UniqueNo  = target->getID();
     actionPacket->ActIndex  = target->getTargID();
@@ -263,7 +301,7 @@ void CLuaClientEntityPairActions::inviteToParty(CLuaBaseEntity* player) const
         return;
     }
 
-    const auto packet       = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_GROUP_SOLICIT_REQ);
+    const auto packet       = parent_->packets().createPacket<GP_CLI_COMMAND_GROUP_SOLICIT_REQ>();
     auto*      invitePacket = packet->as<GP_CLI_COMMAND_GROUP_SOLICIT_REQ>();
     invitePacket->UniqueNo  = player->getID();
     invitePacket->ActIndex  = player->getTargID();
@@ -287,7 +325,7 @@ void CLuaClientEntityPairActions::formAlliance(CLuaBaseEntity* player) const
         return;
     }
 
-    const auto packet       = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_GROUP_SOLICIT_REQ);
+    const auto packet       = parent_->packets().createPacket<GP_CLI_COMMAND_GROUP_SOLICIT_REQ>();
     auto*      invitePacket = packet->as<GP_CLI_COMMAND_GROUP_SOLICIT_REQ>();
     invitePacket->UniqueNo  = player->getID();
     invitePacket->ActIndex  = player->getTargID();
@@ -305,7 +343,7 @@ void CLuaClientEntityPairActions::formAlliance(CLuaBaseEntity* player) const
 
 void CLuaClientEntityPairActions::acceptPartyInvite() const
 {
-    const auto packet         = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_GROUP_SOLICIT_RES);
+    const auto packet         = parent_->packets().createPacket<GP_CLI_COMMAND_GROUP_SOLICIT_RES>();
     auto*      responsePacket = packet->as<GP_CLI_COMMAND_GROUP_SOLICIT_RES>();
     responsePacket->Res       = static_cast<uint8>(GP_CLI_COMMAND_GROUP_SOLICIT_RES_RES::Accept);
 
@@ -343,7 +381,7 @@ void CLuaClientEntityPairActions::tradeNpc(const sol::object& npcQuery, const so
         return;
     }
 
-    const auto packet      = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ITEM_TRANSFER);
+    const auto packet      = parent_->packets().createPacket<GP_CLI_COMMAND_ITEM_TRANSFER>();
     auto*      tradePacket = packet->as<GP_CLI_COMMAND_ITEM_TRANSFER>();
 
     tradePacket->UniqueNo = npc.value().getID();
@@ -393,6 +431,107 @@ void CLuaClientEntityPairActions::tradeNpc(const sol::object& npcQuery, const so
 }
 
 /************************************************************************
+ *  Function: tradeRequest()
+ *  Purpose : Request a trade with another player.
+ *  Example : p1.actions:tradeRequest(p2)
+ ************************************************************************/
+
+void CLuaClientEntityPairActions::tradeRequest(CLuaBaseEntity* target) const
+{
+    if (!target)
+    {
+        TestError("tradeRequest: Invalid target");
+        return;
+    }
+
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_TRADE_REQ>();
+    auto*      data   = packet->as<GP_CLI_COMMAND_TRADE_REQ>();
+    data->UniqueNo    = target->getID();
+    data->ActIndex    = target->getTargID();
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+/************************************************************************
+ *  Function: tradeAccept()
+ *  Purpose : Accept the incoming trade request.
+ *  Example : p2.actions:tradeAccept()
+ ************************************************************************/
+
+void CLuaClientEntityPairActions::tradeAccept() const
+{
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_TRADE_RES>();
+    auto*      data   = packet->as<GP_CLI_COMMAND_TRADE_RES>();
+    data->Kind        = static_cast<uint32_t>(GP_CLI_COMMAND_TRADE_RES_KIND::Start);
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+/************************************************************************
+ *  Function: tradeOffer()
+ *  Purpose : Place an item in a trade slot.
+ *  Example : p1.actions:tradeOffer(0, invSlot, itemId, qty)
+ ************************************************************************/
+
+void CLuaClientEntityPairActions::tradeOffer(uint8 tradeIndex, uint8 invSlot, uint16 itemId, uint32 quantity) const
+{
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_TRADE_LIST>();
+    auto*      data   = packet->as<GP_CLI_COMMAND_TRADE_LIST>();
+    data->TradeIndex  = tradeIndex;
+    data->ItemIndex   = invSlot;
+    data->ItemNo      = itemId;
+    data->ItemNum     = quantity;
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+/************************************************************************
+ *  Function: tradeClearSlot()
+ *  Purpose : Clear a trade slot.
+ *  Example : p1.actions:tradeClearSlot(0)
+ ************************************************************************/
+
+void CLuaClientEntityPairActions::tradeClearSlot(uint8 tradeIndex) const
+{
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_TRADE_LIST>();
+    auto*      data   = packet->as<GP_CLI_COMMAND_TRADE_LIST>();
+    data->TradeIndex  = tradeIndex;
+    data->ItemIndex   = 0;
+    data->ItemNo      = 0;
+    data->ItemNum     = 0;
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+/************************************************************************
+ *  Function: tradeMake()
+ *  Purpose : Lock in this side's offer. Trade goes through once both sides lock.
+ ************************************************************************/
+
+void CLuaClientEntityPairActions::tradeMake() const
+{
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_TRADE_RES>();
+    auto*      data   = packet->as<GP_CLI_COMMAND_TRADE_RES>();
+    data->Kind        = static_cast<uint32_t>(GP_CLI_COMMAND_TRADE_RES_KIND::Make);
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+/************************************************************************
+ *  Function: tradeCancel()
+ *  Purpose : Cancel the trade.
+ ************************************************************************/
+
+void CLuaClientEntityPairActions::tradeCancel() const
+{
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_TRADE_RES>();
+    auto*      data   = packet->as<GP_CLI_COMMAND_TRADE_RES>();
+    data->Kind        = static_cast<uint32_t>(GP_CLI_COMMAND_TRADE_RES_KIND::Cancell);
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+/************************************************************************
  *  Function: acceptRaise()
  *  Purpose : Emits packet to accept a pending raise prompt.
  *  Example : player.actions:acceptRaise()
@@ -401,7 +540,7 @@ void CLuaClientEntityPairActions::tradeNpc(const sol::object& npcQuery, const so
 
 void CLuaClientEntityPairActions::acceptRaise() const
 {
-    const auto packet                      = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ACTION);
+    const auto packet                      = parent_->packets().createPacket<GP_CLI_COMMAND_ACTION>();
     auto*      responsePacket              = packet->as<GP_CLI_COMMAND_ACTION>();
     responsePacket->ActionID               = GP_CLI_COMMAND_ACTION_ACTIONID::RaiseMenu;
     responsePacket->HomepointMenu.StatusId = GP_CLI_COMMAND_ACTION_HOMEPOINTMENU::Accept;
@@ -433,7 +572,7 @@ void CLuaClientEntityPairActions::engage(CLuaBaseEntity* mob) const
     controller->setLastAttackTime(timer::now() - 30s);
 
     // 4. Send packet to engage
-    const auto packet       = parent_->packets().createPacket(PacketC2S::GP_CLI_COMMAND_ACTION);
+    const auto packet       = parent_->packets().createPacket<GP_CLI_COMMAND_ACTION>();
     auto*      attackPacket = packet->as<GP_CLI_COMMAND_ACTION>();
     attackPacket->UniqueNo  = mob->getID();
     attackPacket->ActIndex  = mob->getTargID();
@@ -506,11 +645,129 @@ void CLuaClientEntityPairActions::skillchain(CLuaBaseEntity* target, sol::variad
     }
 }
 
+void CLuaClientEntityPairActions::moveItem(const uint8 srcContainer, const uint8 srcSlot, const uint8 dstContainer, const uint32 quantity, const sol::optional<uint8> dstSlot) const
+{
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_ITEM_MOVE>();
+    auto*      p      = packet->as<GP_CLI_COMMAND_ITEM_MOVE>();
+    p->ItemNum        = quantity;
+    p->Category1      = srcContainer;
+    p->Category2      = dstContainer;
+    p->ItemIndex1     = srcSlot;
+    p->ItemIndex2     = dstSlot.value_or(0xFF);
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+void CLuaClientEntityPairActions::sortContainer(const uint8 container) const
+{
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_ITEM_STACK>();
+    auto*      p      = packet->as<GP_CLI_COMMAND_ITEM_STACK>();
+    p->Category       = container;
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+void CLuaClientEntityPairActions::dropItem(const uint8 container, const uint8 slot, const uint32 quantity) const
+{
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_ITEM_DUMP>();
+    auto*      p      = packet->as<GP_CLI_COMMAND_ITEM_DUMP>();
+    p->ItemNum        = quantity;
+    p->Category       = container;
+    p->ItemIndex      = slot;
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+void CLuaClientEntityPairActions::setLockstyle(const uint8 mode, sol::optional<sol::table> items) const
+{
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_LOCKSTYLE>();
+    auto*      p      = packet->as<GP_CLI_COMMAND_LOCKSTYLE>();
+    p->Mode           = mode;
+    p->Count          = 0;
+
+    if (items.has_value())
+    {
+        uint8 idx = 0;
+        for (const auto& [key, val] : items.value())
+        {
+            if (!val.is<sol::table>() || idx >= 16)
+            {
+                break;
+            }
+
+            auto entry              = val.as<sol::table>();
+            p->Items[idx].ItemNo    = entry.get_or<uint16_t>("itemId", 0);
+            p->Items[idx].EquipKind = entry.get_or<uint8_t>("slot", 0);
+            p->Items[idx].ItemIndex = 0;
+            p->Items[idx].Category  = 0;
+            ++idx;
+        }
+        p->Count = idx;
+    }
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
+/************************************************************************
+ *  Function: craft()
+ *  Purpose : Emits packet to start a synthesis with the given crystal +
+ *            ingredient item IDs (looked up in the player's inventory).
+ *  Example : player.actions:craft(xi.item.FIRE_CRYSTAL, { xi.item.SAND, xi.item.SAND })
+ *  Notes   : Tick time forward to complete the synth.
+ ************************************************************************/
+
+void CLuaClientEntityPairActions::craft(const uint16 crystalItemId, const sol::table& ingredients) const
+{
+    const auto crystalSlot = parent_->getItemInvSlot(crystalItemId, 1);
+    if (!crystalSlot.has_value())
+    {
+        TestError("craft: crystal {} not in inventory", crystalItemId);
+        return;
+    }
+
+    const size_t ingredientCount = ingredients.size();
+    if (ingredientCount == 0 || ingredientCount > 8)
+    {
+        TestError("craft: ingredient count must be 1..8 (got {})", ingredientCount);
+        return;
+    }
+
+    const auto packet = parent_->packets().createPacket<GP_CLI_COMMAND_COMBINE_ASK>();
+    auto*      p      = packet->as<GP_CLI_COMMAND_COMBINE_ASK>();
+    p->Crystal        = crystalItemId;
+    p->CrystalIdx     = crystalSlot.value();
+    p->Items          = static_cast<uint8>(ingredientCount);
+
+    uint8 idx = 0;
+    for (const auto& [_key, val] : ingredients)
+    {
+        if (idx >= 8 || !val.is<uint16>())
+        {
+            break;
+        }
+
+        const uint16 ingredientId = val.as<uint16>();
+        const auto   invSlot      = parent_->getItemInvSlot(ingredientId, 1);
+        if (!invSlot.has_value())
+        {
+            TestError("craft: ingredient {} not in inventory", ingredientId);
+            return;
+        }
+
+        p->ItemNo[idx]  = ingredientId;
+        p->TableNo[idx] = invSlot.value();
+        ++idx;
+    }
+
+    parent_->packets().sendBasicPacket(*packet);
+}
+
 void CLuaClientEntityPairActions::Register()
 {
     SOL_USERTYPE("CClientEntityPairActions", CLuaClientEntityPairActions);
     SOL_REGISTER("move", CLuaClientEntityPairActions::move);
     SOL_REGISTER("useSpell", CLuaClientEntityPairActions::useSpell);
+    SOL_REGISTER("setBlueSpells", CLuaClientEntityPairActions::setBlueSpells);
     SOL_REGISTER("useWeaponskill", CLuaClientEntityPairActions::useWeaponskill);
     SOL_REGISTER("useAbility", CLuaClientEntityPairActions::useAbility);
     SOL_REGISTER("changeTarget", CLuaClientEntityPairActions::changeTarget);
@@ -521,7 +778,18 @@ void CLuaClientEntityPairActions::Register()
     SOL_REGISTER("formAlliance", CLuaClientEntityPairActions::formAlliance);
     SOL_REGISTER("acceptPartyInvite", CLuaClientEntityPairActions::acceptPartyInvite);
     SOL_REGISTER("tradeNpc", CLuaClientEntityPairActions::tradeNpc);
+    SOL_REGISTER("tradeRequest", CLuaClientEntityPairActions::tradeRequest);
+    SOL_REGISTER("tradeAccept", CLuaClientEntityPairActions::tradeAccept);
+    SOL_REGISTER("tradeOffer", CLuaClientEntityPairActions::tradeOffer);
+    SOL_REGISTER("tradeClearSlot", CLuaClientEntityPairActions::tradeClearSlot);
+    SOL_REGISTER("tradeMake", CLuaClientEntityPairActions::tradeMake);
+    SOL_REGISTER("tradeCancel", CLuaClientEntityPairActions::tradeCancel);
     SOL_REGISTER("acceptRaise", CLuaClientEntityPairActions::acceptRaise);
     SOL_REGISTER("engage", CLuaClientEntityPairActions::engage);
     SOL_REGISTER("skillchain", CLuaClientEntityPairActions::skillchain);
+    SOL_REGISTER("moveItem", CLuaClientEntityPairActions::moveItem);
+    SOL_REGISTER("sortContainer", CLuaClientEntityPairActions::sortContainer);
+    SOL_REGISTER("dropItem", CLuaClientEntityPairActions::dropItem);
+    SOL_REGISTER("setLockstyle", CLuaClientEntityPairActions::setLockstyle);
+    SOL_REGISTER("craft", CLuaClientEntityPairActions::craft);
 }
