@@ -199,6 +199,37 @@ INSERT INTO `mob_spawn_slots` VALUES (22,26,0);
 INSERT INTO `mob_spawn_slots` VALUES (22,27,0);
 INSERT INTO `mob_spawn_slots` VALUES (22,28,0);
 
+-- Lufaise Meadows
+INSERT INTO `mob_spawn_slots` VALUES (24,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,9,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,10,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,11,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,12,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,13,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,14,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,15,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,16,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,17,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,18,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,19,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,20,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,21,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,22,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,23,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,24,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,25,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,26,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,27,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,28,0);
+INSERT INTO `mob_spawn_slots` VALUES (24,29,0);
+
 -- Misareaux Coast
 INSERT INTO `mob_spawn_slots` VALUES (25,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (25,2,0);
