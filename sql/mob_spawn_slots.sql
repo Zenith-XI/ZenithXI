@@ -801,6 +801,48 @@ INSERT INTO `mob_spawn_slots` VALUES (109,77,0);
 INSERT INTO `mob_spawn_slots` VALUES (109,78,0);
 INSERT INTO `mob_spawn_slots` VALUES (109,79,0);
 
+-- Rolanberry Fields
+INSERT INTO `mob_spawn_slots` VALUES (110,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,9,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,10,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,11,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,12,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,13,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,14,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,15,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,16,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,17,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,18,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,19,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,20,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,21,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,22,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,23,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,24,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,25,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,26,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,27,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,28,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,29,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,30,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,31,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,32,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,33,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,34,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,35,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,36,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,37,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,38,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,39,0);
+INSERT INTO `mob_spawn_slots` VALUES (110,40,0);
+
 -- Beaucedine Glacier
 INSERT INTO `mob_spawn_slots` VALUES (111,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (111,2,0);
