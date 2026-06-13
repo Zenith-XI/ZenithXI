@@ -158,6 +158,17 @@ INSERT INTO `mob_spawn_slots` VALUES (18,15,0);
 INSERT INTO `mob_spawn_slots` VALUES (18,16,0);
 INSERT INTO `mob_spawn_slots` VALUES (18,17,0);
 
+-- Promyvion-Mea
+INSERT INTO `mob_spawn_slots` VALUES (20,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (20,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (20,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (20,4,0);
+INSERT INTO `mob_spawn_slots` VALUES (20,5,0);
+INSERT INTO `mob_spawn_slots` VALUES (20,6,0);
+INSERT INTO `mob_spawn_slots` VALUES (20,7,0);
+INSERT INTO `mob_spawn_slots` VALUES (20,8,0);
+INSERT INTO `mob_spawn_slots` VALUES (20,9,0);
+
 -- Promyvion-Vahzl
 INSERT INTO `mob_spawn_slots` VALUES (22,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (22,2,0);
