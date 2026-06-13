@@ -2156,6 +2156,12 @@ INSERT INTO `mob_spawn_slots` VALUES (158,14,0);
 INSERT INTO `mob_spawn_slots` VALUES (158,15,0);
 INSERT INTO `mob_spawn_slots` VALUES (158,16,0);
 
+-- Temple of Uggalepih
+INSERT INTO `mob_spawn_slots` VALUES (159,1,0);
+INSERT INTO `mob_spawn_slots` VALUES (159,2,0);
+INSERT INTO `mob_spawn_slots` VALUES (159,3,0);
+INSERT INTO `mob_spawn_slots` VALUES (159,4,0);
+
 -- Den of Rancor
 INSERT INTO `mob_spawn_slots` VALUES (160,1,0);
 INSERT INTO `mob_spawn_slots` VALUES (160,2,0);
