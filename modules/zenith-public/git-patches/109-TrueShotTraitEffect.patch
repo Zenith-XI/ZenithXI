@@ -1,0 +1,17 @@
+diff --git a/scripts/globals/combat/physical_utilities.lua b/scripts/globals/combat/physical_utilities.lua
+index ec5b8b1231..438cb20044 100644
+--- a/scripts/globals/combat/physical_utilities.lua
++++ b/scripts/globals/combat/physical_utilities.lua
+@@ -907,7 +907,11 @@ xi.combat.physical.calculateRangedPDIF = function(actor, target, weaponType, wsA
+         pDif = pDif * 1.25
+     end
+ 
+-    -- Step 5: TODO: True Shot.
++    -- Step 5: True Shot.
++    local trueShotBonus = actor:getMod(xi.mod.TRUE_SHOT_EFFECT)
++    if trueShotBonus > 0 then
++        pDif = pDif * (1 + trueShotBonus / 100)
++    end
+ 
+     -- Crit damage bonus is a final modifier
+     if isCritical then

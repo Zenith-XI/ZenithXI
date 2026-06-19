@@ -1,8 +1,8 @@
 diff --git a/src/map/ai/ai_container.cpp b/src/map/ai/ai_container.cpp
-index ff9c8ed6bc..a1d0574463 100644
+index 555f6c0bc0..f98dbaf4f3 100644
 --- a/src/map/ai/ai_container.cpp
 +++ b/src/map/ai/ai_container.cpp
-@@ -461,6 +461,29 @@ void CAIContainer::Tick(timer::time_point _tick)
+@@ -462,6 +462,29 @@ auto CAIContainer::Tick(timer::time_point tick) -> Task<void>
              break;
          }
      }
@@ -16,7 +16,7 @@ index ff9c8ed6bc..a1d0574463 100644
 +    {
 +        if (
 +            m_queuedRangedAttack &&
-+            _tick - PChar->m_LastRangedAttackTime > std::chrono::milliseconds(1100)
++            tick - PChar->m_LastRangedAttackTime > std::chrono::milliseconds(1100)
 +        )
 +        {
 +            RangedAttack(m_queuedRangedAttack);
@@ -31,12 +31,12 @@ index ff9c8ed6bc..a1d0574463 100644
 +    }
  
      PEntity->PostTick();
- }
+ 
 diff --git a/src/map/ai/ai_container.h b/src/map/ai/ai_container.h
-index ef3f629986..a5f00c6faa 100644
+index ba04b962c5..bf96d142e9 100644
 --- a/src/map/ai/ai_container.h
 +++ b/src/map/ai/ai_container.h
-@@ -133,6 +133,10 @@ public:
+@@ -132,6 +132,10 @@ public:
      // pathfinder, not guaranteed to be implemented
      std::unique_ptr<CPathFind> PathFind;
  
@@ -48,7 +48,7 @@ index ef3f629986..a5f00c6faa 100644
      // input controller
      std::unique_ptr<CController> Controller;
 diff --git a/src/map/ai/controllers/player_controller.cpp b/src/map/ai/controllers/player_controller.cpp
-index f78f912183..53f1df355c 100644
+index 3ddd7b433d..6d45afd7e6 100644
 --- a/src/map/ai/controllers/player_controller.cpp
 +++ b/src/map/ai/controllers/player_controller.cpp
 @@ -25,6 +25,8 @@
@@ -60,7 +60,7 @@ index f78f912183..53f1df355c 100644
  #include "entities/charentity.h"
  #include "items/item_weapon.h"
  #include "latent_effect_container.h"
-@@ -49,6 +51,26 @@ void CPlayerController::Tick(timer::time_point /*tick*/)
+@@ -50,6 +52,26 @@ auto CPlayerController::Tick(timer::time_point /*tick*/) -> Task<void>
  bool CPlayerController::Cast(uint16 targid, SpellID spellid)
  {
      auto* PChar = static_cast<CCharEntity*>(POwner);
@@ -87,7 +87,7 @@ index f78f912183..53f1df355c 100644
      if (canAct() && !PChar->PRecastContainer->HasRecast(RECAST_MAGIC, static_cast<Recast>(spellid), 0s))
      {
          if (auto target = PChar->GetEntity(targid); target && target->PAI->IsUntargetable())
-@@ -155,7 +177,26 @@ bool CPlayerController::Ability(uint16 targid, uint16 abilityid)
+@@ -156,7 +178,26 @@ bool CPlayerController::Ability(uint16 targid, uint16 abilityid)
  bool CPlayerController::RangedAttack(uint16 targid)
  {
      auto* PChar = static_cast<CCharEntity*>(POwner);

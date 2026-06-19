@@ -7,6 +7,8 @@
 require('modules/module_utils')
 
 local m = Module:new('e_x-item')
+m:addOverride('xi.dummyFunc', function()
+end)
 
 -- Vendor overrides
 xi.item.HANDFUL_OF_STEEL_SCALES  = 676

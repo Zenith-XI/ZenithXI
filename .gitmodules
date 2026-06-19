@@ -6,8 +6,8 @@
     url = https://github.com/InoUno/ximeshes.git
 [submodule "mod-lqs"]
     path = modules/LQS
-    url = https://github.com/LoxleyX/LQS.git
-    branch = main
+    url = https://github.com/Zenith-XI/LQS.git
+    branch = Prod
     ignore = dirty
 [submodule "mod-priv"]
     path = modules/zenith-private

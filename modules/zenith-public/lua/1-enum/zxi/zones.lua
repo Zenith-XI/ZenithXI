@@ -2,6 +2,8 @@
 -- Converts zone names to IDs
 -----------------------------------
 local m = Module:new('e_z-zones')
+m:addOverride('xi.dummyFunc', function()
+end)
 
 zxi = zxi or {}
 zxi.zone =

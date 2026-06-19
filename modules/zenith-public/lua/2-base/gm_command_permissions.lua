@@ -24,6 +24,8 @@
 -----------------------------------
 
 local m = Module:new('c_gmCmdPerms')
+m:addOverride('xi.dummyFunc', function()
+end)
 
 -----------------------------------
 -- Command Permission Definitions
