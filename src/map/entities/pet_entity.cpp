@@ -19,6 +19,8 @@
 ===========================================================================
 */
 
+#include "pet_entity.h"
+
 #include <cstring>
 
 #include "ai/ai_container.h"
@@ -40,7 +42,6 @@
 
 #include "common/timer.h"
 #include "common/utils.h"
-#include "petentity.h"
 
 #include "action/action.h"
 #include "action/interrupts.h"

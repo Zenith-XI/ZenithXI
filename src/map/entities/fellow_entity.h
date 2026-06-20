@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include "charentity.h"
-#include "mobentity.h"
+#include "char_entity.h"
+#include "mob_entity.h"
 
 class CFellowEntity : public CMobEntity
 {

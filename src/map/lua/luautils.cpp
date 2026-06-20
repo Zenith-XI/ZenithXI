@@ -50,9 +50,9 @@
 
 #include "ai/ai_container.h"
 
-#include "entities/baseentity.h"
-#include "entities/charentity.h"
-#include "entities/mobentity.h"
+#include "entities/base_entity.h"
+#include "entities/char_entity.h"
+#include "entities/mob_entity.h"
 
 #include "items/item_puppet.h"
 

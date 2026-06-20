@@ -19,7 +19,8 @@
 ===========================================================================
 */
 
-#include "trustentity.h"
+#include "trust_entity.h"
+
 #include "action/action.h"
 #include "action/interrupts.h"
 #include "ai/ai_container.h"

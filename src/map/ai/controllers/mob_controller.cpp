@@ -31,7 +31,7 @@
 #include "battlefield.h"
 #include "common/utils.h"
 #include "enmity_container.h"
-#include "entities/mobentity.h"
+#include "entities/mob_entity.h"
 #include "mob_modifier.h"
 #include "mob_spell_container.h"
 #include "mobskill.h"

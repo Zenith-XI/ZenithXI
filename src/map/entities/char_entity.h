@@ -46,12 +46,12 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "automatonentity.h"
-#include "battleentity.h"
+#include "automaton_entity.h"
+#include "battle_entity.h"
 #include "linkshell.h"
 #include "maze.h"
 #include "packets/s2c/base.h"
-#include "petentity.h"
+#include "pet_entity.h"
 
 #include "utils/fishingutils.h"
 

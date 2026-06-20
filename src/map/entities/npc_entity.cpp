@@ -19,7 +19,7 @@
 ===========================================================================
 */
 
-#include "npcentity.h"
+#include "npc_entity.h"
 
 #include "ai/ai_container.h"
 

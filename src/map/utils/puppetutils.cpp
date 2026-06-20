@@ -22,7 +22,7 @@
 #include "puppetutils.h"
 #include "battleutils.h"
 #include "charutils.h"
-#include "entities/automatonentity.h"
+#include "entities/automaton_entity.h"
 #include "enums/automaton.h"
 #include "items/item_puppet.h"
 #include "itemutils.h"

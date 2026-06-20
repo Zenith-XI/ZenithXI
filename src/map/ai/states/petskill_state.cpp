@@ -24,7 +24,7 @@
 #include "action/interrupts.h"
 #include "ai/ai_container.h"
 #include "enmity_container.h"
-#include "entities/petentity.h"
+#include "entities/pet_entity.h"
 #include "packets/s2c/0x028_battle2.h"
 #include "petskill.h"
 #include "status_effect_container.h"

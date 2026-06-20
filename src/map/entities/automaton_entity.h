@@ -22,7 +22,7 @@
 #pragma once
 
 #include "enums/automaton.h"
-#include "petentity.h"
+#include "pet_entity.h"
 
 #include <array>
 

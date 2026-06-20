@@ -27,7 +27,7 @@
 #include <vector>
 
 #include "alliance.h"
-#include "baseentity.h"
+#include "base_entity.h"
 #include "enums/msg_basic.h"
 #include "modifier.h"
 

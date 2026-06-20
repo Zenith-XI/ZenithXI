@@ -28,7 +28,7 @@
 #include "common/database.h"
 #include "common/utils.h"
 #include "enmity_container.h"
-#include "entities/trustentity.h"
+#include "entities/trust_entity.h"
 #include "enums/automaton.h"
 #include "lua/luautils.h"
 #include "mob_spell_container.h"

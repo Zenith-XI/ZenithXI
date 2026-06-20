@@ -27,11 +27,11 @@
 
 #include "entity_update.h"
 
-#include "entities/baseentity.h"
-#include "entities/mobentity.h"
-#include "entities/npcentity.h"
-#include "entities/petentity.h"
-#include "entities/trustentity.h"
+#include "entities/base_entity.h"
+#include "entities/mob_entity.h"
+#include "entities/npc_entity.h"
+#include "entities/pet_entity.h"
+#include "entities/trust_entity.h"
 #include "status_effect_container.h"
 #include "zone.h"
 

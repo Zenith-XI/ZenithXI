@@ -19,7 +19,7 @@
 ===========================================================================
 */
 
-#include "automatonentity.h"
+#include "automaton_entity.h"
 
 #include "action/action.h"
 #include "ai/ai_container.h"

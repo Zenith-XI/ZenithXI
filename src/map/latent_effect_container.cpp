@@ -23,9 +23,9 @@
 
 #include "ai/ai_container.h"
 #include "conquest_system.h"
-#include "entities/battleentity.h"
-#include "entities/charentity.h"
-#include "entities/trustentity.h"
+#include "entities/battle_entity.h"
+#include "entities/char_entity.h"
+#include "entities/trust_entity.h"
 #include "items/item_weapon.h"
 #include "latent_effect.h"
 #include "modifier.h"

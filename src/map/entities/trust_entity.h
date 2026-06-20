@@ -22,7 +22,7 @@
 #ifndef _CTRUSTENTITY_H
 #define _CTRUSTENTITY_H
 
-#include "mobentity.h"
+#include "mob_entity.h"
 
 class CCharEntity;
 class CAbilityState;

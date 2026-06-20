@@ -19,7 +19,7 @@
 ===========================================================================
 */
 
-#include "battleentity.h"
+#include "battle_entity.h"
 
 #include "common/database.h"
 #include "common/logging.h"
@@ -40,7 +40,7 @@
 #include "ai/states/weaponskill_state.h"
 #include "attack.h"
 #include "attackround.h"
-#include "entities/charentity.h"
+#include "entities/char_entity.h"
 #include "items/item_weapon.h"
 #include "job_points.h"
 #include "lua/luautils.h"
@@ -50,7 +50,7 @@
 #include "recast_container.h"
 #include "roe.h"
 #include "status_effect_container.h"
-#include "trustentity.h"
+#include "trust_entity.h"
 #include "utils/battleutils.h"
 #include "utils/charutils.h"
 #include "utils/fishingutils.h"

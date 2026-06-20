@@ -23,7 +23,7 @@
 
 #include "ai/ai_container.h"
 #include "common/utils.h"
-#include "entities/petentity.h"
+#include "entities/pet_entity.h"
 #include "status_effect_container.h"
 #include "utils/petutils.h"
 

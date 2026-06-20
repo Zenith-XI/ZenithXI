@@ -22,7 +22,7 @@
 #ifndef _MOBENTITY_H
 #define _MOBENTITY_H
 
-#include "battleentity.h"
+#include "battle_entity.h"
 #include <unordered_map>
 
 enum class MsgBasic : uint16_t;

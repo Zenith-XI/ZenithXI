@@ -19,7 +19,7 @@
 ===========================================================================
 */
 
-#include "fellowentity.h"
+#include "fellow_entity.h"
 
 namespace
 {

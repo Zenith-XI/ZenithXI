@@ -58,8 +58,8 @@ constexpr std::uint16_t WeatherCycle = 2160;
 #include "treasure_pool.h"
 #include "zone_entities.h"
 
-#include "entities/npcentity.h"
-#include "entities/petentity.h"
+#include "entities/npc_entity.h"
+#include "entities/pet_entity.h"
 
 #include "lua/luautils.h"
 

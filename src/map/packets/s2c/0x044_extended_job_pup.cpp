@@ -21,8 +21,8 @@
 
 #include "0x044_extended_job_pup.h"
 
-#include "entities/automatonentity.h"
-#include "entities/charentity.h"
+#include "entities/automaton_entity.h"
+#include "entities/char_entity.h"
 #include "merit.h"
 #include "utils/puppetutils.h"
 

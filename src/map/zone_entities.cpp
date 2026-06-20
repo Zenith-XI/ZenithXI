@@ -35,9 +35,9 @@
 #include "ai/ai_container.h"
 #include "ai/controllers/mob_controller.h"
 
-#include "entities/mobentity.h"
-#include "entities/npcentity.h"
-#include "entities/trustentity.h"
+#include "entities/mob_entity.h"
+#include "entities/npc_entity.h"
+#include "entities/trust_entity.h"
 
 #include "packets/char_sync.h"
 #include "packets/entity_update.h"

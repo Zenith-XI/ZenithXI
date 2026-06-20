@@ -22,7 +22,7 @@
 #ifndef _CPETENTITY_H
 #define _CPETENTITY_H
 
-#include "mobentity.h"
+#include "mob_entity.h"
 
 class CPetSkillState;
 

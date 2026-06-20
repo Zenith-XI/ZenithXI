@@ -24,7 +24,7 @@
 
 #include "common/cbasetypes.h"
 
-#include "baseentity.h"
+#include "base_entity.h"
 
 class CNpcEntity : public CBaseEntity
 {
