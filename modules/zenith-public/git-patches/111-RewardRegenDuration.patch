@@ -1,0 +1,11 @@
+diff --git a/scripts/globals/job_utils/beastmaster.lua b/scripts/globals/job_utils/beastmaster.lua
+--- a/scripts/globals/job_utils/beastmaster.lua
++++ b/scripts/globals/job_utils/beastmaster.lua
+@@ -528,6 +528,7 @@
+         minimumHealing = foodData.minHealing
+         regenAmount    = foodData.regen
+         totalHealing   = math.floor(minimumHealing + foodData.mndMult * (playerMnd - foodData.mndThreshold))
++        regenTime      = foodData.regenTime or regenTime
+     end
+ 
+     -- Now calculating the bonus based on gear.

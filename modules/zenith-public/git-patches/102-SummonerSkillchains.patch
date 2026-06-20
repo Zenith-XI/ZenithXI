@@ -16,7 +16,7 @@ index fb85d967f6..f079c266d8 100644
 +    if (auto* PChar = dynamic_cast<CCharEntity*>(this->PMaster); PChar && this->getPetType() == PET_TYPE::AVATAR)
 +    {
 +        // If pet is an avatar and pet's owner is a PC, lock skillchaining behind avatar's favor
-+        canSkillchain = PChar->StatusEffectContainer->HasStatusEffect(EFFECT_AVATARS_FAVOR);
++        canSkillchain = PChar->StatusEffectContainer->HasStatusEffect(xi::StatusEffect::AvatarsFavor);
 +    }
 +    // this bool is only ever used for skillchain. If in the future it gets used for something else this logic will need to be adjusted.
 +    bool first{ canSkillchain };
