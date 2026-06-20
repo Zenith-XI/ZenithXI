@@ -26,7 +26,7 @@
 
 #include "base_entity.h"
 
-class CNpcEntity : public CBaseEntity
+class CNpcEntity final : public CBaseEntity
 {
 public:
     uint32       m_flags;
@@ -50,7 +50,7 @@ public:
     }
 
     CNpcEntity();
-    ~CNpcEntity();
+    ~CNpcEntity() override;
 
 private:
 };

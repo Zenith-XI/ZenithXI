@@ -24,7 +24,7 @@
 #include "char_entity.h"
 #include "mob_entity.h"
 
-class CFellowEntity : public CMobEntity
+class CFellowEntity final : public CMobEntity
 {
 public:
     explicit CFellowEntity(CCharEntity* PChar);

@@ -280,7 +280,7 @@ class CBattleEntity : public CBaseEntity
 {
 public:
     CBattleEntity();
-    virtual ~CBattleEntity();
+    ~CBattleEntity() override;
 
     uint16 STR();
     uint16 DEX();

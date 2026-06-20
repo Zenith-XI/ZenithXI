@@ -30,11 +30,11 @@
 
 class CCharEntity;
 
-class CAutomatonEntity : public CPetEntity
+class CAutomatonEntity final : public CPetEntity
 {
 public:
     CAutomatonEntity();
-    ~CAutomatonEntity();
+    ~CAutomatonEntity() override;
 
     AutomatonEquip       m_Equip{};
     std::array<uint8, 8> m_ElementMax{};

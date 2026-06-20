@@ -50,7 +50,7 @@ class CPetEntity : public CMobEntity
 {
 public:
     CPetEntity(PET_TYPE petType);
-    ~CPetEntity();
+    ~CPetEntity() override;
 
     PET_TYPE          getPetType() const;
     uint8             getSpawnLevel();

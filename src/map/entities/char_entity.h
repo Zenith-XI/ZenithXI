@@ -293,7 +293,7 @@ struct ItemLocation
 
 constexpr uint8 EquipSlotCount = 18;
 
-class CCharEntity : public CBattleEntity
+class CCharEntity final : public CBattleEntity
 {
     friend class CBattleEntity;
 
@@ -761,7 +761,7 @@ public:
     bool startSynth(SKILLTYPE synthSkill);
 
     CCharEntity();
-    ~CCharEntity();
+    ~CCharEntity() override;
 
 protected:
     void changeMoghancement(uint16 moghancementID, bool isAdding);

@@ -32,7 +32,7 @@ class CMagicState;
 class CMobSkillState;
 class CWeaponSkillState;
 
-class CTrustEntity : public CMobEntity
+class CTrustEntity final : public CMobEntity
 {
 public:
     explicit CTrustEntity(CCharEntity*);

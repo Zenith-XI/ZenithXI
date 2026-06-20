@@ -117,7 +117,7 @@ class CMobEntity : public CBattleEntity
 {
 public:
     CMobEntity();
-    virtual ~CMobEntity();
+    ~CMobEntity() override;
 
     uint32 getEntityFlags() const;             // Returns the current value in m_flags
     void   setEntityFlags(uint32 EntityFlags); // Change the current value in m_flags
