@@ -292,6 +292,8 @@ local function resolveMissMessage(skill, hitsLanded, hitsYaegasumi, hitsAnticipa
             skill:setMsg(xi.msg.basic.RANGED_ATTACK_MISS)
         elseif primaryMessage == xi.msg.basic.HIT_DMG then
             skill:setMsg(xi.msg.basic.HIT_MISS)
+        elseif primaryMessage == xi.msg.basic.USES_JA_TAKE_DAMAGE then
+            skill:setMsg(xi.msg.basic.JA_MISS_2)
         else
             skill:setMsg(xi.msg.basic.SKILL_MISS)
         end
@@ -392,7 +394,11 @@ local function handleSinglePhysicalHit(mob, target, baseHitDamage, params)
     hitDamage = math.floor(hitDamage * xi.combat.damage.physicalElementSDT(target, params.damageType))
     hitDamage = math.floor(hitDamage * xi.combat.damage.calculateDamageAdjustment(target, true, false, false, false))
 
-    -- TODO: Automaton Equalizer Reduction
+    if mob:isAvatar() then
+        hitDamage = math.floor(hitDamage + hitDamage * mob:getMod(xi.mod.BP_DAMAGE) / 100)
+    end
+
+    hitDamage = xi.automaton.handleEqualizer(target, hitDamage)
 
     -- TODO: Need captures for different severe damage mechanics. Do they proc per hit or per skill
     hitDamage = math.floor(target:handleSevereDamage(hitDamage, true))
@@ -400,8 +406,6 @@ local function handleSinglePhysicalHit(mob, target, baseHitDamage, params)
     -- TODO: Convert Damage to MP + Cover Bonus
 
     -- TODO: Fan Dance Reduction
-
-    hitDamage = math.floor(target:checkDamageCap(hitDamage))
 
     -- Pre phalanx check - if stoneskin breaks we can get TP from shield mastery
     if
@@ -416,6 +420,8 @@ local function handleSinglePhysicalHit(mob, target, baseHitDamage, params)
     if not params.skipStoneskin then
         hitDamage = utils.handleStoneskin(target, hitDamage)
     end
+
+    hitDamage = math.floor(target:checkDamageCap(hitDamage))
 
     if hitDamage > 0 then
         target:trySkillUp(xi.skill.EVASION, target:getMainLvl())
@@ -506,7 +512,7 @@ local function handleSingleRangedHit(mob, target, baseHitDamage, params)
     hitDamage = math.floor(hitDamage * xi.combat.damage.physicalElementSDT(target, params.damageType))
     hitDamage = math.floor(hitDamage * xi.combat.damage.calculateDamageAdjustment(target, true, false, true, false))
 
-    -- TODO: Automaton Equalizer Reduction
+    hitDamage = xi.automaton.handleEqualizer(target, hitDamage)
 
     -- TODO: Need captures for different severe damage mechanics. Do they proc per hit or per skill
     hitDamage = math.floor(target:handleSevereDamage(hitDamage, true))
@@ -872,6 +878,10 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, action, skillParams)
     ----------------------------------
     -- Calculate the hits
     ----------------------------------
+
+    -- TODO: Implement multi attack procs with a param to enable them.
+    -- Need research to see if bloodpacts/pets skills can multi attack.
+    -- If so, do they carry fTP over from the first hit into subsequent hits?
 
     for hitNumber = 1, params.numHits do
         local hitInfo           = nil
