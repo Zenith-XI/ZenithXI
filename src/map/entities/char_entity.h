@@ -53,6 +53,8 @@
 #include "packets/s2c/base.h"
 #include "pet_entity.h"
 
+#include <map/entities/types/automaton_info.h>
+
 #include "utils/fishingutils.h"
 
 #define MAX_QUESTAREA    11
@@ -372,22 +374,8 @@ public:
     uint32 m_claimedDeeds[5]{};
     uint32 m_uniqueEvents[5]{};
 
-    struct automatonInfo_t
-    {
-        // Store a copy of calculated stats to use when automaton is deactivated for the job info packet (automaton menu)
-        skills_t automatonSkills{};
-        stats_t  automatonStats{};
-        health_t automatonHealth{};
-        look_t   automatonLook{};
-
-        automaton_equip_t    m_Equip{};
-        std::array<uint8, 8> m_ElementMax{};
-        std::array<uint8, 8> m_ElementEquip{};
-        uint8                m_elementalCapacityBonus = 0;
-
-        std::string m_automatonName = "Automaton";
-    };
-    automatonInfo_t automatonInfo{};
+    // Store a copy of calculated stats to use when automaton is deactivated for the job info packet (automaton menu)
+    AutomatonInfo automatonInfo_{};
 
     auto getAutomatonAttachment(uint8 slotid) const -> uint8;
     auto hasAutomatonAttachment(uint8 attachment) const -> bool;

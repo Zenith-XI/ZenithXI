@@ -404,9 +404,9 @@ void LoadJugStats(CPetEntity* PMob, Pet_t* petStats)
 
 void LoadAutomatonStats(CCharEntity* PMaster, CPetEntity* PPet, Pet_t* petStats, uint8 mlvl)
 {
-    skills_t& tempSkills = PMaster->automatonInfo.automatonSkills;
-    stats_t&  tempStats  = PMaster->automatonInfo.automatonStats;
-    health_t& tempHealth = PMaster->automatonInfo.automatonHealth;
+    auto& tempSkills = PMaster->automatonInfo_.automatonSkills;
+    auto& tempStats  = PMaster->automatonInfo_.automatonStats;
+    auto& tempHealth = PMaster->automatonInfo_.automatonHealth;
 
     tempSkills.automaton_melee  = std::min(puppetutils::getSkillCap(PMaster, SKILL_AUTOMATON_MELEE, mlvl), PMaster->GetSkill(SKILL_AUTOMATON_MELEE));
     tempSkills.automaton_ranged = std::min(puppetutils::getSkillCap(PMaster, SKILL_AUTOMATON_RANGED, mlvl), PMaster->GetSkill(SKILL_AUTOMATON_RANGED));
@@ -665,9 +665,9 @@ void LoadAutomatonStats(CCharEntity* PMaster, CPetEntity* PPet, Pet_t* petStats,
         PPet->stats         = tempStats;
         PPet->health        = tempHealth;
 
-        PAutomaton->m_Equip = PMaster->automatonInfo.m_Equip;
-        PPet->look          = PMaster->automatonInfo.automatonLook;
-        PPet->name          = PMaster->automatonInfo.m_automatonName;
+        PAutomaton->m_Equip = PMaster->automatonInfo_.equip;
+        PPet->look          = PMaster->automatonInfo_.automatonLook;
+        PPet->name          = PMaster->automatonInfo_.automatonName;
         PPet->look.size     = MODEL_AUTOMATON;
 
         static_cast<CItemWeapon*>(PPet->m_Weapons[SLOT_MAIN])->setSkillType(SKILL_AUTOMATON_MELEE);

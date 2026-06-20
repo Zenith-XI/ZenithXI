@@ -36,6 +36,8 @@
 #include "party.h"
 #include "trait.h"
 
+#include <map/entities/types/health.h>
+
 enum class DEATH_TYPE : uint8
 {
     NONE        = 0,
@@ -251,14 +253,6 @@ enum IMMUNITY : uint32
     IMMUNITY_PLAGUE      = 0x00020000, // 131064
 };
 DECLARE_FORMAT_AS_UNDERLYING(IMMUNITY);
-
-struct health_t
-{
-    int16 tp;
-    int32 hp, mp;
-    int32 maxhp, maxmp;
-    int32 modhp, modmp; // modified maximum values
-};
 
 struct battlehistory_t
 {
@@ -485,7 +479,7 @@ public:
     virtual auto Tick(timer::time_point) -> Task<void> override;
     virtual void PostTick() override;
 
-    health_t health{}; // hp,mp,tp
+    Health   health{}; // hp, mp, tp, etc.
     stats_t  stats{};
     skills_t WorkingSkills{};
     uint32   m_Immunity;     // Mob immunity

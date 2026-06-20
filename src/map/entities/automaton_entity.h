@@ -24,14 +24,9 @@
 #include "enums/automaton.h"
 #include "pet_entity.h"
 
-#include <array>
+#include <map/entities/types/automaton_equip.h>
 
-struct automaton_equip_t
-{
-    AutomatonFrame        Frame;
-    AutomatonHead         Head;
-    std::array<uint8, 12> Attachments;
-};
+#include <array>
 
 class CCharEntity;
 
@@ -41,7 +36,7 @@ public:
     CAutomatonEntity();
     ~CAutomatonEntity();
 
-    automaton_equip_t    m_Equip{};
+    AutomatonEquip       m_Equip{};
     std::array<uint8, 8> m_ElementMax{};
     std::array<uint8, 8> m_ElementEquip{};
 
@@ -60,16 +55,20 @@ public:
     auto addBurden(uint8 element, int8 burden) -> uint8;
     auto getOverloadChance(uint8 element) const -> uint8;
 
+    //
+    // CPetEntity, CMobEntity, etc.
+    //
+
     void PostTick() override;
 
-    virtual void Spawn() override;
-    virtual void Die() override;
+    void Spawn() override;
+    void Die() override;
 
-    virtual auto ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags) -> bool override;
+    auto ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags) -> bool override;
 
-    virtual void OnMobSkillFinished(CMobSkillState&, action_t&) override;
-    virtual void OnCastFinished(CMagicState&, action_t&) override;
+    void OnMobSkillFinished(CMobSkillState&, action_t&) override;
+    void OnCastFinished(CMagicState&, action_t&) override;
 
 private:
-    std::array<uint8, 8> m_Burden{};
+    std::array<uint8, 8> burden_{};
 };

@@ -132,31 +132,29 @@ void LoadAutomaton(CCharEntity* PChar)
 
         if (PChar->GetMJob() == JOB_PUP || PChar->GetSJob() == JOB_PUP)
         {
-            PChar->automatonInfo.m_automatonName = rset->get<std::string>("name");
-
-            if (PChar->automatonInfo.m_automatonName.empty())
+            if (const auto name = rset->get<std::string>("name"); !name.empty())
             {
-                PChar->automatonInfo.m_automatonName = "Automaton";
+                PChar->automatonInfo_.automatonName = name;
             }
 
-            automaton_equip_t tempEquip{};
+            AutomatonEquip tempEquip{};
             db::extractFromBlob(rset, "equipped_attachments", tempEquip);
 
             // If any of this happens then the Automaton failed to load properly and should just reset (Should only occur with older characters or if DB is
             // missing)
-            if (tempEquip.Head < AutomatonHead::Harlequin ||
-                tempEquip.Head > AutomatonHead::Spiritreaver ||
-                tempEquip.Frame < AutomatonFrame::Harlequin ||
-                tempEquip.Frame > AutomatonFrame::Stormwaker)
+            if (tempEquip.head < AutomatonHead::Harlequin ||
+                tempEquip.head > AutomatonHead::Spiritreaver ||
+                tempEquip.frame < AutomatonFrame::Harlequin ||
+                tempEquip.frame > AutomatonFrame::Stormwaker)
             {
                 PChar->setAutomatonHead(AutomatonHead::Harlequin);
-                tempEquip.Head = AutomatonHead::Harlequin;
+                tempEquip.head = AutomatonHead::Harlequin;
                 PChar->setAutomatonFrame(AutomatonFrame::Harlequin);
-                tempEquip.Frame = AutomatonFrame::Harlequin;
+                tempEquip.frame = AutomatonFrame::Harlequin;
 
                 for (int i = 0; i < 12; i++)
                 {
-                    tempEquip.Attachments[i] = 0;
+                    tempEquip.attachments[i] = 0;
                 }
 
                 for (int i = 0; i < 6; i++)
@@ -169,34 +167,34 @@ void LoadAutomaton(CCharEntity* PChar)
 
                 for (int i = 0; i < 8; i++)
                 {
-                    PChar->automatonInfo.m_ElementEquip[i] = 0;
+                    PChar->automatonInfo_.elementEquip[i] = 0;
                 }
             }
 
             // Add the elemental bonus before we set the head and frame
             PChar->setAutomatonElementalCapacityBonus(PChar->getMod(Mod::AUTO_ELEM_CAPACITY));
 
-            setHead(PChar, tempEquip.Head);
-            setFrame(PChar, tempEquip.Frame);
+            setHead(PChar, tempEquip.head);
+            setFrame(PChar, tempEquip.frame);
 
             petutils::CalculateAutomatonStats(PChar, PChar->PPet);
 
             // Always load Optic Fiber and Optic Fiber II first
             for (int i = 0; i < 12; i++)
             {
-                if (static_cast<AutomatonAttachment>(tempEquip.Attachments[i]) == AutomatonAttachment::OpticFiber ||
-                    static_cast<AutomatonAttachment>(tempEquip.Attachments[i]) == AutomatonAttachment::OpticFiberII)
+                if (static_cast<AutomatonAttachment>(tempEquip.attachments[i]) == AutomatonAttachment::OpticFiber ||
+                    static_cast<AutomatonAttachment>(tempEquip.attachments[i]) == AutomatonAttachment::OpticFiberII)
                 {
-                    setAttachment(PChar, i, tempEquip.Attachments[i]);
+                    setAttachment(PChar, i, tempEquip.attachments[i]);
                 }
             }
 
             for (int i = 0; i < 12; i++)
             {
-                if (static_cast<AutomatonAttachment>(tempEquip.Attachments[i]) != AutomatonAttachment::OpticFiber &&
-                    static_cast<AutomatonAttachment>(tempEquip.Attachments[i]) != AutomatonAttachment::OpticFiberII)
+                if (static_cast<AutomatonAttachment>(tempEquip.attachments[i]) != AutomatonAttachment::OpticFiber &&
+                    static_cast<AutomatonAttachment>(tempEquip.attachments[i]) != AutomatonAttachment::OpticFiberII)
                 {
-                    setAttachment(PChar, i, tempEquip.Attachments[i]);
+                    setAttachment(PChar, i, tempEquip.attachments[i]);
                 }
             }
         }
@@ -219,7 +217,7 @@ void SaveAutomaton(CCharEntity* PChar)
         db::preparedStmt("UPDATE char_pet SET "
                          "equipped_attachments = ? "
                          "WHERE charid = ? LIMIT 1",
-                         PChar->automatonInfo.m_Equip,
+                         PChar->automatonInfo_.equip,
                          PChar->id);
     }
 }
@@ -407,7 +405,7 @@ void setFrame(CCharEntity* PChar, AutomatonFrame frame)
     }
 
     PChar->setAutomatonFrame(frame);
-    PChar->automatonInfo.automatonLook.modelid = calculateAutomatonModel(frame, PChar->getAutomatonHead());
+    PChar->automatonInfo_.automatonLook.modelid = calculateAutomatonModel(frame, PChar->getAutomatonHead());
 
     for (int element = 0; element < 8; element++)
     {
@@ -450,7 +448,7 @@ void setHead(CCharEntity* PChar, AutomatonHead head)
     }
 
     PChar->setAutomatonHead(head);
-    PChar->automatonInfo.automatonLook.modelid = calculateAutomatonModel(PChar->getAutomatonFrame(), head);
+    PChar->automatonInfo_.automatonLook.modelid = calculateAutomatonModel(PChar->getAutomatonFrame(), head);
 
     for (int element = 0; element < 8; element++)
     {

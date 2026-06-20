@@ -661,62 +661,62 @@ auto CCharEntity::shouldPetPersistThroughZoning() const -> bool
 
 void CCharEntity::setAutomatonFrame(const AutomatonFrame frame)
 {
-    automatonInfo.m_Equip.Frame = frame;
+    automatonInfo_.equip.frame = frame;
 }
 
 void CCharEntity::setAutomatonHead(const AutomatonHead head)
 {
-    automatonInfo.m_Equip.Head = head;
+    automatonInfo_.equip.head = head;
 }
 
 void CCharEntity::setAutomatonAttachment(const uint8 slotid, const uint8 id)
 {
-    automatonInfo.m_Equip.Attachments[slotid] = id;
+    automatonInfo_.equip.attachments[slotid] = id;
 }
 
 void CCharEntity::setAutomatonElementMax(const uint8 element, const uint8 max)
 {
-    automatonInfo.m_ElementMax[element] = max;
+    automatonInfo_.elementMax[element] = max;
 }
 void CCharEntity::addAutomatonElementCapacity(const uint8 element, const int8 value)
 {
-    automatonInfo.m_ElementEquip[element] += value;
+    automatonInfo_.elementEquip[element] += value;
 }
 
 void CCharEntity::setAutomatonElementalCapacityBonus(const uint8 bonus)
 {
-    if (bonus == automatonInfo.m_elementalCapacityBonus)
+    if (bonus == automatonInfo_.elementalCapacityBonus)
     {
         return;
     }
 
-    int8 difference = static_cast<int8>(bonus) - automatonInfo.m_elementalCapacityBonus;
-    for (size_t i = 0; i < automatonInfo.m_ElementMax.size(); ++i)
+    int8 difference = static_cast<int8>(bonus) - automatonInfo_.elementalCapacityBonus;
+    for (size_t i = 0; i < automatonInfo_.elementMax.size(); ++i)
     {
-        automatonInfo.m_ElementMax[i] += difference;
+        automatonInfo_.elementMax[i] += difference;
     }
 
-    automatonInfo.m_elementalCapacityBonus = bonus;
+    automatonInfo_.elementalCapacityBonus = bonus;
 }
 
 auto CCharEntity::getAutomatonFrame() const -> AutomatonFrame
 {
-    return automatonInfo.m_Equip.Frame;
+    return automatonInfo_.equip.frame;
 }
 
 auto CCharEntity::getAutomatonHead() const -> AutomatonHead
 {
-    return automatonInfo.m_Equip.Head;
+    return automatonInfo_.equip.head;
 }
 
 auto CCharEntity::getAutomatonAttachment(const uint8 slotid) const -> uint8
 {
-    return automatonInfo.m_Equip.Attachments[slotid];
+    return automatonInfo_.equip.attachments[slotid];
 }
 
 auto CCharEntity::hasAutomatonAttachment(const uint8 attachment) const -> bool
 {
-    for (auto&& attachmentid : automatonInfo.m_Equip.Attachments)
+    for (auto&& attachmentid : automatonInfo_.equip.attachments)
     {
         if (attachmentid == attachment)
         {
@@ -728,12 +728,12 @@ auto CCharEntity::hasAutomatonAttachment(const uint8 attachment) const -> bool
 
 auto CCharEntity::getAutomatonElementMax(const uint8 element) const -> uint8
 {
-    return automatonInfo.m_ElementMax[element];
+    return automatonInfo_.elementMax[element];
 }
 
 auto CCharEntity::getAutomatonElementCapacity(const uint8 element) const -> uint8
 {
-    return automatonInfo.m_ElementEquip[element];
+    return automatonInfo_.elementEquip[element];
 }
 
 /************************************************************************
