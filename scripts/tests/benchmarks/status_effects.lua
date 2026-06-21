@@ -18,6 +18,7 @@
 --   XI_BENCH_ENTITIES  entities to spread effects across (default 50)
 --   XI_BENCH_TICKS     effect ticks to advance in the tick test (default 100)
 --   XI_BENCH_ROUNDS    repeat count for add/remove timing (default 30)
+--   XI_BENCH_DRAIN_US  estimated network drain CPU per entity per tick (default 25)
 -- -----------------------------------------------------------------------------
 
 if os.getenv('XI_RUN_BENCHMARKS') ~= '1' then
@@ -29,9 +30,10 @@ local function envNumber(name, default)
     return (value and value > 0) and math.floor(value) or default
 end
 
-local NUM_ENTITIES = envNumber('XI_BENCH_ENTITIES', 50)
-local NUM_TICKS    = envNumber('XI_BENCH_TICKS', 100)
-local ROUNDS       = envNumber('XI_BENCH_ROUNDS', 30)
+local NUM_ENTITIES        = envNumber('XI_BENCH_ENTITIES', 50)
+local NUM_TICKS           = envNumber('XI_BENCH_TICKS', 100)
+local ROUNDS              = envNumber('XI_BENCH_ROUNDS', 30)
+local DRAIN_US_PER_ENTITY = envNumber('XI_BENCH_DRAIN_US', 25)
 
 local EFFECTS = {
     xi.effect.PROTECT,       xi.effect.SHELL,         xi.effect.REGEN,
@@ -49,6 +51,9 @@ describe('#benchmark Status Effect Container', function()
 
     -- effect-operations performed by one addAll()/removeAll() pass
     local opsPerPass = NUM_ENTITIES * #EFFECTS
+
+    -- accumulated wall-clock spent in the modelled network drain
+    local drainTime = 0
 
     setup(function()
         xi.test.world:tick()
@@ -78,6 +83,19 @@ describe('#benchmark Status Effect Container', function()
         end
     end
 
+    -- TODO: Build this into the test harness
+    local function drain()
+        for _, entity in ipairs(entities) do
+            entity.packets:clear()
+        end
+
+        local target = os.clock() + (NUM_ENTITIES * DRAIN_US_PER_ENTITY) / 1e6
+        while os.clock() < target do
+            -- busy-wait: model the network tick occupying the main thread
+        end
+        drainTime = drainTime + (NUM_ENTITIES * DRAIN_US_PER_ENTITY) / 1e6
+    end
+
     -- Report wall-clock for a measured region, normalised per effect-operation.
     local function report(label, seconds, ops)
         print(string.format('[BENCH] %-22s %9.2f ms total | %8.3f us/op | %d ops',
@@ -86,6 +104,7 @@ describe('#benchmark Status Effect Container', function()
 
     it(string.format('add / overwrite / remove (%d entities x %d effects, %d rounds)', NUM_ENTITIES, #EFFECTS, ROUNDS), function()
         local addFresh, addOver, remove = 0, 0, 0
+        drainTime = 0
 
         for _ = 1, ROUNDS do
             -- Clear, then tick once (untimed) to force DeleteStatusEffects to actually
@@ -93,37 +112,47 @@ describe('#benchmark Status Effect Container', function()
             -- below inserts into a clean container instead of one full of dead entries.
             removeAll()
             xi.test.world:tick(xi.tick.EFFECT)
+            drain() -- network tick
 
             local t0 = os.clock()
             addAll() -- fresh insert path
             addFresh = addFresh + (os.clock() - t0)
+            drain() -- network tick
 
             t0 = os.clock()
             addAll() -- effect already present: overwrite/refresh path
             addOver = addOver + (os.clock() - t0)
+            drain() -- network tick
 
             t0 = os.clock()
             removeAll()
             remove = remove + (os.clock() - t0)
+            drain() -- network tick
         end
 
         report('add (fresh)', addFresh, ROUNDS * opsPerPass)
         report('add (overwrite)', addOver, ROUNDS * opsPerPass)
         report('remove', remove, ROUNDS * opsPerPass)
+        report('network drain (est)', drainTime, ROUNDS * 4 * NUM_ENTITIES) -- 4 drains per round
     end)
 
     it(string.format('tick (%d entities x %d effects, %d ticks)', NUM_ENTITIES, #EFFECTS, NUM_TICKS), function()
         removeAll()
         addAll()
+        drain()
 
-        local t0 = os.clock()
+        local elapsed = 0
+        drainTime     = 0
         for _ = 1, NUM_TICKS do
+            local t0 = os.clock()
             xi.test.world:tick(xi.tick.EFFECT)
+            elapsed = elapsed + (os.clock() - t0)
+            drain() -- network tick
         end
-        local elapsed = os.clock() - t0
 
         removeAll()
 
         report('tick', elapsed, NUM_TICKS * opsPerPass)
+        report('network drain (est)', drainTime, NUM_TICKS * NUM_ENTITIES)
     end)
 end)
