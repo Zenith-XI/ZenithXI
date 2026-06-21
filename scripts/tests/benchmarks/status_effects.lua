@@ -93,6 +93,7 @@ describe('#benchmark Status Effect Container', function()
         while os.clock() < target do
             -- busy-wait: model the network tick occupying the main thread
         end
+
         drainTime = drainTime + (kNumEntities * kDrainMicrosPerEntity) / 1e6
     end
 
