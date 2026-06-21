@@ -428,6 +428,8 @@ bool CStatusEffectContainer::CanGainStatusEffect(CStatusEffect* PStatusEffect)
 
 void CStatusEffectContainer::OverwriteStatusEffect(CStatusEffect* StatusEffect)
 {
+    TracyZoneScoped;
+
     xi::StatusEffect statusEffect = StatusEffect->GetStatusID();
     // remove effect
     xi::EffectOverwrite overwrite = effects::EffectsParams[static_cast<uint16>(statusEffect)].Overwrite;
@@ -465,6 +467,8 @@ bool CStatusEffectContainer::AddStatusEffect(std::unique_ptr<CStatusEffect> PSta
         ShowWarning("status_effect_container::AddStatusEffect Status effect given was nullptr!");
         return false;
     }
+
+    TracyZoneScoped;
 
     // Observing pointer into the owned effect; the container takes ownership on insert below.
     // If the effect is not gained, PStatusEffectPtr frees it when this function returns.
@@ -599,6 +603,8 @@ void CStatusEffectContainer::DeleteStatusEffects()
 
 void CStatusEffectContainer::RemoveStatusEffect(CStatusEffect* PStatusEffect, const EffectNotice notice)
 {
+    TracyZoneScoped;
+
     if (!PStatusEffect->isDeleted())
     {
         PStatusEffect->markDeleted();
@@ -665,6 +671,8 @@ void CStatusEffectContainer::RemoveStatusEffect(CStatusEffect* PStatusEffect, co
 
 auto CStatusEffectContainer::DelStatusEffect(xi::StatusEffect StatusID) -> bool
 {
+    TracyZoneScoped;
+
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
         if (PStatusEffect->GetStatusID() == StatusID && !PStatusEffect->isDeleted())
@@ -678,6 +686,8 @@ auto CStatusEffectContainer::DelStatusEffect(xi::StatusEffect StatusID) -> bool
 
 auto CStatusEffectContainer::DelStatusEffectSilent(xi::StatusEffect StatusID) -> bool
 {
+    TracyZoneScoped;
+
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
         if (PStatusEffect->GetStatusID() == StatusID && !PStatusEffect->isDeleted())
@@ -691,6 +701,8 @@ auto CStatusEffectContainer::DelStatusEffectSilent(xi::StatusEffect StatusID) ->
 
 auto CStatusEffectContainer::DelStatusEffect(xi::StatusEffect StatusID, uint16 SubID) -> bool
 {
+    TracyZoneScoped;
+
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
         if (PStatusEffect->GetStatusID() == StatusID && PStatusEffect->GetSubID() == SubID && !PStatusEffect->isDeleted())
@@ -704,6 +716,8 @@ auto CStatusEffectContainer::DelStatusEffect(xi::StatusEffect StatusID, uint16 S
 
 auto CStatusEffectContainer::DelStatusEffectBySource(xi::StatusEffect StatusID, EffectSourceType sourceType, uint16 sourceTypeParam) -> bool
 {
+    TracyZoneScoped;
+
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
         if (PStatusEffect->GetStatusID() == StatusID && PStatusEffect->GetSourceType() == sourceType && PStatusEffect->GetSourceTypeParam() == sourceTypeParam && !PStatusEffect->isDeleted())
@@ -717,6 +731,8 @@ auto CStatusEffectContainer::DelStatusEffectBySource(xi::StatusEffect StatusID, 
 
 auto CStatusEffectContainer::DelStatusEffectByTier(xi::StatusEffect StatusID, uint16 tier) -> bool
 {
+    TracyZoneScoped;
+
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
         if (PStatusEffect->GetStatusID() == StatusID && PStatusEffect->GetTier() == tier && !PStatusEffect->isDeleted())
@@ -735,6 +751,8 @@ auto CStatusEffectContainer::DelStatusEffectByTier(xi::StatusEffect StatusID, ui
  ************************************************************************/
 void CStatusEffectContainer::KillAllStatusEffect()
 {
+    TracyZoneScoped;
+
     for (auto effect_iter = m_StatusEffectSet.begin(); effect_iter != m_StatusEffectSet.end();)
     {
         CStatusEffect* PStatusEffect = effect_iter->get();
@@ -758,6 +776,8 @@ void CStatusEffectContainer::KillAllStatusEffect()
 // Apply any state alterations for the effect if applicable.
 void CStatusEffectContainer::ApplyStateAlteringEffects(CStatusEffect* StatusEffect)
 {
+    TracyZoneScoped;
+
     xi::StatusEffect effect = StatusEffect->GetStatusID();
 
     if (m_POwner->isAlive())
@@ -792,6 +812,8 @@ void CStatusEffectContainer::ApplyStateAlteringEffects(CStatusEffect* StatusEffe
 
 void CStatusEffectContainer::DelStatusEffectsByIcon(const uint16 BuffNo)
 {
+    TracyZoneScoped;
+
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
         if (PStatusEffect->GetIcon() == BuffNo)
@@ -812,6 +834,8 @@ void CStatusEffectContainer::DelStatusEffectsByType(uint16 Type)
         return;
     }
 
+    TracyZoneScoped;
+
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
         if (PStatusEffect->GetEffectType() == Type)
@@ -823,6 +847,8 @@ void CStatusEffectContainer::DelStatusEffectsByType(uint16 Type)
 
 void CStatusEffectContainer::DelStatusEffectsByFlag(xi::StatusEffectFlag flag, EffectNotice notice)
 {
+    TracyZoneScoped;
+
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
         if (PStatusEffect->HasEffectFlag(flag))
@@ -850,6 +876,8 @@ void CStatusEffectContainer::DelStatusEffectsByFlag(xi::StatusEffectFlag flag, E
 
 auto CStatusEffectContainer::EraseStatusEffect() -> xi::StatusEffect
 {
+    TracyZoneScoped;
+
     std::vector<CStatusEffect*> erasableList;
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
@@ -870,6 +898,8 @@ auto CStatusEffectContainer::EraseStatusEffect() -> xi::StatusEffect
 
 auto CStatusEffectContainer::HealingWaltz() -> xi::StatusEffect
 {
+    TracyZoneScoped;
+
     std::vector<CStatusEffect*> waltzableList;
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
@@ -891,12 +921,13 @@ auto CStatusEffectContainer::HealingWaltz() -> xi::StatusEffect
     return xi::StatusEffect::None;
 }
 
-/*
-Erases all negative status effects
-returns number of erased effects
-*/
+// Erases all negative status effects
+// returns number of erased effects
+
 uint8 CStatusEffectContainer::EraseAllStatusEffect()
 {
+    TracyZoneScoped;
+
     uint8 count = 0;
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {
@@ -917,6 +948,8 @@ uint8 CStatusEffectContainer::EraseAllStatusEffect()
 
 auto CStatusEffectContainer::DispelStatusEffect(xi::StatusEffectFlag flag) -> xi::StatusEffect
 {
+    TracyZoneScoped;
+
     std::vector<CStatusEffect*> dispelableList;
     for (const auto& PStatusEffect : m_StatusEffectSet)
     {

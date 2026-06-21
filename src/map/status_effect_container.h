@@ -167,6 +167,8 @@ private:
 template <typename T, typename... Args>
 bool CStatusEffectContainer::AddStatusEffect(Args&&... args)
 {
+    TracyZoneScoped;
+
     return AddStatusEffect(std::make_unique<T>(std::forward<Args>(args)...), EffectNotice::ShowMessage);
 }
 
@@ -174,12 +176,16 @@ bool CStatusEffectContainer::AddStatusEffect(Args&&... args)
 template <typename T, typename... Args>
 bool CStatusEffectContainer::AddStatusEffectSilent(Args&&... args)
 {
+    TracyZoneScoped;
+
     return AddStatusEffect(std::make_unique<T>(std::forward<Args>(args)...), EffectNotice::Silent);
 }
 
 template <typename F, typename... Args>
 void CStatusEffectContainer::ForEachEffect(F func, Args&&... args)
 {
+    TracyZoneScoped;
+
     // The container owns each effect; hand callers a reference to the underlying effect.
     for (auto&& PEffect : m_StatusEffectSet)
     {
