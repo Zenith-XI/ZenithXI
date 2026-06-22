@@ -80,6 +80,8 @@ set(MAP_CORE_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/latent_effect.h
     ${CMAKE_CURRENT_SOURCE_DIR}/linkshell.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/linkshell.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/los_cache.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/los_cache.h
     ${CMAKE_CURRENT_SOURCE_DIR}/map_application.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map_application.h
     ${CMAKE_CURRENT_SOURCE_DIR}/map_engine.cpp
