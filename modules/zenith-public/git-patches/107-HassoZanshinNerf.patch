@@ -1,21 +1,49 @@
+diff --git a/src/map/attack.cpp b/src/map/attack.cpp
+index f590def4f8..d941d9d604 100644
+--- a/src/map/attack.cpp
++++ b/src/map/attack.cpp
+@@ -458,7 +458,7 @@ bool CAttack::CheckCounter()
+     if (m_victim->objtype == TYPE_PC && m_victim->getMod(Mod::SEIGAN_COUNTER_BONUS) > 0)
+     {
+         // counter check (rate AND your hit rate makes it land, else its just a regular hit)
+-        // having seigan active gives chance to counter at 25% of the zanshin proc rate
++        // having seigan active gives chance to counter at 12.5% of the zanshin proc rate
+         auto* PChar              = static_cast<CCharEntity*>(m_victim);
+         auto* weapon             = dynamic_cast<CItemWeapon*>(PChar->m_Weapons[SLOT_MAIN]);
+         bool  isValid2HandWeapon = weapon && weapon->isTwoHanded();
+@@ -468,7 +468,7 @@ bool CAttack::CheckCounter()
+         {
+             seiganChance = PChar->getMod(Mod::ZANSHIN) + PChar->PMeritPoints->GetMeritValue(MERIT_ZASHIN_ATTACK_RATE, PChar);
+             seiganChance = std::clamp<uint16>(seiganChance, 0, 100);
+-            seiganChance /= 4;
++            seiganChance /= 8;
+         }
+     }
+ 
 diff --git a/src/map/entities/battleentity.cpp b/src/map/entities/battleentity.cpp
-index 812c98482e..5cd21215e8 100644
+index adaa0b5d57..dfdb451a15 100644
 --- a/src/map/entities/battleentity.cpp
 +++ b/src/map/entities/battleentity.cpp
-@@ -3146,7 +3146,7 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
+@@ -3808,12 +3808,12 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
+             uint16 zanshinChance = this->getMod(Mod::ZANSHIN) + battleutils::GetMeritValue(this, MERIT_ZASHIN_ATTACK_RATE);
+             zanshinChance        = std::clamp<uint16>(zanshinChance, 0, 100);
+ 
+-            // zanshin may only proc on a missed/guarded/countered swing or as SAM main with hasso up (at 25% of the base zanshin rate)
++            // zanshin may only proc on a missed/guarded/countered swing or as SAM main with hasso up (at 12.5% of the base zanshin rate)
+             const bool missedOrCountered = actionResult.resolution != ActionResolution::Hit || actionResult.spikesEffect == ActionReactKind::Counter;
              const bool normalZanshinProc = missedOrCountered && xirand::GetRandomNumber(100) < zanshinChance;
  
-             const bool isSamWithHasso   = this->getMod(Mod::HASSO_ZANSHIN_BONUS) > 0 && this->StatusEffectContainer->HasStatusEffect(EFFECT_HASSO);
+             const bool isSamWithHasso   = this->getMod(Mod::HASSO_ZANSHIN_BONUS) > 0 && this->StatusEffectContainer->HasStatusEffect(xi::StatusEffect::Hasso);
 -            const bool hassoZanshinProc = isSamWithHasso && xirand::GetRandomNumber(100) < zanshinChance / 4;
 +            const bool hassoZanshinProc = isSamWithHasso && xirand::GetRandomNumber(100) < zanshinChance / 8;
  
              if (normalZanshinProc || hassoZanshinProc)
              {
 diff --git a/src/map/utils/battleutils.cpp b/src/map/utils/battleutils.cpp
-index 37dbcb1719..eaf06d8c13 100644
+index cf9f3866a0..3d502710aa 100644
 --- a/src/map/utils/battleutils.cpp
 +++ b/src/map/utils/battleutils.cpp
-@@ -3154,7 +3154,7 @@ uint8 CheckMultiHits(CBattleEntity* PEntity, CItemWeapon* PWeapon)
+@@ -3036,7 +3036,7 @@ uint8 CheckMultiHits(CBattleEntity* PEntity, CItemWeapon* PWeapon)
                  zanshin += ((CCharEntity*)PEntity)->PMeritPoints->GetMeritValue(MERIT_ZASHIN_ATTACK_RATE, (CCharEntity*)PEntity);
              }
  
