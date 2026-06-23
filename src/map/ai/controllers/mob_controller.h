@@ -73,6 +73,7 @@ protected:
     virtual void Move();
 
     virtual auto DoCombatTick(timer::time_point tick) -> Task<void>;
+    virtual auto DoBuffTick() -> bool;
     void         FaceTarget(uint16 targid = 0) const;
     virtual void HandleEnmity();
 

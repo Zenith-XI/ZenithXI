@@ -79,11 +79,33 @@ auto CMobController::Tick(const timer::time_point tick) -> Task<void>
         }
         else if (!PMob->isDead())
         {
+            if (PMob->SpellContainer->HasSpells() && DoBuffTick())
+            {
+                co_return;
+            }
+
             co_await DoRoamTick(tick);
         }
     }
 
     co_return;
+}
+
+auto CMobController::DoBuffTick() -> bool
+{
+    TracyZoneScoped;
+
+    if (PMob->PAI->IsCurrentState<CMagicState>())
+    {
+        return true;
+    }
+
+    if (!IsSpellReady(0, 0) || !PMob->SpellContainer->HasBuffSpells())
+    {
+        return false;
+    }
+
+    return TryCastSpell();
 }
 
 auto CMobController::TryDeaggro() -> bool
@@ -1209,21 +1231,6 @@ auto CMobController::DoRoamTick(timer::time_point tick) -> Task<void>
                 {
                     // I spawned a pet
                 }
-                else if (
-                    (!PMob->PBattlefield || PMob->PBattlefield->GetStatus() != BATTLEFIELD_STATUS_OPEN) &&
-                    PMob->GetMJob() == JOB_SMN && CanCastSpells(IgnoreRecastsAndCosts::No) &&
-                    PMob->SpellContainer->HasBuffSpells() && m_Tick >= m_nextMagicTime)
-                {
-                    // summon pet
-                    // - initial summoner-mob pets in battlefields will happen via battlefield.lua, so the first player sees the action
-                    // - Once battlefield is locked, behavior is back to normal with no rng added to pet summoning
-                    TryCastSpell();
-                }
-                else if (CanCastSpells(IgnoreRecastsAndCosts::No) && xirand::GetRandomNumber(10) < 3 && PMob->SpellContainer->HasBuffSpells())
-                {
-                    // cast buff
-                    TryCastSpell();
-                }
                 else if (PMob->m_roamFlags & ROAMFLAG_SCRIPTED)
                 {
                     // allow custom event action
@@ -1381,7 +1388,7 @@ void CMobController::Reset()
 {
     TracyZoneScoped;
 
-    // Wait a little before roaming / casting spell / spawning pet
+    // Wait a little while before roaming again.
     m_LastActionTime = m_Tick - std::chrono::seconds(xirand::GetRandomNumber(PMob->getMobMod(MOBMOD_ROAM_COOL)));
 
     // Don't attack player right off of spawn
