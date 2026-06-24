@@ -9,6 +9,13 @@
 --   breakChance    - Override tool break chance (1-100%)
 --   drops          - Replace the entire drop table for this zone
 --   additionalDrops - Add items to the existing drop pool
+--   additionalDrops<EXPANSION> - Add items to the pool only when the matching
+--                     ENABLE_<EXPANSION> server setting is active (e.g.
+--                     additionalDropsABYSSEA gates on xi.settings.main.ENABLE_ABYSSEA).
+--                     This mirrors the stock<EXPANSION> convention in vendorOverrides.lua
+--                     and is intentionally keyed off ENABLE_<X> (not isContentEnabled),
+--                     so post-era items auto-disable until their expansion is enabled
+--                     without hand-editing this module.
 --
 -- Example configuration:
 --   [xi.helmType.MINING] =
@@ -58,6 +65,10 @@ local config =
                 {  10, xi.item.CLUMP_OF_SHEEP_WOOL             },
                 {  10, xi.item.SPRIG_OF_FRESH_MUGWORT          },
                 { 100, xi.item.CLUMP_OF_RED_MOKO_GRASS         },
+            },
+            -- WOTG: Dyer's Woad (added Sep 2008) gated behind ENABLE_WOTG
+            additionalDropsWOTG =
+            {
                 {  50, xi.item.SPRIG_OF_DYERS_WOAD             },
             },
         },
@@ -83,6 +94,10 @@ local config =
                 {  50, xi.item.YAGUDO_FEATHER                  },
                 {  10, xi.item.SPRIG_OF_FRESH_MUGWORT          },
                 { 150, xi.item.CLUMP_OF_RED_MOKO_GRASS         },
+            },
+            -- WOTG: Dyer's Woad (added Sep 2008) gated behind ENABLE_WOTG
+            additionalDropsWOTG =
+            {
                 {  10, xi.item.SPRIG_OF_DYERS_WOAD             },
             },
         },
@@ -136,6 +151,10 @@ local config =
                 {  50, xi.item.CLUMP_OF_RED_MOKO_GRASS      },
                 {  50, xi.item.SPRIG_OF_FRESH_MUGWORT       },
                 {  50, xi.item.PUK_WING                     },
+            },
+            -- WOTG: Eastern Ginger Root (added Jun 2008) gated behind ENABLE_WOTG
+            additionalDropsWOTG =
+            {
                 {  50, xi.item.EASTERN_GINGER_ROOT          },
             },
         },
@@ -157,6 +176,10 @@ local config =
                 {  10, xi.item.WIJNRUIT                     },
                 {  50, xi.item.PIECE_OF_CRAWLER_COCOON      },
                 {  10, xi.item.SPIDER_WEB                   },
+            },
+            -- WOTG: Eastern Ginger Root (added Jun 2008) gated behind ENABLE_WOTG
+            additionalDropsWOTG =
+            {
                 {  50, xi.item.EASTERN_GINGER_ROOT          },
             },
         },
@@ -387,11 +410,8 @@ local config =
             {
                 { 100, xi.item.ARROWWOOD_LOG          },
                 { 150, xi.item.PIECE_OF_RATTAN_LUMBER },
-                {  50, xi.item.KAPOR_LOG              },
                 { 100, xi.item.LAUAN_LOG              },
                 {  50, xi.item.REVIVAL_TREE_ROOT      },
-                { 100, xi.item.AQUILARIA_LOG          },
-                { 100, xi.item.BUTTERPEAR             },
                 {  50, xi.item.BEEHIVE_CHIP           },
                 {  50, xi.item.BAG_OF_TREE_CUTTINGS   },
                 {  10, xi.item.EBONY_LOG              },
@@ -399,6 +419,13 @@ local config =
                 {  50, xi.item.ROSEWOOD_LOG           },
                 {  10, xi.item.KITRON                 },
                 {  50, xi.item.STICK_OF_CINNAMON      },
+            },
+            -- Abyssea-era logging items gated behind ENABLE_ABYSSEA
+            additionalDropsABYSSEA =
+            {
+                {  50, xi.item.KAPOR_LOG              },
+                { 100, xi.item.AQUILARIA_LOG          },
+                { 100, xi.item.BUTTERPEAR             },
             },
         },
 
@@ -409,17 +436,21 @@ local config =
             {
                 { 150, xi.item.ARROWWOOD_LOG          },
                 { 150, xi.item.PIECE_OF_RATTAN_LUMBER },
-                { 100, xi.item.KAPOR_LOG              },
                 { 100, xi.item.LAUAN_LOG              },
                 {  50, xi.item.REVIVAL_TREE_ROOT      },
-                { 100, xi.item.AQUILARIA_LOG          },
-                { 100, xi.item.BUTTERPEAR             },
                 { 100, xi.item.BEEHIVE_CHIP           },
                 {  10, xi.item.BAG_OF_TREE_CUTTINGS   },
                 {  10, xi.item.EBONY_LOG              },
                 {  50, xi.item.DRYAD_ROOT             },
                 {  50, xi.item.MAHOGANY_LOG           },
                 {   5, xi.item.LACQUER_TREE_LOG       },
+            },
+            -- Abyssea-era logging items gated behind ENABLE_ABYSSEA
+            additionalDropsABYSSEA =
+            {
+                { 100, xi.item.KAPOR_LOG              },
+                { 100, xi.item.AQUILARIA_LOG          },
+                { 100, xi.item.BUTTERPEAR             },
             },
         },
 
@@ -595,19 +626,46 @@ local function mergeDrops(baseDrops, additionalDrops)
     return merged
 end
 
+-- Merge expansion-gated drops (additionalDrops<EXPANSION>) into the working drop
+-- table when the matching ENABLE_<EXPANSION> server setting is active. Mirrors the
+-- stock<EXPANSION> convention used by vendorOverrides.lua. Only the zone config's own
+-- keys are scanned, so settings with no matching table are never touched. mergeDrops
+-- returns a new table, so the config tables are never mutated.
+local function applyExpansionDrops(drops, zoneConfig)
+    local prefix = 'additionalDrops'
+
+    for key, expansionDrops in pairs(zoneConfig) do
+        if
+            type(key) == 'string' and
+            #key > #prefix and
+            string.sub(key, 1, #prefix) == prefix
+        then
+            local suffix = string.sub(key, #prefix + 1)
+            local setting = xi.settings.main['ENABLE_' .. suffix]
+
+            if
+                (type(setting) == 'number' and setting == 1) or
+                (type(setting) == 'boolean' and setting)
+            then
+                drops = mergeDrops(drops, expansionDrops)
+            end
+        end
+    end
+
+    return drops
+end
+
 -- Get the effective drop table for a zone
 local function getEffectiveDrops(info, zoneId, zoneConfig)
-    if zoneConfig.drops then
-        return zoneConfig.drops
-    end
-
-    local baseDrops = info.zone[zoneId].drops
+    local drops = zoneConfig.drops or info.zone[zoneId].drops
 
     if zoneConfig.additionalDrops then
-        return mergeDrops(baseDrops, zoneConfig.additionalDrops)
+        drops = mergeDrops(drops, zoneConfig.additionalDrops)
     end
 
-    return baseDrops
+    drops = applyExpansionDrops(drops, zoneConfig)
+
+    return drops
 end
 
 -- Custom tool break check with zone-specific chance
