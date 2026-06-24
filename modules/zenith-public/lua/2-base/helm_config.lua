@@ -40,66 +40,68 @@ local config =
     {
         [xi.zone.WEST_SARUTABARUTA] =
         {
+            breakChance = 10,
             drops =
             {
-                {  50, xi.item.PIECE_OF_CRAWLER_COCOON       },
-                {  50, xi.item.SPRIG_OF_DYERS_WOAD           },
-                { 100, xi.item.FLAX_FLOWER                   },
-                { 150, xi.item.SPRIG_OF_FRESH_MARJORAM       },
-                {  10, xi.item.SPRIG_OF_FRESH_MUGWORT        },
-                {  10, xi.item.BAG_OF_GRAIN_SEEDS            },
-                {  50, xi.item.BUNCH_OF_GYSAHL_GREENS        },
-                {  10, xi.item.BAG_OF_HERB_SEEDS             },
-                { 150, xi.item.CLUMP_OF_MOKO_GRASS           },
-                { 100, xi.item.CLUMP_OF_RED_MOKO_GRASS       },
-                {  10, xi.item.BAG_OF_VEGETABLE_SEEDS        },
-                { 150, xi.item.BALL_OF_SARUTA_COTTON         },
-                {  50, xi.item.SKULL_LOCUST                  },
-                {  50, xi.item.WIJNRUIT                      },
+                {  50, xi.item.PIECE_OF_CRAWLER_COCOON         },
+                { 100, xi.item.FLAX_FLOWER                     },
+                { 150, xi.item.SPRIG_OF_FRESH_MARJORAM         },
+                {  10, xi.item.BAG_OF_GRAIN_SEEDS              },
+                {  50, xi.item.BUNCH_OF_GYSAHL_GREENS          },
+                {  10, xi.item.BAG_OF_HERB_SEEDS               },
+                { 150, xi.item.CLUMP_OF_MOKO_GRASS             },
+                {  10, xi.item.BAG_OF_VEGETABLE_SEEDS          },
+                { 150, xi.item.BALL_OF_SARUTA_COTTON           },
+                {  50, xi.item.SKULL_LOCUST                    },
+                {  50, xi.item.WIJNRUIT                        },
                 {  50, xi.item.CLUMP_OF_WINDURSTIAN_TEA_LEAVES },
-                {  10, xi.item.CLUMP_OF_SHEEP_WOOL           },
+                {  10, xi.item.CLUMP_OF_SHEEP_WOOL             },
+                {  10, xi.item.SPRIG_OF_FRESH_MUGWORT          },
+                { 100, xi.item.CLUMP_OF_RED_MOKO_GRASS         },
+                {  50, xi.item.SPRIG_OF_DYERS_WOAD             },
             },
         },
 
         [xi.zone.GIDDEUS] =
         {
+            breakChance = 10,
             drops =
             {
-                {  10, xi.item.PIECE_OF_CRAWLER_COCOON       },
-                {  10, xi.item.SPRIG_OF_DYERS_WOAD           },
-                { 100, xi.item.FLAX_FLOWER                   },
-                { 100, xi.item.SPRIG_OF_FRESH_MARJORAM       },
-                {  10, xi.item.SPRIG_OF_FRESH_MUGWORT        },
-                {  10, xi.item.BAG_OF_GRAIN_SEEDS            },
-                {  50, xi.item.BUNCH_OF_GYSAHL_GREENS        },
-                {  10, xi.item.BAG_OF_HERB_SEEDS             },
-                { 100, xi.item.CLUMP_OF_MOKO_GRASS           },
-                { 150, xi.item.CLUMP_OF_RED_MOKO_GRASS       },
-                {  10, xi.item.BAG_OF_VEGETABLE_SEEDS        },
-                { 150, xi.item.BALL_OF_SARUTA_COTTON         },
-                {  50, xi.item.KING_LOCUST                   },
-                {  50, xi.item.WIJNRUIT                      },
+                {  10, xi.item.PIECE_OF_CRAWLER_COCOON         },
+                { 100, xi.item.FLAX_FLOWER                     },
+                { 100, xi.item.SPRIG_OF_FRESH_MARJORAM         },
+                {  10, xi.item.BAG_OF_GRAIN_SEEDS              },
+                {  50, xi.item.BUNCH_OF_GYSAHL_GREENS          },
+                {  10, xi.item.BAG_OF_HERB_SEEDS               },
+                { 100, xi.item.CLUMP_OF_MOKO_GRASS             },
+                {  10, xi.item.BAG_OF_VEGETABLE_SEEDS          },
+                { 150, xi.item.BALL_OF_SARUTA_COTTON           },
+                {  50, xi.item.KING_LOCUST                     },
+                {  50, xi.item.WIJNRUIT                        },
                 {  50, xi.item.CLUMP_OF_WINDURSTIAN_TEA_LEAVES },
-                {  50, xi.item.BEEHIVE_CHIP                  },
-                {  50, xi.item.YAGUDO_FEATHER                },
+                {  50, xi.item.BEEHIVE_CHIP                    },
+                {  50, xi.item.YAGUDO_FEATHER                  },
+                {  10, xi.item.SPRIG_OF_FRESH_MUGWORT          },
+                { 150, xi.item.CLUMP_OF_RED_MOKO_GRASS         },
+                {  10, xi.item.SPRIG_OF_DYERS_WOAD             },
             },
         },
-
+        -- TODO: Audit Grauberg (S)
         [xi.zone.GRAUBERG_S] =
         {
             drops =
             {
-                { 150, xi.item.BURDOCK_ROOT            },
-                {  50, xi.item.BAG_OF_GRAIN_SEEDS      },
-                {  50, xi.item.BAG_OF_HERB_SEEDS       },
-                { 150, xi.item.LESSER_CHIGOE           },
-                { 150, xi.item.CLUMP_OF_MOKO_GRASS     },
-                { 100, xi.item.CLUMP_OF_RED_MOKO_GRASS },
-                { 100, xi.item.BAG_OF_VEGETABLE_SEEDS  },
-                { 100, xi.item.WINTERFLOWER            },
+                { 1830, xi.item.CLUMP_OF_MOKO_GRASS     },
+                { 1850, xi.item.CLUMP_OF_RED_MOKO_GRASS },
+                { 1250, xi.item.BAG_OF_VEGETABLE_SEEDS  },
+                { 1560, xi.item.BURDOCK_ROOT            },
+                { 1060, xi.item.BAG_OF_GRAIN_SEEDS      },
+                { 1200, xi.item.BAG_OF_HERB_SEEDS       },
+                { 1270, xi.item.LESSER_CHIGOE           },
+                { 1160, xi.item.WINTERFLOWER            },
             },
         },
-
+        -- TODO: Audit West Sarutabaruta (S)
         [xi.zone.WEST_SARUTABARUTA_S] =
         {
             drops =
@@ -121,6 +123,7 @@ local config =
 
         [xi.zone.WAJAOM_WOODLANDS] =
         {
+            breakChance = 10,
             drops =
             {
                 { 100, xi.item.SPRIG_OF_FRESH_MARJORAM      },
@@ -129,16 +132,17 @@ local config =
                 { 150, xi.item.PEPHREDO_HIVE_CHIP           },
                 {  50, xi.item.EGGPLANT                     },
                 { 100, xi.item.BAG_OF_COFFEE_CHERRIES       },
-                {  50, xi.item.EASTERN_GINGER_ROOT          },
                 { 100, xi.item.CLUMP_OF_IMPERIAL_TEA_LEAVES },
                 {  50, xi.item.CLUMP_OF_RED_MOKO_GRASS      },
                 {  50, xi.item.SPRIG_OF_FRESH_MUGWORT       },
                 {  50, xi.item.PUK_WING                     },
+                {  50, xi.item.EASTERN_GINGER_ROOT          },
             },
         },
 
         [xi.zone.BHAFLAU_THICKETS] =
         {
+            breakChance = 10,
             drops =
             {
                 { 150, xi.item.SPRIG_OF_FRESH_MARJORAM      },
@@ -147,13 +151,56 @@ local config =
                 { 100, xi.item.PEPHREDO_HIVE_CHIP           },
                 {  50, xi.item.EGGPLANT                     },
                 { 150, xi.item.BAG_OF_COFFEE_CHERRIES       },
-                {  50, xi.item.EASTERN_GINGER_ROOT          },
                 { 100, xi.item.CLUMP_OF_IMPERIAL_TEA_LEAVES },
                 {  50, xi.item.CLUMP_OF_RED_MOKO_GRASS      },
                 {  50, xi.item.SPRIG_OF_FRESH_MUGWORT       },
                 {  10, xi.item.WIJNRUIT                     },
-                {  10, xi.item.SPIDER_WEB                   },
                 {  50, xi.item.PIECE_OF_CRAWLER_COCOON      },
+                {  10, xi.item.SPIDER_WEB                   },
+                {  50, xi.item.EASTERN_GINGER_ROOT          },
+            },
+        },
+        -- TODO audit Yuhtunga Jungle Harvesting
+        [xi.zone.YUHTUNGA_JUNGLE] =
+        {
+            drops =
+            {
+                    { 4000, xi.item.WOOZYSHROOM     },
+                    { 2000, xi.item.DANCESHROOM     },
+                    { 2000, xi.item.SLEEPSHROOM     },
+                    {  700, xi.item.SCREAM_FUNGUS   },
+                    {  700, xi.item.PUFFBALL        },
+                    {  300, xi.item.KING_TRUFFLE    },
+                    {  300, xi.item.MUSHROOM_LOCUST },
+            },
+        },
+        -- TODO audit Yhoator Jungle Harvesting
+        [xi.zone.YHOATOR_JUNGLE] =
+        {
+            drops =
+            {
+                    { 4000, xi.item.WOOZYSHROOM     },
+                    { 2000, xi.item.DANCESHROOM     },
+                    { 2000, xi.item.SLEEPSHROOM     },
+                    {  700, xi.item.SCREAM_FUNGUS   },
+                    {  700, xi.item.CORAL_FUNGUS    },
+                    {  300, xi.item.REISHI_MUSHROOM },
+                    {  300, xi.item.MUSHROOM_LOCUST },
+            },
+        },
+        -- TODO audit Abyssea Grauberg
+        [xi.zone.ABYSSEA_GRAUBERG] =
+        {
+            drops =
+            {
+                    {  970, xi.item.BAG_OF_HERB_SEEDS        },
+                    { 1330, xi.item.CLUMP_OF_MOKO_GRASS      },
+                    {  880, xi.item.LESSER_CHIGOE            },
+                    {  880, xi.item.BAG_OF_GRAIN_SEEDS       },
+                    { 1180, xi.item.CLUMP_OF_RED_MOKO_GRASS  },
+                    { 1000, xi.item.BURDOCK_ROOT             },
+                    {  790, xi.item.BAG_OF_VEGETABLE_SEEDS   },
+                    {  940, xi.item.BUNCH_OF_GRAUBERG_GREENS },
             },
         },
     },
@@ -161,16 +208,36 @@ local config =
     -- EXCAVATION (Pickaxe) --------------------------------------------------
     [xi.helmType.EXCAVATION] =
     {
+        [xi.zone.TAHRONGI_CANYON] =
+        {
+            breakChance = 40,
+            drops =
+            {
+                { 240, xi.item.BONE_CHIP        },
+                { 240, xi.item.CHICKEN_BONE     },
+                { 150, xi.item.BAT_FANG         },
+                { 150, xi.item.GIANT_FEMUR      },
+                { 100, xi.item.LITTLE_WORM      },
+                {  10, xi.item.SCORPION_CLAW    },
+                {  10, xi.item.SCORPION_SHELL   },
+                {  10, xi.item.TURTLE_SHELL     },
+                {  10, xi.item.SACK_OF_SILICA   },
+                {  10, xi.item.BLACK_TIGER_FANG },
+                {  50, xi.item.RAM_HORN         },
+            },
+        },
+
         [xi.zone.ATTOHWA_CHASM] =
         {
+            breakChance = 60,
             drops =
             {
                 { 240, xi.item.BONE_CHIP                   },
-                { 240, xi.item.CHICKEN_BONE                },
+                { 150, xi.item.CHICKEN_BONE                },
                 { 100, xi.item.BAT_FANG                    },
                 {  50, xi.item.LITTLE_WORM                 },
-                { 100, xi.item.SCORPION_CLAW               },
-                {  50, xi.item.SCORPION_SHELL              },
+                { 150, xi.item.SCORPION_CLAW               },
+                { 100, xi.item.SCORPION_SHELL              },
                 { 100, xi.item.ANTLION_JAW                 },
                 {  10, xi.item.BAG_OF_CACTUS_STEMS         },
                 {  10, xi.item.HIGH_QUALITY_SCORPION_SHELL },
@@ -181,29 +248,13 @@ local config =
             },
         },
 
-        [xi.zone.TAHRONGI_CANYON] =
-        {
-            drops =
-            {
-                { 240, xi.item.BONE_CHIP      },
-                { 240, xi.item.CHICKEN_BONE   },
-                { 150, xi.item.BAT_FANG       },
-                { 150, xi.item.GIANT_FEMUR    },
-                { 100, xi.item.LITTLE_WORM    },
-                {  10, xi.item.SCORPION_CLAW  },
-                {  10, xi.item.SCORPION_SHELL },
-                {  10, xi.item.TURTLE_SHELL   },
-                {  10, xi.item.SACK_OF_SILICA },
-                {  50, xi.item.RAM_HORN       },
-            },
-        },
-
         [xi.zone.KORROLOKA_TUNNEL] =
         {
+            breakChance = 55,
             drops =
             {
-                { 100, xi.item.CHUNK_OF_ROCK_SALT     },
-                { 100, xi.item.SEASHELL               },
+                {  50, xi.item.CHUNK_OF_ROCK_SALT     },
+                { 150, xi.item.SEASHELL               },
                 { 100, xi.item.CRAB_SHELL             },
                 { 150, xi.item.HANDFUL_OF_FISH_SCALES },
                 { 100, xi.item.LUGWORM                },
@@ -220,6 +271,7 @@ local config =
 
         [xi.zone.MAZE_OF_SHAKHRAMI] =
         {
+            breakChance = 55,
             drops =
             {
                 { 240, xi.item.BONE_CHIP      },
@@ -241,78 +293,9 @@ local config =
     -- LOGGING (Hatchet) -----------------------------------------------------
     [xi.helmType.LOGGING] =
     {
-        [xi.zone.CARPENTERS_LANDING] =
-        {
-            drops =
-            {
-                { 240, xi.item.WALNUT_LOG    },
-                { 150, xi.item.WILLOW_LOG    },
-                { 150, xi.item.YEW_LOG       },
-                { 150, xi.item.ARROWWOOD_LOG },
-                { 100, xi.item.ASH_LOG       },
-                {  50, xi.item.DRYAD_ROOT    },
-                {  50, xi.item.ACORN         },
-                {  10, xi.item.OAK_LOG       },
-                {  50, xi.item.CHESTNUT_LOG  },
-                {  10, xi.item.ELM_LOG       },
-            },
-        },
-
-        [xi.zone.LUFAISE_MEADOWS] =
-        {
-            drops =
-            {
-                { 150, xi.item.ARROWWOOD_LOG },
-                { 240, xi.item.ASH_LOG       },
-                { 150, xi.item.MAPLE_LOG     },
-                { 100, xi.item.FAERIE_APPLE  },
-                { 100, xi.item.WALNUT_LOG    },
-                { 100, xi.item.ACORN         },
-                {  50, xi.item.ELM_LOG       },
-                {  10, xi.item.OAK_LOG       },
-                {  50, xi.item.HOLLY_LOG     },
-            },
-        },
-
-        [xi.zone.MAMOOK] =
-        {
-            drops =
-            {
-                { 150, xi.item.ARROWWOOD_LOG        },
-                { 240, xi.item.DOGWOOD_LOG          },
-                {  50, xi.item.HANDFUL_OF_PINE_NUTS },
-                { 150, xi.item.HANDFUL_OF_ALMONDS   },
-                {  10, xi.item.CHESTNUT_LOG         },
-                { 100, xi.item.DATE                 },
-                {  50, xi.item.EBONY_LOG            },
-                {  50, xi.item.LAUAN_LOG            },
-                {  50, xi.item.ROSEWOOD_LOG         },
-                {  10, xi.item.BLOODWOOD_LOG        },
-                {  10, xi.item.LACQUER_TREE_LOG     },
-                {  50, xi.item.OAK_LOG              },
-            },
-        },
-
-        [xi.zone.EAST_RONFAURE_S] =
-        {
-            drops =
-            {
-                { 150, xi.item.ARROWWOOD_LOG      },
-                { 150, xi.item.ASH_LOG            },
-                { 150, xi.item.MAPLE_LOG          },
-                { 150, xi.item.WALNUT             },
-                { 100, xi.item.CHESTNUT_LOG       },
-                { 100, xi.item.RONFAURE_CHESTNUT  },
-                {  50, xi.item.WALNUT_LOG         },
-                {  50, xi.item.BAG_OF_FRUIT_SEEDS },
-                {   1, xi.item.JACARANDA_LOG      },
-                {  50, xi.item.OAK_LOG            },
-                {  50, xi.item.TEAK_LOG           },
-            },
-        },
-
         [xi.zone.EAST_RONFAURE] =
         {
+            breakChance = 10,
             drops =
             {
                 { 240, xi.item.ARROWWOOD_LOG      },
@@ -326,8 +309,25 @@ local config =
             },
         },
 
+        [xi.zone.GHELSBA_OUTPOST] =
+        {
+            breakChance = 10,
+            drops =
+            {
+                { 240, xi.item.ARROWWOOD_LOG     },
+                { 240, xi.item.ASH_LOG           },
+                { 240, xi.item.MAPLE_LOG         },
+                { 100, xi.item.WILLOW_LOG        },
+                {  50, xi.item.ELM_LOG           },
+                {  50, xi.item.HOLLY_LOG         },
+                {  10, xi.item.BAG_OF_FRUIT_SEEDS },
+                {  50, xi.item.LAUAN_LOG         },
+            },
+        },
+
         [xi.zone.BUBURIMU_PENINSULA] =
         {
+            breakChance = 15,
             drops =
             {
                 { 150, xi.item.LAUAN_LOG                },
@@ -345,9 +345,44 @@ local config =
             },
         },
 
-        -- YUHTUNGA_JUNGLE: Abyssea + Kapor Lumber Synths Scaled Back (Final)
+        [xi.zone.JUGNER_FOREST] =
+        {
+            breakChance = 15,
+            drops =
+            {
+                { 150, xi.item.WALNUT_LOG    },
+                { 150, xi.item.WILLOW_LOG    },
+                { 240, xi.item.YEW_LOG       },
+                { 150, xi.item.ARROWWOOD_LOG },
+                { 100, xi.item.ASH_LOG       },
+                {  50, xi.item.DRYAD_ROOT    },
+                { 100, xi.item.ACORN         },
+                {  50, xi.item.OAK_LOG       },
+                {  10, xi.item.MAHOGANY_LOG  },
+            },
+        },
+
+        [xi.zone.CARPENTERS_LANDING] =
+        {
+            breakChance = 15,
+            drops =
+            {
+                { 240, xi.item.WALNUT_LOG    },
+                { 150, xi.item.WILLOW_LOG    },
+                { 150, xi.item.YEW_LOG       },
+                { 150, xi.item.ARROWWOOD_LOG },
+                { 100, xi.item.ASH_LOG       },
+                {  50, xi.item.DRYAD_ROOT    },
+                {  50, xi.item.ACORN         },
+                {  10, xi.item.OAK_LOG       },
+                {  50, xi.item.CHESTNUT_LOG  },
+                {  10, xi.item.ELM_LOG       },
+            },
+        },
+
         [xi.zone.YUHTUNGA_JUNGLE] =
         {
+            breakChance = 20,
             drops =
             {
                 { 100, xi.item.ARROWWOOD_LOG          },
@@ -367,92 +402,9 @@ local config =
             },
         },
 
-        [xi.zone.JUGNER_FOREST] =
-        {
-            drops =
-            {
-                { 150, xi.item.WALNUT_LOG    },
-                { 150, xi.item.WILLOW_LOG    },
-                { 240, xi.item.YEW_LOG       },
-                { 150, xi.item.ARROWWOOD_LOG },
-                { 100, xi.item.ASH_LOG       },
-                {  50, xi.item.DRYAD_ROOT    },
-                { 100, xi.item.ACORN         },
-                {  50, xi.item.OAK_LOG       },
-                {  10, xi.item.MAHOGANY_LOG  },
-            },
-        },
-
-        [xi.zone.MISAREAUX_COAST] =
-        {
-            drops =
-            {
-                { 150, xi.item.ARROWWOOD_LOG },
-                { 240, xi.item.ASH_LOG       },
-                { 150, xi.item.MAPLE_LOG     },
-                { 100, xi.item.FAERIE_APPLE  },
-                { 100, xi.item.WALNUT_LOG    },
-                {  50, xi.item.ACORN         },
-                { 100, xi.item.ELM_LOG       },
-                {  50, xi.item.OAK_LOG       },
-                {  50, xi.item.LAUAN_LOG     },
-            },
-        },
-
-        [xi.zone.CAEDARVA_MIRE] =
-        {
-            drops =
-            {
-                { 100, xi.item.ARROWWOOD_LOG        },
-                { 240, xi.item.DOGWOOD_LOG          },
-                { 100, xi.item.HANDFUL_OF_PINE_NUTS },
-                { 100, xi.item.HANDFUL_OF_ALMONDS   },
-                {  50, xi.item.CHESTNUT_LOG         },
-                {  50, xi.item.DATE                 },
-                {  50, xi.item.EBONY_LOG            },
-                {  50, xi.item.LAUAN_LOG            },
-                {  50, xi.item.ROSEWOOD_LOG         },
-                {  10, xi.item.BLOODWOOD_LOG        },
-                {  10, xi.item.PETRIFIED_LOG        },
-                { 100, xi.item.WALNUT_LOG           },
-            },
-        },
-
-        [xi.zone.JUGNER_FOREST_S] =
-        {
-            drops =
-            {
-                { 100, xi.item.ARROWWOOD_LOG },
-                { 150, xi.item.ASH_LOG       },
-                { 150, xi.item.WALNUT        },
-                { 150, xi.item.WILLOW_LOG    },
-                { 150, xi.item.WALNUT_LOG    },
-                {  50, xi.item.ACORN         },
-                {  10, xi.item.JACARANDA_LOG },
-                { 100, xi.item.OAK_LOG       },
-                {  50, xi.item.TEAK_LOG      },
-                {  10, xi.item.MAHOGANY_LOG  },
-            },
-        },
-
-        [xi.zone.GHELSBA_OUTPOST] =
-        {
-            drops =
-            {
-                { 240, xi.item.ARROWWOOD_LOG     },
-                { 240, xi.item.ASH_LOG           },
-                { 240, xi.item.MAPLE_LOG         },
-                { 100, xi.item.WILLOW_LOG        },
-                {  50, xi.item.ELM_LOG           },
-                {  50, xi.item.HOLLY_LOG         },
-                {  10, xi.item.BAG_OF_FRUIT_SEEDS },
-                {  50, xi.item.LAUAN_LOG         },
-            },
-        },
-
-        -- YHOATOR_JUNGLE: Abyssea + Kapor Lumber Synths Scaled Back (Final)
         [xi.zone.YHOATOR_JUNGLE] =
         {
+            breakChance = 20,
             drops =
             {
                 { 150, xi.item.ARROWWOOD_LOG          },
@@ -470,6 +422,118 @@ local config =
                 {   5, xi.item.LACQUER_TREE_LOG       },
             },
         },
+
+        [xi.zone.LUFAISE_MEADOWS] =
+        {
+            breakChance = 20,
+            drops =
+            {
+                { 150, xi.item.ARROWWOOD_LOG },
+                { 240, xi.item.ASH_LOG       },
+                { 150, xi.item.MAPLE_LOG     },
+                { 100, xi.item.FAERIE_APPLE  },
+                { 100, xi.item.WALNUT_LOG    },
+                { 100, xi.item.ACORN         },
+                {  50, xi.item.ELM_LOG       },
+                {  10, xi.item.OAK_LOG       },
+                {  50, xi.item.HOLLY_LOG     },
+            },
+        },
+
+        [xi.zone.MISAREAUX_COAST] =
+        {
+            breakChance = 20,
+            drops =
+            {
+                { 150, xi.item.ARROWWOOD_LOG },
+                { 240, xi.item.ASH_LOG       },
+                { 150, xi.item.MAPLE_LOG     },
+                { 100, xi.item.FAERIE_APPLE  },
+                { 100, xi.item.WALNUT_LOG    },
+                {  50, xi.item.ACORN         },
+                { 100, xi.item.ELM_LOG       },
+                {  50, xi.item.OAK_LOG       },
+                {  50, xi.item.LAUAN_LOG     },
+            },
+        },
+
+        [xi.zone.CAEDARVA_MIRE] =
+        {
+            breakChance = 10,
+            drops =
+            {
+                { 100, xi.item.ARROWWOOD_LOG        },
+                { 240, xi.item.DOGWOOD_LOG          },
+                { 100, xi.item.HANDFUL_OF_PINE_NUTS },
+                { 100, xi.item.HANDFUL_OF_ALMONDS   },
+                {  50, xi.item.CHESTNUT_LOG         },
+                {  50, xi.item.DATE                 },
+                {  50, xi.item.EBONY_LOG            },
+                {  50, xi.item.LAUAN_LOG            },
+                {  50, xi.item.ROSEWOOD_LOG         },
+                {  10, xi.item.BLOODWOOD_LOG        },
+                {  10, xi.item.PETRIFIED_LOG        },
+                { 100, xi.item.WALNUT_LOG           },
+            },
+        },
+
+        [xi.zone.MAMOOK] =
+        {
+            breakChance = 10,
+            drops =
+            {
+                { 150, xi.item.ARROWWOOD_LOG        },
+                { 240, xi.item.DOGWOOD_LOG          },
+                {  50, xi.item.HANDFUL_OF_PINE_NUTS },
+                { 150, xi.item.HANDFUL_OF_ALMONDS   },
+                {  10, xi.item.CHESTNUT_LOG         },
+                { 100, xi.item.DATE                 },
+                {  50, xi.item.EBONY_LOG            },
+                {  50, xi.item.LAUAN_LOG            },
+                {  50, xi.item.ROSEWOOD_LOG         },
+                {  10, xi.item.BLOODWOOD_LOG        },
+                {  10, xi.item.LACQUER_TREE_LOG     },
+                {  50, xi.item.OAK_LOG              },
+            },
+        },
+
+        [xi.zone.EAST_RONFAURE_S] =
+        {
+            breakChance = 10,
+            drops =
+            {
+                { 150, xi.item.ARROWWOOD_LOG      },
+                { 150, xi.item.ASH_LOG            },
+                { 150, xi.item.MAPLE_LOG          },
+                { 150, xi.item.WALNUT             },
+                { 100, xi.item.CHESTNUT_LOG       },
+                { 100, xi.item.RONFAURE_CHESTNUT  },
+                {  50, xi.item.WALNUT_LOG         },
+                {  50, xi.item.BAG_OF_FRUIT_SEEDS },
+                {   1, xi.item.JACARANDA_LOG      },
+                {  50, xi.item.OAK_LOG            },
+                {  50, xi.item.TEAK_LOG           },
+            },
+        },
+
+        [xi.zone.JUGNER_FOREST_S] =
+        {
+            breakChance = 15,
+            drops =
+            {
+                { 100, xi.item.ARROWWOOD_LOG },
+                { 150, xi.item.ASH_LOG       },
+                { 150, xi.item.WALNUT        },
+                { 150, xi.item.WILLOW_LOG    },
+                { 150, xi.item.WALNUT_LOG    },
+                {  50, xi.item.ACORN         },
+                {  10, xi.item.JACARANDA_LOG },
+                { 100, xi.item.OAK_LOG       },
+                {  50, xi.item.TEAK_LOG      },
+                {  10, xi.item.MAHOGANY_LOG  },
+            },
+        },
+
     },
 
     -- MINING (Pickaxe) ------------------------------------------------------
