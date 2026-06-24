@@ -14,8 +14,16 @@ local blockedOptions =
 {
     [xi.regime.type.FIELDS] =
     {
+        [36]  = true, -- ELITE_INTRO
+        [52]  = true, -- ELITE_CHAP1
+        [68]  = true, -- ELITE_CHAP2
+        [84]  = true, -- ELITE_CHAP3
+        [100] = true, -- ELITE_CHAP4
+        [116] = true, -- ELITE_CHAP5
         [117] = true, -- DRIED_MEAT
+        [132] = true, -- ELITE_CHAP6
         [133] = true, -- SALTED_FISH
+        [148] = true, -- ELITE_CHAP7
         [149] = true, -- HARD_COOKIE
         [165] = true, -- INSTANT_NOODLES
     },
