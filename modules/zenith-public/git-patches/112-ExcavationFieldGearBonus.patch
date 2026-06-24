@@ -1,0 +1,17 @@
+Excavation: let Field/gathering gear reduce pickaxe break chance.
+No EXCAVATION_RESULT mod exists, so point the EXCAVATION HELM type at
+MINING_RESULT (which the Field set grants). xi.helm.doesToolBreak reads
+info.mod, so this lowers tool-break chance while digging. Yield is unaffected.
+---
+diff --git a/scripts/globals/hobbies/helm/data.lua b/scripts/globals/hobbies/helm/data.lua
+--- a/scripts/globals/hobbies/helm/data.lua
++++ b/scripts/globals/hobbies/helm/data.lua
+@@ -341,7 +341,7 @@
+     {
+         id           = 'EXCAVATION',
+         animation    = xi.emote.EXCAVATION,
+-        mod          = nil,
++        mod          = xi.mod.MINING_RESULT,
+         settingRate  = xi.settings.main.EXCAVATION_RATE,
+         settingBreak = xi.settings.main.EXCAVATION_BREAK_CHANCE,
+         message      = 'MINING_IS_POSSIBLE_HERE',
