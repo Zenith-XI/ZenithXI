@@ -285,17 +285,10 @@ int32 MapNetworking::recv_parse(uint8* buff, size_t* buffsize, MapSession* PSess
 
             std::ignore = langID;
 
-            auto rset = db::preparedStmt("SELECT charid FROM chars WHERE charid = ? LIMIT 1", packetCharID);
+            auto rset = db::preparedStmt("SELECT accid FROM chars WHERE charid = ? LIMIT 1", packetCharID);
             if (!rset || rset->rowsCount() == 0 || !rset->next())
             {
-                ShowError("recv_parse: Cannot load charid %u", packetCharID);
-                return -1;
-            }
-
-            rset = db::preparedStmt("SELECT accid FROM chars WHERE charid = ? LIMIT 1", packetCharID);
-            if (!rset || rset->rowsCount() == 0 || !rset->next())
-            {
-                ShowError("recv_parse: Cannot load account id for char id %u", packetCharID);
+                ShowError("recv_parse: Cannot load char %u (no such charid)", packetCharID);
                 return -1;
             }
 
