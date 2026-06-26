@@ -773,7 +773,7 @@ void CZoneEntities::SpawnMOBs(CCharEntity* PChar)
         {
             if (!isInSpawnList)
             {
-                spawnList.insert(itr, SpawnIDList_t::value_type(id, PCurrentMob));
+                spawnList.emplace(id, PCurrentMob);
                 PChar->updateEntityPacket(PCurrentMob, ENTITY_SPAWN, UPDATE_ALL_MOB);
             }
         };
@@ -855,7 +855,7 @@ void CZoneEntities::SpawnPETs(CCharEntity* PChar)
         {
             if (!isInSpawnList)
             {
-                spawnList.insert(itr, SpawnIDList_t::value_type(id, PCurrentEntity));
+                spawnList.emplace(id, PCurrentEntity);
                 PChar->updateEntityPacket(PCurrentEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
             }
         };
@@ -904,7 +904,7 @@ void CZoneEntities::SpawnNPCs(CCharEntity* PChar)
 
             if (want && !inSpawnSet)
             {
-                spawnList.insert(itr, SpawnIDList_t::value_type(PEntity->id, PEntity));
+                spawnList.emplace(PEntity->id, PEntity);
                 PChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
             }
             else if (!want && inSpawnSet)
@@ -963,7 +963,7 @@ void CZoneEntities::SpawnTRUSTs(CCharEntity* PChar)
         {
             if (!isInSpawnList)
             {
-                spawnList.insert(itr, SpawnIDList_t::value_type(id, PCurrentEntity));
+                spawnList.emplace(id, PCurrentEntity);
                 PChar->updateEntityPacket(PCurrentEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
             }
         };
@@ -1508,8 +1508,7 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
 
                                 auto pushPacketIfInSpawnList = [&](CCharEntity* PChar, SpawnIDList_t const& spawnlist)
                                 {
-                                    auto iter = spawnlist.lower_bound(id);
-                                    if (iter != spawnlist.end() && !spawnlist.key_comp()(id, iter->first))
+                                    if (spawnlist.find(id) != spawnlist.end())
                                     {
                                         PChar->pushPacket(packet->copy());
                                     }
