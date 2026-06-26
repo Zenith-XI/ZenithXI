@@ -169,7 +169,6 @@ int32 MapNetworking::map_decipher_packet(uint8* buff, size_t buffsize, MapSessio
     TracyZoneScoped;
 
     uint16 tmp = 0;
-    uint16 i   = 0;
 
     // counting blocks whose size = 4 byte
     tmp = (uint16)((buffsize - FFXI_HEADER_SIZE) / 4);
@@ -177,10 +176,8 @@ int32 MapNetworking::map_decipher_packet(uint8* buff, size_t buffsize, MapSessio
 
     const auto ip = PSession->client_ipp.getIP();
 
-    for (i = 0; i < tmp; i += 2)
-    {
-        blowfish_decipher((uint32*)buff + i + 7, (uint32*)buff + i + 8, pbfkey->P, pbfkey->S[0]);
-    }
+    // tmp is an even count of 4-byte words, i.e. 2 words (one 64-bit block) per cipher step.
+    blowfish_decipher_blocks((uint32*)buff + 7, tmp / 2, pbfkey->P, pbfkey->S[0]);
 
     if (checksum((uint8*)(buff + FFXI_HEADER_SIZE), (uint32)(buffsize - (FFXI_HEADER_SIZE + 16)), (char*)(buff + buffsize - 16)) == 0)
     {
@@ -698,7 +695,7 @@ void MapNetworking::finalizePacket(uint8* buff, size_t* buffsize, size_t PacketS
     // Making total outgoing packet
     std::memcpy(buff + FFXI_HEADER_SIZE, PScratchBuffer.data(), PacketSize);
 
-    uint32 CypherSize = (PacketSize / 4) & -2;
+    uint32 cypherSize = (PacketSize / 4) & -2;
 
     blowfish_t* pbfkey = nullptr;
 
@@ -711,10 +708,8 @@ void MapNetworking::finalizePacket(uint8* buff, size_t* buffsize, size_t PacketS
         pbfkey = &PSession->blowfish;
     }
 
-    for (uint32 j = 0; j < CypherSize; j += 2)
-    {
-        blowfish_encipher((uint32*)(buff) + j + 7, (uint32*)(buff) + j + 8, pbfkey->P, pbfkey->S[0]);
-    }
+    // cypherSize is an even count of 4-byte words, i.e. 2 words (one 64-bit block) per cipher step.
+    blowfish_encipher_blocks((uint32*)(buff) + 7, cypherSize / 2, pbfkey->P, pbfkey->S[0]);
 
     *buffsize = PacketSize + FFXI_HEADER_SIZE;
 }
