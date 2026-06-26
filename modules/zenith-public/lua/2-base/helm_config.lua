@@ -63,7 +63,13 @@ local config =
                 {  50, xi.item.WIJNRUIT                        },
                 {  50, xi.item.CLUMP_OF_WINDURSTIAN_TEA_LEAVES },
                 {  10, xi.item.CLUMP_OF_SHEEP_WOOL             },
+            },
+            additionalDropsROTZ =
+            {
                 {  10, xi.item.SPRIG_OF_FRESH_MUGWORT          },
+            },
+            additionalDropsCOP =
+            {
                 { 100, xi.item.CLUMP_OF_RED_MOKO_GRASS         },
             },
             -- WOTG: Dyer's Woad (added Sep 2008) gated behind ENABLE_WOTG
@@ -92,10 +98,16 @@ local config =
                 {  50, xi.item.CLUMP_OF_WINDURSTIAN_TEA_LEAVES },
                 {  50, xi.item.BEEHIVE_CHIP                    },
                 {  50, xi.item.YAGUDO_FEATHER                  },
+            },
+            additionalDropsROTZ =
+            {
                 {  10, xi.item.SPRIG_OF_FRESH_MUGWORT          },
+            },
+            additionalDropsCOP =
+            {
                 { 150, xi.item.CLUMP_OF_RED_MOKO_GRASS         },
             },
-            -- WOTG: Dyer's Woad (added Sep 2008) gated behind ENABLE_WOTG
+            -- WOTG: Dyer's Woad (added Sep 2008)
             additionalDropsWOTG =
             {
                 {  10, xi.item.SPRIG_OF_DYERS_WOAD             },
@@ -151,8 +163,9 @@ local config =
                 {  50, xi.item.CLUMP_OF_RED_MOKO_GRASS      },
                 {  50, xi.item.SPRIG_OF_FRESH_MUGWORT       },
                 {  50, xi.item.PUK_WING                     },
+                {  10, xi.item.WAMOURA_COCOON               },
             },
-            -- WOTG: Eastern Ginger Root (added Jun 2008) gated behind ENABLE_WOTG
+            -- WOTG: Eastern Ginger Root (added Jun 2008)
             additionalDropsWOTG =
             {
                 {  50, xi.item.EASTERN_GINGER_ROOT          },
@@ -177,7 +190,7 @@ local config =
                 {  50, xi.item.PIECE_OF_CRAWLER_COCOON      },
                 {  10, xi.item.SPIDER_WEB                   },
             },
-            -- WOTG: Eastern Ginger Root (added Jun 2008) gated behind ENABLE_WOTG
+            -- WOTG: Eastern Ginger Root (added Jun 2008)
             additionalDropsWOTG =
             {
                 {  50, xi.item.EASTERN_GINGER_ROOT          },
@@ -288,6 +301,9 @@ local config =
                 {  50, xi.item.RAM_HORN               },
                 {  50, xi.item.SHALL_SHELL            },
                 {  10, xi.item.VIAL_OF_BEASTMAN_BLOOD },
+            },
+            additionalDropsCOP =
+            {
                 {  10, xi.item.URAGNITE_SHELL         },
             },
         },
@@ -409,7 +425,7 @@ local config =
             drops =
             {
                 { 100, xi.item.ARROWWOOD_LOG          },
-                { 150, xi.item.PIECE_OF_RATTAN_LUMBER },
+                { 240, xi.item.PIECE_OF_RATTAN_LUMBER },
                 { 100, xi.item.LAUAN_LOG              },
                 {  50, xi.item.REVIVAL_TREE_ROOT      },
                 {  50, xi.item.BEEHIVE_CHIP           },
@@ -419,13 +435,14 @@ local config =
                 {  50, xi.item.ROSEWOOD_LOG           },
                 {  10, xi.item.KITRON                 },
                 {  50, xi.item.STICK_OF_CINNAMON      },
+                {  10, xi.item.STICK_OF_VANILLA       },
             },
             -- Abyssea-era logging items gated behind ENABLE_ABYSSEA
             additionalDropsABYSSEA =
             {
-                {  50, xi.item.KAPOR_LOG              },
-                { 100, xi.item.AQUILARIA_LOG          },
+                {  50, xi.item.AQUILARIA_LOG          },
                 { 100, xi.item.BUTTERPEAR             },
+                {  50, xi.item.KAPOR_LOG              },
             },
         },
 
@@ -434,8 +451,8 @@ local config =
             breakChance = 20,
             drops =
             {
-                { 150, xi.item.ARROWWOOD_LOG          },
-                { 150, xi.item.PIECE_OF_RATTAN_LUMBER },
+                {  50, xi.item.ARROWWOOD_LOG          },
+                { 240, xi.item.PIECE_OF_RATTAN_LUMBER },
                 { 100, xi.item.LAUAN_LOG              },
                 {  50, xi.item.REVIVAL_TREE_ROOT      },
                 { 100, xi.item.BEEHIVE_CHIP           },
@@ -443,14 +460,16 @@ local config =
                 {  10, xi.item.EBONY_LOG              },
                 {  50, xi.item.DRYAD_ROOT             },
                 {  50, xi.item.MAHOGANY_LOG           },
+                {  50, xi.item.MALBORO_VINE           },
+                {  10, xi.BLACK_CHOCOBO_FEATHER       },
                 {   5, xi.item.LACQUER_TREE_LOG       },
             },
             -- Abyssea-era logging items gated behind ENABLE_ABYSSEA
             additionalDropsABYSSEA =
             {
-                { 100, xi.item.KAPOR_LOG              },
-                { 100, xi.item.AQUILARIA_LOG          },
+                {  50, xi.item.AQUILARIA_LOG          },
                 { 100, xi.item.BUTTERPEAR             },
+                { 100, xi.item.KAPOR_LOG              },
             },
         },
 
@@ -568,18 +587,196 @@ local config =
     },
 
     -- MINING (Pickaxe) ------------------------------------------------------
-    -- [xi.helmType.MINING] =
-    -- {
-    --     [xi.zone.ZERUHN_MINES] =
-    --     {
-    --         rate = 75,
-    --         breakChance = 20,
-    --         additionalDrops =
-    --         {
-    --             { 500, xi.item.CHUNK_OF_GOLD_ORE },
-    --         },
-    --     },
-    -- },
+    [xi.helmType.MINING] =
+    {
+        [xi.zone.OLDTON_MOVALPOLOS] =
+        {
+            drops =
+            {
+                { 100, xi.item.IGNEOUS_ROCK           },
+                { 100, xi.item.CHUNK_OF_ZINC_ORE      },
+                { 100, xi.item.CHUNK_OF_COPPER_ORE    },
+                { 100, xi.item.CHUNK_OF_TIN_ORE       },
+                { 100, xi.item.CHUNK_OF_SILVER_ORE    },
+                { 100, xi.item.CHUNK_OF_IRON_ORE      },
+                {  50, xi.item.SUIT_OF_MOBLIN_MAIL    },
+                {  50, xi.item.MOBLIN_HELM            },
+                {  50, xi.item.MOBLIN_MASK            },
+                {  50, xi.item.GOBLIN_DIE             },
+                {  50, xi.item.SUIT_OF_MOBLIN_ARMOR   },
+                {  10, xi.item.CHUNK_OF_DARKSTEEL_ORE },
+                {  10, xi.item.CHUNK_OF_MYTHRIL_ORE   },
+                {  10, xi.item.CHUNK_OF_GOLD_ORE      },
+                {  10, xi.item.CHUNK_OF_PLATINUM_ORE  },
+            },
+        },
+
+        [xi.zone.NEWTON_MOVALPOLOS] =
+        {
+            drops =
+            {
+                { 1660, xi.item.CHUNK_OF_COPPER_ORE    },
+                { 1100, xi.item.CHUNK_OF_TIN_ORE       },
+                { 1450, xi.item.CHUNK_OF_ZINC_ORE      },
+                { 1790, xi.item.IGNEOUS_ROCK           },
+                { 1450, xi.item.CHUNK_OF_SILVER_ORE    },
+                {  140, xi.item.CHUNK_OF_ALUMINUM_ORE  },
+                { 1720, xi.item.CHUNK_OF_IRON_ORE      },
+                {   70, xi.item.CHUNK_OF_DARKSTEEL_ORE },
+                {  210, xi.item.CHUNK_OF_MYTHRIL_ORE   },
+                {  140, xi.item.CHUNK_OF_GOLD_ORE      },
+                {  340, xi.item.CHUNK_OF_PLATINUM_ORE  },
+                {   70, xi.item.RED_ROCK               },
+            },
+        },
+
+        [xi.zone.MOUNT_ZHAYOLM] =
+        {
+            drops =
+            {
+                { 150, xi.item.PINCH_OF_SULFUR      },
+                { 150, xi.item.CHUNK_OF_IRON_ORE    },
+                { 150, xi.item.HANDFUL_OF_IRON_SAND },
+                { 100, xi.item.FLINT_STONE          },
+                { 100, xi.item.PINCH_OF_BOMB_ASH    },
+                {  50, xi.item.SUIT_OF_MOBLIN_MAIL  },
+                {  50, xi.item.MOBLIN_HELM          },
+                {  50, xi.item.TROLL_PAULDRON       },
+                {  50, xi.item.TROLL_VAMBRACE       },
+                {  10, xi.item.MOBLIN_MASK          },
+                {  50, xi.item.DEMON_HORN           },
+                {  10, xi.item.CHUNK_OF_ADAMAN_ORE  },
+                {   1, xi.item.CHUNK_OF_KHROMA_ORE  },
+                {  10, xi.item.SLAB_OF_PLUMBAGO     },
+            },
+        },
+
+        [xi.zone.HALVUNG] =
+        {
+            drops =
+            {
+                { 100, xi.item.PINCH_OF_SULFUR           },
+                {  10, xi.item.CHUNK_OF_LUMINIUM_ORE     },
+                { 100, xi.item.HANDFUL_OF_IRON_SAND      },
+                { 100, xi.item.FLINT_STONE               },
+                { 100, xi.item.PINCH_OF_BOMB_ASH         },
+                {  50, xi.item.SUIT_OF_MOBLIN_MAIL       },
+                {  50, xi.item.MOBLIN_HELM               },
+                {  50, xi.item.SUIT_OF_MOBLIN_ARMOR      },
+                {  50, xi.item.TROLL_PAULDRON            },
+                {  50, xi.item.TROLL_VAMBRACE            },
+                {  50, xi.item.MOBLIN_MASK               },
+                { 150, xi.item.CHUNK_OF_AHT_URHGAN_BRASS },
+                {  10, xi.item.CHUNK_OF_GOLD_ORE         },
+                {   5, xi.item.CHUNK_OF_ORICHALCUM_ORE   },
+                {  10, xi.item.SLAB_OF_PLUMBAGO          },
+                {  50, xi.item.CHUNK_OF_DARKSTEEL_ORE    },
+            },
+        },
+
+        [xi.zone.NORTH_GUSTABERG_S] =
+        {
+            drops =
+            {
+                { 1870, xi.item.CHUNK_OF_COPPER_ORE   },
+                { 1930, xi.item.CHUNK_OF_ZINC_ORE     },
+                { 1500, xi.item.CHUNK_OF_TIN_ORE      },
+                { 1340, xi.item.PEBBLE                },
+                {  860, xi.item.CHUNK_OF_SILVER_ORE   },
+                { 1180, xi.item.CHUNK_OF_IRON_ORE     },
+                {  750, xi.item.CHUNK_OF_MYTHRIL_ORE  },
+                {  210, xi.item.MOBLIN_MASK           },
+                {  110, xi.item.MOBLIN_HELM           },
+                {  110, xi.item.SUIT_OF_MOBLIN_MAIL   },
+                {   50, xi.item.SUIT_OF_MOBLIN_ARMOR  },
+                {  160, xi.item.CHUNK_OF_PLATINUM_ORE },
+            },
+        },
+
+        [xi.zone.YUGHOTT_GROTTO] =
+        {
+            drops =
+            {
+                { 100, xi.item.CHUNK_OF_COPPER_ORE    },
+                { 240, xi.item.CHUNK_OF_IRON_ORE      },
+                { 150, xi.item.CHUNK_OF_TIN_ORE       },
+                { 150, xi.item.PEBBLE                 },
+                { 150, xi.item.CHUNK_OF_ZINC_ORE      },
+                { 100, xi.item.FLINT_STONE            },
+                {  50, xi.item.CHUNK_OF_SILVER_ORE    },
+                {  10, xi.item.RED_ROCK               },
+                {  10, xi.item.CHUNK_OF_DARKSTEEL_ORE },
+                {   5, xi.item.CHUNK_OF_GOLD_ORE      },
+            },
+        },
+
+        [xi.zone.GUSGEN_MINES] =
+        {
+            drops =
+            {
+                { 150, xi.item.CHUNK_OF_COPPER_ORE    },
+                { 150, xi.item.CHUNK_OF_IRON_ORE      },
+                { 150, xi.item.CHUNK_OF_TIN_ORE       },
+                { 100, xi.item.PEBBLE                 },
+                { 150, xi.item.CHUNK_OF_ZINC_ORE      },
+                { 100, xi.item.CHUNK_OF_SILVER_ORE    },
+                {  50, xi.item.RED_ROCK               },
+                {  50, xi.item.CHUNK_OF_DARKSTEEL_ORE },
+                {  10, xi.item.CHUNK_OF_GOLD_ORE      },
+            },
+        },
+
+        [xi.zone.PALBOROUGH_MINES] =
+        {
+            drops =
+            {
+                { 150, xi.item.CHUNK_OF_ZINC_ORE     },
+                { 150, xi.item.CHUNK_OF_IRON_ORE     },
+                { 150, xi.item.PEBBLE                },
+                { 150, xi.item.CHUNK_OF_TIN_ORE      },
+                { 100, xi.item.CHUNK_OF_MYTHRIL_ORE  },
+                { 100, xi.item.CHUNK_OF_SILVER_ORE   },
+                { 100, xi.item.CHUNK_OF_COPPER_ORE   },
+                {  10, xi.item.CHUNK_OF_PLATINUM_ORE },
+            },
+        },
+
+        [xi.zone.ZERUHN_MINES] =
+        {
+            drops =
+            {
+                { 150, xi.item.CHUNK_OF_IRON_ORE      },
+                { 150, xi.item.PEBBLE                 },
+                { 240, xi.item.CHUNK_OF_COPPER_ORE    },
+                { 100, xi.item.CHUNK_OF_ZINC_ORE      },
+                { 100, xi.item.CHUNK_OF_TIN_ORE       },
+                { 150, xi.item.SNAPPING_MOLE          },
+                {   5, xi.item.CHUNK_OF_SILVER_ORE    },
+                {   5, xi.item.CHUNK_OF_DARKSTEEL_ORE },
+            },
+        },
+
+        [xi.zone.IFRITS_CAULDRON] =
+        {
+            drops =
+            {
+                { 150, xi.item.FLINT_STONE             },
+                { 150, xi.item.CHUNK_OF_IRON_ORE       },
+                { 100, xi.item.PINCH_OF_SULFUR         },
+                {  50, xi.item.BOMB_ARM                },
+                { 150, xi.item.PINCH_OF_BOMB_ASH       },
+                { 150, xi.item.HANDFUL_OF_IRON_SAND    },
+                {  10, xi.item.CHUNK_OF_ADAMAN_ORE     },
+                {  10, xi.item.CHUNK_OF_DARKSTEEL_ORE  },
+                {  50, xi.item.CHUNK_OF_ORPIMENT       },
+                {   5, xi.item.CHUNK_OF_ORICHALCUM_ORE },
+                {  10, xi.item.RED_ROCK                },
+                {  50, xi.item.CHUNK_OF_SILVER_ORE     },
+                {  10, xi.item.CHUNK_OF_GOLD_ORE       },
+                {  10, xi.item.DEMON_HORN              },
+            },
+        },
+    },
 }
 
 -----------------------------------
