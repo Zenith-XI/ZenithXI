@@ -1,13 +1,13 @@
 -----------------------------------
 -- Area: Outer Ra'Kaznar
---  NPC: Entwined Roots (6)
--- !pos -337.826 -160 294.713 274
+--  NPC: Entwined Roots (2)
+-- !pos -262.135 -160 -305.495 274
 -----------------------------------
 ---@type TNpcEntity
 local entity = {}
 
 entity.onTrigger = function(player, npc)
-    player:startEvent(36, 0, 0, 0, 0, 0, 6)
+    player:startEvent(32, 0, 0, 0, 0, 0, 2)
 end
 
 return entity
