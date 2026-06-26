@@ -755,6 +755,36 @@ void CZoneEntities::DespawnPC(CCharEntity* PChar)
     }
 }
 
+void CZoneEntities::tapMobAggro(CCharEntity* PChar, CMobEntity* PCurrentMob)
+{
+    // Check to skip aggro routine
+    if (PCurrentMob->isDead() || PChar->isDead() || PChar->visibleGmLevel >= 3 || PCurrentMob->PMaster)
+    {
+        return;
+    }
+
+    // checking monsters night/daytime sleep is already taken into account in the CurrentAction check, because monsters don't move in their sleep
+    const EMobDifficulty mobCheck = charutils::CheckMob(PChar->GetMLevel(), PCurrentMob);
+
+    CMobController* PController = static_cast<CMobController*>(PCurrentMob->PAI->GetController());
+
+    // Check if this mob follows targets and if so then it should not aggro
+    if (PCurrentMob->m_roamFlags & ROAMFLAG_FOLLOW)
+    {
+        if (PController->CanFollowTarget(PChar))
+        {
+            PController->SetFollowTarget(PChar, FollowType::Roam);
+        }
+        return;
+    }
+
+    bool validAggro = mobCheck > EMobDifficulty::TooWeak || PChar->isSitting() || PCurrentMob->getMobMod(MOBMOD_ALWAYS_AGGRO);
+    if (validAggro && PController->CanAggroTarget(PChar))
+    {
+        PCurrentMob->PAI->Engage(PChar->targid);
+    }
+}
+
 void CZoneEntities::SpawnMOBs(CCharEntity* PChar)
 {
     TracyZoneScoped;
@@ -788,43 +818,13 @@ void CZoneEntities::SpawnMOBs(CCharEntity* PChar)
             }
         };
 
-        const auto tapAggro = [&]()
-        {
-            // Check to skip aggro routine
-            if (PCurrentMob->isDead() || PChar->isDead() || PChar->visibleGmLevel >= 3 || PCurrentMob->PMaster)
-            {
-                return;
-            }
-
-            // checking monsters night/daytime sleep is already taken into account in the CurrentAction check, because monsters don't move in their sleep
-            const EMobDifficulty mobCheck = charutils::CheckMob(PChar->GetMLevel(), PCurrentMob);
-
-            CMobController* PController = static_cast<CMobController*>(PCurrentMob->PAI->GetController());
-
-            // Check if this mob follows targets and if so then it should not aggro
-            if (PCurrentMob->m_roamFlags & ROAMFLAG_FOLLOW)
-            {
-                if (PController->CanFollowTarget(PChar))
-                {
-                    PController->SetFollowTarget(PChar, FollowType::Roam);
-                }
-                return;
-            }
-
-            bool validAggro = mobCheck > EMobDifficulty::TooWeak || PChar->isSitting() || PCurrentMob->getMobMod(MOBMOD_ALWAYS_AGGRO);
-            if (validAggro && PController->CanAggroTarget(PChar))
-            {
-                PCurrentMob->PAI->Engage(PChar->targid);
-            }
-        };
-
         // Is this mob "visible" to the player?
         if (isVisibleStatus && isInHeightRange && isInRange)
         {
             tryAddToSpawnList();
 
             // TODO: Can/should this aggro routine be moved out of here and into the entity's first tick/spawn?
-            tapAggro();
+            tapMobAggro(PChar, PCurrentMob);
         }
         else
         {

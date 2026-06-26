@@ -111,6 +111,9 @@ private:
     auto trustTick(CTrustEntity* PTrust, timer::time_point tick) -> Task<void>;
     auto charTick(CCharEntity* PChar, timer::time_point tick) -> Task<void>;
 
+    // aggro check when a mob becomes visible
+    void tapMobAggro(CCharEntity* PChar, CMobEntity* PCurrentMob);
+
     Scheduler& scheduler_;
     MapConfig  config_;
 
