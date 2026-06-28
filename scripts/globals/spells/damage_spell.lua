@@ -653,19 +653,29 @@ xi.spells.damage.calculateMagicBonusDiff = function(caster, target, spellId, ski
         end
     end
 
-    -- Job Point MAB
+    -- Job Point regular MAB
     if casterJob == xi.job.RDM then
         mab = mab + caster:getJobPointLevel(xi.jp.RDM_MAGIC_ATK_BONUS)
     elseif casterJob == xi.job.GEO then
         mab = mab + caster:getJobPointLevel(xi.jp.GEO_MAGIC_ATK_BONUS)
     end
 
-    -- Ancient Magic I and II MAB
+    -- Ancient Magic I and II specific MAB
     if
         spellId >= xi.magic.spell.FLARE and
         spellId <= xi.magic.spell.FLOOD_II
     then
         mab = mab + caster:getMerit(xi.merit.ANCIENT_MAGIC_ATK_BONUS)
+    end
+
+    -- "Theurgic focus" -ra specific MAB
+    if caster:hasStatusEffect(xi.effect.THEURGIC_FOCUS) then
+        if
+            (spellId >= xi.magic.spell.FIRA and spellId <= xi.magic.spell.WATERA_II) or
+            (spellId >= xi.magic.spell.FIRA_III and spellId <= xi.magic.spell.WATERA_III)
+        then
+            mab = mab + 50 + caster:getJobPointLevel(xi.jp.THEURGIC_FOCUS_EFFECT) * 3
+        end
     end
 
     -- Final operations
