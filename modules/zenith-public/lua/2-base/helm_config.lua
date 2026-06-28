@@ -113,41 +113,34 @@ local config =
                 {  10, xi.item.SPRIG_OF_DYERS_WOAD             },
             },
         },
-        -- TODO: Audit Grauberg (S)
-        [xi.zone.GRAUBERG_S] =
+        -- TODO Audit Yuhtunga Jungle Harvesting (Only appears during rain)
+        [xi.zone.YUHTUNGA_JUNGLE] =
         {
             drops =
             {
-                { 1830, xi.item.CLUMP_OF_MOKO_GRASS     },
-                { 1850, xi.item.CLUMP_OF_RED_MOKO_GRASS },
-                { 1250, xi.item.BAG_OF_VEGETABLE_SEEDS  },
-                { 1560, xi.item.BURDOCK_ROOT            },
-                { 1060, xi.item.BAG_OF_GRAIN_SEEDS      },
-                { 1200, xi.item.BAG_OF_HERB_SEEDS       },
-                { 1270, xi.item.LESSER_CHIGOE           },
-                { 1160, xi.item.WINTERFLOWER            },
+                    { 4000, xi.item.WOOZYSHROOM     },
+                    { 2000, xi.item.DANCESHROOM     },
+                    { 2000, xi.item.SLEEPSHROOM     },
+                    {  700, xi.item.SCREAM_FUNGUS   },
+                    {  700, xi.item.PUFFBALL        },
+                    {  300, xi.item.KING_TRUFFLE    },
+                    {  300, xi.item.MUSHROOM_LOCUST },
             },
         },
-        -- TODO: Audit West Sarutabaruta (S)
-        [xi.zone.WEST_SARUTABARUTA_S] =
+        -- TODO Audit Yhoator Jungle Harvesting (Only appears during rain)
+        [xi.zone.YHOATOR_JUNGLE] =
         {
             drops =
             {
-                {  890, xi.item.BURDOCK_ROOT            },
-                {  830, xi.item.CLUMP_OF_RED_MOKO_GRASS },
-                {  910, xi.item.FLAX_FLOWER             },
-                {  540, xi.item.BAG_OF_VEGETABLE_SEEDS  },
-                { 1630, xi.item.SPRIG_OF_FRESH_MARJORAM },
-                { 1580, xi.item.CLUMP_OF_MOKO_GRASS     },
-                { 1680, xi.item.BALL_OF_SARUTA_COTTON   },
-                {  550, xi.item.SKULL_LOCUST            },
-                {  390, xi.item.SPRIG_OF_FRESH_MUGWORT  },
-                {  350, xi.item.KING_LOCUST             },
-                {  280, xi.item.BAG_OF_HERB_SEEDS       },
-                {  370, xi.item.BAG_OF_GRAIN_SEEDS      },
+                    { 4000, xi.item.WOOZYSHROOM     },
+                    { 2000, xi.item.DANCESHROOM     },
+                    { 2000, xi.item.SLEEPSHROOM     },
+                    {  700, xi.item.SCREAM_FUNGUS   },
+                    {  700, xi.item.CORAL_FUNGUS    },
+                    {  300, xi.item.REISHI_MUSHROOM },
+                    {  300, xi.item.MUSHROOM_LOCUST },
             },
         },
-
         [xi.zone.WAJAOM_WOODLANDS] =
         {
             breakChance = 10,
@@ -196,35 +189,41 @@ local config =
                 {  50, xi.item.EASTERN_GINGER_ROOT          },
             },
         },
-        -- TODO audit Yuhtunga Jungle Harvesting
-        [xi.zone.YUHTUNGA_JUNGLE] =
+        -- TODO: Audit Grauberg (S)
+        [xi.zone.GRAUBERG_S] =
         {
             drops =
             {
-                    { 4000, xi.item.WOOZYSHROOM     },
-                    { 2000, xi.item.DANCESHROOM     },
-                    { 2000, xi.item.SLEEPSHROOM     },
-                    {  700, xi.item.SCREAM_FUNGUS   },
-                    {  700, xi.item.PUFFBALL        },
-                    {  300, xi.item.KING_TRUFFLE    },
-                    {  300, xi.item.MUSHROOM_LOCUST },
+                { 1830, xi.item.CLUMP_OF_MOKO_GRASS     },
+                { 1850, xi.item.CLUMP_OF_RED_MOKO_GRASS },
+                { 1250, xi.item.BAG_OF_VEGETABLE_SEEDS  },
+                { 1560, xi.item.BURDOCK_ROOT            },
+                { 1060, xi.item.BAG_OF_GRAIN_SEEDS      },
+                { 1200, xi.item.BAG_OF_HERB_SEEDS       },
+                { 1270, xi.item.LESSER_CHIGOE           },
+                { 1160, xi.item.WINTERFLOWER            },
             },
         },
-        -- TODO audit Yhoator Jungle Harvesting
-        [xi.zone.YHOATOR_JUNGLE] =
+        -- TODO: Audit West Sarutabaruta (S)
+        [xi.zone.WEST_SARUTABARUTA_S] =
         {
             drops =
             {
-                    { 4000, xi.item.WOOZYSHROOM     },
-                    { 2000, xi.item.DANCESHROOM     },
-                    { 2000, xi.item.SLEEPSHROOM     },
-                    {  700, xi.item.SCREAM_FUNGUS   },
-                    {  700, xi.item.CORAL_FUNGUS    },
-                    {  300, xi.item.REISHI_MUSHROOM },
-                    {  300, xi.item.MUSHROOM_LOCUST },
+                {  890, xi.item.BURDOCK_ROOT            },
+                {  830, xi.item.CLUMP_OF_RED_MOKO_GRASS },
+                {  910, xi.item.FLAX_FLOWER             },
+                {  540, xi.item.BAG_OF_VEGETABLE_SEEDS  },
+                { 1630, xi.item.SPRIG_OF_FRESH_MARJORAM },
+                { 1580, xi.item.CLUMP_OF_MOKO_GRASS     },
+                { 1680, xi.item.BALL_OF_SARUTA_COTTON   },
+                {  550, xi.item.SKULL_LOCUST            },
+                {  390, xi.item.SPRIG_OF_FRESH_MUGWORT  },
+                {  350, xi.item.KING_LOCUST             },
+                {  280, xi.item.BAG_OF_HERB_SEEDS       },
+                {  370, xi.item.BAG_OF_GRAIN_SEEDS      },
             },
         },
-        -- TODO audit Abyssea Grauberg
+        -- TODO Audit Abyssea Grauberg
         [xi.zone.ABYSSEA_GRAUBERG] =
         {
             drops =
@@ -279,6 +278,7 @@ local config =
                 {  10, xi.item.HIGH_QUALITY_SCORPION_SHELL },
                 {  10, xi.item.RED_ROCK                    },
                 {   5, xi.item.SCARLET_STONE               },
+                {  10, xi.item.HANDFUL_OF_WYVERN_SCALES    },
                 {   5, xi.item.WYVERN_SKULL                },
                 {  50, xi.item.COEURL_WHISKER              },
             },
@@ -293,13 +293,14 @@ local config =
                 { 150, xi.item.SEASHELL               },
                 { 100, xi.item.CRAB_SHELL             },
                 { 150, xi.item.HANDFUL_OF_FISH_SCALES },
-                { 100, xi.item.LUGWORM                },
+                {  50, xi.item.LUGWORM                },
                 { 100, xi.item.SHELL_BUG              },
                 {  10, xi.item.CORAL_FRAGMENT         },
                 {  50, xi.item.TURTLE_SHELL           },
                 {  50, xi.item.HELMET_MOLE            },
-                {  50, xi.item.RAM_HORN               },
+                {  10, xi.item.BEETLE_JAW             },
                 {  50, xi.item.SHALL_SHELL            },
+                { 100, xi.item.VIAL_OF_SLIME_OIL      },
                 {  10, xi.item.VIAL_OF_BEASTMAN_BLOOD },
             },
             additionalDropsCOP =
@@ -461,7 +462,7 @@ local config =
                 {  50, xi.item.DRYAD_ROOT             },
                 {  50, xi.item.MAHOGANY_LOG           },
                 {  50, xi.item.MALBORO_VINE           },
-                {  10, xi.BLACK_CHOCOBO_FEATHER       },
+                {  10, xi.item.BLACK_CHOCOBO_FEATHER  },
                 {   5, xi.item.LACQUER_TREE_LOG       },
             },
             -- Abyssea-era logging items gated behind ENABLE_ABYSSEA
@@ -478,15 +479,16 @@ local config =
             breakChance = 20,
             drops =
             {
-                { 150, xi.item.ARROWWOOD_LOG },
-                { 240, xi.item.ASH_LOG       },
-                { 150, xi.item.MAPLE_LOG     },
-                { 100, xi.item.FAERIE_APPLE  },
-                { 100, xi.item.WALNUT_LOG    },
-                { 100, xi.item.ACORN         },
-                {  50, xi.item.ELM_LOG       },
-                {  10, xi.item.OAK_LOG       },
-                {  50, xi.item.HOLLY_LOG     },
+                { 150, xi.item.ARROWWOOD_LOG      },
+                { 240, xi.item.ASH_LOG            },
+                { 150, xi.item.MAPLE_LOG          },
+                { 100, xi.item.FAERIE_APPLE       },
+                { 100, xi.item.WALNUT_LOG         },
+                { 100, xi.item.ACORN              },
+                {  50, xi.item.ELM_LOG            },
+                {  10, xi.item.OAK_LOG            },
+                {  50, xi.item.SPRIG_OF_MISTLETOE },
+                {  50, xi.item.HOLLY_LOG          },
             },
         },
 
@@ -495,15 +497,16 @@ local config =
             breakChance = 20,
             drops =
             {
-                { 150, xi.item.ARROWWOOD_LOG },
-                { 240, xi.item.ASH_LOG       },
-                { 150, xi.item.MAPLE_LOG     },
-                { 100, xi.item.FAERIE_APPLE  },
-                { 100, xi.item.WALNUT_LOG    },
-                {  50, xi.item.ACORN         },
-                { 100, xi.item.ELM_LOG       },
-                {  50, xi.item.OAK_LOG       },
-                {  50, xi.item.LAUAN_LOG     },
+                { 150, xi.item.ARROWWOOD_LOG      },
+                { 240, xi.item.ASH_LOG            },
+                { 150, xi.item.MAPLE_LOG          },
+                { 100, xi.item.FAERIE_APPLE       },
+                { 100, xi.item.WALNUT_LOG         },
+                {  50, xi.item.ACORN              },
+                { 100, xi.item.ELM_LOG            },
+                {  50, xi.item.OAK_LOG            },
+                {  50, xi.item.GIANT_BIRD_FEATHER },
+                {  10, xi.item.GIANT_BIRD_PLUME   },
             },
         },
 
@@ -584,33 +587,142 @@ local config =
             },
         },
 
+                [xi.zone.FORT_KARUGO_NARUGO_S] =
+        {
+            breakChance = 10,
+            drops =
+            {
+                {  50, xi.item.FLASK_OF_HOLY_WATER },
+                { 150, xi.item.PAIR_OF_NOPALES     },
+                { 150, xi.item.DRAGON_FRUIT        },
+                { 100, xi.item.BIRD_FEATHER        },
+                { 100, xi.item.BIRD_EGG            },
+                {  10, xi.item.BAG_OF_CACTUS_STEMS },
+                {  50, xi.item.DRYAD_ROOT          },
+                {  50, xi.item.BEEHIVE_CHIP        },
+                { 100, xi.item.GNAT_WING           },
+                {  50, xi.item.WILD_ONION          },
+                {  10, xi.item.RAFFLESIA_VINE      },
+            },
+        },
     },
 
     -- MINING (Pickaxe) ------------------------------------------------------
     [xi.helmType.MINING] =
     {
+        [xi.zone.YUGHOTT_GROTTO] =
+        {
+            breakChance = 55,
+            drops =
+            {
+                { 100, xi.item.CHUNK_OF_COPPER_ORE    },
+                { 240, xi.item.CHUNK_OF_IRON_ORE      },
+                { 150, xi.item.CHUNK_OF_TIN_ORE       },
+                { 150, xi.item.PEBBLE                 },
+                { 150, xi.item.CHUNK_OF_ZINC_ORE      },
+                { 100, xi.item.FLINT_STONE            },
+                {  50, xi.item.CHUNK_OF_SILVER_ORE    },
+                {  10, xi.item.RED_ROCK               },
+                {  10, xi.item.CHUNK_OF_DARKSTEEL_ORE },
+                {   5, xi.item.CHUNK_OF_GOLD_ORE      },
+            },
+        },
+
+        [xi.zone.GUSGEN_MINES] =
+        {
+            breakChance = 55,
+            drops =
+            {
+                { 150, xi.item.CHUNK_OF_COPPER_ORE    },
+                { 150, xi.item.CHUNK_OF_IRON_ORE      },
+                { 150, xi.item.CHUNK_OF_TIN_ORE       },
+                {  50, xi.item.PEBBLE                 },
+                { 150, xi.item.CHUNK_OF_ZINC_ORE      },
+                { 100, xi.item.CHUNK_OF_SILVER_ORE    },
+                {  50, xi.item.RED_ROCK               },
+                {  50, xi.item.CHUNK_OF_DARKSTEEL_ORE },
+                {  10, xi.item.CHUNK_OF_GOLD_ORE      },
+            },
+        },
+
+        [xi.zone.PALBOROUGH_MINES] =
+        {
+            breakChance = 50,
+            drops =
+            {
+                { 150, xi.item.CHUNK_OF_ZINC_ORE     },
+                { 150, xi.item.CHUNK_OF_IRON_ORE     },
+                { 150, xi.item.PEBBLE                },
+                { 150, xi.item.CHUNK_OF_TIN_ORE      },
+                { 100, xi.item.CHUNK_OF_MYTHRIL_ORE  },
+                { 100, xi.item.CHUNK_OF_SILVER_ORE   },
+                { 100, xi.item.CHUNK_OF_COPPER_ORE   },
+                {  10, xi.item.CHUNK_OF_PLATINUM_ORE },
+            },
+        },
+
+        [xi.zone.ZERUHN_MINES] =
+        {
+            breakChance = 45,
+            drops =
+            {
+                { 150, xi.item.CHUNK_OF_IRON_ORE      },
+                { 150, xi.item.PEBBLE                 },
+                { 240, xi.item.CHUNK_OF_COPPER_ORE    },
+                { 100, xi.item.CHUNK_OF_ZINC_ORE      },
+                { 100, xi.item.CHUNK_OF_TIN_ORE       },
+                { 150, xi.item.SNAPPING_MOLE          },
+                {  10, xi.item.CHUNK_OF_SILVER_ORE    },
+                {   5, xi.item.CHUNK_OF_DARKSTEEL_ORE },
+                {   5, xi.item.CHUNK_OF_GOLD_ORE      },
+            },
+        },
+
+        [xi.zone.IFRITS_CAULDRON] =
+        {
+            breakChance = 55, -- ~60-65% in retail
+            drops =
+            {
+                { 100, xi.item.FLINT_STONE             },
+                { 150, xi.item.CHUNK_OF_IRON_ORE       },
+                { 100, xi.item.PINCH_OF_SULFUR         },
+                {  10, xi.item.BOMB_ARM                },
+                { 150, xi.item.PINCH_OF_BOMB_ASH       },
+                { 150, xi.item.HANDFUL_OF_IRON_SAND    },
+                {  10, xi.item.CHUNK_OF_ADAMAN_ORE     },
+                {  10, xi.item.CHUNK_OF_DARKSTEEL_ORE  },
+                {  50, xi.item.CHUNK_OF_ORPIMENT       },
+                {   5, xi.item.CHUNK_OF_ORICHALCUM_ORE },
+                {  10, xi.item.RED_ROCK                },
+                { 100, xi.item.CHUNK_OF_SILVER_ORE     },
+                {  10, xi.item.CHUNK_OF_GOLD_ORE       },
+                {  10, xi.item.DEMON_HORN              },
+            },
+        },
+
+        -- TODO: Audit Oldton Movalpolos
         [xi.zone.OLDTON_MOVALPOLOS] =
         {
             drops =
             {
-                { 100, xi.item.IGNEOUS_ROCK           },
-                { 100, xi.item.CHUNK_OF_ZINC_ORE      },
-                { 100, xi.item.CHUNK_OF_COPPER_ORE    },
-                { 100, xi.item.CHUNK_OF_TIN_ORE       },
-                { 100, xi.item.CHUNK_OF_SILVER_ORE    },
-                { 100, xi.item.CHUNK_OF_IRON_ORE      },
-                {  50, xi.item.SUIT_OF_MOBLIN_MAIL    },
-                {  50, xi.item.MOBLIN_HELM            },
-                {  50, xi.item.MOBLIN_MASK            },
-                {  50, xi.item.GOBLIN_DIE             },
-                {  50, xi.item.SUIT_OF_MOBLIN_ARMOR   },
-                {  10, xi.item.CHUNK_OF_DARKSTEEL_ORE },
-                {  10, xi.item.CHUNK_OF_MYTHRIL_ORE   },
-                {  10, xi.item.CHUNK_OF_GOLD_ORE      },
-                {  10, xi.item.CHUNK_OF_PLATINUM_ORE  },
+                { 1150, xi.item.IGNEOUS_ROCK           },
+                { 1130, xi.item.CHUNK_OF_ZINC_ORE      },
+                { 1100, xi.item.CHUNK_OF_COPPER_ORE    },
+                { 1080, xi.item.CHUNK_OF_TIN_ORE       },
+                { 1050, xi.item.CHUNK_OF_SILVER_ORE    },
+                {  970, xi.item.CHUNK_OF_IRON_ORE      },
+                {  680, xi.item.SUIT_OF_MOBLIN_MAIL    },
+                {  630, xi.item.MOBLIN_HELM            },
+                {  600, xi.item.MOBLIN_MASK            },
+                {  570, xi.item.GOBLIN_DIE             },
+                {  570, xi.item.SUIT_OF_MOBLIN_ARMOR   },
+                {   80, xi.item.CHUNK_OF_DARKSTEEL_ORE },
+                {   80, xi.item.CHUNK_OF_MYTHRIL_ORE   },
+                {   70, xi.item.CHUNK_OF_GOLD_ORE      },
+                {   70, xi.item.CHUNK_OF_PLATINUM_ORE  },
             },
         },
-
+        -- TODO: Audit Newton Movalpolos
         [xi.zone.NEWTON_MOVALPOLOS] =
         {
             drops =
@@ -632,6 +744,7 @@ local config =
 
         [xi.zone.MOUNT_ZHAYOLM] =
         {
+            breakChance = 55,
             drops =
             {
                 { 150, xi.item.PINCH_OF_SULFUR      },
@@ -653,6 +766,7 @@ local config =
 
         [xi.zone.HALVUNG] =
         {
+            breakChance = 55,
             drops =
             {
                 { 100, xi.item.PINCH_OF_SULFUR           },
@@ -673,7 +787,7 @@ local config =
                 {  50, xi.item.CHUNK_OF_DARKSTEEL_ORE    },
             },
         },
-
+        -- TODO: Audit North Gustaberg (S)
         [xi.zone.NORTH_GUSTABERG_S] =
         {
             drops =
@@ -690,90 +804,6 @@ local config =
                 {  110, xi.item.SUIT_OF_MOBLIN_MAIL   },
                 {   50, xi.item.SUIT_OF_MOBLIN_ARMOR  },
                 {  160, xi.item.CHUNK_OF_PLATINUM_ORE },
-            },
-        },
-
-        [xi.zone.YUGHOTT_GROTTO] =
-        {
-            drops =
-            {
-                { 100, xi.item.CHUNK_OF_COPPER_ORE    },
-                { 240, xi.item.CHUNK_OF_IRON_ORE      },
-                { 150, xi.item.CHUNK_OF_TIN_ORE       },
-                { 150, xi.item.PEBBLE                 },
-                { 150, xi.item.CHUNK_OF_ZINC_ORE      },
-                { 100, xi.item.FLINT_STONE            },
-                {  50, xi.item.CHUNK_OF_SILVER_ORE    },
-                {  10, xi.item.RED_ROCK               },
-                {  10, xi.item.CHUNK_OF_DARKSTEEL_ORE },
-                {   5, xi.item.CHUNK_OF_GOLD_ORE      },
-            },
-        },
-
-        [xi.zone.GUSGEN_MINES] =
-        {
-            drops =
-            {
-                { 150, xi.item.CHUNK_OF_COPPER_ORE    },
-                { 150, xi.item.CHUNK_OF_IRON_ORE      },
-                { 150, xi.item.CHUNK_OF_TIN_ORE       },
-                { 100, xi.item.PEBBLE                 },
-                { 150, xi.item.CHUNK_OF_ZINC_ORE      },
-                { 100, xi.item.CHUNK_OF_SILVER_ORE    },
-                {  50, xi.item.RED_ROCK               },
-                {  50, xi.item.CHUNK_OF_DARKSTEEL_ORE },
-                {  10, xi.item.CHUNK_OF_GOLD_ORE      },
-            },
-        },
-
-        [xi.zone.PALBOROUGH_MINES] =
-        {
-            drops =
-            {
-                { 150, xi.item.CHUNK_OF_ZINC_ORE     },
-                { 150, xi.item.CHUNK_OF_IRON_ORE     },
-                { 150, xi.item.PEBBLE                },
-                { 150, xi.item.CHUNK_OF_TIN_ORE      },
-                { 100, xi.item.CHUNK_OF_MYTHRIL_ORE  },
-                { 100, xi.item.CHUNK_OF_SILVER_ORE   },
-                { 100, xi.item.CHUNK_OF_COPPER_ORE   },
-                {  10, xi.item.CHUNK_OF_PLATINUM_ORE },
-            },
-        },
-
-        [xi.zone.ZERUHN_MINES] =
-        {
-            drops =
-            {
-                { 150, xi.item.CHUNK_OF_IRON_ORE      },
-                { 150, xi.item.PEBBLE                 },
-                { 240, xi.item.CHUNK_OF_COPPER_ORE    },
-                { 100, xi.item.CHUNK_OF_ZINC_ORE      },
-                { 100, xi.item.CHUNK_OF_TIN_ORE       },
-                { 150, xi.item.SNAPPING_MOLE          },
-                {   5, xi.item.CHUNK_OF_SILVER_ORE    },
-                {   5, xi.item.CHUNK_OF_DARKSTEEL_ORE },
-            },
-        },
-
-        [xi.zone.IFRITS_CAULDRON] =
-        {
-            drops =
-            {
-                { 150, xi.item.FLINT_STONE             },
-                { 150, xi.item.CHUNK_OF_IRON_ORE       },
-                { 100, xi.item.PINCH_OF_SULFUR         },
-                {  50, xi.item.BOMB_ARM                },
-                { 150, xi.item.PINCH_OF_BOMB_ASH       },
-                { 150, xi.item.HANDFUL_OF_IRON_SAND    },
-                {  10, xi.item.CHUNK_OF_ADAMAN_ORE     },
-                {  10, xi.item.CHUNK_OF_DARKSTEEL_ORE  },
-                {  50, xi.item.CHUNK_OF_ORPIMENT       },
-                {   5, xi.item.CHUNK_OF_ORICHALCUM_ORE },
-                {  10, xi.item.RED_ROCK                },
-                {  50, xi.item.CHUNK_OF_SILVER_ORE     },
-                {  10, xi.item.CHUNK_OF_GOLD_ORE       },
-                {  10, xi.item.DEMON_HORN              },
             },
         },
     },
