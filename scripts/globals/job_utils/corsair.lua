@@ -10,7 +10,7 @@ xi.job_utils.corsair = xi.job_utils.corsair or {}
 -----------------------------------
 
 -- Table used for Corsair's Phantom Roll calculations
-local rollData =
+xi.job_utils.corsair.rollData =
 {
     [xi.jobAbility.CORSAIRS_ROLL] =
     {
@@ -355,7 +355,7 @@ local rollData =
     },
 }
 
-local quickDrawDataTable =
+xi.job_utils.corsair.quickDrawDataTable =
 {
     [xi.jobAbility.FIRE_SHOT   ] = { cardAmmo = xi.item.FIRE_CARD,    element = xi.element.FIRE,    multiplier = 1.2, canDamage = true,  applyEffectId = 0                 },
     [xi.jobAbility.ICE_SHOT    ] = { cardAmmo = xi.item.ICE_CARD,     element = xi.element.ICE,     multiplier = 1.2, canDamage = true,  applyEffectId = 0                 },
@@ -367,7 +367,7 @@ local quickDrawDataTable =
     [xi.jobAbility.DARK_SHOT   ] = { cardAmmo = xi.item.DARK_CARD,    element = xi.element.DARK,    multiplier = 1.5, canDamage = false, applyEffectId = xi.effect.NONE    }, -- Dispel
 }
 
-local quickDrawEffectBoostTable =
+xi.job_utils.corsair.quickDrawEffectBoostTable =
 {
     [xi.jobAbility.FIRE_SHOT] =
     {
@@ -403,13 +403,13 @@ local quickDrawEffectBoostTable =
 
     [xi.jobAbility.LIGHT_SHOT] =
     {
-        { effectId = xi.effect.DIA, capByTier = { [1] = 10, [3] = 15, [5] = 20, [7] = 25, [9] = 30 } },
+        { effectId = xi.effect.DIA, basePowerByTier = { [1] = 10, [3] = 15, [5] = 20, [7] = 25, [9] = 30 } },
     },
 
     [xi.jobAbility.DARK_SHOT] =
     {
-        { effectId = xi.effect.BIO,       capByTier = { [2] = 10, [4] = 15, [6] = 20, [8] = 25, [10] = 30 } },
-        { effectId = xi.effect.BLINDNESS, capGlobal = 30                                                    },
+        { effectId = xi.effect.BIO,       basePowerByTier = { [2] = 10, [4] = 15, [6] = 20, [8] = 25, [10] = 30 } },
+        { effectId = xi.effect.BLINDNESS, capGlobal = 30                                                          },
     },
 }
 
@@ -424,26 +424,6 @@ local rollEnhanceMods =
 -----------------------------------
 -- Local helper functions
 -----------------------------------
-
--- Sets local var if party contains specified job
-local function checkForJobBonus(caster, job)
-    if job == xi.job.NONE then
-        caster:setLocalVar('corsairRollBonus', 0)
-        return
-    end
-
-    if caster:hasPartyJob(job) then
-        caster:setLocalVar('corsairRollBonus', 1)
-        return
-    end
-
-    if math.random(1, 100) <= caster:getMod(xi.mod.JOB_BONUS_CHANCE) then
-        caster:setLocalVar('corsairRollBonus', 1)
-        return
-    end
-
-    caster:setLocalVar('corsairRollBonus', 0)
-end
 
 local function corsairSetup(caster, ability, action, effect, job)
     local roll = math.random(1, 6)
@@ -479,12 +459,12 @@ local function corsairSetup(caster, ability, action, effect, job)
     -- In short, it seems the minimum recast time is 15 seconds.
     action:setRecast(utils.clamp(recastTime - recastReduction, 15, 300))
 
-    checkForJobBonus(caster, job)
+    xi.job_utils.corsair.checkForJobBonus(caster, job)
 end
 
 -- Handle application of roll or bust effects on party members
 local function applyCorsairEffect(caster, target, abilityId, power, subPower)
-    local rollInfo = rollData[abilityId]
+    local rollInfo = xi.job_utils.corsair.rollData[abilityId]
     if not rollInfo then
         return false
     end
@@ -597,10 +577,192 @@ local function applyCorsairEffect(caster, target, abilityId, power, subPower)
     return target:addStatusEffect(effectId, effectParams)
 end
 
+-----------------------------------
+-- Global helper functions
+-----------------------------------
+
+xi.job_utils.corsair.checkForElevenRoll = function(caster)
+    local effects = caster:getStatusEffects()
+
+    for _, effect in pairs(effects) do
+        if
+            effect:hasEffectFlag(xi.effectFlag.ROLL) and
+            effect:getSubPower() == 11
+        then
+            return true
+        end
+    end
+
+    return false
+end
+
+xi.job_utils.corsair.onRollEffectLose = function(player, effect)
+    -- Ignore effect loss if COR is doubling up
+    if player:getLocalVar('corsairApplyingRoll') == 1 then
+        return
+    end
+
+    if
+        player:hasStatusEffect(xi.effect.DOUBLE_UP_CHANCE) and
+        player:getLocalVar('corsairDuEffect') == effect:getEffectType()
+    then
+        player:delStatusEffectSilent(xi.effect.DOUBLE_UP_CHANCE)
+        player:setLocalVar('corsairDuEffect', 0)
+    end
+end
+
+xi.job_utils.corsair.handleQuickDrawDamage = function(player, target, action, element, resist)
+    -- Calculate Quick Draw damage - https://wiki.ffo.jp/html/3349.html TODO: QUICK_DRAW_TRIPLE_DAMAGE gear mod needs research
+    local damage                 = 2 * player:getRangedDmg() + 2 * player:getJobPointLevel(xi.jp.QUICK_DRAW_EFFECT) + player:getMod(xi.mod.QUICK_DRAW_DMG)
+    local deathPenaltyMultiplier = 1 + player:getMod(xi.mod.QUICK_DRAW_DMG_PERCENT) / 100
+    local damageAdditiveBonus    = player:getMod(xi.mod.MAGIC_DAMAGE)
+    local elementalStaffBonus    = xi.spells.damage.calculateElementalStaffBonus(player, element)
+    local affinityMultiplier     = xi.spells.damage.calculateElementalAffinityBonus(player, element)
+    local dayWeatherMultiplier   = xi.spells.damage.calculateDayAndWeather(player, element, false)
+    local magicBonusDiff         = xi.spells.damage.calculateMagicBonusDiff(player, target, 0, 0, element, 0)
+
+    -- Unconfirmed order.
+    local sdtMultiplier          = xi.combat.damage.magicalElementSDT(target, element)
+    local additionalResistTier   = xi.spells.damage.calculateAdditionalResistTier(player, target, element)
+    local elementalAbsorption    = xi.spells.damage.calculateAbsorption(target, element, false)
+    local elementalNullification = xi.spells.damage.calculateNullification(target, element, false, false)
+
+    -- Apply multipliers and bonuses.
+    damage = math.floor(damage * deathPenaltyMultiplier)
+    damage = math.floor(damage + damageAdditiveBonus)
+    damage = math.floor(damage * elementalStaffBonus)
+    damage = math.floor(damage * affinityMultiplier)
+    damage = math.floor(damage * dayWeatherMultiplier)
+    damage = math.floor(damage * magicBonusDiff)
+    damage = math.floor(damage * sdtMultiplier)
+    damage = math.floor(damage * resist)
+    damage = math.floor(damage * additionalResistTier)
+    damage = math.floor(damage * elementalAbsorption)
+    damage = math.floor(damage * elementalNullification)
+
+    -- TODO: Investigate. Whats actually needed from this?
+    damage = xi.ability.takeDamage(target, player, { targetTPMult = 0 }, true, damage, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL + element, xi.slot.RANGED, 1, 0, 0, 0, action, nil)
+
+    return damage
+end
+
+xi.job_utils.corsair.handleQuickDrawEffectBoost = function(player, target, abilityId, multiplier)
+    local effectData = xi.job_utils.corsair.quickDrawEffectBoostTable[abilityId]
+    if not effectData then
+        return
+    end
+
+    -- Gather eligible effects that have not yet been boosted.
+    local effects = {}
+    for _, entryTable in ipairs(effectData) do
+        local effectChecked = target:getStatusEffect(entryTable.effectId)
+
+        if effectChecked then
+            local eligible = false
+
+            -- Check for Dia/Bio.
+            if entryTable.basePowerByTier then
+                local basePower = entryTable.basePowerByTier[effectChecked:getTier()]
+                eligible        = basePower and effectChecked:getSubPower() <= basePower
+
+            -- Check for all other eligible effects
+            else
+                eligible = effectChecked:getPower() < entryTable.capGlobal
+            end
+
+            if eligible then
+                table.insert(effects, { effect = effectChecked, entry = entryTable })
+            end
+        end
+    end
+
+    -- Early return: No effect can be boosted, either because it's capped or isn't present.
+    if #effects <= 0 then
+        return
+    end
+
+    -- Select effect entry from table and fetch it's content.
+    local selected = effects[math.random(1, #effects)]
+    local effect   = selected.effect
+    local entry    = selected.entry
+
+    -- Fetch effect data.
+    local effectId        = effect:getEffectType()
+    local effectPower     = effect:getPower()
+    local effectTick      = effect:getTick() / 1000
+    local effectDuration  = effect:getDuration() / 1000
+    local effectSubPower  = effect:getSubPower()
+    local effectSubType   = effect:getSubType()
+    local effectTier      = effect:getTier()
+    local effectStartTime = effect:getStartTime()
+    local effectOriginID  = effect:getOriginID()
+
+    -- Apply boost to Dia or Bio effects. They can only be boosted once. "Cannot be stacked."
+    if entry.basePowerByTier then
+        -- TODO: Determine power effect of Bio. Current retail bug with Dark Shot removes the DoT effect from Bio currently.
+        if effectId == xi.effect.DIA then
+            effectPower = effectPower + 1
+        end
+
+        effectSubPower = effectSubPower + math.floor(100 * 28 / 1024) -- TODO: Change ATTP, DEFP and similar mods from base 100 to base 10k
+
+    -- Apply boost to all other eligible effects.
+    else
+        if effectId >= xi.effect.BURN and effectId <= xi.effect.DROWN then
+            effectPower = math.min(effectPower + 2, entry.capGlobal)
+        else
+            effectPower = math.min(effectPower * multiplier, entry.capGlobal)
+        end
+    end
+
+    -- Remove the existing effect and reapply it with the new power/subPower values.
+    target:delStatusEffectSilent(effectId)
+
+    local params =
+    {
+        power    = effectPower,
+        tick     = effectTick,
+        duration = effectDuration,
+        subPower = effectSubPower,
+        subType  = effectSubType,
+        tier     = effectTier,
+        origin   = player,
+    }
+
+    target:addStatusEffect(effectId, params)
+
+    -- Update the start time and origin ID of the new effect to match the original effect.
+    local newEffect = target:getStatusEffect(effectId)
+    if newEffect then
+        newEffect:setStartTime(effectStartTime)
+        newEffect:setOriginID(effectOriginID)
+    end
+end
+
+-- Sets local var if party contains specified job
+xi.job_utils.corsair.checkForJobBonus = function(caster, job)
+    if job == xi.job.NONE then
+        caster:setLocalVar('corsairRollBonus', 0)
+        return
+    end
+
+    if caster:hasPartyJob(job) then
+        caster:setLocalVar('corsairRollBonus', 1)
+        return
+    end
+
+    if math.random(1, 100) <= caster:getMod(xi.mod.JOB_BONUS_CHANCE) then
+        caster:setLocalVar('corsairRollBonus', 1)
+        return
+    end
+
+    caster:setLocalVar('corsairRollBonus', 0)
+end
+
 -- in_ability == current_ability if not using doubleup. current_ability is used to set the message whether you're using a doubleup or not.
-local function applyRoll(caster, target, inAbility, total, isDoubleup, currentAbility)
+xi.job_utils.corsair.applyRoll = function(caster, target, inAbility, total, isDoubleup, currentAbility)
     local abilityId   = inAbility:getID()
-    local rollInfo    = rollData[abilityId]
+    local rollInfo    = xi.job_utils.corsair.rollData[abilityId]
     local effectpower = total >= 12 and rollInfo.bustPower or rollInfo.powers[total]    -- Get roll or bust power values
     local enhanceMod  = rollEnhanceMods[abilityId]                                      -- Check for roll enhancement gear mod specific to the rolled ability
     local doBonus     = enhanceMod and math.random(1, 100) <= caster:getMod(enhanceMod) -- Chance to enhance roll based on gear mod
@@ -662,169 +824,6 @@ local function applyRoll(caster, target, inAbility, total, isDoubleup, currentAb
     return total
 end
 
-local function handleQuickDrawDamage(player, target, action, element, resist)
-    -- Calculate Quick Draw damage - https://wiki.ffo.jp/html/3349.html TODO: QUICK_DRAW_TRIPLE_DAMAGE gear mod needs research
-    local damage                 = 2 * player:getRangedDmg() + 2 * player:getJobPointLevel(xi.jp.QUICK_DRAW_EFFECT) + player:getMod(xi.mod.QUICK_DRAW_DMG)
-    local deathPenaltyMultiplier = 1 + player:getMod(xi.mod.QUICK_DRAW_DMG_PERCENT) / 100
-    local damageAdditiveBonus    = player:getMod(xi.mod.MAGIC_DAMAGE)
-    local elementalStaffBonus    = xi.spells.damage.calculateElementalStaffBonus(player, element)
-    local affinityMultiplier     = xi.spells.damage.calculateElementalAffinityBonus(player, element)
-    local dayWeatherMultiplier   = xi.spells.damage.calculateDayAndWeather(player, element, false)
-    local magicBonusDiff         = xi.spells.damage.calculateMagicBonusDiff(player, target, 0, 0, element, 0)
-
-    -- Unconfirmed order.
-    local sdtMultiplier          = xi.combat.damage.magicalElementSDT(target, element)
-    local additionalResistTier   = xi.spells.damage.calculateAdditionalResistTier(player, target, element)
-    local elementalAbsorption    = xi.spells.damage.calculateAbsorption(target, element, false)
-    local elementalNullification = xi.spells.damage.calculateNullification(target, element, false, false)
-
-    -- Apply multipliers and bonuses.
-    damage = math.floor(damage * deathPenaltyMultiplier)
-    damage = math.floor(damage + damageAdditiveBonus)
-    damage = math.floor(damage * elementalStaffBonus)
-    damage = math.floor(damage * affinityMultiplier)
-    damage = math.floor(damage * dayWeatherMultiplier)
-    damage = math.floor(damage * magicBonusDiff)
-    damage = math.floor(damage * sdtMultiplier)
-    damage = math.floor(damage * resist)
-    damage = math.floor(damage * additionalResistTier)
-    damage = math.floor(damage * elementalAbsorption)
-    damage = math.floor(damage * elementalNullification)
-
-    -- TODO: Investigate. Whats actually needed from this?
-    damage = xi.ability.takeDamage(target, player, { targetTPMult = 0 }, true, damage, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL + element, xi.slot.RANGED, 1, 0, 0, 0, action, nil)
-
-    return damage
-end
-
-local function handleQuickDrawEffectBoost(player, target, abilityId, multiplier)
-    local effectData = quickDrawEffectBoostTable[abilityId]
-    if not effectData then
-        return
-    end
-
-    -- Gather eligible effects that are below the power cap.
-    local effects = {}
-    for _, entryTable in ipairs(effectData) do
-        local effectChecked = target:getStatusEffect(entryTable.effectId)
-
-        if effectChecked then
-            local eligible = false
-
-            -- Check for Dia/Bio.
-            if entryTable.capByTier then
-                local basePower = entryTable.capByTier[effectChecked:getTier()]
-                eligible        = basePower and basePower < effectChecked:getSubPower()
-
-            -- Check for all other eligible effects
-            else
-                eligible = effectChecked:getPower() < entryTable.capGlobal
-            end
-
-            if eligible then
-                table.insert(effects, { effect = effectChecked, entry = entryTable })
-            end
-        end
-    end
-
-    -- Early return: No effect can be boosted, either because it's capped or isn't present.
-    if #effects <= 0 then
-        return
-    end
-
-    -- Select effect entry from table and fetch it's content.
-    local selected = effects[math.random(1, #effects)]
-    local effect   = selected.effect
-    local entry    = selected.entry
-
-    -- Fetch effect data.
-    local effectId        = effect:getEffectType()
-    local effectPower     = effect:getPower()
-    local effectTick      = effect:getTick() / 1000
-    local effectDuration  = effect:getDuration() / 1000
-    local effectSubPower  = effect:getSubPower()
-    local effectSubType   = effect:getSubType()
-    local effectTier      = effect:getTier()
-    local effectStartTime = effect:getStartTime()
-    local effectOriginID  = effect:getOriginID()
-
-    -- Apply boost to Dia or Bio effects. They can only be boosted once. "Cannot be stacked."
-    if entry.capByTier then
-        -- TODO: Determine power effect of Bio. Current retail bug with Dark Shot removes the DoT effect from Bio currently.
-        if effectId == xi.effect.DIA then
-            effectPower = effectPower + 1
-        end
-
-        -- If subPower exceeds cap, clamp it.
-        effectSubPower = effectSubPower + math.floor(100 * 28 / 1024) -- TODO: Change ATTP, DEFP and similar mods from base 100 to base 10k
-
-    -- Apply boost to all other eligible effects.
-    else
-        if effectId >= xi.effect.BURN and effectId <= xi.effect.DROWN then
-            effectPower = math.min(effectPower + 2, entry.capGlobal)
-        else
-            effectPower = math.min(effectPower * multiplier, entry.capGlobal)
-        end
-    end
-
-    -- Remove the existing effect and reapply it with the new power/subPower values.
-    target:delStatusEffectSilent(effectId)
-
-    local params =
-    {
-        power    = effectPower,
-        tick     = effectTick,
-        duration = effectDuration,
-        subPower = effectSubPower,
-        subType  = effectSubType,
-        tier     = effectTier,
-        origin   = player,
-    }
-
-    target:addStatusEffect(effectId, params)
-
-    -- Update the start time and origin ID of the new effect to match the original effect.
-    local newEffect = target:getStatusEffect(effectId)
-    if newEffect then
-        newEffect:setStartTime(effectStartTime)
-        newEffect:setOriginID(effectOriginID)
-    end
-end
-
------------------------------------
--- Global helper functions
------------------------------------
-
-xi.job_utils.corsair.checkForElevenRoll = function(caster)
-    local effects = caster:getStatusEffects()
-
-    for _, effect in pairs(effects) do
-        if
-            effect:hasEffectFlag(xi.effectFlag.ROLL) and
-            effect:getSubPower() == 11
-        then
-            return true
-        end
-    end
-
-    return false
-end
-
-xi.job_utils.corsair.onRollEffectLose = function(player, effect)
-    -- Ignore effect loss if COR is doubling up
-    if player:getLocalVar('corsairApplyingRoll') == 1 then
-        return
-    end
-
-    if
-        player:hasStatusEffect(xi.effect.DOUBLE_UP_CHANCE) and
-        player:getLocalVar('corsairDuEffect') == effect:getEffectType()
-    then
-        player:delStatusEffectSilent(xi.effect.DOUBLE_UP_CHANCE)
-        player:setLocalVar('corsairDuEffect', 0)
-    end
-end
-
 -----------------------------------
 -- Ability Check functions
 -----------------------------------
@@ -834,7 +833,7 @@ end
 xi.job_utils.corsair.onRollAbilityCheck = function(player, target, ability)
     local abilityId = ability:getID()
     local numBusts  = player:numBustEffects()
-    local effectId  = rollData[abilityId].effect
+    local effectId  = xi.job_utils.corsair.rollData[abilityId].effect
     local maxRolls  = player:getMainJob() == xi.job.COR and 2 or 1
 
     if player:hasStatusEffect(effectId) then
@@ -876,7 +875,7 @@ xi.job_utils.corsair.checkFold = function(player)
 end
 
 xi.job_utils.corsair.checkQuickDraw = function(player, ability)
-    local data = quickDrawDataTable[ability:getID()]
+    local data = xi.job_utils.corsair.quickDrawDataTable[ability:getID()]
     if not data then
         return xi.msg.basic.CANNOT_PERFORM, 0
     end
@@ -921,7 +920,7 @@ end
 -- Called by Phantom Rolls' onUseAbility
 xi.job_utils.corsair.onRollUseAbility = function(caster, target, ability, action)
     local abilityId = ability:getID()
-    local rollInfo  = rollData[abilityId]
+    local rollInfo  = xi.job_utils.corsair.rollData[abilityId]
     local effectId  = rollInfo.effect
     local bonusJob  = rollInfo.bonusJob
 
@@ -929,7 +928,7 @@ xi.job_utils.corsair.onRollUseAbility = function(caster, target, ability, action
         corsairSetup(caster, ability, action, effectId, bonusJob)
     end
 
-    return applyRoll(caster, target, ability, caster:getLocalVar('corsairRollTotal'), false, ability)
+    return xi.job_utils.corsair.applyRoll(caster, target, ability, caster:getLocalVar('corsairRollTotal'), false, ability)
 end
 
 xi.job_utils.corsair.useDoubleUp = function(caster, target, ability, action)
@@ -966,7 +965,7 @@ xi.job_utils.corsair.useDoubleUp = function(caster, target, ability, action)
 
         caster:setLocalVar('corsairRollTotal', roll)
         action:info(caster:getID(), roll - prevRoll:getSubPower())
-        checkForJobBonus(caster, job)
+        xi.job_utils.corsair.checkForJobBonus(caster, job)
     end
 
     local total       = caster:getLocalVar('corsairRollTotal')
@@ -976,7 +975,7 @@ xi.job_utils.corsair.useDoubleUp = function(caster, target, ability, action)
     if prevAbility then -- Apply rolls to target(s), including the COR
         action:actionID(prevAbility:getID())
 
-        total = applyRoll(caster, target, prevAbility, total, true, ability)
+        total = xi.job_utils.corsair.applyRoll(caster, target, prevAbility, total, true, ability)
 
         if total > 11 then
             action:setAnimation(target:getID(), 98) -- 98 is bust anim for all rolls
@@ -992,7 +991,7 @@ xi.job_utils.corsair.useElementalShot = function(actor, target, ability, action)
     local abilityId = ability:getID()
 
     -- Fetch specific ability data.
-    local data = quickDrawDataTable[abilityId]
+    local data = xi.job_utils.corsair.quickDrawDataTable[abilityId]
     if not data then
         return
     end
@@ -1015,7 +1014,7 @@ xi.job_utils.corsair.useElementalShot = function(actor, target, ability, action)
     -- Handle damage.
     local damage = 0
     if data.canDamage then
-        damage = handleQuickDrawDamage(actor, target, action, data.element, resist)
+        damage = xi.job_utils.corsair.handleQuickDrawDamage(actor, target, action, data.element, resist)
     end
 
     if damage > 0 then
@@ -1024,7 +1023,7 @@ xi.job_utils.corsair.useElementalShot = function(actor, target, ability, action)
     end
 
     -- Handle effect boost.
-    handleQuickDrawEffectBoost(actor, target, abilityId, data.multiplier)
+    xi.job_utils.corsair.handleQuickDrawEffectBoost(actor, target, abilityId, data.multiplier)
 
     -- Handle effect application.
     if data.applyEffectId > 0 then
