@@ -25,4 +25,10 @@ xi.item.CHOCOBO_CHAIR            = 6411
 xi.item.POROGGO_CASSOCK          = 23803
 xi.item.KNIT_CAP                 = 23810
 
+-- HELM
+xi.item.SCARLET_STONE            = 1649
+xi.item.RAFFLESIA_VINE           = 2513
+xi.item.GNAT_WING                = 2522
+xi.item.HEAD_OF_GRAUBERG_LETTUCE = 5688
+
 return m
