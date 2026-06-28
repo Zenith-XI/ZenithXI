@@ -79,7 +79,7 @@ auto CMobController::Tick(const timer::time_point tick) -> Task<void>
         }
         else if (!PMob->isDead())
         {
-            if (PMob->SpellContainer->HasSpells() && DoBuffTick())
+            if (PMob->SpellContainer->HasSpells() && !PMob->PAI->PathFind->IsPatrolling() && DoBuffTick())
             {
                 co_return;
             }
