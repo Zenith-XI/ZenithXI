@@ -44,6 +44,7 @@ describe('Sight aggro line of sight', function()
 
     it('aggros in front of the alcove but not around the corner', function()
         local mob = alcoveGroundskeeper()
+        assert(mob, 'alcove Groundskeeper not found')
 
         -- TODO: We shouldn't have to set these manually, they should be the default behaviours
         --     : of this particular Groundskeeper
