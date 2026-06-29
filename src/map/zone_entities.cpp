@@ -849,6 +849,7 @@ void CZoneEntities::syncSpawnListWithGrid(CCharEntity*                     PChar
                                           uint8                            spawnFlag,
                                           const EntityFn&                  visible,
                                           const EntityCallback&            onAdd,
+                                          const EntityCallback&            onUpdate,
                                           const std::vector<CBaseEntity*>* alwaysInclude)
 {
     // Remove pass: anything currently shown that is no longer visible.
@@ -871,8 +872,18 @@ void CZoneEntities::syncSpawnListWithGrid(CCharEntity*                     PChar
     // Add a single candidate if it's the right type, not already shown, and passes the precise filter.
     const auto tryAdd = [&](CBaseEntity* entity)
     {
-        if (entity->objtype != objtype || spawnList.find(entity->id) != spawnList.end() || !visible(entity))
+        if (entity->objtype != objtype || !visible(entity))
         {
+            return;
+        }
+
+        if (spawnList.find(entity->id) != spawnList.end())
+        {
+            if (onUpdate)
+            {
+                onUpdate(entity);
+            }
+
             return;
         }
 
@@ -915,6 +926,11 @@ void CZoneEntities::SpawnMOBs(CCharEntity* PChar)
                    isWithinDistance(PChar->loc.p, entity->loc.p, ENTITY_RENDER_DISTANCE);
         },
         /*Fn: onAdd*/ [&](CBaseEntity* entity)
+        {
+            // TODO: Can/should this aggro routine be moved out of here and into the entity's first tick/spawn?
+            tapMobAggro(PChar, static_cast<CMobEntity*>(entity));
+        },
+        /*Fn: onUpdate*/ [&](CBaseEntity* entity)
         {
             // TODO: Can/should this aggro routine be moved out of here and into the entity's first tick/spawn?
             tapMobAggro(PChar, static_cast<CMobEntity*>(entity));
@@ -971,6 +987,7 @@ void CZoneEntities::SpawnNPCs(CCharEntity* PChar)
             return visibleStatus && (inRange || alwaysRel);
         },
         /*Fn: onAdd (empty)*/ {},
+        /*Fn: onUpdate (empty)*/ {},
         &alwaysRelevantNpcs_);
 }
 

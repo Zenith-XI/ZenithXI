@@ -132,7 +132,7 @@ private:
     // distance checks; `onAdd` runs per newly-added entity (mob aggro). `alwaysInclude` is an optional
     // set of entities that must be considered regardless of range (NPCs flagged alwaysRelevant, which
     // a range query can't find) - each is run through `visible` like any other candidate.
-    void syncSpawnListWithGrid(CCharEntity* PChar, SpawnIDList_t& spawnList, uint8 objtype, uint8 spawnFlag, const EntityFn& visible, const EntityCallback& onAdd = {}, const std::vector<CBaseEntity*>* alwaysInclude = nullptr);
+    void syncSpawnListWithGrid(CCharEntity* PChar, SpawnIDList_t& spawnList, uint8 objtype, uint8 spawnFlag, const EntityFn& visible, const EntityCallback& onAdd = {}, const EntityCallback& onUpdate = {}, const std::vector<CBaseEntity*>* alwaysInclude = nullptr);
 
     Scheduler& scheduler_;
     MapConfig  config_;
