@@ -26,6 +26,7 @@
 #include <common/utils.h>
 
 #include <array>
+#include <cmath>
 #include <fstream>
 #include <span>
 #include <unordered_map>
@@ -724,11 +725,17 @@ auto XiMesh::rayIntersect(const Vector3& start, const Vector3& end, const Ignore
         nextZ = std::numeric_limits<float>::infinity();
     }
 
-    const auto rayLength       = std::sqrt(dx * dx + dz * dz);
-    float      currentDistance = 0.0f;
+    float       currentDistance = 0.0f;
+    const int32 maxSteps        = static_cast<int32>(header_.gridWidth) + static_cast<int32>(header_.gridHeight) + 2;
+    int32       steps           = 0;
 
-    while ((col != endCol || row != endRow) && currentDistance < rayLength)
+    while ((col != endCol || row != endRow) && currentDistance < 1.0f)
     {
+        if (++steps > maxSteps)
+        {
+            break;
+        }
+
         // Move to whichever grid line is closer.
         if (nextX < nextZ)
         {
@@ -755,7 +762,7 @@ auto XiMesh::rayIntersect(const Vector3& start, const Vector3& end, const Ignore
             col2 = std::min<int32>(header_.gridWidth - 1, col + cellSearchDiff);
         }
 
-        if (currentDistance <= rayLength)
+        if (currentDistance <= 1.0f)
         {
             for (int32 r = row1; r <= row2; ++r)
             {
