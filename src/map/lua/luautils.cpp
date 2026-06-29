@@ -3365,13 +3365,16 @@ std::tuple<Maybe<SpellID>, Maybe<CBattleEntity*>> OnMobSpellChoose(CBattleEntity
         }
     }
 
-    uint32 newSpellId = result.get_type(0) == sol::type::number ? result.get<int32>(0) : 0;
-
     std::tuple<Maybe<SpellID>, Maybe<CBattleEntity*>> retVal = {};
 
-    if (newSpellId > 0)
+    if (result.get_type(0) == sol::type::number)
     {
-        std::get<0>(retVal) = static_cast<SpellID>(newSpellId);
+        const auto newSpellId = result.get<int32>(0);
+
+        if (newSpellId >= 0)
+        {
+            std::get<0>(retVal) = static_cast<SpellID>(newSpellId);
+        }
     }
 
     if (newTarget)
