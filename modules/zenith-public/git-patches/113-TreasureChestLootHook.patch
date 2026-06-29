@@ -1,0 +1,39 @@
+Allows Lua modules to override the per-zone drop tables for key-traded
+treasure chests and coffers (scripts/globals/treasure.lua).
+
+The loot data lives in a file-local lootTable, so it is unreachable from
+modules. This patch exposes a small overridable accessor,
+xi.treasure.getItemTable(zoneId, containerType), and routes the inline
+lookup in xi.treasure.onTrade through it. A module can then override the
+accessor (with super() fallback) to supply custom drop tables per zone.
+
+Example module usage:
+    m:addOverride('xi.treasure.getItemTable', function(zoneId, containerType)
+        local override = lootOverrides[zoneId] and lootOverrides[zoneId][containerType]
+        return override or super(zoneId, containerType)
+    end)
+---
+diff --git a/scripts/globals/treasure.lua b/scripts/globals/treasure.lua
+--- a/scripts/globals/treasure.lua
++++ b/scripts/globals/treasure.lua
+@@ -1599,6 +1599,11 @@
+     },
+ }
+ 
++-- Overridable accessor so modules can replace per-zone chest/coffer loot tables.
++xi.treasure.getItemTable = function(zoneId, containerType)
++    return lootTable[zoneId][containerType]
++end
++
+ -----------------------------------
+ -- Local functions
+ -----------------------------------
+@@ -1730,7 +1735,7 @@
+     local treasureKey   = keyTable[zoneId][containerType]
+     local treasureLevel = levelTable[zoneId][containerType] -- Used for Gil and THF tool calculations.
+     local treasureMap   = mapTable[zoneId][containerType]
+-    local itemTable     = lootTable[zoneId][containerType]
++    local itemTable     = xi.treasure.getItemTable(zoneId, containerType)
+ 
+     -- Early return: Distance check.
+     if player:checkDistance(npc) > 2 then
