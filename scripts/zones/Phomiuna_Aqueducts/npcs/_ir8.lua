@@ -1,7 +1,7 @@
 -----------------------------------
 -- Area: Phomiuna_Aqueducts
---  NPC: _ir7 (Iron Gate)
--- !pos -70.8 -1.5 60 27
+--  NPC: _ir8 (Iron Gate)
+-- !pos 20 -1.5 50 0
 -----------------------------------
 local ID = zones[xi.zone.PHOMIUNA_AQUEDUCTS]
 -----------------------------------
@@ -9,10 +9,7 @@ local ID = zones[xi.zone.PHOMIUNA_AQUEDUCTS]
 local entity = {}
 
 entity.onTrade = function(player, npc, trade)
-    if
-        player:getXPos() > -70.8 and
-        npc:getAnimation() == xi.animation.CLOSE_DOOR
-    then
+    if player:getZPos() > 50 and npc:getAnimation() == xi.animation.CLOSE_DOOR then
         if npcUtil.tradeHasExactly(trade, xi.item.BRONZE_KEY) then
             player:confirmTrade()
             player:messageSpecial(ID.text.ITEM_BREAKS, xi.item.BRONZE_KEY)
@@ -36,7 +33,7 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-    if player:getXPos() <= -70.8 then
+    if player:getZPos() <= 50 then
         npc:openDoor(15)
     elseif npc:getAnimation() == xi.animation.CLOSE_DOOR then
         local noValidationFlag = 0x8000
