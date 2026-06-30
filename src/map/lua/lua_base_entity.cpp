@@ -19058,18 +19058,19 @@ bool CLuaBaseEntity::hasTPMoves()
         return false;
     }
 
-    uint16 speciesID = 0;
-
-    if (m_PBaseEntity->objtype & TYPE_PET)
+    auto* PMob = dynamic_cast<CMobEntity*>(m_PBaseEntity);
+    if (!PMob)
     {
-        speciesID = static_cast<CPetEntity*>(m_PBaseEntity)->m_Species;
+        return false;
     }
-    else if (m_PBaseEntity->objtype & TYPE_MOB)
-    {
-        speciesID = static_cast<CMobEntity*>(m_PBaseEntity)->m_Species;
-    }
-    const std::vector<uint16>& MobSkills = battleutils::GetMobSkillList(speciesID);
 
+    uint16 skillListID = static_cast<uint16>(PMob->getMobMod(MOBMOD_SKILL_LIST));
+    if (skillListID == 0)
+    {
+        skillListID = PMob->m_MobSkillList;
+    }
+
+    const std::vector<uint16>& MobSkills = battleutils::GetMobSkillList(skillListID);
     return !MobSkills.empty();
 }
 
