@@ -51,3 +51,11 @@ auto MapSession::toString() -> std::string
 {
     return fmt::format("MapSession: client_ipp: {}", client_ipp.toString());
 }
+
+void MapSession::tapLastUpdate()
+{
+    if (!forceLinkDead)
+    {
+        last_update = earth_time::now();
+    }
+}
