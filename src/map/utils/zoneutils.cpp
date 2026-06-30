@@ -25,6 +25,7 @@
 #include "aman.h"
 #include "battlefield.h"
 #include "campaign_system.h"
+#include "charutils.h"
 #include "common/logging.h"
 #include "conquest_system.h"
 #include "entities/mobentity.h"
@@ -1407,6 +1408,11 @@ void AfterZoneIn(CBaseEntity* PEntity)
 
     PChar->aman().onZoneIn();
     luautils::AfterZoneIn(PChar);
+
+    // Re-apply any enmity that was captured when this character was evicted by a
+    // duplicate (second session) login, so a second session can't be used to
+    // shed hate. No-op for normal logins.
+    charutils::restoreDuplicateLoginEnmity(PChar);
 }
 
 auto IsAlwaysOutOfNationControl(const REGION_TYPE region) -> bool

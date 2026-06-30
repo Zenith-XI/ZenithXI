@@ -154,80 +154,34 @@ void IPCClient::handleMessage_AccountLogin(const IPP& ipp, const ipc::AccountLog
 
     if (auto session = networking_.sessions().getSessionByAccountId(message.accountId))
     {
-        if (session->PChar && session->PChar->animation == ANIMATION_ATTACK)
+        if (session->PChar)
         {
-            // Character is in combat — don't instant-evict (would allow exploiting to
-            // escape death). Instead, scramble blowfish so the old client can't send
-            // valid packets. The character stays in-zone as link-dead and mobs can
-            // still kill them. cleanupSessions will remove them after timeout.
-            ShowInfoFmt("handleMessage_AccountLogin: account {} in combat, scrambling keys (link-dead)", message.accountId);
+            ShowInfoFmt("handleMessage_AccountLogin: evicting session for account {} (duplicate login)", message.accountId);
 
-            for (uint32_t& i : session->blowfish.key)
+            // If the character is in combat, snapshot the mobs' hate before
+            // evicting so it can be restored when they next zone in. This stops a
+            // second session being used to instantly shed enmity, while leaving
+            // the normal logout-to-shed behaviour untouched.
+            if (session->PChar->hasEnmityEXPENSIVE())
             {
-                i = xirand::GetRandomNumber<uint32_t>(std::numeric_limits<uint32_t>::max());
+                charutils::captureDuplicateLoginEnmity(session->PChar.get());
             }
 
-            for (uint32_t& i : session->prev_blowfish.key)
+            session->PChar->StatusEffectContainer->SaveStatusEffects(true);
+            charutils::SaveCharPosition(session->PChar.get());
+
+            if (session->PChar->PPet != nullptr && session->PChar->PPet->objtype == TYPE_MOB)
             {
-                i = xirand::GetRandomNumber<uint32_t>(std::numeric_limits<uint32_t>::max());
+                petutils::DespawnPet(session->PChar.get());
             }
 
-            for (uint32_t& i : session->blowfish.P)
-            {
-                i = xirand::GetRandomNumber<uint32_t>(std::numeric_limits<uint32_t>::max());
-            }
-
-            for (uint32_t& i : session->prev_blowfish.P)
-            {
-                i = xirand::GetRandomNumber<uint32_t>(std::numeric_limits<uint32_t>::max());
-            }
-
-            for (uint8_t& i : session->blowfish.hash)
-            {
-                i = static_cast<uint8_t>(xirand::GetRandomNumber<uint16_t>(std::numeric_limits<uint16_t>::max()) % 255);
-            }
-
-            for (uint8_t& i : session->prev_blowfish.hash)
-            {
-                i = static_cast<uint8_t>(xirand::GetRandomNumber<uint16_t>(std::numeric_limits<uint16_t>::max()) % 255);
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                for (uint32_t& x : session->blowfish.S[i])
-                {
-                    x = xirand::GetRandomNumber<uint32_t>(std::numeric_limits<uint32_t>::max());
-                }
-
-                for (uint32_t& x : session->prev_blowfish.S[i])
-                {
-                    x = xirand::GetRandomNumber<uint32_t>(std::numeric_limits<uint32_t>::max());
-                }
-            }
+            session->PChar->status = STATUS_TYPE::SHUTDOWN;
+            charutils::removeCharFromZone(session->PChar.get());
+            session->shuttingDown = 0; // Prevent destroySession from deleting the new accounts_sessions row
+            session->PChar.reset();
         }
-        else
-        {
-            // Not in combat — instant clean eviction (retail behavior).
-            if (session->PChar)
-            {
-                ShowInfoFmt("handleMessage_AccountLogin: evicting session for account {} (duplicate login)", message.accountId);
 
-                session->PChar->StatusEffectContainer->SaveStatusEffects(true);
-                charutils::SaveCharPosition(session->PChar.get());
-
-                if (session->PChar->PPet != nullptr && session->PChar->PPet->objtype == TYPE_MOB)
-                {
-                    petutils::DespawnPet(session->PChar.get());
-                }
-
-                session->PChar->status = STATUS_TYPE::SHUTDOWN;
-                charutils::removeCharFromZone(session->PChar.get());
-                session->shuttingDown = 0; // Prevent destroySession from deleting the new accounts_sessions row
-                session->PChar.reset();
-            }
-
-            networking_.sessions().destroySession(session);
-        }
+        networking_.sessions().destroySession(session);
     }
 }
 
@@ -242,8 +196,15 @@ void IPCClient::handleMessage_CharZone(const IPP& ipp, const ipc::CharZone& mess
         if (session->PChar)
         {
             // Active character in this session means a duplicate login —
-            // the old client is still playing. Evict it (retail: new login wins).
+            // the old client is still in the world. Evict it (retail: new login wins).
             ShowInfoFmt("handleMessage_CharZone: evicting active session for charid {} (duplicate login)", message.charId);
+
+            // Snapshot combat enmity (if any) so it can be restored when the
+            // character zones back in — a second session can't be used to shed hate.
+            if (session->PChar->hasEnmityEXPENSIVE())
+            {
+                charutils::captureDuplicateLoginEnmity(session->PChar.get());
+            }
 
             session->PChar->StatusEffectContainer->SaveStatusEffects(true);
             charutils::SaveCharPosition(session->PChar.get());
