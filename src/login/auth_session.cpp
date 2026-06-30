@@ -260,9 +260,9 @@ void auth_session::read_func()
                                  "WHERE a.charid IN (SELECT charid FROM chars WHERE accid = ?)",
                                  accountID);
             }
-            // Retail behavior: if this account already has an active session, kick the old
-            // session and allow the new login to proceed. The map server's stale-session
-            // cleanup will handle disconnecting the old client.
+            // Retail behavior: if this account already has an active session, clear the DB
+            // session row so the new login can proceed. The map server handles evicting the
+            // old character when the new session arrives (in createPendingSession).
             const auto sessionCheck = db::preparedStmt("SELECT charid FROM accounts_sessions WHERE accid = ? LIMIT 1", accountID);
             if (sessionCheck && sessionCheck->rowsCount() != 0)
             {
