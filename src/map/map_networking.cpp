@@ -357,6 +357,13 @@ int32 MapNetworking::recv_parse(uint8* buff, size_t* buffsize, MapSession* PSess
             }
         }
 
+        // This is when a real decrypt of the current key hits.
+        // We gate this variable to allow no longer allow incoming 0x00As to be handled
+        if (decryptCount == 0)
+        {
+            PSession->hasDecryptedPacket = true;
+        }
+
         // reading data size
         uint32 PacketDataSize = ref<uint32>(buff, *buffsize - sizeof(int32) - 16);
 

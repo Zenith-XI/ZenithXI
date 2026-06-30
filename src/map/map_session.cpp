@@ -25,7 +25,8 @@
 
 void MapSession::incrementBlowfish()
 {
-    prev_blowfish = blowfish;
+    hasDecryptedPacket = false;
+    prev_blowfish      = blowfish;
 
     blowfish.key[4] += 2;
 
