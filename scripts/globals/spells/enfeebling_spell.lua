@@ -388,6 +388,9 @@ xi.spells.enfeebling.useEnfeeblingSpell = function(caster, target, spell)
     local spellEffect  = pTable[spellId][column.EFFECT_ID]
     local tier         = pTable[spellId][column.EFFECT_TIER] or 0
 
+    -- Cascade (BLM) is consumed by any elemental magic, including non-damaging spells like Burn/Frost.
+    xi.job_utils.black_mage.tryConsumeCascade(caster, skillType)
+
     ------------------------------
     -- STEP 1: Check spell nullification.
     ------------------------------
