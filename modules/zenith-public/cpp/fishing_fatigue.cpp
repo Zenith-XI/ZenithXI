@@ -95,6 +95,7 @@ class FishingFatigueModule : public CPPModule
             }
 
             TracyZoneScoped;
+			
             // process the main packet first
             typedPacket->process(session, PChar);
 
