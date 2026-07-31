@@ -681,39 +681,6 @@ local npcOverrides =
                 { xi.item.SCROLL_OF_DARK_CAROL,         8400 },
             },
         },
-        ['Amalasanda'] =
-        {
-            shopDialog = 'AMALASANDA_SHOP_DIALOG',
-            stock =
-            {
-                { xi.item.BAMBOO_STICK,             151 },
-                { xi.item.PINCH_OF_BLACK_PEPPER,    267 },
-                { xi.item.SQUARE_OF_SILK_CLOTH,   35070 }, -- *
-                { xi.item.KOMA,                     231 },
-                { xi.item.LUMP_OF_TAMA_HAGANE,    12000 }, -- *
-                { xi.item.POT_OF_URUSHI,          77206 },
-                { xi.item.ONZ_OF_CURRY_POWDER,     1039 },
-                { xi.item.JAR_OF_GROUND_WASABI,    2724 },
-                { xi.item.BOTTLE_OF_RICE_VINEGAR,   210 },
-                { xi.item.SCROLL_OF_KATON_ICHI,    2447 },
-                { xi.item.SCROLL_OF_HYOTON_ICHI,   2447 },
-                { xi.item.SCROLL_OF_HUTON_ICHI,    2447 },
-                { xi.item.SCROLL_OF_DOTON_ICHI,    2447 },
-                { xi.item.SCROLL_OF_RAITON_ICHI,   2447 },
-                { xi.item.SCROLL_OF_SUITON_ICHI,   2447 },
-            },
-            stockCOPafter = xi.item.POT_OF_URUSHI,
-            stockCOP =
-            {
-                { xi.item.BOX_OF_STICKY_RICE,       331 },
-                { xi.item.BUNDLE_OF_SHIRATAKI,      516 },
-            },
-            stockWOTGafter = xi.item.BOTTLE_OF_RICE_VINEGAR,
-            stockWOTG =
-            {
-                { xi.item.BAG_OF_BUCKWHEAT_FLOUR,  2250 },
-            },
-        },
     },
     [xi.zone.UPPER_JEUNO] =
     {
