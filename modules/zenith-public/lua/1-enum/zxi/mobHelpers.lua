@@ -89,4 +89,36 @@ zxi.mobHelpers.zoneInitReposition = function(zone, mobList)
     end
 end
 
+zxi.mobHelpers.mobOnInitSpawnGroups = function(mob, rangeCheck, maxmobs)
+    if mob:getSpawnGroupID() then
+        return
+    end
+
+    maxmobs = maxmobs or 1
+    -- typical hearing range is 8, so this makes it mostly possible to pull from any type of dense groups
+    rangeCheck = rangeCheck or 8
+    local targetTypeFlag = 3 -- self and party (even though parties aren't built during onMobInit)
+    -- find all dead entities in range, including self
+    local mobsInRange = mob:getEntitiesInRange(mob, xi.aoeType.ROUND, 0, rangeCheck, xi.findFlag.HIT_ALL + xi.findFlag.DEAD, targetTypeFlag)
+
+    local spawnGroupID = mob:getID()
+    local nonGroupedMobs = {}
+    for _, entity in ipairs(mobsInRange) do
+        -- TODO more conditions to auto-include mobs in range in the same spawn group?
+        if
+            not entity:getSpawnGroupID() and
+            mob:isNM() == entity:isNM()
+        then
+            table.insert(nonGroupedMobs, entity)
+        end
+    end
+
+    -- if this table is more than just the original mob
+    if #nonGroupedMobs > 1 then
+        for _, entity in ipairs(nonGroupedMobs) do
+            entity:setSpawnGroup(spawnGroupID, maxmobs)
+        end
+    end
+end
+
 return m
