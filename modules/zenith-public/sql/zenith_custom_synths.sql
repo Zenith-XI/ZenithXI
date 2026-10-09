@@ -1,4 +1,18 @@
--- This SQL Module enables the Synthesis recipes for items dropped by Notorious
+-- This SQL Module implements custom and/or out of era synth recipes
+
+-- Changes Shall Shell and Istiridye synthesis results back to Pebble (NQ), Pearl (HQ1), Black Pearl (HQ2/HQ3).
+-- Source: https://forum.square-enix.com/ffxi/threads/42614-Jun-17-2014-%28JST%29-Version-Update
+-- NIN fuma from the same update are purposefully not set to era
+
+UPDATE synth_recipes
+SET Result = 17296, ResultHQ1 = 792, ResultName = 'Pebble'
+WHERE ID IN
+(
+50514, -- Shall Shell
+50516  -- Istiridye
+);
+
+-- This section enables the Synthesis recipes for items dropped by Notorious
 -- Monsters from the Wings of the Goddess expansion. These NMs will be enabled
 -- on Zenith at launch, so setting the content_tag to NULL (Vanilla).
 
@@ -36,5 +50,5 @@ WHERE Result IN
 11535, -- Fowler's Mantle - Woolly Pelage - NM: Flockbock
 15849, -- Krousis Ring - Imperial Topaz - NM: Huwasi
 16373, -- Kyoshu Sitabaki - Lineadach - NM: Sengann
-11407 -- Mettle Leggings - Samwell's Shank - NM: Slumbering Samwell
-)
+11407  -- Mettle Leggings - Samwell's Shank - NM: Slumbering Samwell
+);
