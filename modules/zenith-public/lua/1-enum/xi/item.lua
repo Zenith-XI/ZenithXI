@@ -39,4 +39,8 @@ xi.item.BREEDER_MUFFLERS         = 15001
 xi.item.CABALLERO_GAUNTLETS      = 15000
 xi.item.CABALLERO_SHIELD         = 16169
 
+-- Casket Loot
+xi.item.COEURL_WHISKER           = 927
+xi.item.LEATHER_POUCH            = 1655
+
 return m
