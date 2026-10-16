@@ -8,9 +8,9 @@
 --   17215612: {}          # Ornery_Sheep
 --   17215613: {chance: 8} # Carnero
 --   17215626: {chance: 8} # Carnero
-local ORNERY_SHEEP = 17215612
-local CARNERO      = { 17215613, 17215626 }
-local BASE_CHANCE  = 8
+local ornerySheepId = 17215612
+local carneroIds    = { 17215613, 17215626 }
+local baseChance    = 8
 
 describe('Zenith PH boost', function()
     ---@type CClientEntityPair
@@ -18,13 +18,20 @@ describe('Zenith PH boost', function()
     ---@type CTestEntity
     local ph
 
-    -- CLuaTestEntity does not see methods a C++ module adds to CBaseEntity, so bindings go through GetMobByID
+    -- CLuaTestEntity does not see methods a C++ module adds to CBaseEntity, so bindings go through GetMobByID.
+    -- They are called with '.' because tools/ci/sanity_checks/lua_binding_usage.py only knows SOL_REGISTER bindings.
     local function slotEntry(mobId)
-        return GetMobByID(mobId):getSpawnSlotEntry()
+        local mob = GetMobByID(mobId)
+        return mob.getSpawnSlotEntry(mob)
+    end
+
+    local function setSlotEntry(mobId, params)
+        local mob = GetMobByID(mobId)
+        return mob.setSpawnSlotEntry(mob, params)
     end
 
     local function clearRespawnVars()
-        for _, nmId in ipairs(CARNERO) do
+        for _, nmId in ipairs(carneroIds) do
             SetServerVariable(zxi.mobHelpers.getRespawnVarName(GetMobByID(nmId)), 0)
         end
     end
@@ -37,17 +44,17 @@ describe('Zenith PH boost', function()
             xi.test.world:tickEntity(ph)
         end
 
-        SpawnMob(ORNERY_SHEEP)
+        SpawnMob(ornerySheepId)
         ph.assert:isSpawned()
     end
 
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.SOUTH_GUSTABERG })
-        ph     = player.entities:get(ORNERY_SHEEP)
+        ph     = player.entities:get(ornerySheepId)
 
         -- xi_test shares the database, so start from a clean module and server-var state every case
         clearRespawnVars()
-        for _, nmId in ipairs(CARNERO) do
+        for _, nmId in ipairs(carneroIds) do
             local nm = GetMobByID(nmId)
             if nm:isSpawned() then
                 -- a despawn takes a few ticks, and the module treats a still-spawned NM as up and resets its count
@@ -61,7 +68,7 @@ describe('Zenith PH boost', function()
                 nmEntity.assert.no:isSpawned()
             end
 
-            nm:setSpawnSlotEntry({ chance = BASE_CHANCE, readyIn = 0 })
+            setSlotEntry(nmId, { chance = baseChance, readyIn = 0 })
             nm:setLocalVar('phKills', 0)
             -- the module caches the base chance on the first PH kill it sees, and an earlier case may have forced it
             zxi.slotLottery.base[nmId]     = nil
@@ -70,7 +77,7 @@ describe('Zenith PH boost', function()
         end
 
         if not ph:isSpawned() then
-            SpawnMob(ORNERY_SHEEP)
+            SpawnMob(ornerySheepId)
         end
     end)
 
@@ -80,21 +87,21 @@ describe('Zenith PH boost', function()
 
     describe('slot contract', function()
         it('exposes the slot entry loaded from mobs.yaml', function()
-            assert(GetMobByID(CARNERO[1]).getSpawnSlotEntry, 'cpp/spawn_slot_lua.cpp is not built into this binary')
+            assert(GetMobByID(carneroIds[1]).getSpawnSlotEntry, 'cpp/spawn_slot_lua.cpp is not built into this binary')
 
-            for _, nmId in ipairs(CARNERO) do
+            for _, nmId in ipairs(carneroIds) do
                 local entry = slotEntry(nmId)
                 assert(entry, string.format('mob %d has no spawn slot entry', nmId))
-                assert(entry.chance == BASE_CHANCE, string.format('expected chance %d for %d, got %d', BASE_CHANCE, nmId, entry.chance))
+                assert(entry.chance == baseChance, string.format('expected chance %d for %d, got %d', baseChance, nmId, entry.chance))
             end
 
-            local phEntry = slotEntry(ORNERY_SHEEP)
+            local phEntry = slotEntry(ornerySheepId)
             assert(phEntry and phEntry.chance == 0, 'the placeholder should be a chance-less slot member')
         end)
 
         it('rolls the chance written through the module', function()
-            for _, nmId in ipairs(CARNERO) do
-                GetMobByID(nmId):setSpawnSlotEntry({ chance = 50 })
+            for _, nmId in ipairs(carneroIds) do
+                setSlotEntry(nmId, { chance = 50 })
             end
 
             -- a slot respawn after a PH kill must read the chance we wrote: 50 + 50 always rolls an NM
@@ -102,7 +109,7 @@ describe('Zenith PH boost', function()
             xi.test.world:skipTime(3600)
             xi.test.world:tick(xi.tick.SPAWN)
 
-            local spawned = GetMobByID(CARNERO[1]):isSpawned() or GetMobByID(CARNERO[2]):isSpawned()
+            local spawned = GetMobByID(carneroIds[1]):isSpawned() or GetMobByID(carneroIds[2]):isSpawned()
             assert(spawned, 'SpawnSlot did not roll the chance set through setSpawnSlotEntry')
             ph.assert.no:isSpawned()
         end)
@@ -113,7 +120,7 @@ describe('Zenith PH boost', function()
             for kill = 1, 3 do
                 killPh()
 
-                for _, nmId in ipairs(CARNERO) do
+                for _, nmId in ipairs(carneroIds) do
                     local phKills = GetMobByID(nmId):getLocalVar('phKills')
                     assert(phKills == kill, string.format('after %d kills %d has phKills %d', kill, nmId, phKills))
                 end
@@ -127,7 +134,7 @@ describe('Zenith PH boost', function()
             for kill, chance in ipairs(expected) do
                 killPh()
 
-                for _, nmId in ipairs(CARNERO) do
+                for _, nmId in ipairs(carneroIds) do
                     local entry = slotEntry(nmId)
                     assert(entry.chance == chance, string.format('after %d kills expected chance %d on %d, got %d', kill, chance, nmId, entry.chance))
                 end
@@ -137,24 +144,24 @@ describe('Zenith PH boost', function()
         it('leaves a chance forced from elsewhere alone', function()
             -- the module learns the base chance on the first PH kill it sees; a chance forced before that is taken as the base
             killPh()
-            GetMobByID(CARNERO[1]):setSpawnSlotEntry({ chance = 42 })
+            setSlotEntry(carneroIds[1], { chance = 42 })
 
             killPh()
             killPh()
 
-            assert(slotEntry(CARNERO[1]).chance == 42, 'the module overwrote a chance it did not set')
+            assert(slotEntry(carneroIds[1]).chance == 42, 'the module overwrote a chance it did not set')
         end)
 
         it('stops counting while the NM is on cooldown', function()
-            for _, nmId in ipairs(CARNERO) do
-                GetMobByID(nmId):setSpawnSlotEntry({ readyIn = 600 })
+            for _, nmId in ipairs(carneroIds) do
+                setSlotEntry(nmId, { readyIn = 600 })
             end
 
             killPh()
 
-            for _, nmId in ipairs(CARNERO) do
+            for _, nmId in ipairs(carneroIds) do
                 assert(GetMobByID(nmId):getLocalVar('phKills') == 0, 'phKills grew while the NM was on cooldown')
-                assert(slotEntry(nmId).chance == BASE_CHANCE, 'chance was boosted while the NM was on cooldown')
+                assert(slotEntry(nmId).chance == baseChance, 'chance was boosted while the NM was on cooldown')
             end
         end)
     end)
@@ -163,12 +170,12 @@ describe('Zenith PH boost', function()
         it('saves the cooldown to the respawn server var and drops the boost', function()
             killPh()
             killPh()
-            assert(slotEntry(CARNERO[1]).chance > BASE_CHANCE, 'precondition: the chance is boosted')
+            assert(slotEntry(carneroIds[1]).chance > baseChance, 'precondition: the chance is boosted')
 
             -- bring Carnero up in the PH's place directly, so the boosted chance is not touched
-            local nmId = CARNERO[1]
+            local nmId = carneroIds[1]
             local nm   = player.entities:get(nmId)
-            DespawnMob(ORNERY_SHEEP)
+            DespawnMob(ornerySheepId)
             for _ = 1, 3 do
                 xi.test.world:skipTime(5)
                 xi.test.world:tickEntity(ph)
@@ -182,7 +189,7 @@ describe('Zenith PH boost', function()
 
             local var = GetServerVariable(zxi.mobHelpers.getRespawnVarName(GetMobByID(nmId)))
             assert(var >= before, string.format('respawn server var not saved for %d (got %d)', nmId, var))
-            assert(slotEntry(nmId).chance == BASE_CHANCE, 'chance was not put back to base after the NM died')
+            assert(slotEntry(nmId).chance == baseChance, 'chance was not put back to base after the NM died')
         end)
     end)
 end)

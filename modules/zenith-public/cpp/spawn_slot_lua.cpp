@@ -77,7 +77,7 @@ class SpawnSlotLuaModule : public CPPModule
 
             const auto now = timer::now();
 
-            sol::table table = ::lua.create_table();
+            sol::table table  = ::lua.create_table();
             table["chance"]   = entry->spawnChance;
             table["cooldown"] = timer::count_seconds(entry->cooldown);
             table["readyIn"]  = entry->readyAt > now ? timer::count_seconds(entry->readyAt - now) : 0;
