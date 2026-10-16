@@ -1,4 +1,4 @@
-﻿/************************************************************************
+/************************************************************************
  * Fishing Fatigue
  *************************************************************************
  * Copyright (c) 2026 ZenithXI Dev Teams
@@ -39,6 +39,7 @@
  * Allegiance won't cause you to lose your unlocked 200 daily cap.
  ************************************************************************/
 #include "map/utils/charutils.h"
+#include "map/utils/fishingutils.h"
 #include "map/utils/moduleutils.h"
 #include <enums/chat_message_type.h>
 #include <packets/c2s/0x066_fishing.h>
