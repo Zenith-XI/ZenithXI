@@ -79,9 +79,9 @@ class FishingFatigueModule : public CPPModule
             const uint16 FISHING_LOWER = 20;  // Lower limit for fishing (when conditions not met)
             const uint16 FISHING_UPPER = 200; // Upper limit for fishing
 
-            uint8 rankSandoria           = PChar->profile.rank[NATION_SANDORIA];
-            uint8 rankBastok             = PChar->profile.rank[NATION_BASTOK];
-            uint8 rankWindurst           = PChar->profile.rank[NATION_WINDURST];
+            uint8 rankSandoria           = PChar->profile.rank[static_cast<uint8>(xi::Nation::Sandoria)];
+            uint8 rankBastok             = PChar->profile.rank[static_cast<uint8>(xi::Nation::Bastok)];
+            uint8 rankWindurst           = PChar->profile.rank[static_cast<uint8>(xi::Nation::Windurst)];
             bool  isSufficientNationRank = (rankSandoria >= RANK_REQUIRED || rankBastok >= RANK_REQUIRED || rankWindurst >= RANK_REQUIRED);
 
             uint16 limit = isSufficientNationRank ? FISHING_UPPER : FISHING_LOWER;
