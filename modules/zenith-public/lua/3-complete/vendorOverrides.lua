@@ -1751,6 +1751,60 @@ m:addOverride('xi.zones.Upper_Jeuno.npcs.Leillaine.onTrigger', function(player, 
     xi.shop.general(player, stock)
 end)
 
+-- Kid Mithra shop: stock grows with the server-wide takings of the day (xi.kidMithraShop).
+-- Same as base except the stock tables; base's onShopBuy still raises the shop level.
+local macchiLevelUpSales = { 10000, 20000 }
+local macchiMilkPrice    = { 300, 150, 100 }
+local macchiCheesePrice  = { 600, 300, 250 }
+local macchiExtraStock   =
+{
+    [2] =
+    {
+        { xi.item.CHEESE_SANDWICH,      800 },
+        { xi.item.SERVING_OF_BAVAROIS, 3360 },
+        { xi.item.CREAM_PUFF,          1300 },
+    },
+    [3] =
+    {
+        { xi.item.BUFFALO_MILK_CASE,          5000 },
+        { xi.item.SLICE_OF_BUFFALO_MEAT,      1280 },
+        { xi.item.SCROLL_OF_ENFIRE_II,       31878 },
+        { xi.item.SCROLL_OF_ENBLIZZARD_II,   30492 },
+        { xi.item.SCROLL_OF_ENAERO_II,       27968 },
+        { xi.item.SCROLL_OF_ENSTONE_II,      26112 },
+        { xi.item.SCROLL_OF_ENTHUNDER_II,    25600 },
+        { xi.item.SCROLL_OF_ENWATER_II,      33000 },
+        -- SCROLL_OF_REFRESH_II removed: out of era
+    },
+}
+
+m:addOverride('xi.zones.RuLude_Gardens.npcs.Macchi_Gazlitah.onTrigger', function(player, npc)
+    local ID    = zones[xi.zone.RULUDE_GARDENS]
+    local level = xi.kidMithraShop.settle('[Macchi]', macchiLevelUpSales, 0)
+    local stock =
+    {
+        { xi.item.JUG_OF_ULEGUERAND_MILK, macchiMilkPrice[level] },
+        { xi.item.WEDGE_OF_CHALAIMBILLE,  macchiCheesePrice[level] },
+        { xi.item.JUG_OF_WORMY_BROTH,     100 },
+    }
+
+    for stockLevel = 2, level do
+        for _, entry in ipairs(macchiExtraStock[stockLevel]) do
+            table.insert(stock, entry)
+        end
+    end
+
+    local greetings =
+    {
+        ID.text.MACCHI_GAZLITAH_SHOP_DIALOG1,
+        ID.text.MACCHI_GAZLITAH_SHOP_DIALOG2,
+        ID.text.MACCHI_GAZLITAH_SHOP_DIALOG3,
+    }
+
+    player:showText(npc, greetings[level])
+    xi.shop.general(player, stock, xi.fameArea.JEUNO)
+end)
+
 -----------------------------------
 -- TOAU Vendor Overrides
 -----------------------------------
