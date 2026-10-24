@@ -116,6 +116,47 @@ m:addOverride('xi.actions.spells.black.bio_iii.onSpellCast', function(caster, ta
     return castBio(caster, target, spell, 6, 180, 15)
 end)
 
+-- Restore the potency decay on Absorb-STAT removed in the March 2015 update: a 90 second base duration,
+-- and the boost and the down each lose 1 point every 10 second tick (str_boost.lua etc. do the decay).
+-- Source: http://forum.square-enix.com/ffxi/threads/46531-Mar-26-2015-%28JST%29-Version-Update
+-- Unlike modules/era, gear and other modifiers still count: potency is base's (Augments "Absorb", Liberator,
+-- Nether Void) and the 90 seconds take base's duration modifiers. Absorb spells cast by monsters are unchanged.
+local absorbBaseDuration = 90
+local absorbDecayTick    = 10
+
+m:addOverride('xi.spells.absorb.doAbsorbStatSpell', function(caster, target, spell)
+    if not caster:isPC() then
+        return super(caster, target, spell)
+    end
+
+    -- base replaces both effects when the spell lands; a changed start time marks the new ones
+    local data          = xi.spells.absorb.absorbStatData[spell:getID()]
+    local previousBoost = caster:getStatusEffect(data.boostEffect)
+    local previousDown  = target:getStatusEffect(data.downEffect)
+    local boostStart    = previousBoost and previousBoost:getStartTime() or nil
+    local downStart     = previousDown and previousDown:getStartTime() or nil
+
+    local result = super(caster, target, spell)
+
+    local darkDurationMultiplier = 1 + caster:getMod(xi.mod.DARK_MAGIC_DURATION) / 100
+    local durationGearMultiplier = 1 + caster:getMod(xi.mod.ABSORB_EFFECT_DURATION) / 100
+    local duration = math.floor(absorbBaseDuration * darkDurationMultiplier * durationGearMultiplier) + caster:getMod(xi.mod.ENHANCES_ABSORB_EFFECTS)
+
+    local boost = caster:getStatusEffect(data.boostEffect)
+    if boost and boost:getStartTime() ~= boostStart then
+        boost:setDuration(duration * 1000)
+        boost:setTick(absorbDecayTick * 1000)
+    end
+
+    local down = target:getStatusEffect(data.downEffect)
+    if down and down:getStartTime() ~= downStart then
+        down:setDuration(duration * 1000)
+        down:setTick(absorbDecayTick * 1000)
+    end
+
+    return result
+end)
+
 -----------------------------------
 -- Enfeebling Magic: Blind and Poison
 -----------------------------------
