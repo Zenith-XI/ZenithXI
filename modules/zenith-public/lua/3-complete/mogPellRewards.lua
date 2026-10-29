@@ -412,4 +412,16 @@ m:addOverride('xi.festiveMoogle.onTrade', function(player, npc, trade)
     -- Do nothing for pell types we don't handle - prevents unintended behavior
 end)
 
+-----------------------------------
+-- Pell outfits are cosmetic only: refuse the Persikos Snow Cone dispense.
+-- Korrigan Suit needs no override: it has no item script, so the engine already refuses it.
+-----------------------------------
+m:addOverride('xi.items.fancy_gilet.onItemCheck', function(target, item, caster)
+    return xi.msg.basic.ITEM_UNABLE_TO_USE
+end)
+
+m:addOverride('xi.items.fancy_top.onItemCheck', function(target, item, caster)
+    return xi.msg.basic.ITEM_UNABLE_TO_USE
+end)
+
 return m
