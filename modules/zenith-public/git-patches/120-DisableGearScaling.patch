@@ -1,0 +1,18 @@
+Level Sync: disable equipment scaling by default (ZENITHDEV-245).
+
+Gear above the synced level comes off, instead of staying on with scaled stats.
+This sets the default. A live settings/map.lua that lists the key has to change it too.
+---
+diff --git a/settings/default/map.lua b/settings/default/map.lua
+index 8b6c2d0265..4e8db5a1a3 100644
+--- a/settings/default/map.lua
++++ b/settings/default/map.lua
+@@ -89,7 +89,7 @@ xi.settings.map =
+     LEVEL_SYNC_ENABLE = true,
+ 
+     -- Disables ability to equip higher level gear when level cap/sync effect is on player.
+-    DISABLE_GEAR_SCALING = false,
++    DISABLE_GEAR_SCALING = true,
+ 
+     -- Disables Treasure Hunter procs (Era behavior wants this true)
+     DISABLE_TREASURE_HUNTER_PROCS = false,
