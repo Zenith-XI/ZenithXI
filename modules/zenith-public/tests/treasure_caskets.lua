@@ -7,6 +7,8 @@
 -- casket_loot.lua: replaces xi.casket_loot.casketItems. Prism Powder and Silent Oil are taken out of
 --   every temporary-item table (Deodorizer takes their weight), and the item tables are reweighted.
 --   West Ronfaure is spot-checked: Deodorizer 1200 and Rabbit Hide 3500, neither of which LSB has.
+--   Coeurl Whisker and Leather Pouch come from 1-enum/xi/item.lua, which loads after casket_loot.lua, so
+--   the table is built in xi.server.onServerStart; built at load time those entries had a nil itemId.
 --
 -- The 'attempts' cases guard treasure_caskets.lua and the 'loot' cases guard casket_loot.lua; each
 -- group passes when only the other module is switched off.
@@ -158,6 +160,26 @@ describe('Zenith treasure caskets', function()
 
             assert(weightOf(zoneLoot.temps, xi.item.FLASK_OF_DEODORIZER) == 1200, string.format('expected Deodorizer at 1200 in temps, got %d', weightOf(zoneLoot.temps, xi.item.FLASK_OF_DEODORIZER)))
             assert(weightOf(zoneLoot.items, xi.item.RABBIT_HIDE) == 3500, string.format('expected Rabbit Hide at 3500 in items, got %d', weightOf(zoneLoot.items, xi.item.RABBIT_HIDE)))
+        end)
+
+        it('gives every entry an item ID', function()
+            for zoneId, zoneLoot in pairs(xi.casket_loot.casketItems) do
+                for key, entries in pairs(zoneLoot) do
+                    if key ~= 'regionalItems' then
+                        for i, entry in ipairs(entries) do
+                            assert(entry.itemId ~= nil, string.format('zone %d %s entry %d has a nil itemId', zoneId, key, i))
+                        end
+                    end
+                end
+            end
+        end)
+
+        it('holds the items that only the module item enum adds', function()
+            local ranguemont = xi.casket_loot.casketItems[xi.zone.RANGUEMONT_PASS].items
+            local yuhtunga   = xi.casket_loot.casketItems[xi.zone.YUHTUNGA_JUNGLE].items
+
+            assert(hasItem(ranguemont, xi.item.LEATHER_POUCH), 'Ranguemont Pass items lost Leather Pouch')
+            assert(hasItem(yuhtunga, xi.item.COEURL_WHISKER), 'Yuhtunga Jungle items lost Coeurl Whisker')
         end)
 
         -- The real path: opening a blue casket rolls its contents from xi.casket_loot.casketItems.
