@@ -1,0 +1,18 @@
+Ranged attacks: restore the 1200 ms free phase delay (ZENITHDEV-237).
+
+Retail lowered the wait before the next ranged attack in 2012, which raised ranged DPS.
+This sets the default. A live settings/main.lua that lists the key has to change it too.
+---
+diff --git a/settings/default/main.lua b/settings/default/main.lua
+index d46eb6e901..2c553bb556 100644
+--- a/settings/default/main.lua
++++ b/settings/default/main.lua
+@@ -159,7 +159,7 @@ xi.settings.main =
+     PLAYER_ALLIES_VIT_DEF_MULTIPLIER = 1.5, -- 1.5: 1 VIT = 1.5 DEF. This has been 0.5 in previous eras.
+ 
+     -- Ranged Attack Free Phase Delay (in milliseconds) - The delay before a ranged attack can be executed after the player puts away their weapon. Default is 500 milliseconds. (Use 1200 for pre-2012 setting)
+-    RANGED_ATTACK_FREE_PHASE_DELAY = 500,
++    RANGED_ATTACK_FREE_PHASE_DELAY = 1200,
+ 
+     USE_ADOULIN_WEAPON_SKILL_CHANGES = true,  -- true/false. Change to toggle new Adoulin weapon skill damage calculations
+     ENABLE_IMMUNOBREAK               = true,  -- true/false. Allow/Disallow immunobreaks to happen.
