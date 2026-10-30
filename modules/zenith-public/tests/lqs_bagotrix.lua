@@ -12,6 +12,12 @@
 -- menu is answered; the "answered at once" cases answer while the lock is held and check the
 -- reply's first line reaches LQS's chat output (player:fmt).
 --
+-- LQS dialog is timed chat lines, so the server used to release the player (0x052) the moment
+-- they talked to him and they could walk off mid-pitch (ZXIALPHA-89). The module holds them in an
+-- NPC sequence until the menu opens or the "already have one" answer ends, then freezes them
+-- while the menu is open and until his answer to it ends. A talk dropped under the LQS lock must
+-- still be released at once, or the player would be held with nothing to let them go.
+--
 -- xi_test links xi_map_core but not the module C++ (modules/LQS/cpp/lqs_util.cpp is built into
 -- xi_map only), so LQS's entity bindings (fmt, sys, ceFace, ceReset, ...) do not exist here and
 -- LQS.event stops at its first npc:ceFace(). They only print dialog and turn the NPC, so the file
@@ -115,6 +121,24 @@ describe('Zenith Bagotrix Mog Satchel vendor', function()
         return false
     end
 
+    -- Has the server sent the 0x052 that lets the client go after talking to an NPC?
+    local function released()
+        for _, pkt in ipairs(player.packets:getIncoming()) do
+            if pkt.type == 0x052 then
+                return true
+            end
+        end
+
+        return false
+    end
+
+    -- The value of the latest setFreezeFlag call, or nil if there was none
+    local function frozen(freeze)
+        local last = freeze.calls[#freeze.calls]
+
+        return last and last.args[2]
+    end
+
     local function setRanks(sandoria, bastok, windurst)
         for nation, rank in pairs({ [xi.nation.SANDORIA] = sandoria, [xi.nation.BASTOK] = bastok, [xi.nation.WINDURST] = windurst }) do
             player:setNation(nation)
@@ -204,5 +228,60 @@ describe('Zenith Bagotrix Mog Satchel vendor', function()
         assert(player:getGil() == 518999, string.format('gil changed without a sale: %d', player:getGil()))
         assert(player:getContainerSize(xi.inv.MOGSATCHEL) == 0, 'the Mog Satchel was granted without enough gil')
         assert(said(chat, 'pockets empty'), string.format('no follow-up dialog after a quick answer: LQS dropped the "not enough gil" refusal (%d chat lines)', #chat.calls))
+    end)
+
+    it('holds the player through his pitch and keeps them frozen until he answers the menu', function()
+        setRanks(1, 1, 1)
+        local menu   = spy('CBaseEntity.customMenu')
+        local freeze = spy('CBaseEntity.setFreezeFlag')
+
+        player.packets:clear()
+        player.entities:gotoAndTrigger(npcName)
+        assert(not released(), 'the player was let go as soon as they talked to Bagotrix, so they can walk off mid-pitch')
+
+        for _ = 1, 15 do
+            if #menu.calls > 0 then
+                break
+            end
+
+            assert(not released(), 'the player was let go before the purchase menu opened')
+            xi.test.world:skipTime(1)
+        end
+
+        assert(#menu.calls > 0, 'precondition: the purchase menu never opened')
+        assert(released(), 'the player was still held in the NPC talk when the menu opened, and the client drops a menu sent during an event')
+        assert(frozen(freeze) == true, 'the player was not frozen while the purchase menu is open')
+
+        answerMenu('No thanks')
+        assert(frozen(freeze) == true, 'the player was unfrozen before Bagotrix finished answering "No thanks"')
+
+        waitSeconds(6)
+        assert(frozen(freeze) == false, 'the player was still frozen after Bagotrix finished answering "No thanks"')
+    end)
+
+    it('holds the player through his "already have a satchel" answer, then lets go', function()
+        player:changeContainerSize(xi.inv.MOGSATCHEL, 80)
+
+        player.packets:clear()
+        player.entities:gotoAndTrigger(npcName)
+        assert(not released(), 'the player was let go as soon as they talked to Bagotrix, so they can walk off mid-answer')
+
+        waitSeconds(6)
+        assert(released(), 'the player was never let go after the "already have a satchel" answer')
+    end)
+
+    it('unfreezes a player who closes the menu and lets go at once of a talk LQS drops', function()
+        setRanks(1, 1, 1)
+        local freeze = spy('CBaseEntity.setFreezeFlag')
+
+        talkUntilMenu()
+        answerMenu('Canceled.')
+        assert(frozen(freeze) == false, 'the player stayed frozen after closing the purchase menu')
+        assert(player:getLocalVar('[LQS]BLOCKING') == 1, 'precondition: LQS still holds its dialog lock after the menu was closed')
+
+        -- LQS plays nothing for this talk, so nothing would ever release a sequence started for it
+        player.packets:clear()
+        player.entities:gotoAndTrigger(npcName)
+        assert(released(), 'talking to Bagotrix under the LQS dialog lock left the player held with nothing to let them go')
     end)
 end)
