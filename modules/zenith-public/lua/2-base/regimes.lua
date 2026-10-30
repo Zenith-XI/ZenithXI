@@ -5,20 +5,11 @@ m:addOverride('xi.regime.checkRegime', function(player, mob, regimeId, index, re
         return
     end
 
-    local vanadielEpoch = VanadielUniqueDay()
-    local localVarName = 'regimeReminder'
-    if player:getCharVar('[regime]lastReward') < vanadielEpoch then
-        player:setLocalVar(localVarName, 0)
+    if player:getCharVar('[regime]lastReward') < VanadielUniqueDay() then
         super(player, mob, regimeId, index, regimeType)
-    else
-        -- cannot receive credit for regime today, maybe give a system message once per zone?
-        if
-            player:getLocalVar(localVarName) == 0 and
-            player:getCharVar('[regime]id') == regimeId
-        then
-            player:printToPlayer('You must wait until the next game day to complete another Page of Valor', xi.msg.channel.SYSTEM_3)
-            player:setLocalVar(localVarName, 1)
-        end
+    elseif player:getCharVar('[regime]id') == regimeId then
+        -- cannot receive credit for regime today, so say why on every kill of a mob on the page
+        player:printToPlayer('You must wait until the next game day to complete another Page of Valor', xi.msg.channel.SYSTEM_3)
     end
 end)
 
