@@ -1,0 +1,18 @@
+Chocobo Raising: off by default (ZENITHDEV-241).
+
+LSB turned it on by default, but the feature only came with Treasures of Aht Urhgan.
+This sets the default. A live settings/main.lua that lists the key has to change it too.
+---
+diff --git a/settings/default/main.lua b/settings/default/main.lua
+index d46eb6e901..fd5e74acbc 100644
+--- a/settings/default/main.lua
++++ b/settings/default/main.lua
+@@ -298,7 +298,7 @@ xi.settings.main =
+ 
+     -- CHOCOBO RAISING
+     -- GMs open the developer debug menu on the chocobo next to each VCS trainer.
+-    ENABLE_CHOCOBO_RAISING = true,  -- true/false. Enable Chocobo Raising features.
++    ENABLE_CHOCOBO_RAISING = false, -- true/false. Enable Chocobo Raising features.
+     DEBUG_CHOCOBO_RAISING  = false, -- true/false. Enable verbose debug logging for Chocobo Raising (visible by players).
+ 
+     -- CHOCOBO RACING
