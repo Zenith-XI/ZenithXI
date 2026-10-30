@@ -1,0 +1,21 @@
+Avatar's Favor: drop the engine's x1.2 perpetuation multiplier.
+The avatars_favor_perpetuation module adds a flat +3 (+2 for Carbuncle) to AVATAR_PERPETUATION instead.
+---
+diff --git a/src/map/status_effect_container.cpp b/src/map/status_effect_container.cpp
+index 838f25f78d..f0c860e8dd 100644
+--- a/src/map/status_effect_container.cpp
++++ b/src/map/status_effect_container.cpp
+@@ -2126,12 +2126,7 @@ void CStatusEffectContainer::TickRegen(timer::time_point tick)
+                     perpetuationCost = perpetuationCost - PChar->getMod(xi::Mod::WEATHER_REDUCTION);
+                 }
+ 
+-                // Avatar's Favor multiplier after all regular reductions.
+-                if (PChar->StatusEffectContainer->HasStatusEffect(xi::StatusEffect::AvatarsFavor) &&
+-                    ((PPet->petID() >= PETID_CARBUNCLE && PPet->petID() <= PETID_CAIT_SITH) || PPet->petID() == PETID_SIREN))
+-                {
+-                    perpetuationCost = static_cast<int16>(perpetuationCost * 1.2); // Confirmed it's floored.
+-                }
++                // Zenith: no Avatar's Favor multiplier. The avatars_favor_perpetuation module raises AVATAR_PERPETUATION instead.
+             }
+ 
+             // Astral Flow.
