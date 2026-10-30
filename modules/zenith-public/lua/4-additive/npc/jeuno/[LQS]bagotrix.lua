@@ -42,8 +42,13 @@ end
 -- got no reply at all (not even the "not enough gil" one). Once the menu is answered the greeting
 -- is over, so release the lock before replying. LQS's own release timer still runs later and
 -- only resets the NPC's facing.
+-- The menu froze the player; the last row unfreezes them once Bagotrix has finished his answer.
 local function reply(player, event)
     player:setLocalVar('[LQS]BLOCKING', 0)
+    table.insert(event, function(playerArg)
+        playerArg:setFreezeFlag(false)
+    end)
+
     LQS.event(player, nil, event)
 end
 
@@ -83,6 +88,9 @@ end
 local function showPurchaseMenu(player, npcName)
     local menuPrice = calculateSatchelPrice(player)
 
+    -- Keep the player in place while the menu is open and through Bagotrix's answer (see reply)
+    player:setFreezeFlag(true)
+
     player:customMenu({
         title = string.format('Purchase Mog Satchel for %s gil?', menuPrice),
         options =
@@ -104,6 +112,11 @@ local function showPurchaseMenu(player, npcName)
                 end,
             },
         },
+
+        -- Closing the menu, or the client dropping it, gets no answer to wait for
+        onCancelled = function(playerMenuArg)
+            playerMenuArg:setFreezeFlag(false)
+        end,
     })
 end
 
@@ -140,12 +153,27 @@ LQS.add(m, {
             [bagotrix] =
             {
                 onTrigger = function(player, npc)
+                    -- LQS.event plays nothing while [LQS]BLOCKING is held, and a dialog that never
+                    -- plays would never release the sequence below
+                    if player:getLocalVar('[LQS]BLOCKING') == 1 then
+                        return
+                    end
+
+                    -- LQS dialog is timed chat lines, so the server would release the player as soon
+                    -- as onTrigger returns and they could walk off or talk to other NPCs mid-pitch
+                    -- (ZXIALPHA-89). A sequence holds them like a vanilla NPC talk until the
+                    -- dialog's last row calls release().
+                    player:startSequence()
+
                     -- Check if already purchased/unlocked
                     if hasSatchelUnlocked(player) then
                         LQS.event(player, npc, {
                             'Oho! Uplander already have big satchel!',
                             ' Bagotrix no have more to sell you!',
                             ' You keep satchel full of treasures, yes?',
+                            function(playerArg)
+                                playerArg:release()
+                            end,
                         })
                         return
                     end
@@ -164,6 +192,9 @@ LQS.add(m, {
                         string.format(' You have %d completed mission ranks!', totalRanks),
                         ' Each rank save you 37,000 gil! Good deal, yes?',
                         function(playerArg)
+                            -- Release first: the menu is a GM prompt, and the client drops one that
+                            -- arrives during an event (see luautils HandleCustomMenu)
+                            playerArg:release()
                             showPurchaseMenu(playerArg, npcName)
                         end,
                     })
