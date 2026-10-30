@@ -1,7 +1,8 @@
 -----------------------------------
--- Protect/Protectra Enhancement Module
--- Combines defense rebalancing and Shield Barrier trait modifications
+-- Protect/Protectra and Shell/Shellra Enhancement Module
+-- Combines defense rebalancing, Shell potency and Shield Barrier trait modifications
 -- - Adjusts defense amounts for Protect and Protectra spells
+-- - Restores the Shell and Shellra I-IV potency from before the May 10, 2019 update (ZENITHDEV-265)
 -- - Modifies Shield Barrier to grant Protect Defense + (Shield Defense / 2)
 -----------------------------------
 require('modules/module_utils')
@@ -27,7 +28,21 @@ local protectDefenseValues = {
     [xi.magic.spell.PROTECTRA_V]   = 65,  -- Protectra V
 }
 
--- Override the base power calculation for Protect/Protectra spells
+-- Era magic damage reduction for Shell and Shellra, tier V keeps the LSB value
+-- Source: https://forum.square-enix.com/ffxi/threads/55360-May.-10-2019-%28JST%29-Version-Update?p=615387&viewfull=1#post615387
+local shellPowerValues = {
+    [xi.magic.spell.SHELL]       = 937,
+    [xi.magic.spell.SHELL_II]    = 1406,
+    [xi.magic.spell.SHELL_III]   = 1875,
+    [xi.magic.spell.SHELL_IV]    = 2187,
+
+    [xi.magic.spell.SHELLRA]     = 937,
+    [xi.magic.spell.SHELLRA_II]  = 1406,
+    [xi.magic.spell.SHELLRA_III] = 1875,
+    [xi.magic.spell.SHELLRA_IV]  = 2187,
+}
+
+-- Override the base power calculation for Protect/Protectra and Shell/Shellra spells
 m:addOverride('xi.spells.enhancing.calculateEnhancingBasePower', function(caster, target, spell, spellId, spellEffect)
     local basePower = super(caster, target, spell, spellId, spellEffect)
 
@@ -37,7 +52,7 @@ m:addOverride('xi.spells.enhancing.calculateEnhancingBasePower', function(caster
         basePower = newDefense
     end
 
-    return basePower
+    return shellPowerValues[spellId] or basePower
 end)
 
 -- Override the final power calculation to modify Shield Barrier trait behavior
