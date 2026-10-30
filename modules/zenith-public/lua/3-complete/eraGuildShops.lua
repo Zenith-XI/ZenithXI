@@ -29,8 +29,8 @@ end)
 
 -- The filewatcher can re-execute this file mid-session and the table.insert
 -- calls below are not idempotent. The sentinel lives on xi.data.guildShops
--- itself so reloading scripts/data/guild_shops.lua clears it too. Nothing
--- iterates that table with pairs(), so an extra key is harmless.
+-- itself so reloading scripts/data/guild_shops.lua clears it too. The only
+-- pairs() over that table is guild_shop_persistence.lua, which skips it.
 if xi.data.guildShops.eraStockApplied then
     return m
 end
