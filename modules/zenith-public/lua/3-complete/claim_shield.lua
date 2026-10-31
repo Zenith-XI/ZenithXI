@@ -1139,17 +1139,45 @@ end
 local endClaimshieldProcess
 local claimRecoveryCheck
 
+-- Remember the flags this module overrides, so restoreFlags can hand back what the NM
+-- actually had rather than forcing a default onto an NM that was deliberately
+-- non-exclusive or unkillable. Records only once per guarded stretch: a second call while
+-- the NM is already guarded would record the module's own values as the NM's.
+-- @param mob CMobEntity: The NM about to be guarded
+local guardFlags = function(mob)
+    if mob:getLocalVar('CS_Guarded') == 1 then
+        return
+    end
+
+    mob:setLocalVar('CS_PriorClaimType', mob:getMobMod(xi.mobMod.CLAIM_TYPE))
+    mob:setLocalVar('CS_PriorUnkillable', mob:getUnkillable() and 1 or 0)
+    mob:setLocalVar('CS_PriorCfhBlocked', mob:getCallForHelpBlocked() and 1 or 0)
+    mob:setLocalVar('CS_Guarded', 1)
+end
+
+-- Put back the flags guardFlags recorded. The engine resets none of them on respawn
+-- (m_unkillable is only cleared in the constructor, mob mods are not restored), so an NM
+-- left guarded would stay unkillable and unclaimable for every later spawn.
+-- @param mob CMobEntity: The guarded NM
+local restoreFlags = function(mob)
+    if mob:getLocalVar('CS_Guarded') == 0 then
+        return
+    end
+
+    mob:setMobMod(xi.mobMod.CLAIM_TYPE, mob:getLocalVar('CS_PriorClaimType'))
+    mob:setUnkillable(mob:getLocalVar('CS_PriorUnkillable') == 1)
+    mob:setCallForHelpBlocked(mob:getLocalVar('CS_PriorCfhBlocked') == 1)
+    mob:setLocalVar('CS_Guarded', 0)
+end
+
 -- Apply the claimshield to the NM itself.
 -- The NM is its own lottery target: unclaimable so that every alliance may attack it,
 -- unkillable and stunned so the window cannot be ended early, and stripped of the
 -- engager's claim so that nobody holds ownership while entries are collected.
 -- @param mob CMobEntity: The NM to shield
 local applyClaimshield = function(mob)
-    -- Remembered so removeClaimshield restores what the NM actually had, rather than
-    -- forcing a default onto an NM that was deliberately non-exclusive or unkillable.
-    mob:setLocalVar('CS_PriorClaimType', mob:getMobMod(xi.mobMod.CLAIM_TYPE))
-    mob:setLocalVar('CS_PriorUnkillable', mob:getUnkillable() and 1 or 0)
-    mob:setLocalVar('CS_PriorCfhBlocked', mob:getCallForHelpBlocked() and 1 or 0)
+    -- Normally a no-op: the SPAWN listener already guarded the NM for the engage window.
+    guardFlags(mob)
 
     -- Force the NM into nearby clients' render lists so the whole lottery field can see
     -- and target it.
@@ -1175,11 +1203,7 @@ end
 -- safe to call at any point, including on a shield that was only half applied.
 -- @param mob CMobEntity: The shielded NM
 local removeClaimshield = function(mob)
-    -- An unset localvar reads back as 0, which is xi.claimType.EXCLUSIVE and false - the
-    -- right answer when the shield never got as far as recording anything.
-    mob:setMobMod(xi.mobMod.CLAIM_TYPE, mob:getLocalVar('CS_PriorClaimType'))
-    mob:setUnkillable(mob:getLocalVar('CS_PriorUnkillable') == 1)
-    mob:setCallForHelpBlocked(mob:getLocalVar('CS_PriorCfhBlocked') == 1)
+    restoreFlags(mob)
     mob:setHP(mob:getMaxHP())
 
     -- Strip only what other entities applied. delStatusEffectsByFlag(0xFFFF) would also
@@ -1239,6 +1263,7 @@ end
 endClaimshieldProcess = function(realMob)
     local mobName = realMob:getPacketName()
 
+    -- The DESPAWN listener has already restored its flags.
     if not realMob:isSpawned() then
         print(string.format('[ClaimShield] %s despawned before its lottery resolved', mobName))
         return
@@ -1352,11 +1377,35 @@ end
 -- Listener Functions
 -----------------------------------
 
--- SPAWN listener - Records spawn time and resets claimshield state
+-- SPAWN listener - Records spawn time and holds the NM unkillable for the engage window
+-- Runs after the mob script's onMobSpawn, so guardFlags records the script's own values.
 -- @param mob CMobEntity: The mob that spawned
 local spawnListenerFunc = function(mob)
     mob:setLocalVar('CS_SpawnTime', GetSystemTime())
     mob:setLocalVar('CS_Triggered', 0)
+
+    -- A mob only engages on its own AI tick after landing on someone's hate list, so a
+    -- first blow that kills it outright (a nuke, a weapon skill) finishes before ENGAGE can
+    -- fire and the lottery is skipped. Unkillable leaves it at 1 HP instead; it then
+    -- engages and the shield starts as usual.
+    guardFlags(mob)
+    mob:setUnkillable(true)
+
+    -- Nobody engaged inside the window: hand the NM back as a normal NM. Spawn resets the
+    -- action queue, so this can never fire into a later spawn.
+    mob:timer(engageWindowSeconds * 1000, function(mobArg)
+        if mobArg:getLocalVar('CS_Triggered') == 0 then
+            restoreFlags(mobArg)
+        end
+    end)
+end
+
+-- DESPAWN listener - Restores the flags if the NM leaves while guarded
+-- Covers a despawn inside the engage window or during the lottery itself, which would
+-- otherwise leave the next spawn unkillable and unclaimable.
+-- @param mob CMobEntity: The mob that despawned
+local despawnListenerFunc = function(mob)
+    restoreFlags(mob)
 end
 
 -- ENGAGE listener - Triggers claimshield if within the engage window
@@ -1469,6 +1518,9 @@ for zoneId, mobNames in pairs(nmsToShield) do
 
                 -- Add ENGAGE listener to potentially trigger claimshield
                 mob:addListener('ENGAGE', listenerPrefix .. '_ENGAGE', engageListenerFunc)
+
+                -- Add DESPAWN listener to undo a shield the NM left with
+                mob:addListener('DESPAWN', listenerPrefix .. '_DESPAWN', despawnListenerFunc)
             end)
 
             nmCount = nmCount + 1
