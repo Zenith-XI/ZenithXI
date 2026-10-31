@@ -6,7 +6,7 @@ index d5a103bbee..efd0dfcf60 100644
  #include "utils/zoneutils.h"
  #include "weapon_skill.h"
  
-+static float GetEraScaledMultiplier(uint8 level, float startValue, float endValue)
++static auto GetEraScaledMultiplier(uint8 level, float startValue, float endValue) -> float
 +{
 +    if (level < 37)
 +    {
