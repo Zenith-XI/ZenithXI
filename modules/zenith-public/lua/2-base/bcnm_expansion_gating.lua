@@ -38,11 +38,17 @@ local currentContentPhase = contentPhase.rotzEarly
 
 -----------------------------------
 -- Orb Phase Requirements
--- Maps orb item IDs to the phase they were introduced
--- Orbs not listed here are always available (Star/Moon Orbs)
+-- Maps orb item IDs to the phase they were introduced.
+-- These are the gated orbs: a fight that needs one of them must also be
+-- listed in fightPhaseRequirements, or it is hidden from the menu.
+-- Other orbs and items (Monarch's Orb, ...) are not gated.
 -----------------------------------
 local orbPhaseRequirements =
 {
+    -- baseGame orbs
+    [xi.item.STAR_ORB]     = contentPhase.baseGame,
+    [xi.item.MOON_ORB]     = contentPhase.baseGame,
+
     -- rotzEarly orbs
     [xi.item.COMET_ORB]    = contentPhase.rotzEarly,
     [xi.item.ATROPOS_ORB]  = contentPhase.rotzEarly,
@@ -82,8 +88,10 @@ local optionToOrb =
 
 -----------------------------------
 -- Fight Phase Requirements
--- Maps battlefield IDs to the phase they become available
--- Fights not listed here use their orb's phase requirement
+-- Maps battlefield IDs to the phase they become available.
+-- Every fight that needs a gated orb must be listed here: an unlisted
+-- one is hidden, so an orb fight added upstream stays closed until it
+-- is given a phase.
 -----------------------------------
 local fightPhaseRequirements =
 {
@@ -144,18 +152,39 @@ local fightPhaseRequirements =
 
     -- Late ROTZ fights (Phase 3) - Comet Orb expansion
     [xi.battlefield.id.IDOL_THOUGHTS]           = contentPhase.rotzLate,
+    [xi.battlefield.id.EYE_OF_THE_TIGER]        = contentPhase.rotzLate,
+    [xi.battlefield.id.RAPID_RAPTORS]           = contentPhase.rotzLate,
+    [xi.battlefield.id.FINAL_BOUT]              = contentPhase.rotzLate,
+    [xi.battlefield.id.AWFUL_AUTOPSY]           = contentPhase.rotzLate,
 
     -- Late ROTZ fights (Phase 3) - Moon Orb expansion
     [xi.battlefield.id.BROTHERS_D_AURPHE]       = contentPhase.rotzLate,
     [xi.battlefield.id.KINDRED_SPIRITS]         = contentPhase.rotzLate,
+    [xi.battlefield.id.SHOTS_IN_THE_DARK]       = contentPhase.rotzLate,
+    [xi.battlefield.id.WILD_WILD_WHISKERS]      = contentPhase.rotzLate,
+    [xi.battlefield.id.UP_IN_ARMS]              = contentPhase.rotzLate,
+    [xi.battlefield.id.CELERY]                  = contentPhase.rotzLate,
 
     -- Late ROTZ fights (Phase 3) - KS Orb expansion
     [xi.battlefield.id.SCARLET_KING]            = contentPhase.rotzLate,
     [xi.battlefield.id.EYE_OF_THE_STORM]        = contentPhase.rotzLate,
     [xi.battlefield.id.CACTUAR_SUAVE]           = contentPhase.rotzLate,
 
+    -- Late ROTZ fights (Phase 3) - KS Orb fights at Horlais, Balga and Waughroon
+    [xi.battlefield.id.DOUBLE_DRAGONIAN]        = contentPhase.rotzLate, -- Clotho
+    [xi.battlefield.id.SEASONS_GREETINGS]       = contentPhase.rotzLate, -- Clotho
+    [xi.battlefield.id.COPYCAT]                 = contentPhase.rotzLate, -- Clotho
+    [xi.battlefield.id.TODAYS_HOROSCOPE]        = contentPhase.rotzLate, -- Lachesis
+    [xi.battlefield.id.ROYALE_RAMBLE]           = contentPhase.rotzLate, -- Lachesis
+    [xi.battlefield.id.OPERATION_DESERT_SWARM]  = contentPhase.rotzLate, -- Lachesis
+    [xi.battlefield.id.CONTAMINATED_COLOSSEUM]  = contentPhase.rotzLate, -- Atropos
+    [xi.battlefield.id.MOA_CONSTRICTORS]        = contentPhase.rotzLate, -- Atropos
+    [xi.battlefield.id.PREHISTORIC_PIGEONS]     = contentPhase.rotzLate, -- Atropos
+
     -- End ROTZ fights (Phase 4) - Themis Orb
     [xi.battlefield.id.EARLY_BIRD_CATCHES_THE_WYRM] = contentPhase.rotzEnd,
+    [xi.battlefield.id.HORNS_OF_WAR]                = contentPhase.rotzEnd,
+    [xi.battlefield.id.HILLS_ARE_ALIVE]             = contentPhase.rotzEnd,
 }
 
 -----------------------------------
@@ -172,20 +201,24 @@ local function isFightAvailable(content)
         return true
     end
 
-    -- Check if the orb itself is available
+    -- Items other than the gated orbs are not phase-gated
     local orbPhase = orbPhaseRequirements[orbId]
-    if orbPhase ~= nil and orbPhase > currentContentPhase then
+    if orbPhase == nil then
+        return true
+    end
+
+    -- Check if the orb itself is available
+    if orbPhase > currentContentPhase then
         return false
     end
 
-    -- Check if this specific fight has a phase requirement
+    -- A gated-orb fight with no phase of its own stays hidden
     local fightPhase = fightPhaseRequirements[content.battlefieldId]
-    if fightPhase ~= nil then
-        return fightPhase <= currentContentPhase
+    if fightPhase == nil then
+        return false
     end
 
-    -- If fight has no specific phase requirement, use orb's phase (or allow if orb has no requirement)
-    return orbPhase == nil or orbPhase <= currentContentPhase
+    return fightPhase <= currentContentPhase
 end
 
 -- Check if a specific orb is available for purchase based on content phase
