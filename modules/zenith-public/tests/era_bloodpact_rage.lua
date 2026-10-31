@@ -6,7 +6,9 @@ describe('Zenith Blood Pact: Rage era adjustments', function()
     local function firstParams(name)
         local params
 
-        stub('xi.job_utils.summoner.onUseBloodPact', function() end)
+        stub('xi.job_utils.summoner.onUseBloodPact', function()
+        end)
+
         stub('xi.mobskills.processDamage', false)
         stub('xi.mobskills.mobPhysicalMove', function(_, _, _, _, moveParams)
             params = moveParams
@@ -14,7 +16,14 @@ describe('Zenith Blood Pact: Rage era adjustments', function()
             return { damage = 0 }
         end)
 
-        xi.actions.abilities.pets[name].onPetAbility({}, { getWeaponDmg = function() return 10 end }, {}, {}, {})
+        local pet =
+        {
+            getWeaponDmg = function()
+                return 10
+            end,
+        }
+
+        xi.actions.abilities.pets[name].onPetAbility({}, pet, {}, {}, {})
 
         return params
     end
