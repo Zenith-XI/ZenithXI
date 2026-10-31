@@ -1,7 +1,6 @@
 -- ZenithXI era chocobo digging loot (modules/zenith-public/lua/3-complete/era_digging_loot.lua).
 --
--- The regular digging layer of the zones with historical data uses the historical items, the other layers and
--- the zones without data keep LSB's. Seeds are only in the pool at night.
+-- The regular digging pools swap items to match the historical pools. Everything else stays LSB's.
 
 describe('Zenith era chocobo digging loot', function()
     local function regularPool(zoneId)
@@ -14,50 +13,33 @@ describe('Zenith era chocobo digging loot', function()
         return items
     end
 
-    it('uses the historical pool in Batallia Downs', function()
-        local pool = regularPool(xi.zone.BATALLIA_DOWNS)
+    it('removes items from a pool', function()
+        local pool = regularPool(xi.zone.NORTH_GUSTABERG)
 
-        assert(pool[xi.item.PEBBLE], 'Pebble is not in the pool')
-        assert(pool[xi.item.PEBBLE][2] == 100, 'Pebble has the wrong chance')
-        assert(pool[xi.item.REISHI_MUSHROOM], 'Reishi Mushroom is not in the pool')
-        assert(pool[xi.item.REISHI_MUSHROOM][3] == xi.craftRank.VETERAN, 'Reishi Mushroom has the wrong rank')
+        assert(not pool[xi.item.CHUNK_OF_MYTHRIL_ORE], 'Mythril Ore is in the pool')
+        assert(not pool[xi.item.BAG_OF_CACTUS_STEMS], 'Cactus Stems are in the pool')
     end)
 
-    it('uses the historical pool in Carpenters\' Landing', function()
-        assert(regularPool(xi.zone.CARPENTERS_LANDING)[xi.item.LITTLE_WORM], 'Little Worm is not in the pool')
+    it('adds items to a pool', function()
+        local row = regularPool(xi.zone.CARPENTERS_LANDING)[xi.item.KING_TRUFFLE]
+
+        assert(row, 'King Truffle is not in the pool')
     end)
 
-    it('leaves items out of the pool that the historical data does not have', function()
-        assert(not regularPool(xi.zone.BATALLIA_DOWNS)[xi.item.SCREAM_FUNGUS], 'Scream Fungus is in the pool')
+    it('keeps the chance and rank of an item in both pools', function()
+        local row = regularPool(xi.zone.CARPENTERS_LANDING)[xi.item.LITTLE_WORM]
+
+        assert(row[2] == 100, 'the chance changed')
+        assert(row[3] == xi.craftRank.AMATEUR, 'the rank changed')
     end)
 
-    it('leaves a zone without historical data alone', function()
-        assert(next(regularPool(xi.zone.XARCABARD)) == nil, 'Xarcabard got a regular pool')
+    it('leaves a zone that needs no changes alone', function()
+        assert(next(regularPool(xi.zone.LA_THEINE_PLATEAU)), 'La Theine Plateau lost its pool')
     end)
 
     it('leaves the treasure layer alone', function()
         local layer = xi.chocoboDig.digInfo[xi.zone.CARPENTERS_LANDING][xi.chocoboDig.layer.TREASURE]
 
         assert(layer[1][1] == xi.item.KING_TRUFFLE, 'the treasure layer changed')
-    end)
-
-    describe('seeds in East Ronfaure', function()
-        local function fruitSeedChance(hour)
-            local player = xi.test.world:spawnPlayer({ zone = xi.zone.EAST_RONFAURE })
-
-            stub('VanadielHour', hour)
-            stub('xi.chocoboDig.fetchFatigue', 1000000)
-            xi.chocoboDig.start(GetPlayerByID(player:getID()))
-
-            return regularPool(xi.zone.EAST_RONFAURE)[xi.item.BAG_OF_FRUIT_SEEDS][2]
-        end
-
-        it('are out of the pool by day', function()
-            assert(fruitSeedChance(12) == 0, 'seeds can be dug up by day')
-        end)
-
-        it('are in the pool at night', function()
-            assert(fruitSeedChance(22) > 0, 'seeds cannot be dug up at night')
-        end)
     end)
 end)
