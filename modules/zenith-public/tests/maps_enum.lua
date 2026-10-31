@@ -1,15 +1,12 @@
 -- ZenithXI map tables (modules/zenith-public/lua/1-enum/xi/maps.lua).
 --
 -- Base keeps its map vendor tables local to scripts/globals/maps.lua. The enum module publishes
--- them as xi.maps.mapVendors (vendor name -> menu event) and xi.maps.mapInfo (menu index ->
--- key item, cost, regions sold in), with -1 marking a map that is not for sale. The menu index is
--- the client's bit position, so each index must keep base's key item. c_map_vendor
--- (3-complete/map_vendor.lua) reads both tables; the last case checks it sees them through Ludwig.
+-- them as xi.maps.mapVendors (vendor name -> vanilla menu event) and xi.maps.mapInfo (menu index
+-- -> key item, cost, regions sold in, menu name), with -1 marking a map that is not for sale. The
+-- menu index is the client's bit position, so each index must keep base's key item. c_map_vendor
+-- (3-complete/map_vendor.lua) builds its menu from these tables; tests/map_vendor.lua covers that.
 
 describe('Zenith map tables', function()
-    ---@type CClientEntityPair
-    local player
-
     local function requireTables()
         assert(xi.maps.mapVendors ~= nil, 'xi.maps.mapVendors is not defined: 1-enum/xi/maps.lua did not load')
         assert(xi.maps.mapInfo ~= nil, 'xi.maps.mapInfo is not defined: 1-enum/xi/maps.lua did not load')
@@ -69,26 +66,22 @@ describe('Zenith map tables', function()
         assert(xi.maps.mapInfo[58][2] == alZahbi, string.format('expected the Al Zahbi map at %d, got %d', alZahbi, xi.maps.mapInfo[58][2]))
     end)
 
-    describe('seen by the map vendor module', function()
-        before_each(function()
-            player = xi.test.world:spawnPlayer({ zone = xi.zone.MHAURA })
-        end)
+    it('sells the three nation-area maps in Jeuno', function()
+        requireTables()
 
-        it('opens Ludwig\'s menu event from xi.maps.mapVendors', function()
-            requireTables()
+        for index = 0, 2 do
+            assert(soldIn(xi.maps.mapInfo[index], xi.region.JEUNO), string.format('xi.maps.mapInfo[%d] is not sold in Jeuno', index))
+        end
+    end)
 
-            player.packets:clear()
-            player.entities:gotoAndTrigger('Ludwig')
+    it('gives every map a menu name', function()
+        requireTables()
 
-            local eventId = nil
-            for _, pkt in pairs(player.packets:getIncoming()) do
-                if pkt.type == 0x034 then
-                    eventId = pkt.data[0x2C] + pkt.data[0x2D] * 256
-                end
-            end
+        for index = 0, #xi.maps.mapInfo do
+            local name = xi.maps.mapInfo[index].name
+            assert(type(name) == 'string' and #name > 0, string.format('xi.maps.mapInfo[%d] has no menu name', index))
+        end
 
-            assert(eventId == xi.maps.mapVendors.Ludwig, string.format('Ludwig opened event %s, not xi.maps.mapVendors.Ludwig', tostring(eventId)))
-            player.events:finish(eventId, utils.EVENT_CANCELLED_OPTION)
-        end)
+        assert(xi.maps.mapInfo[10].name == 'Beadeaux', string.format('expected index 10 named Beadeaux, got %s', tostring(xi.maps.mapInfo[10].name)))
     end)
 end)
