@@ -7,13 +7,33 @@ describe('Zenith era Bard song potency', function()
     local function power(spellId, skill, instrumentBoost, merit)
         local caster =
         {
-            isPC = function() return true end,
-            getSkillLevel = function() return skill end,
-            getWeaponSkillType = function() return 0 end,
-            getMerit = function() return merit or 0 end,
-            getJobPointLevel = function() return 0 end,
-            getStatusEffect = function() return nil end,
-            hasStatusEffect = function() return false end,
+            isPC = function()
+                return true
+            end,
+
+            getSkillLevel = function()
+                return skill
+            end,
+
+            getWeaponSkillType = function()
+                return 0
+            end,
+
+            getMerit = function()
+                return merit or 0
+            end,
+
+            getJobPointLevel = function()
+                return 0
+            end,
+
+            getStatusEffect = function()
+                return nil
+            end,
+
+            hasStatusEffect = function()
+                return false
+            end,
         }
 
         return xi.spells.enhancing.calculateSongPower(caster, nil, nil, spellId, 1, 0, instrumentBoost or 0, false)
