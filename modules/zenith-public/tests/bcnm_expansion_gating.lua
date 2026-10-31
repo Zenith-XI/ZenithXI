@@ -36,6 +36,20 @@ describe('Zenith BCNM expansion gating', function()
             assert(menuHas(options, xi.battlefield.id.TAILS_OF_WOE), string.format('precondition: Tails of Woe missing from the Star Orb menu (options %d)', options))
             assert(not menuHas(options, xi.battlefield.id.UNDER_OBSERVATION), string.format('Under Observation (rotzLate) is offered at phase rotzEarly (options %d)', options))
         end)
+
+        -- ZXIALPHA-45: Eye of the Tiger was missing from the fight table and fell back to the Comet
+        -- Orb's phase, so it was offered at rotzEarly next to Hostile Herbivores.
+        it('hides a late-phase fight from the Comet Orb menu', function()
+            player:addItem(xi.item.COMET_ORB)
+            assert(player:hasItem(xi.item.COMET_ORB), 'precondition: the player has no Comet Orb')
+
+            player.entities:moveTo('BC_Entrance')
+            player.actions:tradeNpc('BC_Entrance', { xi.item.COMET_ORB })
+
+            local options = player:getLocalVar('[BCNM]MenuOptions')
+            assert(menuHas(options, xi.battlefield.id.HOSTILE_HERBIVORES), string.format('precondition: Hostile Herbivores missing from the Comet Orb menu (options %d)', options))
+            assert(not menuHas(options, xi.battlefield.id.EYE_OF_THE_TIGER), string.format('Eye of the Tiger (rotzLate) is offered at phase rotzEarly (options %d)', options))
+        end)
     end)
 
     describe('Shami orb sales', function()
