@@ -112,7 +112,10 @@ m:addOverride('xi.server.onServerStart', function()
 
     for _, items in pairs(xi.crafting.guildItemTable) do
         for _, item in pairs(items) do
-            if outOfEraItems[item.id] or (wotgItems[item.id] and xi.settings.main.ENABLE_WOTG == 0) then
+            if
+                outOfEraItems[item.id] or
+                (wotgItems[item.id] and xi.settings.main.ENABLE_WOTG == 0)
+            then
                 item.rank = disabledRank
             end
         end

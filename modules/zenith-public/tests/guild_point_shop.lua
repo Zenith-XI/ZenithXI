@@ -45,7 +45,6 @@ describe('Zenith Guild Point rewards', function()
             entity:setSkillRank(xi.crafting.guildTable[guild.id][1], xi.craftRank.VETERAN)
             entity:setCurrency(guild.currency, 1000000)
         end
-
     end)
 
     -- Plays the part of the player, and counts the notices the module prints
