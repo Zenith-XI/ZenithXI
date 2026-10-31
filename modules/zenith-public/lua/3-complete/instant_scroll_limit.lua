@@ -25,6 +25,14 @@ local imperialStandingOptions =
     [4097] = instantWarp,
 }
 
+local function conquestPoints(player)
+    return player:getCP()
+end
+
+local function imperialStanding(player)
+    return player:getCurrency('imperial_standing')
+end
+
 local function buyOncePerDay(player, charVar, getCurrency, buy)
     if player:getCharVar(charVar) > 0 then
         player:printToPlayer('You have already purchased this scroll today.', xi.msg.channel.SYSTEM_3)
@@ -32,11 +40,11 @@ local function buyOncePerDay(player, charVar, getCurrency, buy)
         return
     end
 
-    local before = getCurrency()
+    local before = getCurrency(player)
 
     buy()
 
-    if getCurrency() < before then
+    if getCurrency(player) < before then
         player:setCharVar(charVar, 1, JstMidnight())
     end
 end
@@ -48,9 +56,7 @@ m:addOverride('xi.conquest.overseerOnEventFinish', function(player, csid, option
         return super(player, csid, option, guardNation, guardType, guardRegion)
     end
 
-    buyOncePerDay(player, charVar, function()
-        return player:getCP()
-    end, function()
+    buyOncePerDay(player, charVar, conquestPoints, function()
         super(player, csid, option, guardNation, guardType, guardRegion)
     end)
 end)
@@ -62,9 +68,7 @@ m:addOverride('xi.besieged.onEventFinish', function(player, csid, option, npc)
         return super(player, csid, option, npc)
     end
 
-    buyOncePerDay(player, charVar, function()
-        return player:getCurrency('imperial_standing')
-    end, function()
+    buyOncePerDay(player, charVar, imperialStanding, function()
         super(player, csid, option, npc)
     end)
 end)
