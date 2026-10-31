@@ -100,9 +100,20 @@ helper.restore = function(rows)
         local state = xi.guildShops.state[shopName]
 
         -- eraGuildShops.lua keeps a boolean sentinel in this table
-        if type(shop) == 'table' and shop.stock and (not state or state.lastRoll < 0) then
+        if
+            type(shop) == 'table' and
+            shop.stock and
+            (not state or state.lastRoll < 0)
+        then
             -- onBuyList only reads the NPC name, so a stub runs the real day roll.
-            xi.guildShops.onBuyList(nil, { getName = function() return shopName end })
+            local npc =
+            {
+                getName = function()
+                    return shopName
+                end,
+            }
+
+            xi.guildShops.onBuyList(nil, npc)
             seeded = seeded + 1
         end
     end

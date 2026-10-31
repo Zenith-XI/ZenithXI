@@ -7,7 +7,12 @@ describe('Zenith guild shop persistence', function()
     local shopName = 'Amulya'
 
     local function npc(name)
-        return { getName = function() return name end }
+        return
+        {
+            getName = function()
+                return name
+            end,
+        }
     end
 
     local function persistence()
