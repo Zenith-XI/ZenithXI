@@ -21,22 +21,45 @@ describe('Zenith guild master rank cap', function()
     local function fakePlayer(rank)
         local player = { rank = rank }
 
-        player.getSkillRank = function(self) return self.rank end
-        player.setSkillRank = function(self, _, newRank) self.rank = newRank end
-        player.getCharSkillLevel = function(self) return (self.rank + 1) * 100 end
-        player.getCharVar = function() return 0 end
-        player.hasKeyItem = function() return false end
-        player.tradeComplete = function() end
-        player.startEvent = function(self, _, testItem) self.offered = testItem end
+        player.getSkillRank = function(self)
+            return self.rank
+        end
+
+        player.setSkillRank = function(self, _, newRank)
+            self.rank = newRank
+        end
+
+        player.getCharSkillLevel = function(self)
+            return (self.rank + 1) * 100
+        end
+
+        player.getCharVar = function()
+            return 0
+        end
+
+        player.hasKeyItem = function()
+            return false
+        end
+
+        player.tradeComplete = function()
+        end
+
+        player.startEvent = function(self, _, testItem)
+            self.offered = testItem
+        end
 
         return player
     end
 
     for _, master in ipairs(masters) do
         describe(master.name, function()
-            local npc = { getName = function() return master.name end }
-
             local matched
+            local npc =
+            {
+                getName = function()
+                    return master.name
+                end,
+            }
 
             before_each(function()
                 matched = false
