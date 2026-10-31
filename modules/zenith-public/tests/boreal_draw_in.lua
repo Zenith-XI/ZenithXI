@@ -14,20 +14,42 @@ describe('Zenith Boreal NM draw-in', function()
     local function fakeTarget(pos)
         return
         {
-            getXPos = function() return pos.x end,
-            getZPos = function() return pos.z end,
+            getXPos = function()
+                return pos.x
+            end,
+
+            getZPos = function()
+                return pos.z
+            end,
         }
     end
 
     local function fakeMob(engaged)
         local mob = { noMove = -1, disengaged = false, speedSet = false }
 
-        mob.isEngaged = function() return engaged end
-        mob.getPos = function() return { x = 0, y = 0, z = 0, rot = 0 } end
-        mob.checkDistance = function() return 100 end
-        mob.disengage = function(self) self.disengaged = true end
-        mob.timer = function() end
-        mob.setBaseSpeed = function(self) self.speedSet = true end
+        mob.isEngaged = function()
+            return engaged
+        end
+
+        mob.getPos = function()
+            return { x = 0, y = 0, z = 0, rot = 0 }
+        end
+
+        mob.checkDistance = function()
+            return 100
+        end
+
+        mob.disengage = function(self)
+            self.disengaged = true
+        end
+
+        mob.timer = function()
+        end
+
+        mob.setBaseSpeed = function(self)
+            self.speedSet = true
+        end
+
         mob.setMobMod = function(self, mod, value)
             if mod == xi.mobMod.NO_MOVE then
                 self.noMove = value
