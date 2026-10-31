@@ -12,7 +12,14 @@ describe('Zenith era Final Sting', function()
 
     -- The check only reads the mob's HP percent
     local function canUse(hpp)
-        return sting.onMobSkillCheck(nil, { getHPP = function() return hpp end }, nil)
+        local mob =
+        {
+            getHPP = function()
+                return hpp
+            end,
+        }
+
+        return sting.onMobSkillCheck(nil, mob, nil)
     end
 
     it('can be used at exactly 33% HP', function()
@@ -38,9 +45,17 @@ describe('Zenith era Final Sting', function()
 
             return { damage = 0, attackType = moveParams.attackType, damageType = moveParams.damageType }
         end)
+
         stub('xi.mobskills.processDamage', false)
 
-        sting.onMobWeaponSkill({}, {}, { getMobHP = function() return 1234 end }, {})
+        local skill =
+        {
+            getMobHP = function()
+                return 1234
+            end,
+        }
+
+        sting.onMobWeaponSkill({}, {}, skill, {})
 
         assert(params.baseDamage == 1234, 'base damage is not current HP')
         assert(params.fTP[1] == 1.0 and params.fTP[2] == 1.0 and params.fTP[3] == 1.0, 'fTP is not 1.0')
