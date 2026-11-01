@@ -21,11 +21,16 @@
 --   1. Add the command name and permission level to the appropriate category
 --   2. Follow the format: commandname = X,  -- Description of command
 --   3. Restart the server
+--
+-- COVERAGE:
+--   The table covers scripts/commands, LQS/commands and the module commands
+--   from zenith-public and zenith-private. It is applied from
+--   xi.server.onServerStart, after every module file has loaded, so module
+--   commands (registered by 4-additive files, which load after this one) are
+--   covered too. Any loaded command missing from the table becomes level 5.
 -----------------------------------
 
 local m = Module:new('b_gmCmdPerms')
-m:addOverride('xi.dummyFunc', function()
-end)
 
 -----------------------------------
 -- Command Permission Definitions
@@ -283,10 +288,20 @@ local commandPermissions =
     promote                 = 1,  -- Promote player in linkshell rank
 
     ------------------------------------
-    -- MODULE COMMANDS (Permission 1)
+    -- MODULE COMMANDS
+    -- Levels match each command's own cmdprops.permission
     ------------------------------------
-   -- getfishmob              = 1,  -- Display fishing mob info for zone (Module: zenith-public)
-   -- gmlink                  = 1,  -- Link GM to personal characters for zone restrictions (Module: zenith-public)
+    lfp                     = 0,  -- Toggle Looking for Party flag with trusts out (Module: zenith-public)
+    checkwardrobes          = 1,  -- Check and award pending wardrobe/mog case unlocks (Module: zenith-public)
+    guildstock              = 1,  -- Print a guild shop's live stock (Module: zenith-public)
+    outpost                 = 1,  -- Manage a player's outpost teleport unlocks (Module: zenith-public)
+    getfishmob              = 1,  -- Display fishing mob info for zone (Module: zenith-private)
+    clearquestbonus         = 4,  -- Clear daily double gil quest bonus counters (Module: zenith-public)
+    chatban                 = 4,  -- Permanently ban player from all chat channels (Module: zenith-private)
+    chatcheck               = 4,  -- Check player's chat mute status (Module: zenith-private)
+    chatmute                = 4,  -- Temporarily mute player from all chat channels (Module: zenith-private)
+    chatunmute              = 4,  -- Remove chat mute/ban from player (Module: zenith-private)
+    erascalingtest          = 5,  -- Test era attribute scaling (Module: zenith-public)
 
     ------------------------------------
     -- GM LEVEL 2 COMMANDS
@@ -316,7 +331,6 @@ local commandPermissions =
     exec                    = 4,  -- Execute Lua code string directly
     reloadglobal            = 4,  -- Reload global Lua scripts
     setbattlefieldtime      = 4,  -- Set battlefield time limit
-    -- checkunlocks            = 4,  -- Check wardrobe/mog case unlocks (Module: zenith-public)
 
     ------------------------------------
     -- GM LEVEL 5 COMMANDS
@@ -335,21 +349,42 @@ local commandPermissions =
     reloadquest             = 5,  -- Reload quest scripts
     reloadrecipes           = 5,  -- Reload crafting recipe data
     sleep                   = 5,  -- Pause server execution (DANGEROUS)
+
+    -- Kept admin only; LSB ships these at the level in brackets
+    addallwarps             = 5,  -- Add all Survival Guides and Home Points (LSB: 1)
+    besieged                = 5,  -- Drive Besieged events by hand (LSB: 1)
+    cansee                  = 5,  -- Raycast line of sight to cursor target (LSB: 1)
+    getfamily               = 5,  -- Display mob family ID (LSB: 1)
+    getspecies              = 5,  -- Display mob species ID (LSB: 1)
+    gettp                   = 5,  -- Display player and target TP (LSB: 1)
+    inwater                 = 5,  -- Check whether you are standing in water (LSB: 1)
+    monunlock               = 5,  -- Unlock one Monstrosity family or variant (LSB: 1)
+    naga                    = 5,  -- Set up Escha - Ru'Aun fence and spawn Naga Raja (LSB: 5)
+    rebuildnavmesh          = 5,  -- Rebuild current zone's navmesh (LSB: 5)
+    reloadmagians           = 5,  -- Reload magian trial listeners (LSB: 5)
+    ['return']              = 5,  -- Warp GM or target to previous zone (LSB: 1)
 }
 
 -----------------------------------
 -- Apply permissions: use our table if defined, otherwise default to 5 (admin only)
--- Commands are cached before modules load, so we iterate over xi.commands directly
+-- Runs at server start, after every module file (and so every module command) has loaded
 -----------------------------------
-for cmdName, cmd in pairs(xi.commands) do
-    if cmd.cmdprops then
-        local permission = commandPermissions[cmdName]
-        if permission then
-            cmd.cmdprops.permission = permission
-        else
-            cmd.cmdprops.permission = 5
+local function applyCommandPermissions()
+    for cmdName, cmd in pairs(xi.commands) do
+        if cmd.cmdprops then
+            local permission = commandPermissions[cmdName]
+            if permission then
+                cmd.cmdprops.permission = permission
+            else
+                cmd.cmdprops.permission = 5
+            end
         end
     end
 end
+
+m:addOverride('xi.server.onServerStart', function()
+    super()
+    applyCommandPermissions()
+end)
 
 return m
