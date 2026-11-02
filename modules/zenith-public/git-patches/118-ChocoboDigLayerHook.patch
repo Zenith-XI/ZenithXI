@@ -1,0 +1,72 @@
+Allows Lua modules to replace how chocobo digging picks an item from a layer
+(scripts/globals/hobbies/chocobo_digging/logic.lua).
+
+handleDiggingLayer is file-local, so modules cannot reach it. This patch
+exposes it through xi.chocoboDig.rollLayer and routes xi.chocoboDig.start
+through that. A module can then override it, with super() as the fallback.
+---
+diff --git a/scripts/globals/hobbies/chocobo_digging/logic.lua b/scripts/globals/hobbies/chocobo_digging/logic.lua
+index a7f3268937..704fddbc1c 100644
+--- a/scripts/globals/hobbies/chocobo_digging/logic.lua
++++ b/scripts/globals/hobbies/chocobo_digging/logic.lua
+@@ -398,6 +398,16 @@ xi.chocoboDig.updateFatigue = function(player, newValue)
+     player:setVar('[DIG]DigCount', newValue, NextJstDay())
+ end
+ 
++-- Overridable so modules can replace how a layer picks its item.
++---@param player CBaseEntity
++---@param zoneId integer
++---@param currentLayer integer
++---@param chocobo ChocoboDigChocobo?
++---@return integer
++xi.chocoboDig.rollLayer = function(player, zoneId, currentLayer, chocobo)
++    return handleDiggingLayer(player, zoneId, currentLayer, chocobo)
++end
++
+ -- Returns whether the dig went ahead, then whether the chocobo left the Gysahl Greens.
+ ---@param player CBaseEntity
+ ---@return boolean
+@@ -485,7 +495,7 @@ xi.chocoboDig.start = function(player)
+     end
+ 
+     -- Handle treasure layer. Incompatible with the other 3 layers. "Early" return.
+-    local trasureItemId = handleDiggingLayer(player, zoneId, xi.chocoboDig.layer.TREASURE, chocobo)
++    local trasureItemId = xi.chocoboDig.rollLayer(player, zoneId, xi.chocoboDig.layer.TREASURE, chocobo)
+ 
+     if trasureItemId > 0 then
+         handleItemObtained(player, text, trasureItemId)
+@@ -500,14 +510,14 @@ xi.chocoboDig.start = function(player)
+     -- TODO: Implement logic and message to zones.
+ 
+     -- Handle regular layer. This also contains, elemental ores, weather crystals and day-element geodes.
+-    local regularItemId = handleDiggingLayer(player, zoneId, xi.chocoboDig.layer.REGULAR, chocobo)
++    local regularItemId = xi.chocoboDig.rollLayer(player, zoneId, xi.chocoboDig.layer.REGULAR, chocobo)
+ 
+     handleItemObtained(player, text, regularItemId)
+ 
+     local burrowItemId = 0
+ 
+     if hasAbility(chocobo, xi.chocoboRaising.ability.BURROW) then
+-        burrowItemId = handleDiggingLayer(player, zoneId, xi.chocoboDig.layer.BURROW, chocobo)
++        burrowItemId = xi.chocoboDig.rollLayer(player, zoneId, xi.chocoboDig.layer.BURROW, chocobo)
+ 
+         handleItemObtained(player, text, burrowItemId)
+     end
+@@ -515,7 +525,7 @@ xi.chocoboDig.start = function(player)
+     local boreItemId = 0
+ 
+     if hasAbility(chocobo, xi.chocoboRaising.ability.BORE) then
+-        boreItemId = handleDiggingLayer(player, zoneId, xi.chocoboDig.layer.BORE, chocobo)
++        boreItemId = xi.chocoboDig.rollLayer(player, zoneId, xi.chocoboDig.layer.BORE, chocobo)
+ 
+         handleItemObtained(player, text, boreItemId)
+     end
+@@ -526,7 +536,7 @@ xi.chocoboDig.start = function(player)
+         boreItemId == 0 and
+         hasAbility(chocobo, xi.chocoboRaising.ability.TREASURE_FINDER)
+     then
+-        regularItemId = handleDiggingLayer(player, zoneId, xi.chocoboDig.layer.REGULAR, chocobo)
++        regularItemId = xi.chocoboDig.rollLayer(player, zoneId, xi.chocoboDig.layer.REGULAR, chocobo)
+ 
+         handleItemObtained(player, text, regularItemId)
+     end
