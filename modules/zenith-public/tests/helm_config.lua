@@ -7,6 +7,8 @@
 --   Gold Ore 5. obtainRate (89.88) is not configured, so it stays LSB's.
 -- West Sarutabaruta harvesting: LSB breakRate 6.05, Fresh Mugwort 110; module breakRate 10 and
 --   Mugwort 10 from additionalDropsROTZ (ENABLE_ROTZ is 1 in the test settings).
+-- Full inventory: the HELM cutscene shows only "inventory full" even when base broke the tool;
+--   the module's xi.helm.result wrapper sends "Your <tool> breaks." in that case (ZXIALPHA-51).
 
 describe('Zenith HELM config', function()
     ---@type CClientEntityPair
@@ -74,5 +76,71 @@ describe('Zenith HELM config', function()
 
         local left = player:getItemCount(xi.item.PICKAXE)
         assert(left == 0, string.format('a roll of 40 should break the pickaxe at a 45%% break rate, %d left', left))
+    end)
+
+    -- Text of every 0x017 chat line (printToPlayer) the server sent since the last clear
+    local function chatLines()
+        local lines = {}
+        for _, pkt in ipairs(player.packets:getIncoming()) do
+            if pkt.type == 0x017 then
+                local chars = {}
+                for i = 23, pkt.size - 1 do
+                    local byte = pkt.data[i]
+                    if byte == nil or byte == 0 then
+                        break
+                    end
+
+                    table.insert(chars, string.char(byte))
+                end
+
+                table.insert(lines, table.concat(chars))
+            end
+        end
+
+        return lines
+    end
+
+    local function hasLine(lines, text)
+        for _, line in ipairs(lines) do
+            if line == text then
+                return true
+            end
+        end
+
+        return false
+    end
+
+    -- Mine with two pickaxes (one stack, so the slot stays used after one breaks) and a roll of 40,
+    -- which finds an item and breaks the pickaxe. Returns the chat lines the trade produced.
+    local function mineWithBrokenPickaxe(fillInventory)
+        stub('math.randomFloat', 40)
+
+        player:addItem(xi.item.PICKAXE, 2)
+        if fillInventory then
+            player:changeContainerSize(xi.inv.INVENTORY, -player:getFreeSlotsCount())
+            assert(player:getFreeSlotsCount() == 0, 'precondition: the inventory should be full')
+        end
+
+        player.entities:moveTo('Mining_Point')
+        player.packets:clear()
+        player.actions:tradeNpc('Mining_Point', { xi.item.PICKAXE }, { eventId = 165 })
+
+        local left = player:getItemCount(xi.item.PICKAXE)
+        assert(left == 1, string.format('precondition: one pickaxe should have broken, %d left', left))
+
+        return chatLines()
+    end
+
+    it('says the pickaxe broke when the inventory is full', function()
+        local lines = mineWithBrokenPickaxe(true)
+
+        assert(hasLine(lines, 'Your pickaxe breaks.'), string.format('expected "Your pickaxe breaks.", got: %s', table.concat(lines, ' | ')))
+    end)
+
+    -- Control: with free space the cutscene already reports the break, so no extra line is sent.
+    it('sends no extra break line when the inventory has room', function()
+        local lines = mineWithBrokenPickaxe(false)
+
+        assert(not hasLine(lines, 'Your pickaxe breaks.'), 'the cutscene reports this break; the module should stay quiet')
     end)
 end)

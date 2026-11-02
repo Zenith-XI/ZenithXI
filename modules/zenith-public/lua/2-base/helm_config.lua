@@ -5,7 +5,8 @@
 -- item pools and success/break rates on a per-zone basis.
 --
 -- The configuration is written into xi.helm.dataTable at server start; the base
--- xi.helm.onTrade keeps running unchanged. Do NOT reintroduce an onTrade override:
+-- xi.helm.onTrade keeps running unchanged. xi.helm.result is wrapped only to tell
+-- the player when a tool breaks while their inventory is full. Do NOT reintroduce an onTrade override:
 -- base owns the minLevel gate, the Mount Zhayolm daily cap, the shared depletion
 -- pools, the camp penalty ([HELM]PositionIndex), the per-type relocateRate /
 -- respawnTime and the ENABLE_HELM_WAIT delay, and a replacement silently drops
@@ -957,6 +958,30 @@ m:addOverride('xi.server.onServerStart', function()
 
     if zoneCount > 0 then
         printf('[helm_config] Applied %d HELM zone override(s).', zoneCount)
+    end
+end)
+
+-- With a full inventory the HELM cutscene only says "Your inventory is full", even
+-- when base onTrade broke and removed the tool. Base zeroes itemID when the
+-- inventory is full and adds nothing, so broke + no item + no free slot is exactly
+-- that case; tell the player the tool broke.
+local toolNames =
+{
+    [xi.helmType.HARVESTING] = 'sickle',
+    [xi.helmType.EXCAVATION] = 'pickaxe',
+    [xi.helmType.LOGGING]    = 'hatchet',
+    [xi.helmType.MINING]     = 'pickaxe',
+}
+
+m:addOverride('xi.helm.result', function(player, helmType, broke, itemID)
+    super(player, helmType, broke, itemID)
+
+    if
+        broke == 1 and
+        itemID == 0 and
+        player:getFreeSlotsCount() == 0
+    then
+        player:printToPlayer(string.format('Your %s breaks.', toolNames[helmType]), xi.msg.channel.SYSTEM_3)
     end
 end)
 
