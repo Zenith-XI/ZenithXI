@@ -8,7 +8,9 @@
 --
 -- ZXIALPHA-129 retest: a fresh aura could still skip its second check once (fixed with a 1 s aura tick), and
 -- re-using Avatar's Favor while it was up kept the aura that was being removed, so the buff was gone until the
--- next Favor tick. The last two cases guard those; both fail on LSB and on the earlier module version.
+-- next Favor tick. The fresh-start and re-use cases guard those; both fail on LSB and on the earlier module version.
+-- The retest also measured the aura's reach at about 6.5 yalms (LSB's 6 plus the hitbox); the last case checks the
+-- module's 10.
 
 describe('Zenith Avatar\'s Favor aura', function()
     ---@type CClientEntityPair
@@ -202,5 +204,35 @@ describe('Zenith Avatar\'s Favor aura', function()
         end
 
         assert(#failures == 0, 'after Favor was used again: ' .. table.concat(failures, ', '))
+    end)
+
+    -- LSB's aura range is 6 yalms; the module makes it 10 as on retail. A party member is kept at a set distance from
+    -- Ifrit (re-placed before every zone tick, as the avatar moves after its master).
+    it('reaches party members within 10 yalms of the avatar', function()
+        summonWithFavor(xi.petId.IFRIT)
+
+        local member = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 75 })
+        player.actions:inviteToParty(member)
+        member.actions:acceptPartyInvite()
+
+        local function memberHasFavorAt(yalms)
+            member:delStatusEffect(xi.effect.IFRITS_FAVOR)
+
+            local gotIt = false
+
+            for _ = 1, 20 do -- 8 s: at least two aura ticks
+                local pet = player:getPet()
+                member:setPos(pet:getXPos() + yalms, pet:getYPos(), pet:getZPos())
+                player:setMP(player:getMaxMP())
+                xi.test.world:tick()
+
+                gotIt = gotIt or member:hasStatusEffect(xi.effect.IFRITS_FAVOR)
+            end
+
+            return gotIt
+        end
+
+        assert(memberHasFavorAt(9), 'a party member 9 yalms from Ifrit did not get Ifrit\'s Favor')
+        assert(not memberHasFavorAt(13), 'precondition: a party member 13 yalms from Ifrit got Ifrit\'s Favor, the range has no limit')
     end)
 end)

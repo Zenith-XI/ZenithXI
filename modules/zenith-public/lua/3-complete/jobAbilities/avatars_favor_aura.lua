@@ -14,11 +14,16 @@ local m = Module:new('c-j_avatarsFavorAura')
 -- and re-using Favor while it is up replaces the aura while party members still carry its copy. So a fresh aura is
 -- backdated by 3 s and given a 1 s tick. Effects only tick on the 3 s grid, so it ticks on the very next check and
 -- on every check after that, refreshing the 4 s copy every 2.8 to 3.2 s.
+--
+-- The aura reaches party members within 10 yalms of the avatar, as on retail (ZXIALPHA-129). The engine's aura range
+-- is 6 yalms plus the owner's AURA_SIZE / 100 (CStatusEffectContainer::HandleAura), and LSB never sets it on avatars.
+-- Avatar's Favor is the only aura an avatar carries, so the mod changes nothing else.
 -----------------------------------
 
 local auraDuration = 15000 -- ms, as LSB's applyAvatarsFavorAuraToPet adds it
 local auraTick     = 1000  -- ms, below the effect check spacing so no check is skipped
 local auraBackdate = 3     -- s, at least one aura tick so the next check ticks at once
+local auraSize     = 400   -- 6 + 400 / 100 = 10 yalms
 local powerVar     = '[avatarsFavorAura]power'
 
 -- getStatusEffects also lists an aura removed earlier this tick (re-using Favor removes the old Favor and its aura
@@ -61,6 +66,7 @@ m:addOverride('xi.avatarsFavor.applyAvatarsFavorAuraToPet', function(target, eff
             aura:setTick(auraTick)
             aura:setStartTime(aura:getStartTime() - auraBackdate)
             extendAura(aura)
+            pet:setMod(xi.mod.AURA_SIZE, auraSize)
         end
 
         pet:setLocalVar(powerVar, effect:getPower())
