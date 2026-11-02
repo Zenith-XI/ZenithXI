@@ -748,6 +748,11 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
                 }
 
                 auto mLevel = POwner->GetMLevel();
+                if (action.select == G_SELECT::BY_LEVEL && PAbility->getLevel() < mLevel) {
+                    // If the level of the caster isn't high enough to use the ability from the abilities.sql set level
+                    // SPECIFIC will skip this and be used as instructed
+                    continue;
+                }
 
                 if (action.select == G_SELECT::HIGHEST_WALTZ)
                 {
@@ -1480,6 +1485,16 @@ auto CGambitsContainer::CheckTrigger(const CBattleEntity* triggerTarget, const G
                 predicateResults.push_back(canUseUriel);
                 continue;
             }
+            case G_CONDITION::JA_AYAME_CHECK:
+            {
+                auto* PMaster     = dynamic_cast<CCharEntity*>(POwner->PMaster);
+                if (PMaster->health.tp >= 1000 && triggerTarget->health.tp < 1000) {
+                    predicateResults.push_back(true);
+                    continue;
+                } else {
+                    predicateResults.push_back(false);
+                }
+            }
             default:
             {
                 predicateResults.push_back(false);
@@ -1860,7 +1875,7 @@ auto CGambitsContainer::PartyHasTank() -> bool
         static_cast<CCharEntity*>(POwner->PMaster)->ForPartyWithTrusts([&](CBattleEntity* PMember)
         {
             auto jobType = PMember->GetMJob();
-
+            // Era make WAR and MNK? and TODO as Jobs get added back? Era specific patches?
             if (jobType == xi::Job::NIN || jobType == xi::Job::PLD || jobType == xi::Job::RUN)
             {
                 hasTank = true;

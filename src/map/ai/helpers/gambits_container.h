@@ -105,6 +105,7 @@ enum class G_CONDITION : uint16
     JA_ON_COOLDOWN     = 37,
     VAL_URIEL_CHECK    = 38,
     TIMER              = 39, // condition_arg in seconds
+    JA_AYAME_CHECK     = 40,
 };
 
 enum class G_REACTION : uint16
@@ -140,6 +141,7 @@ enum class G_SELECT : uint16
     DEF_BAR_ELEMENT     = 17,
     RUNE_DAY            = 18,
     RANDOM_ANIMATION    = 19,
+    BY_LEVEL            = 20,
 };
 
 enum class G_TP_TRIGGER : uint16

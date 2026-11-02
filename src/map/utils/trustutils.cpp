@@ -63,6 +63,46 @@ static std::unordered_set<SpellID> passiveTrustIDs = {
     SpellID::Cornelia,
 };
 
+// Key MobSkillID, Value: Main Hand max Skill value
+// Possible to move this to its own helper, as its currently only for trusts; this just might be large.
+const std::map<uint16_t, uint16_t> mobSkillAsSkillValue = {
+    // Semih
+    {636,     5},  // Flaming Arrow
+    {3487,  175},  // Sidewinder
+    {3488,  225},  // Arching Arrow
+    {3489,    1},  // Lux Arrow; No commit until these are discussed
+    {3490,    1},  // Stellar Arrow
+    // Trion
+    {968,    50},  // Red Lotus Blade 
+    {969,    75},  // Flat Blade
+    {970,   240},  // Savage Blade
+    {3194,   31},  // Royal Savior; Techinically not a WS, but is used as one. So set to 31 skill to be used at lv 10 like Protection
+    // Nanaa Mihgo
+    {3189,    1},  // King Cobra Clamp
+    // Volker
+    {973,    50},  // Red Lotus Blade
+    {974,   175},  // Spirits Within
+    {975,   200},  // Vorpal Blade
+    // Maat
+    {3263,     1},  // Red Lotus Blade
+    {3413,     5},  // Combo
+    {3414,    75},  // One Inch Punch
+    {3415,   200},  // Howling Fist
+    {3416,   225},  // Dragon Kick
+    {3417,   250},  // Asuran Fists
+};
+
+// Return 0 as safe default. 0 will mean unchanged behavior
+uint16_t GetMobSkillValue(uint16_t mobSkillId) {
+    auto it = mobSkillAsSkillValue.find(mobSkillId);
+    if (it != mobSkillAsSkillValue.end()) {
+        return it->second;
+    }
+    return 0; // Fallback value
+}
+
+} // namespace
+
 struct TrustData
 {
     uint32        trustID{};
@@ -496,7 +536,7 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
     // HP/MP ========================
     // This is the same system as used in charutils.cpp, but modified
     // to use parts from data/ecosystems.yaml instead of hardcoded player
-    // race tables.
+    // race tables.in
 
     // http://ffxi-stat-calc.sourceforge.net/cgi-bin/ffxistats.cgi?mode=document
 
@@ -672,13 +712,18 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
             }
         }
     }
-
+    std::optional<uint16> maxSkillForMainWeapon;
     for (int i = static_cast<int>(xi::SkillType::HandToHand); i <= static_cast<int>(xi::SkillType::Staff); i++)
     {
-        uint16 maxSkill = battleutils::GetMaxSkill(static_cast<uint8>(i), std::min<uint8>(mLvl, 99));
+        uint8 skillTypeID = static_cast<uint8>(i);
+        uint16 maxSkill = battleutils::GetMaxSkill(skillTypeID, std::min<uint8>(mLvl, 99));
         if (maxSkill != 0)
         {
             PTrust->WorkingSkills.skill[i] = static_cast<uint16>(maxSkill * settings::get<float>("map.ALTER_EGO_SKILL_MULTIPLIER"));
+        }
+        if (auto* mainWeapon = dynamic_cast<CItemWeapon*>(PTrust->m_Weapons[SLOT_MAIN])) {
+            // Save possible max skill for later to figure out if the Trust should have a weapon skill
+            maxSkillForMainWeapon = PTrust->WorkingSkills.skill[skillTypeID];
         }
     }
 
@@ -712,7 +757,7 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
     // Default TP selectors
     controller->m_GambitsContainer->tp_trigger = G_TP_TRIGGER::ASAP;
     controller->m_GambitsContainer->tp_select  = G_SELECT::RANDOM;
-
+    
     auto skillList = battleutils::GetMobSkillList(PTrust->m_MobSkillList);
     for (uint16 skill_id : skillList)
     {
@@ -724,6 +769,12 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
             {
                 ShowWarning("LoadTrustStatsAndSkills: Error loading WeaponSkill id %d for trust %s", skill_id, PTrust->name);
                 break;
+            }
+
+            //If the WS is greater than the current skill level skip
+            if (maxSkillForMainWeapon && maxSkillForMainWeapon < PWeaponSkill->getSkillLevel()) {
+                ShowDebug("LoadTrustStatsAndSkills: Skipping Weaponskill id %d for trust %s", skill_id, PTrust->name);
+                continue;
             }
 
             skill = TrustSkill_t{
@@ -742,6 +793,11 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
             {
                 ShowWarning("LoadTrustStatsAndSkills: Error loading MobSkill id %d for trust %s", skill_id, PTrust->name);
                 break;
+            }
+            //If the WS is greater than the current skill level skip
+            if (maxSkillForMainWeapon && maxSkillForMainWeapon < GetMobSkillValue(PMobSkill->getID())) {
+                ShowDebug("LoadTrustStatsAndSkills: Skipping MobSkill id %d for trust %s", skill_id, PTrust->name);
+                continue;
             }
             skill = {
                 G_REACTION::MS,
