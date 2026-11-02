@@ -37,6 +37,7 @@
 #include "status_effect_container.h"
 #include "trait.h"
 #include "utils/dataset_loader.h"
+#include "weapon_skill.h"
 #include "zone_entities.h"
 #include "zoneutils.h"
 
@@ -2037,4 +2038,18 @@ void WeaknessTrigger(CBaseEntity* PTarget, WeaknessType level)
     PTarget->loc.zone->PushPacket(PTarget, CHAR_INRANGE, std::make_unique<GP_SERV_COMMAND_BATTLE2>(action));
 }
 
+auto hasLearnedSpell(CMobEntity* PMob, uint16 spellID) -> uint16
+{
+    if (PMob == nullptr)
+    {
+        ShowError("PMob is null.");
+        return 0;
+    }
+    auto castedSpellId = static_cast<SpellID>(spellID);
+    if (PMob->SpellContainer->hasAvailableAtLevel(castedSpellId)) 
+    {
+        return spellID;
+    }
+    return 0;
+}
 }; // namespace mobutils

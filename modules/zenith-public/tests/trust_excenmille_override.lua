@@ -1,0 +1,108 @@
+-- ZenithXI (modules\zenith-public\lua\4-additive\trusts\excenmille_override.lua).
+--
+
+describe('Trust: EXCENMILLE Integration Test #trusts #excenmille', function()
+    ---@type CClientEntityPair
+    local player
+    assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, "Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true")
+    
+    before_each(function()
+        player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
+        player:setGMLevel(5)
+    end)
+
+    it('Trust spell check', function()
+        -- Lv 1 check
+        local trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 1, "Must be lv 1")
+        assert(not trustEntity:hasSpell(xi.magic.spell.CURE))
+        assert(not trustEntity:hasSpell(xi.magic.spell.FLASH))
+        assert(not trustEntity:hasSpell(xi.magic.spell.CURE_IV))
+
+        player:clearTrusts()
+        player:setLevel(45)
+        trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 45, "Must be lv 45")
+        assert(trustEntity:hasSpell(xi.magic.spell.CURE))
+        assert(trustEntity:hasSpell(xi.magic.spell.FLASH))
+        assert(not trustEntity:hasSpell(xi.magic.spell.CURE_IV))
+
+        player:clearTrusts()
+        player:setLevel(55)
+        trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 55, "Must be lv 55")
+        assert(trustEntity:hasSpell(xi.magic.spell.CURE))
+        assert(trustEntity:hasSpell(xi.magic.spell.FLASH))
+        assert(trustEntity:hasSpell(xi.magic.spell.CURE_IV))
+    end)
+
+    it('Trust skill check', function()
+        -- Lv 1 check
+        local trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 1, "Must be lv 1")
+        assert(not trustEntity:hasLearnedAbility(xi.ja.SENTINEL))
+
+        player:clearTrusts()
+        player:setLevel(30)
+        trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 30, "Must be lv 30")
+        assert(trustEntity:hasLearnedAbility(xi.ja.SENTINEL))
+    end)
+
+    it('Trust trait check', function()
+        local trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 1, "Must be lv 1")
+        assert(trustEntity:getMod(xi.mod.UNDEAD_KILLER) == 0)
+        assert(trustEntity:getMod(xi.mod.STORETP) >= 25)
+
+        player:clearTrusts()
+        player:setLevel(5)
+        trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 5, "Must be lv 5")
+        assert(trustEntity:getMod(xi.mod.UNDEAD_KILLER) == 8)
+    end)
+
+    it('Trust WS check', function()
+        -- Lv 1 check
+        local trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 1, "Must be lv 1")
+        assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.DOUBLE_THRUST))
+        assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.LEG_SWEEP))
+        assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.PENTA_THRUST))
+
+        player:clearTrusts()
+        player:setLevel(5)
+        trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 5, "Must be lv 5")
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.DOUBLE_THRUST))
+        assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.LEG_SWEEP))
+        assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.PENTA_THRUST))
+        
+        player:clearTrusts()
+        player:setLevel(40)
+        trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 40, "Must be lv 40")
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.DOUBLE_THRUST))
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.LEG_SWEEP))
+        assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.PENTA_THRUST))
+
+        player:clearTrusts()
+        player:setLevel(56)
+        trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 56, "Must be lv 56")
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.DOUBLE_THRUST))
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.LEG_SWEEP))
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.PENTA_THRUST))
+    end)
+end)

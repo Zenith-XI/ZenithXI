@@ -303,4 +303,7 @@ xi.settings.map =
     -- The max GM level is 5, so setting this to 6 disables it
     -- for everone. Setting it to 0 enables for everyone.
     REPORT_LUA_ERRORS_TO_PLAYER_LEVEL = 6,
+
+    -- Enable checking WS and abilties against the their current level and decided if they have access to it
+    TRUST_SKILLS_BY_LEVEL = true,
 }

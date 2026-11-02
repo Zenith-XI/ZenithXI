@@ -21,6 +21,7 @@
 #pragma once
 
 #include "common/cbasetypes.h"
+#include <map>
 
 class CCharEntity;
 class CTrustEntity;
@@ -31,5 +32,8 @@ namespace trustutils
 // We cache all of this so we don't have to hit the database every time a trust is spawned
 void LoadTrustList();
 auto SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntity*;
+uint16 hasLearnedWeaponskill(CTrustEntity* CTrust, uint16 skillID); // checking the presence of a learned weaponskill
+uint16 hasLearnedWeaponskill(CTrustEntity* CTrust, uint16 skillID, uint16 maxSkillLvl); // used as a wrapper to stop looking up skill values over a loop
 
+uint16 canUseAbility(CTrustEntity* CTrust, uint16 skillId); //checks if the trust can use a JA
 }; // namespace trustutils

@@ -1,0 +1,34 @@
+meta:
+  cpp:
+    underlying: uint16_t
+  lua:
+    table: xi.trustskills.id
+
+values:
+  # Semih
+  FLAMING_ARROW:  636
+  SIDEWINDER:    3487
+  ARCHING_ARROW: 3488
+  STELLAR_ARROW: 3489
+  LUX_ARROW:     3490
+
+  # Trion
+  RED_LOTUS_BLADE:  968
+  FLAT_BLADE:       969
+  SAVAGE_BLADE:     970
+  ROYAL_BASH:      3193
+  ROYAL_SAVIOR:    3194
+
+  # Nanaa Migho
+  KING_COBRA_CLAMP: 3189
+
+  # Volker
+  BERSERK_RUF: 976
+
+  # Maat
+  COMBO:          3413
+  ONE_INCH_PUNCH: 3414
+  BEAR_KILLER:    3263
+  HOWLING_FIST:   3415
+  DRAGON_KICK:    3416
+  ASURAN_FISTS:   3417

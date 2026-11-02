@@ -63,6 +63,7 @@ public:
     void AddSpell(SpellID spellId);
     void RemoveSpell(SpellID spellId);
 
+    auto hasAvailableAtLevel(SpellID spellId) -> Maybe<SpellID>;
     auto GetAvailable(SpellID spellId) -> Maybe<SpellID>;
     auto GetBestAvailable(SPELLFAMILY family) -> Maybe<SpellID>;
     auto GetBestIndiSpell(CBattleEntity* PMaster) -> Maybe<SpellID>;
@@ -82,6 +83,7 @@ public:
     std::vector<SpellID> m_naList;
     std::vector<SpellID> m_raiseList;
     std::vector<SpellID> m_severeList;
+    std::vector<SpellID> m_availibleAtLevelList;
 
 private:
     CMobEntity* m_PMob;

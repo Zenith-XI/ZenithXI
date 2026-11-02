@@ -1,0 +1,34 @@
+meta:
+  cpp:
+    underlying: uint8_t
+  lua:
+    table: xi.trustskills.level
+
+values:
+  # Semih
+  FLAMING_ARROW:  5
+  SIDEWINDER:    55
+  ARCHING_ARROW: 66
+  STELLAR_ARROW: 60
+  LUX_ARROW:     50
+
+  # Trion
+  RED_LOTUS_BLADE: 16
+  FLAT_BLADE:      24
+  SAVAGE_BLADE:    70
+  ROYAL_BASH:      15
+  ROYAL_SAVIOR:    30
+
+  # Nanaa Migho
+  KING_COBRA_CLAMP: 30
+
+  # Volker
+  BERSERK_RUF: 40
+
+  # Maat
+  COMBO:           5
+  ONE_INCH_PUNCH: 24
+  BEAR_KILLER:    24
+  HOWLING_FIST:   60
+  DRAGON_KICK:    65
+  ASURAN_FISTS:   70

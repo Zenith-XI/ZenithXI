@@ -11338,15 +11338,19 @@ void CLuaBaseEntity::addLearnedWeaponskill(uint8 wsUnlockId)
  *  Notes   :
  ************************************************************************/
 
-auto CLuaBaseEntity::hasLearnedWeaponskill(uint8 wsUnlockId) -> bool
+auto CLuaBaseEntity::hasLearnedWeaponskill(uint16 wsUnlockId) -> bool
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (m_PBaseEntity->objtype == TYPE_PC)
     {
-        ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
-        return false;
+        return charutils::hasLearnedWeaponskill(static_cast<CCharEntity*>(m_PBaseEntity), (uint8) wsUnlockId) != 0;
     }
+    // Differing Mobs (not Trusts) have abilities us it. Trusts can have either
+    else if (m_PBaseEntity->objtype == TYPE_TRUST){
+        return trustutils::hasLearnedWeaponskill(dynamic_cast<CTrustEntity*>(m_PBaseEntity), wsUnlockId) != 0;
+    }
+    ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+    return false;
 
-    return (charutils::hasLearnedWeaponskill(static_cast<CCharEntity*>(m_PBaseEntity), wsUnlockId) != 0);
 }
 
 /************************************************************************
@@ -11450,13 +11454,17 @@ void CLuaBaseEntity::addLearnedAbility(uint16 abilityID)
 
 auto CLuaBaseEntity::hasLearnedAbility(uint16 abilityID) -> bool
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (m_PBaseEntity->objtype == TYPE_PC)
     {
-        ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
-        return false;
+        return charutils::hasLearnedAbility(static_cast<CCharEntity*>(m_PBaseEntity), abilityID) != 0;
     }
+    else if (m_PBaseEntity->objtype == TYPE_TRUST)
+    {   //Mobs use WS as abilities, they don't have true JAs
+        return trustutils::canUseAbility(dynamic_cast<CTrustEntity*>(m_PBaseEntity), abilityID) != 0;
+    }
+    ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+    return false;
 
-    return charutils::hasLearnedAbility(static_cast<CCharEntity*>(m_PBaseEntity), abilityID) != 0;
 }
 
 /************************************************************************
@@ -11579,13 +11587,16 @@ void CLuaBaseEntity::addSpell(uint16 spellID, const sol::optional<sol::table>& p
 
 auto CLuaBaseEntity::hasSpell(uint16 spellID) -> bool
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (m_PBaseEntity->objtype == TYPE_PC)
     {
-        ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
-        return false;
+        return charutils::hasSpell(static_cast<CCharEntity*>(m_PBaseEntity), spellID) != 0;
+    }
+    else if (m_PBaseEntity->objtype == TYPE_TRUST || m_PBaseEntity->objtype == TYPE_MOB){
+        return mobutils::hasLearnedSpell(dynamic_cast<CMobEntity*>(m_PBaseEntity), spellID) != 0;
     }
 
-    return charutils::hasSpell(static_cast<CCharEntity*>(m_PBaseEntity), spellID) != 0;
+    ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+    return false;
 }
 
 /************************************************************************

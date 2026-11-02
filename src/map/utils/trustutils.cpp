@@ -27,8 +27,11 @@
 
 #include <algorithm>
 
+#include "ability.h"
 #include "battleutils.h"
 #include "data/loader.h"
+#include "data/enums/trust_skills_id.h"
+#include "data/enums/trust_skills_level.h"
 #include "mobutils.h"
 
 #include "grades.h"
@@ -61,6 +64,34 @@ static std::unordered_set<SpellID> passiveTrustIDs = {
     SpellID::Brygid,
     SpellID::Kupofried,
     SpellID::Cornelia,
+};
+
+// Key MobSkillID, Value: Main Hand max Skill value
+// Possible to move this to its own helper, as its currently only for trusts; this just might be large.
+static const std::map<xi::TrustSkillsId,  xi::TrustSkillsLevel> mobSkillAsSkillValue = {
+    // Semih
+    { xi::TrustSkillsId::FlamingArrow, xi::TrustSkillsLevel::FlamingArrow },
+    { xi::TrustSkillsId::Sidewinder, xi::TrustSkillsLevel::Sidewinder },
+    { xi::TrustSkillsId::ArchingArrow, xi::TrustSkillsLevel::ArchingArrow },
+    { xi::TrustSkillsId::StellarArrow, xi::TrustSkillsLevel::StellarArrow },
+    { xi::TrustSkillsId::LuxArrow,  xi::TrustSkillsLevel::LuxArrow },
+    // Trion
+    { xi::TrustSkillsId::RedLotusBlade, xi::TrustSkillsLevel::RedLotusBlade },
+    { xi::TrustSkillsId::FlatBlade,  xi::TrustSkillsLevel::FlatBlade },
+    { xi::TrustSkillsId::SavageBlade,  xi::TrustSkillsLevel::SavageBlade },
+    { xi::TrustSkillsId::RoyalBash,  xi::TrustSkillsLevel::RoyalBash },
+    { xi::TrustSkillsId::RoyalSavior, xi::TrustSkillsLevel::RoyalSavior },
+    // Nanaa Mihgo
+    { xi::TrustSkillsId::KingCobraClamp, xi::TrustSkillsLevel::KingCobraClamp },
+    // Volker
+    { xi::TrustSkillsId::BerserkRuf, xi::TrustSkillsLevel::BerserkRuf },
+    // Maat
+    { xi::TrustSkillsId::BearKiller, xi::TrustSkillsLevel::BearKiller },
+    { xi::TrustSkillsId::Combo, xi::TrustSkillsLevel::Combo },
+    { xi::TrustSkillsId::OneInchPunch, xi::TrustSkillsLevel::OneInchPunch },
+    { xi::TrustSkillsId::HowlingFist, xi::TrustSkillsLevel::HowlingFist },
+    { xi::TrustSkillsId::DragonKick, xi::TrustSkillsLevel::DragonKick },
+    { xi::TrustSkillsId::AsuranFists, xi::TrustSkillsLevel::AsuranFists },
 };
 
 struct TrustData
@@ -181,23 +212,81 @@ auto trustutils::SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntit
     PMaster->PTrusts.insert(PMaster->PTrusts.end(), PTrust);
     PMaster->StatusEffectContainer->CopyConfrontationEffect(PTrust);
     PTrust->setBattleID(PMaster->getBattleID());
-
     if (PMaster->PBattlefield)
     {
         PTrust->PBattlefield = PMaster->PBattlefield;
     }
-
     if (PMaster->PInstance)
     {
         PTrust->PInstance = PMaster->PInstance;
     }
-
     PMaster->loc.zone->InsertTRUST(PTrust);
     PTrust->Spawn();
-
     PMaster->PParty->ReloadParty();
-
     return PTrust;
+}
+
+uint16 trustutils::hasLearnedWeaponskill(CTrustEntity* CTrust, uint16 skillId, uint16 maxSkillLvl)
+{
+    if(!settings::get<bool>("map.TRUST_SKILLS_BY_LEVEL")) {
+        return skillId;
+    }
+    if (CTrust == nullptr)
+    {
+        ShowError("PMob is null.");
+        return 0;
+    }
+    uint16 returnValue = 0;
+    if(skillId <= 255) 
+    { // Player WSs
+        CWeaponSkill* PWeaponSkill = battleutils::GetWeaponSkill(skillId);
+        if(PWeaponSkill) 
+        {
+            // If the WS is greater than the current skill level skip
+            if (CTrust->GetMLevel() >= 5 && maxSkillLvl > PWeaponSkill->getSkillLevel())
+            {
+                returnValue = skillId;
+            }
+        }
+    } 
+    else 
+    {
+        // Use the by level table look up since it's a mob skill
+        auto it = mobSkillAsSkillValue.find(static_cast<xi::TrustSkillsId>(skillId));
+        if (it != mobSkillAsSkillValue.end() && CTrust->GetMLevel() >= (uint8)(it->second))
+        {
+            returnValue = skillId;
+        }
+    }
+    if(returnValue == 0) {
+        ShowDebug("hasLearnedWeaponskill: Weaponskill not learned id %d for trust %s with skill lv: %d, ", skillId, CTrust->name, maxSkillLvl);
+    }
+    return returnValue;
+}
+
+uint16 trustutils::hasLearnedWeaponskill(CTrustEntity* CTrust, uint16 skillId) {
+    uint8 skillTypeID = static_cast<uint8>(dynamic_cast<CItemWeapon*>(CTrust->m_Weapons[SLOT_MAIN])->getSkillType());
+    uint16 maxSkillLevel = battleutils::GetMaxSkill((xi::SkillType)skillTypeID, CTrust->GetMJob(), CTrust->GetMLevel());
+    return trustutils::hasLearnedWeaponskill(CTrust, skillId, maxSkillLevel);
+}
+
+uint16 trustutils::canUseAbility(CTrustEntity* CTrust, uint16 skillId)
+{
+    if (CTrust == nullptr)
+    {
+        ShowError("PMob is null.");
+        return 0;
+    }
+    CAbility* PAbility = ability::GetAbility(skillId);
+    bool meetsLevelRequirement = !settings::get<bool>("map.TRUST_SKILLS_BY_LEVEL") || 
+        (PAbility->getJob() == CTrust->GetMJob() && PAbility->getLevel() <= CTrust->GetMLevel()) || 
+        (PAbility->getJob() == CTrust->GetSJob() && PAbility->getLevel() <= CTrust->GetSLevel());
+    if (meetsLevelRequirement) {
+        return skillId;
+    }
+    ShowDebug("canUseAbility: Trust Main: %d/%d (%d/%d), Ability: %s (%d) for Job: %d. Could not use", 
+        CTrust->GetMJob(), CTrust->GetSJob(), CTrust->GetMLevel(),CTrust->GetSLevel(), PAbility->getName(),  PAbility->getLevel(),  PAbility->getJob());
+    return 0;
 }
 
 void BuildTrustData(uint32 TrustID)
@@ -371,8 +460,13 @@ auto LoadTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntity*
     PTrust->SetMLevel(PMaster->GetMLevel());
     PTrust->SetSLevel(std::floor(PMaster->GetMLevel() / 2));
 
-    LoadTrustStatsAndSkills(PTrust);
+    // Run a first pass to properly load WS in the step. Ranged WS should all be Mob Abilities(refer to mob utils)
+    if (auto* mainWeapon = dynamic_cast<CItemWeapon*>(PTrust->m_Weapons[SLOT_MAIN]))
+    {
+        mainWeapon->setSkillType(static_cast<xi::SkillType>(trustData->cmbSkill));
+    }
 
+    LoadTrustStatsAndSkills(PTrust);
     // Use Mob formulas to work out base "weapon" damage, but scale down to reasonable values.
     // TODO: Verify trust base damage.
     const float  mobStyleDamage   = static_cast<float>(mobutils::GetBaseWeaponDamage(PTrust, SLOT_MAIN));
@@ -439,7 +533,6 @@ auto LoadTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntity*
             ammoWeapon->setDPS(dps);
         }
     }
-
     // NOTE: Trusts don't really have weapons, and they don't really have combat skills. They only have
     // a damage type, and whether or not they are multi-hit. We handle this wrong everywhere.
     // To give any Trust multi-hit, you need to give them cmbSkill == xi::SkillType::HandToHand (1).
@@ -452,7 +545,6 @@ auto LoadTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntity*
     {
         mobutils::SetSpellList(PTrust, trustData->spellList);
     }
-
     return PTrust;
 }
 
@@ -672,10 +764,10 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
             }
         }
     }
-
     for (int i = static_cast<int>(xi::SkillType::HandToHand); i <= static_cast<int>(xi::SkillType::Staff); i++)
     {
-        uint16 maxSkill = battleutils::GetMaxSkill(static_cast<uint8>(i), std::min<uint8>(mLvl, 99));
+        uint8  skillTypeID = static_cast<uint8>(i);
+        uint16 maxSkill = battleutils::GetMaxSkill(skillTypeID, std::min<uint8>(mLvl, 99));
         if (maxSkill != 0)
         {
             PTrust->WorkingSkills.skill[i] = static_cast<uint16>(maxSkill * settings::get<float>("map.ALTER_EGO_SKILL_MULTIPLIER"));
@@ -716,54 +808,55 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
     auto skillList = battleutils::GetMobSkillList(PTrust->m_MobSkillList);
     for (uint16 skill_id : skillList)
     {
-        TrustSkill_t skill;
-        if (skill_id <= 255) // Player WSs
-        {
-            CWeaponSkill* PWeaponSkill = battleutils::GetWeaponSkill(skill_id);
-            if (!PWeaponSkill)
+        if (trustutils::hasLearnedWeaponskill(PTrust, skill_id) != 0) {
+            TrustSkill_t skill;
+            if (skill_id <= 255) // Player WSs
             {
-                ShowWarning("LoadTrustStatsAndSkills: Error loading WeaponSkill id %d for trust %s", skill_id, PTrust->name);
-                break;
-            }
+                
+                CWeaponSkill* PWeaponSkill = battleutils::GetWeaponSkill(skill_id);
+                if (!PWeaponSkill)
+                {
+                    ShowWarning("LoadTrustStatsAndSkills: Error loading WeaponSkill id %d for trust %s", skill_id, PTrust->name);
+                    break;
+                }
 
-            skill = TrustSkill_t{
-                G_REACTION::WS,
-                skill_id,
-                PWeaponSkill->getPrimarySkillchain(),
-                PWeaponSkill->getSecondarySkillchain(),
-                PWeaponSkill->getTertiarySkillchain(),
-                battleutils::isValidSelfTargetWeaponskill(skill_id) ? TARGET_SELF : TARGET_ENEMY,
-            };
-        }
-        else // MobSkills
-        {
-            CMobSkill* PMobSkill = battleutils::GetMobSkill(skill_id);
-            if (!PMobSkill)
+                skill = TrustSkill_t{
+                    G_REACTION::WS,
+                    skill_id,
+                    PWeaponSkill->getPrimarySkillchain(),
+                    PWeaponSkill->getSecondarySkillchain(),
+                    PWeaponSkill->getTertiarySkillchain(),
+                    battleutils::isValidSelfTargetWeaponskill(skill_id) ? TARGET_SELF : TARGET_ENEMY,
+                };
+            }
+            else // MobSkills
             {
-                ShowWarning("LoadTrustStatsAndSkills: Error loading MobSkill id %d for trust %s", skill_id, PTrust->name);
-                break;
+                CMobSkill* PMobSkill = battleutils::GetMobSkill(skill_id);
+                if (!PMobSkill)
+                {
+                    ShowWarning("LoadTrustStatsAndSkills: Error loading MobSkill id %d for trust %s", skill_id, PTrust->name);
+                    break;
+                }
+                skill = {
+                    G_REACTION::MS,
+                    skill_id,
+                    PMobSkill->getPrimarySkillchain(),
+                    PMobSkill->getSecondarySkillchain(),
+                    PMobSkill->getTertiarySkillchain(),
+                    static_cast<TARGETTYPE>(PMobSkill->getValidTargets()),
+                };
+                controller->m_GambitsContainer->tp_skills.emplace_back(skill);
             }
-            skill = {
-                G_REACTION::MS,
-                skill_id,
-                PMobSkill->getPrimarySkillchain(),
-                PMobSkill->getSecondarySkillchain(),
-                PMobSkill->getTertiarySkillchain(),
-                static_cast<TARGETTYPE>(PMobSkill->getValidTargets()),
-            };
+            // Only get access to skills that produce Lv3 SCs after Lv60
+            bool canFormLv3Skillchain = skill.primary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.secondary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.tertiary >= std::to_underlying(xi::SkillchainType::Gravitation);
 
-            controller->m_GambitsContainer->tp_skills.emplace_back(skill);
-        }
+            // Special case for Zeid II and others who only have Lv3+ skills
+            bool onlyHasLv3Skillchains = canFormLv3Skillchain && controller->m_GambitsContainer->tp_skills.empty();
 
-        // Only get access to skills that produce Lv3 SCs after Lv60
-        bool canFormLv3Skillchain = skill.primary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.secondary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.tertiary >= std::to_underlying(xi::SkillchainType::Gravitation);
-
-        // Special case for Zeid II and others who only have Lv3+ skills
-        bool onlyHasLv3Skillchains = canFormLv3Skillchain && controller->m_GambitsContainer->tp_skills.empty();
-
-        if (!canFormLv3Skillchain || PTrust->GetMLevel() >= 60 || onlyHasLv3Skillchains)
-        {
-            controller->m_GambitsContainer->tp_skills.emplace_back(skill);
+            if (!canFormLv3Skillchain || PTrust->GetMLevel() >= 60 || onlyHasLv3Skillchains)
+            {
+                controller->m_GambitsContainer->tp_skills.emplace_back(skill);
+            }
         }
     }
 }

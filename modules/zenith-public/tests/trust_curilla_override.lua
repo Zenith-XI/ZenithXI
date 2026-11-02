@@ -1,0 +1,98 @@
+-- ZenithXI (modules\zenith-public\lua\4-additive\trusts\curilla_override.lua).
+--
+
+describe('Trust: CURILLA Integration Test #trusts #curilla', function()
+    ---@type CClientEntityPair
+    local player
+    assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, "Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true")
+    
+    before_each(function()
+        player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
+        player:setGMLevel(5)
+    end)
+
+    it('Trust spell check', function()
+        -- Lv 1 check
+        local trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 1, "Must be lv 1")
+        assert(not trustEntity:hasSpell(xi.magic.spell.CURE))
+        assert(not trustEntity:hasSpell(xi.magic.spell.FLASH))
+        assert(not trustEntity:hasSpell(xi.magic.spell.CURE_IV))
+
+        player:clearTrusts()
+        player:setLevel(45)
+        trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 45, "Must be lv 45")
+        assert(trustEntity:hasSpell(xi.magic.spell.CURE))
+        assert(trustEntity:hasSpell(xi.magic.spell.FLASH))
+        assert(not trustEntity:hasSpell(xi.magic.spell.CURE_IV))
+
+        player:clearTrusts()
+        player:setLevel(55)
+        trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 55, "Must be lv 55")
+        assert(trustEntity:hasSpell(xi.magic.spell.CURE))
+        assert(trustEntity:hasSpell(xi.magic.spell.FLASH))
+        assert(trustEntity:hasSpell(xi.magic.spell.CURE_IV))
+    end)
+
+    it('Trust skill check', function()
+        -- Lv 1 check
+        local trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 1, "Must be lv 1")
+        assert(not trustEntity:hasLearnedAbility(xi.ja.SENTINEL))
+
+        player:clearTrusts()
+        player:setLevel(30)
+        trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 30, "Must be lv 30")
+        assert(trustEntity:hasLearnedAbility(xi.ja.SENTINEL))
+    end)
+
+    it('Trust trait check', function()
+        local trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 1, "Must be lv 1")
+        assert(trustEntity:getMod(xi.mod.ENHANCES_GUARDIAN) == 0)
+        assert(trustEntity:getMod(xi.mod.SHIELDBLOCKRATE) >= 20)
+        assert(trustEntity:getMod(xi.mod.CURE_CAST_TIME) >= 50)
+        assert(trustEntity:getMod(xi.mod.CURE_POTENCY) >= 25)
+        assert(trustEntity:getMod(xi.mod.ENMITY) >= 15)
+        assert(trustEntity:getMod(xi.mod.DMG) <= -500)
+        assert(trustEntity:getMod(xi.mod.HPP) >= 10)
+        assert(trustEntity:getMod(xi.mod.MPP) >= 30)
+    end)
+
+    it('Trust WS check', function()
+        -- Lv 1 check
+        local trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 1, "Must be lv 1")
+        assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.FAST_BLADE))
+        assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.SWIFT_BLADE))
+
+        player:clearTrusts()
+        player:setLevel(5)
+        trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 5, "Must be lv 5")
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.FAST_BLADE))
+        assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.SWIFT_BLADE))
+        
+        player:clearTrusts()
+        player:setLevel(65)
+        trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)
+        assert(trustEntity ~= nil, "Cannot be null")
+        assert(trustEntity:getMainLvl() == 65, "Must be lv 65")
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.FAST_BLADE))
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.SWIFT_BLADE))
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.RED_LOTUS_BLADE))
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.VORPAL_BLADE))
+        assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.SERAPH_BLADE))
+    end)
+end)

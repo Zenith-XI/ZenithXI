@@ -573,7 +573,7 @@ public:
     auto getCharSkillLevel(uint8 skillID) -> uint16;
 
     void addLearnedWeaponskill(uint8 wsUnlockId);
-    auto hasLearnedWeaponskill(uint8 wsUnlockId) -> bool;
+    auto hasLearnedWeaponskill(uint16 wsUnlockId) -> bool;
     void delLearnedWeaponskill(uint8 wsUnlockId);
 
     void trySkillUp(uint8 skill, uint8 level, const sol::object& forceSkillUpObj, const sol::object& useSubSkillObj);

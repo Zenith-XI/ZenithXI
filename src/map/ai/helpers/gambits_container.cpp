@@ -31,6 +31,7 @@
 #include "enmity_container.h"
 #include "notoriety_container.h"
 #include "spell.h"
+#include "utils/trustutils.h"
 #include "utils/battleutils.h"
 #include "weapon_skill.h"
 
@@ -56,7 +57,6 @@ auto CGambitsContainer::NewGambitIdentifier(const Gambit_t& gambit) const -> std
 auto CGambitsContainer::AddGambit(const Gambit_t& gambit) -> std::string
 {
     TracyZoneScoped;
-
     bool available = true;
     for (const auto& action : gambit.actions)
     {
@@ -74,7 +74,6 @@ auto CGambitsContainer::AddGambit(const Gambit_t& gambit) -> std::string
     {
         return "";
     }
-
     // Make a modifiable copy, assign a new identifier and store it
     Gambit_t stored   = gambit;
     stored.identifier = NewGambitIdentifier(stored);
@@ -746,9 +745,12 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
                     // If SPECIFIC was validated earlier this shouldn't happen; skip this action.
                     continue;
                 }
-
                 auto mLevel = POwner->GetMLevel();
-
+                if (!trustutils::canUseAbility(POwner, action.select_arg)) 
+                {
+                    continue;
+                }
+                
                 if (action.select == G_SELECT::HIGHEST_WALTZ)
                 {
                     auto currentTP = POwner->health.tp;
@@ -1603,7 +1605,8 @@ auto CGambitsContainer::TryTrustSkill() -> bool
 
     Maybe<TrustSkill_t> chosen_skill;
     xi::SkillchainType  chosen_skillchain = xi::SkillchainType::None;
-    if (checkTPTrigger() && !tp_skills.empty())
+    if ((settings::get<bool>("map.TRUST_SKILLS_BY_LEVEL") && POwner->GetMLevel() > 5) 
+        && (checkTPTrigger() && !tp_skills.empty()))
     {
         switch (tp_select)
         {
@@ -1857,11 +1860,12 @@ auto CGambitsContainer::PartyHasTank() -> bool
 {
     bool hasTank = false;
     // clang-format off
-        static_cast<CCharEntity*>(POwner->PMaster)->ForPartyWithTrusts([&](CBattleEntity* PMember)
+        CCharEntity *master = static_cast<CCharEntity*>(POwner->PMaster);
+        master->ForPartyWithTrusts([&](CBattleEntity* PMember)
         {
             auto jobType = PMember->GetMJob();
-
-            if (jobType == xi::Job::NIN || jobType == xi::Job::PLD || jobType == xi::Job::RUN)
+            // Custom code for Trusts that need a tank. Select advanced job other, use WAR as the "beginner" tank
+            if ((jobType == xi::Job::NIN || jobType == xi::Job::PLD || jobType == xi::Job::RUN) || (jobType == xi::Job::WAR && master->GetMLevel() <= 30))
             {
                 hasTank = true;
             }
