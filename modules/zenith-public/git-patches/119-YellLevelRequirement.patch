@@ -1,0 +1,62 @@
+Requires a job at level 10 before a character can /yell, and tells the player how
+many seconds of the /yell cooldown remain (src/map/packets/c2s/0x0b5_chat_std.cpp).
+
+The [YELL]Cooldown char var now holds the time the cooldown ends instead of 1.
+It still expires on its own, so the cooldown survives zoning and relogging.
+The length is still map.YELL_COOLDOWN, and the zone check, ban and broadcast are unchanged.
+---
+diff --git a/src/map/packets/c2s/0x0b5_chat_std.cpp b/src/map/packets/c2s/0x0b5_chat_std.cpp
+index 6f9484760b..69169fea9e 100644
+--- a/src/map/packets/c2s/0x0b5_chat_std.cpp
++++ b/src/map/packets/c2s/0x0b5_chat_std.cpp
+@@ -39,6 +39,8 @@
+ #include "unitychat.h"
+ #include "utils/jailutils.h"
+ 
++#include <algorithm>
++
+ namespace
+ {
+ 
+@@ -257,9 +259,15 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
+         break;
+         case GP_CLI_COMMAND_CHAT_STD_KIND::Yell:
+         {
++            // Zenith: a job at level 10 is required, and the cooldown var holds its end time so the remaining wait can be shown.
++            constexpr uint8 yellMinimumLevel = 10;
++
+             const auto yellCooldownTime = settings::get<uint16>("map.YELL_COOLDOWN");
+             const auto isYellBanned     = PChar->getCharVar("[YELL]Banned") == 1;
+-            const auto isInYellCooldown = PChar->getCharVar("[YELL]Cooldown") == 1;
++            const auto now              = earth_time::timestamp();
++            const auto yellCooldownEnd  = static_cast<uint32>(std::max(PChar->getCharVar("[YELL]Cooldown"), 0));
++            const auto isInYellCooldown = yellCooldownEnd > now;
++            const auto highestJobLevel  = *std::max_element(std::begin(PChar->jobs.job), std::end(PChar->jobs.job));
+ 
+             if (PChar->loc.zone->CanUseMisc(xi::ZoneMisc::Yell))
+             {
+@@ -267,10 +275,14 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
+                 {
+                     PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::CannotUseInArea);
+                 }
++                else if (highestJobLevel < yellMinimumLevel)
++                {
++                    PChar->pushPacket<GP_SERV_COMMAND_CHAT_STD>(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, fmt::format("You must reach level {} on a job before you can yell.", yellMinimumLevel));
++                }
+                 else if (!isInYellCooldown)
+                 {
+                     // CharVar will self-expire and set to zero after the cooldown period
+-                    PChar->setCharVar("[YELL]Cooldown", 1, earth_time::timestamp() + yellCooldownTime);
++                    PChar->setCharVar("[YELL]Cooldown", static_cast<int32>(now + yellCooldownTime), now + yellCooldownTime);
+ 
+                     message::send(ipc::ChatMessageYell{
+                         .senderId   = PChar->id,
+@@ -285,7 +297,7 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
+                 }
+                 else
+                 {
+-                    PChar->pushPacket<GP_SERV_COMMAND_MESSAGE>(PChar, 0, MsgStd::WaitLonger);
++                    PChar->pushPacket<GP_SERV_COMMAND_CHAT_STD>(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, fmt::format("You must wait {} more seconds before you can yell again.", yellCooldownEnd - now));
+                 }
+             }
+             else
