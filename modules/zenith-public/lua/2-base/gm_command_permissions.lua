@@ -296,6 +296,7 @@ local commandPermissions =
     guildstock              = 1,  -- Print a guild shop's live stock (Module: zenith-public)
     outpost                 = 1,  -- Manage a player's outpost teleport unlocks (Module: zenith-public)
     getfishmob              = 1,  -- Display fishing mob info for zone (Module: zenith-private)
+    spin                    = 1,  -- Rotate the cursor target or a named player in place (Module: zenith-private)
     clearquestbonus         = 4,  -- Clear daily double gil quest bonus counters (Module: zenith-public)
     chatban                 = 4,  -- Permanently ban player from all chat channels (Module: zenith-private)
     chatcheck               = 4,  -- Check player's chat mute status (Module: zenith-private)
