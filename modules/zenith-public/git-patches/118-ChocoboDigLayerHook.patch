@@ -1,15 +1,40 @@
-Allows Lua modules to replace how chocobo digging picks an item from a layer
+Chocobo digging: Zenith elemental ore rate, and a hook for each layer roll
 (scripts/globals/hobbies/chocobo_digging/logic.lua).
 
-handleDiggingLayer is file-local, so modules cannot reach it. This patch
-exposes it through xi.chocoboDig.rollLayer and routes xi.chocoboDig.start
-through that. A module can then override it, with super() as the fallback.
+Lowers the elemental ore roll threshold from 100 to elementalOreRate (15).
+Zenith has no shared zone depletion to limit ore, so stock LSB's rate is
+far above the era's. Ore keeps LSB's zone, rank, weather and moon rules.
+
+handleDiggingLayer is file-local, so modules and tests cannot reach it.
+This patch also exposes it through xi.chocoboDig.rollLayer and routes
+xi.chocoboDig.start through that, the same way 113-TreasureChestLootHook
+does for chests. era_digging_loot's test calls it to check the ore rate.
 ---
 diff --git a/scripts/globals/hobbies/chocobo_digging/logic.lua b/scripts/globals/hobbies/chocobo_digging/logic.lua
-index a7f3268937..704fddbc1c 100644
+index a7f3268937..319c0c364d 100644
 --- a/scripts/globals/hobbies/chocobo_digging/logic.lua
 +++ b/scripts/globals/hobbies/chocobo_digging/logic.lua
-@@ -398,6 +398,16 @@ xi.chocoboDig.updateFatigue = function(player, newValue)
+@@ -104,6 +104,10 @@ set{
+     xi.zone.SAUROMUGUE_CHAMPAIGN,
+ }
+ 
++-- Zenith: elemental ore roll threshold, down from LSB's 100. Zenith has no shared zone depletion to limit ore,
++-- so this keeps it to about 1-2% of eligible digs at the best moon.
++local elementalOreRate = 15
++
+ local diggingWeatherTable =
+ {
+     -- Single weather by elemental order.
+@@ -333,7 +337,7 @@ local function handleDiggingLayer(player, zoneId, currentLayer, chocobo)
+             playerRank >= xi.craftRank.CRAFTSMAN and                            -- Digging level must be 60+
+             xi.data.element.getWeatherElement(weather) ~= xi.element.NONE and   -- Weather must be elemental.
+             moon >= 7 and moon <= 21 and                                        -- Moon must be between those values.
+-            randomRoll <= 100
++            randomRoll <= elementalOreRate
+         then
+             table.insert(dTableItemIds, #dTableItemIds + 1, diggingDayTable[currentDay][2]) -- Insert item ID to table.
+         end
+@@ -398,6 +402,16 @@ xi.chocoboDig.updateFatigue = function(player, newValue)
      player:setVar('[DIG]DigCount', newValue, NextJstDay())
  end
  
@@ -26,7 +51,7 @@ index a7f3268937..704fddbc1c 100644
  -- Returns whether the dig went ahead, then whether the chocobo left the Gysahl Greens.
  ---@param player CBaseEntity
  ---@return boolean
-@@ -485,7 +495,7 @@ xi.chocoboDig.start = function(player)
+@@ -485,7 +499,7 @@ xi.chocoboDig.start = function(player)
      end
  
      -- Handle treasure layer. Incompatible with the other 3 layers. "Early" return.
@@ -35,7 +60,7 @@ index a7f3268937..704fddbc1c 100644
  
      if trasureItemId > 0 then
          handleItemObtained(player, text, trasureItemId)
-@@ -500,14 +510,14 @@ xi.chocoboDig.start = function(player)
+@@ -500,14 +514,14 @@ xi.chocoboDig.start = function(player)
      -- TODO: Implement logic and message to zones.
  
      -- Handle regular layer. This also contains, elemental ores, weather crystals and day-element geodes.
@@ -52,7 +77,7 @@ index a7f3268937..704fddbc1c 100644
  
          handleItemObtained(player, text, burrowItemId)
      end
-@@ -515,7 +525,7 @@ xi.chocoboDig.start = function(player)
+@@ -515,7 +529,7 @@ xi.chocoboDig.start = function(player)
      local boreItemId = 0
  
      if hasAbility(chocobo, xi.chocoboRaising.ability.BORE) then
@@ -61,7 +86,7 @@ index a7f3268937..704fddbc1c 100644
  
          handleItemObtained(player, text, boreItemId)
      end
-@@ -526,7 +536,7 @@ xi.chocoboDig.start = function(player)
+@@ -526,7 +540,7 @@ xi.chocoboDig.start = function(player)
          boreItemId == 0 and
          hasAbility(chocobo, xi.chocoboRaising.ability.TREASURE_FINDER)
      then
