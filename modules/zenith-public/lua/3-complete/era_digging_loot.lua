@@ -4,11 +4,13 @@
 -- Phoenix has one weighted pool per zone, so the treasure layer drops nothing and the regular layer rolls that pool.
 -- Fatigue, cooldowns, skill-ups and the Burrow and Bore layers stay LSB's.
 -- xi.chocoboDig.rollLayer comes from git-patches/118-ChocoboDigLayerHook.patch.
+-- LSB's scripts/tests/systems/chocobo_raising/digging.lua fails while this module is loaded, as intended:
+-- it swaps in its own East Ronfaure rows, and this module rolls Phoenix's pool there instead.
 -----------------------------------
 require('modules/module_utils')
 require('scripts/globals/hobbies/chocobo_digging/logic')
 -----------------------------------
-local m = Module:new('era_digging_loot')
+local m = Module:new('c_era_digging_loot')
 
 -----------------------------------
 -- Digging accuracy is affected by player's rank only. No moon influence.
