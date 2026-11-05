@@ -27,13 +27,15 @@ spellObject.onMobSpawn = function(mob)
         [xi.magic.spell.RAHAL] = xi.trust.messageOffset.TEAMWORK_1,
     })
 
-    mob:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.SENTINEL }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.SENTINEL })
-
+    mob:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.SENTINEL }, { ai.r.JA, ai.s.BY_LEVEL, xi.ja.SENTINEL })
     mob:addGambit(ai.t.TARGET, { ai.c.NOT_STATUS, xi.effect.FLASH }, { ai.r.MA, ai.s.SPECIFIC, xi.magic.spell.FLASH })
-
     mob:addGambit(ai.t.PARTY, { ai.c.HPP_LT, 75 }, { ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.CURE })
 
     mob:addMod(xi.mod.STORETP, 25)
+    local lvl = mob:getMainLvl()
+    if lvl >= 5 then
+        mob:addMod(xi.mod.UNDEAD_KILLER, 10)
+    end
 end
 
 spellObject.onMobDespawn = function(mob)

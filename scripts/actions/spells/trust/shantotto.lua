@@ -21,8 +21,9 @@ spellObject.onMobSpawn = function(mob)
     })
 
     mob:addGambit(ai.t.TARGET, { ai.c.MB_AVAILABLE, 0 }, { ai.r.MA, ai.s.MB_ELEMENT, xi.magic.spellFamily.NONE })
-
-    mob:addGambit(ai.t.TARGET, { ai.c.NOT_SC_AVAILABLE, 0 }, { ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.NONE }, 60)
+    mob:addGambit(ai.t.TARGET, { ai.c.HPP_GTE, 35 }, { ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.NONE }, 60)
+    mob:addGambit(ai.t.TARGET, { ai.c.HPP_LT, 35 }, { ai.r.MA, ai.s.LOWEST, xi.magic.spellFamily.NONE }, 60)
+    mob:addGambit(ai.t.TARGET, { ai.c.STATUS, xi.effect.THRENODY }, { ai.r.MA, ai.s.BEST_AGAINST_TARGET, 0 }, 60)
 
     local power = mob:getMainLvl() / 10
     mob:addMod(xi.mod.MATT, power)
@@ -30,7 +31,6 @@ spellObject.onMobSpawn = function(mob)
     mob:addMod(xi.mod.HASTE_MAGIC, 1000) -- 10% Haste (Magic)
 
     mob:setAutoAttackEnabled(false)
-
     mob:setMobMod(xi.mobMod.TRUST_DISTANCE, xi.trust.movementType.NO_MOVE)
 end
 

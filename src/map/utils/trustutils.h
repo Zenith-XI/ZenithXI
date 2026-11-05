@@ -21,6 +21,7 @@
 #pragma once
 
 #include "common/cbasetypes.h"
+#include <map>
 
 class CCharEntity;
 class CTrustEntity;
@@ -31,5 +32,11 @@ namespace trustutils
 // We cache all of this so we don't have to hit the database every time a trust is spawned
 void LoadTrustList();
 auto SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntity*;
+
+// Declare the constant map. inline/extern prevents multiple definition linker errors.
+extern const std::map<uint16_t, uint16_t> mobSkillAsSkillValue;
+
+// Helper function to safely look up values without throwing exceptions
+uint16_t GetMobSkillValue(uint16_t mobSkillId);
 
 }; // namespace trustutils
