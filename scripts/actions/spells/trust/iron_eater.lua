@@ -23,7 +23,6 @@ spellObject.onMobSpawn = function(mob)
     if lvl >= 10 then
         mob:addMod(xi.mod.STORETP, 10)
     end
-    
     if lvl >= 15 then
         mob:addMod(xi.mod.DOUBLE_ATTACK, 10)
     end
