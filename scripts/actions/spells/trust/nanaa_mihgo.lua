@@ -17,12 +17,11 @@ spellObject.onMobSpawn = function(mob)
         [xi.magic.spell.ROMAA_MIHGO] = xi.trust.messageOffset.TEAMWORK_1,
     })
     local lvl = mob:getMainLvl()
-    if (lvl >= 15) then
+    if lvl >= 15 then
         mob:addMod(xi.mod.GILFINDER, 1)
-    end
-    if (lvl >= 15) then
         mob:addMod(xi.mod.TREASURE_HUNTER, 1)
     end
+
     mob:setTrustTPSkillSettings(ai.tp.OPENER, ai.s.HIGHEST)
 end
 

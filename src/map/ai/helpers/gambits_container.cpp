@@ -748,7 +748,7 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
                 }
 
                 auto mLevel = POwner->GetMLevel();
-                if (action.select == G_SELECT::BY_LEVEL && PAbility->getLevel() < mLevel) {
+                if (action.select == G_SELECT::BY_LEVEL && PAbility->getLevel() > mLevel) {
                     // If the level of the caster isn't high enough to use the ability from the abilities.sql set level
                     // SPECIFIC will skip this and be used as instructed
                     continue;
@@ -1872,11 +1872,12 @@ auto CGambitsContainer::PartyHasTank() -> bool
 {
     bool hasTank = false;
     // clang-format off
-        static_cast<CCharEntity*>(POwner->PMaster)->ForPartyWithTrusts([&](CBattleEntity* PMember)
+        CCharEntity *master = static_cast<CCharEntity*>(POwner->PMaster);
+        master->ForPartyWithTrusts([&](CBattleEntity* PMember)
         {
             auto jobType = PMember->GetMJob();
-            // Era make WAR and MNK? and TODO as Jobs get added back? Era specific patches?
-            if (jobType == xi::Job::NIN || jobType == xi::Job::PLD || jobType == xi::Job::RUN)
+            // Custom code for Trusts that need a tank. Select advanced job other, use WAR as the "beginner" tank
+            if ((jobType == xi::Job::NIN || jobType == xi::Job::PLD || jobType == xi::Job::RUN) || (jobType == xi::Job::WAR && master->GetMLevel() <= 30))
             {
                 hasTank = true;
             }

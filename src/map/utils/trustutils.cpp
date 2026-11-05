@@ -67,29 +67,29 @@ static std::unordered_set<SpellID> passiveTrustIDs = {
 // Possible to move this to its own helper, as its currently only for trusts; this just might be large.
 const std::map<uint16_t, uint16_t> mobSkillAsSkillValue = {
     // Semih
-    {636,     5},  // Flaming Arrow
-    {3487,  175},  // Sidewinder
-    {3488,  225},  // Arching Arrow
-    {3489,    1},  // Lux Arrow; No commit until these are discussed
-    {3490,    1},  // Stellar Arrow
-    // Trion
-    {968,    50},  // Red Lotus Blade 
-    {969,    75},  // Flat Blade
-    {970,   240},  // Savage Blade
+    {636,     5},  // Flaming Arrow;lv 1
+    {3487,  175},  // Sidewinder; lv 55
+    {3488,  225},  // Arching Arrow; lv 65
+    {3489,   91},  // Lux Arrow; lv 30
+    {3490,  199},  // Stellar Arrow; lv 60 since it has darkness
+    // Trion; Gets a WS at 15
+    {968,    50},  // Red Lotus Blade; lv 16 
+    {969,    75},  // Flat Blade; lv 24
+    {970,   240},  // Savage Blade; lv 70
     {3194,   31},  // Royal Savior; Techinically not a WS, but is used as one. So set to 31 skill to be used at lv 10 like Protection
     // Nanaa Mihgo
-    {3189,    1},  // King Cobra Clamp
+    {3189,    94},  // King Cobra Clamp; She gets this at lv 30. She gains WS at lv 1 or 60 otherwise
     // Volker
-    {973,    50},  // Red Lotus Blade
-    {974,   175},  // Spirits Within
-    {975,   200},  // Vorpal Blade
+    {973,    50},  // Red Lotus Blade; lv 16
+    {974,   175},  // Spirits Within; lv 55
+    {975,   200},  // Vorpal Blade;lv 60
     // Maat
-    {3263,     1},  // Red Lotus Blade
-    {3413,     5},  // Combo
-    {3414,    75},  // One Inch Punch
-    {3415,   200},  // Howling Fist
-    {3416,   225},  // Dragon Kick
-    {3417,   250},  // Asuran Fists
+    {3263,   124},  // Bear Killer; lv 40
+    {3413,     5},  // Combo; lv 1
+    {3414,    75},  // One Inch Punch; lv 24
+    {3415,   200},  // Howling Fist;lv 60
+    {3416,   225},  // Dragon Kick; lv 65
+    {3417,   250},  // Asuran Fists; lv 70
 };
 
 // Return 0 as safe default. 0 will mean unchanged behavior
@@ -100,8 +100,6 @@ uint16_t GetMobSkillValue(uint16_t mobSkillId) {
     }
     return 0; // Fallback value
 }
-
-} // namespace
 
 struct TrustData
 {
@@ -536,7 +534,7 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
     // HP/MP ========================
     // This is the same system as used in charutils.cpp, but modified
     // to use parts from data/ecosystems.yaml instead of hardcoded player
-    // race tables.in
+    // race tables.
 
     // http://ffxi-stat-calc.sourceforge.net/cgi-bin/ffxistats.cgi?mode=document
 

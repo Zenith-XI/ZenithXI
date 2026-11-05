@@ -28,7 +28,7 @@ spellObject.onMobSpawn = function(mob)
     mob:addGambit(ai.t.TARGET, { ai.c.NOT_STATUS, xi.effect.FLASH }, { ai.r.MA, ai.s.SPECIFIC, xi.magic.spell.FLASH })
     mob:addGambit(ai.t.PARTY, { ai.c.HPP_LT, 50 }, { ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.CURE })
     local lvl = mob:getMainLvl()
-    if (lvl >= 15) then
+    if lvl >= 15 then
         mob:addMod(xi.mod.DOUBLE_ATTACK, 10)
     end
 end

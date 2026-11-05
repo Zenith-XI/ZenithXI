@@ -33,7 +33,7 @@ spellObject.onMobSpawn = function(mob)
 
     mob:addMod(xi.mod.STORETP, 25)
     local lvl = mob:getMainLvl()
-    if (lvl >= 5) then
+    if lvl >= 5 then
         mob:addMod(xi.mod.UNDEAD_KILLER, 10)
     end
 end

@@ -37,6 +37,6 @@ auto SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntity*;
 extern const std::map<uint16_t, uint16_t> mobSkillAsSkillValue;
 
 // Helper function to safely look up values without throwing exceptions
-std::string_view GetMobSkillValue(uint16_t mobSkillId);
+uint16_t GetMobSkillValue(uint16_t mobSkillId);
 
 }; // namespace trustutils
