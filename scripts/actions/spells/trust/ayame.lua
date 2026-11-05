@@ -21,6 +21,7 @@ spellObject.onMobSpawn = function(mob)
     if not xi.pre(xi.expansion.TOAU) then
         mob:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.HASSO }, { ai.r.JA, ai.s.BY_LEVEL, xi.ja.HASSO })
     end
+
     mob:addGambit(ai.t.SELF, { ai.c.HAS_TOP_ENMITY, 0 }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.THIRD_EYE })
     -- Special Check for this ability. Gambit needs to check two sources SELF and MASTER; Keep trigger target as SELF, the value on the check is NOT used --
     mob:addGambit(ai.t.SELF, { ai.c.JA_AYAME_CHECK, 0 }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.MEDITATE })
