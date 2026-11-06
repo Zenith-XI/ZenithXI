@@ -5,6 +5,11 @@
 -- cards are given or the quest is turned in. Each onEventFinish handler of the quest is wrapped: after base
 -- has run, a 'Date' of JstMidnight() becomes NextConquestTally(). Rewards, completion, repeatability and
 -- the Collect Tarut Cards quest are unchanged.
+--
+-- The new batch is also raised above progress priority (ZXIALPHA-148). Until Rubbish Day is offered,
+-- Chululu answers with its compatibility test as a progress event, which outranks the base batch event,
+-- so a player who had not started Rubbish Day never got a new batch. The reminder keeps the base
+-- priority, so the compatibility test can still be reached while the timer runs.
 -----------------------------------
 require('modules/module_utils')
 -----------------------------------
@@ -14,6 +19,16 @@ m:addOverride('xi.server.onServerStart', function()
     super()
 
     xi.module.modifyInteractionEntry('scripts/quests/jeuno/All_in_the_Cards', function(quest)
+        -- Section 3 is the accepted quest.
+        quest.sections[3][xi.zone.LOWER_JEUNO]['Chululu'].onTrigger = function(player, npc)
+            if GetSystemTime() > quest:getVar(player, 'Date') then
+                -- Above progress, or the tie with Rubbish Day makes Chululu alternate between the two
+                return quest:progressEvent(10112):setPriority(Action.Priority.Progress + 1) -- A new batch of cards
+            else
+                return quest:event(10111) -- Reminder
+            end
+        end
+
         for _, section in ipairs(quest.sections) do
             for _, zoneHandlers in pairs(section) do
                 if
