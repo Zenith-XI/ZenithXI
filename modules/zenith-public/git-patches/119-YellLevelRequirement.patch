@@ -3,14 +3,41 @@ many seconds of the /yell cooldown remain (src/map/packets/c2s/0x0b5_chat_std.cp
 
 The [YELL]Cooldown char var now holds the time the cooldown ends instead of 1.
 It still expires on its own, so the cooldown survives zoning and relogging.
-The length is still map.YELL_COOLDOWN, and the zone check, ban and broadcast are unchanged.
+The length is still map.YELL_COOLDOWN, and the zone check and broadcast are unchanged.
+
+A yell-banned player is now told they are banned and how long the ban has left
+(read from the [YELL]Banned expiry), instead of the generic "cannot be used in this area".
+!yell ban without a day count (scripts/commands/yell.lua) now stores expiry 0, a ban with
+no end; it used to store the current time, so the "indefinite" ban expired at once.
 ---
+diff --git a/scripts/commands/yell.lua b/scripts/commands/yell.lua
+index 1973e0b9ab..e994a9ae62 100644
+--- a/scripts/commands/yell.lua
++++ b/scripts/commands/yell.lua
+@@ -53,7 +53,13 @@ commandObj.onTrigger = function(player, value, target, days)
+             days = 0
+         end
+ 
+-        targ:setCharVar('[YELL]Banned', 1, GetSystemTime() + utils.days(days))
++        -- An expiry of 0 never expires. GetSystemTime() + 0 would expire at once.
++        local expiry = 0
++        if days > 0 then
++            expiry = GetSystemTime() + utils.days(days)
++        end
++
++        targ:setCharVar('[YELL]Banned', 1, expiry)
+         player:printToPlayer(string.format('%s has been banned from using the /yell command.', targ:getName()))
+     end
+ end
 diff --git a/src/map/packets/c2s/0x0b5_chat_std.cpp b/src/map/packets/c2s/0x0b5_chat_std.cpp
-index 6f9484760b..69169fea9e 100644
+index 6f9484760b..9ac5e5a7a9 100644
 --- a/src/map/packets/c2s/0x0b5_chat_std.cpp
 +++ b/src/map/packets/c2s/0x0b5_chat_std.cpp
-@@ -39,6 +39,8 @@
+@@ -37,8 +37,11 @@
+ #include "packets/s2c/0x029_battle_message.h"
+ #include "roe.h"
  #include "unitychat.h"
++#include "utils/charutils.h"
  #include "utils/jailutils.h"
  
 +#include <algorithm>
@@ -18,7 +45,7 @@ index 6f9484760b..69169fea9e 100644
  namespace
  {
  
-@@ -257,9 +259,15 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
+@@ -257,20 +260,64 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
          break;
          case GP_CLI_COMMAND_CHAT_STD_KIND::Yell:
          {
@@ -35,14 +62,49 @@ index 6f9484760b..69169fea9e 100644
  
              if (PChar->loc.zone->CanUseMisc(xi::ZoneMisc::Yell))
              {
-@@ -267,10 +275,14 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
+                 if (isYellBanned)
                  {
-                     PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::CannotUseInArea);
-                 }
+-                    PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::CannotUseInArea);
++                    // Zenith: say why the yell was refused and when the ban ends (the end time is the var's expiry, 0 = no end).
++                    const auto banExpiry = charutils::FetchCharVar(PChar->id, "[YELL]Banned").second;
++
++                    if (banExpiry == 0)
++                    {
++                        PChar->pushPacket<GP_SERV_COMMAND_CHAT_STD>(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, "You are banned from yelling until a GM lifts the ban.");
++                    }
++                    else
++                    {
++                        const auto left = banExpiry > now ? banExpiry - now : 1;
++                        const auto unit = [](uint32 count, const char* name)
++                        {
++                            return fmt::format("{} {}{}", count, name, count == 1 ? "" : "s");
++                        };
++
++                        std::string timeLeft;
++                        if (left >= 86400)
++                        {
++                            timeLeft = fmt::format("{}, {}", unit(left / 86400, "day"), unit(left % 86400 / 3600, "hour"));
++                        }
++                        else if (left >= 3600)
++                        {
++                            timeLeft = fmt::format("{}, {}", unit(left / 3600, "hour"), unit(left % 3600 / 60, "minute"));
++                        }
++                        else if (left >= 60)
++                        {
++                            timeLeft = unit(left / 60, "minute");
++                        }
++                        else
++                        {
++                            timeLeft = unit(left, "second");
++                        }
++
++                        PChar->pushPacket<GP_SERV_COMMAND_CHAT_STD>(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, fmt::format("You are banned from yelling. The ban ends in {}.", timeLeft));
++                    }
++                }
 +                else if (highestJobLevel < yellMinimumLevel)
 +                {
 +                    PChar->pushPacket<GP_SERV_COMMAND_CHAT_STD>(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, fmt::format("You must reach level {} on a job before you can yell.", yellMinimumLevel));
-+                }
+                 }
                  else if (!isInYellCooldown)
                  {
                      // CharVar will self-expire and set to zero after the cooldown period
@@ -51,7 +113,7 @@ index 6f9484760b..69169fea9e 100644
  
                      message::send(ipc::ChatMessageYell{
                          .senderId   = PChar->id,
-@@ -285,7 +297,7 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
+@@ -285,7 +332,7 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
                  }
                  else
                  {
