@@ -37,7 +37,6 @@
 #include "status_effect_container.h"
 #include "trait.h"
 #include "utils/dataset_loader.h"
-#include "weapon_skill.h"
 #include "zone_entities.h"
 #include "zoneutils.h"
 
