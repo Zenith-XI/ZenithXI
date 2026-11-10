@@ -3,8 +3,8 @@
 -----------------------------------
 require('modules/module_utils')
 require('scripts/globals/trust')
-require("scripts/globals/magic")
-require("scripts/globals/gambits")
+require('scripts/globals/magic')
+require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('volker_override')
 

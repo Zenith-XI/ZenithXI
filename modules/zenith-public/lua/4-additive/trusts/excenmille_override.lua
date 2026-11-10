@@ -3,8 +3,8 @@
 -----------------------------------
 require('modules/module_utils')
 require('scripts/globals/trust')
-require("scripts/globals/magic")
-require("scripts/globals/gambits")
+require('scripts/globals/magic')
+require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('excenmille_override')
 
@@ -18,5 +18,4 @@ m:addOverride('xi.actions.spells.trust.excenmille.onMobSpawn', function(trust)
     trust:addGambit(ai.t.PARTY, { ai.c.HPP_LT, 75 }, { ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.CURE })
 
     trust:addMod(xi.mod.STORETP, 25)
-    local lvl = trust:getMainLvl()
 end)

@@ -3,13 +3,13 @@
 -----------------------------------
 require('modules/module_utils')
 require('scripts/globals/trust')
-require("scripts/globals/magic")
-require("scripts/globals/gambits")
+require('scripts/globals/magic')
+require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('iron_eater_override')
 
 m:addOverride('xi.actions.spells.trust.iron_eater.onMobSpawn', function(trust)
- xi.trust.teamworkMessage(trust, {
+    xi.trust.teamworkMessage(trust, {
         [xi.magic.spell.NAJI] = xi.trust.messageOffset.TEAMWORK_1,
     })
 

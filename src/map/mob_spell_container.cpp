@@ -148,7 +148,7 @@ auto CMobSpellContainer::hasAvailableAtLevel(SpellID spellId) -> Maybe<SpellID>
 auto CMobSpellContainer::GetAvailable(SpellID spellId) -> Maybe<SpellID>
 {
     if(!hasAvailableAtLevel(spellId)) {
-        return std::nullopt; 
+        return std::nullopt;
     }
     auto* spell    = spell::GetSpell(spellId);
     bool  enoughMP = spell->getMPCost() <= m_PMob->health.mp ||
@@ -175,7 +175,7 @@ auto CMobSpellContainer::GetBestAvailable(SPELLFAMILY family) -> Maybe<SpellID>
             auto* spell         = spell::GetSpell(id);
             bool  sameFamily    = (family == SPELLFAMILY_NONE) ? true : spell->getSpellFamily() == family;
             if(sameFamily && !hasAvailableAtLevel(id)) {
-                continue; 
+                continue;
             }
             bool  enoughMP      = spell->getMPCost() <= m_PMob->health.mp ||
                                   spell->getSkillType() == xi::SkillType::Ninjutsu ||
