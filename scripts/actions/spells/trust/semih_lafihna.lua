@@ -1,6 +1,5 @@
 -----------------------------------
 -- Trust: Semih Lafihna
--- Note: Looks like uses MobSkills instead of Weapons Skill to overcome the ranged accuracy penalties.
 -----------------------------------
 ---@type TSpellTrust
 local spellObject = {}
