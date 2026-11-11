@@ -57,7 +57,6 @@ auto CGambitsContainer::NewGambitIdentifier(const Gambit_t& gambit) const -> std
 auto CGambitsContainer::AddGambit(const Gambit_t& gambit) -> std::string
 {
     TracyZoneScoped;
-
     bool available = true;
     for (const auto& action : gambit.actions)
     {
@@ -747,11 +746,11 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
                     continue;
                 }
                 auto mLevel = POwner->GetMLevel();
-                if (!trustutils::canUseAbility(POwner, action.select_arg))
+                if (!trustutils::canUseAbility(POwner, action.select_arg)) 
                 {
                     continue;
                 }
-
+                
                 if (action.select == G_SELECT::HIGHEST_WALTZ)
                 {
                     auto currentTP = POwner->health.tp;
@@ -1606,7 +1605,7 @@ auto CGambitsContainer::TryTrustSkill() -> bool
 
     Maybe<TrustSkill_t> chosen_skill;
     xi::SkillchainType  chosen_skillchain = xi::SkillchainType::None;
-    if ((settings::get<bool>("map.TRUST_SKILLS_BY_LEVEL") && POwner->GetMLevel() > 5)
+    if ((settings::get<bool>("map.TRUST_SKILLS_BY_LEVEL") && POwner->GetMLevel() > 5) 
         && (checkTPTrigger() && !tp_skills.empty()))
     {
         switch (tp_select)

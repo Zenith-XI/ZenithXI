@@ -120,4 +120,5 @@ auto InstantiateDynamicMob(uint32 groupid, xi::ZoneId groupZoneId, xi::ZoneId ta
 void WeaknessTrigger(CBaseEntity* PTarget, WeaknessType level);
 
 auto hasLearnedSpell(CMobEntity* PMob, uint16 spellID) -> uint16; // checking for the presence of a learned spell
+auto hasLearnedAbility(CMobEntity* PMob, uint16 skillID) -> uint16; // checking the presence of a learned ability
 }; // namespace mobutils

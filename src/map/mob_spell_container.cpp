@@ -45,7 +45,6 @@ void CMobSpellContainer::ClearSpells()
     m_naList.clear();
     m_raiseList.clear();
     m_severeList.clear();
-    m_availibleAtLevelList.clear();
     m_hasSpells = false;
 }
 
@@ -107,7 +106,6 @@ void CMobSpellContainer::AddSpell(SpellID spellId)
     {
         ShowDebug("Where does this spell go? %d", static_cast<uint16>(spellId));
     }
-    m_availibleAtLevelList.emplace_back(spellId);
 }
 
 void CMobSpellContainer::RemoveSpell(SpellID spellId)
@@ -124,32 +122,14 @@ void CMobSpellContainer::RemoveSpell(SpellID spellId)
     findAndRemove(m_healList, spellId);
     findAndRemove(m_naList, spellId);
     findAndRemove(m_raiseList, spellId);
-    findAndRemove(m_availibleAtLevelList, spellId);
-    m_hasSpells = !(m_gaList.empty() && m_damageList.empty() && m_buffList.empty() && m_debuffList.empty() && m_healList.empty() && m_naList.empty() && m_raiseList.empty());
-}
 
-auto CMobSpellContainer::hasAvailableAtLevel(SpellID spellId) -> Maybe<SpellID>
-{
-    if(!settings::get<bool>("map.TRUST_SKILLS_BY_LEVEL")) {
-        return spellId;
-    }
-    for (std::vector<SpellID>::iterator it = m_availibleAtLevelList.begin(); it != m_availibleAtLevelList.end(); ++it)
-    {
-        if (spellId == (*it))
-        {
-            return spellId;
-        }
-    }
-    return std::nullopt;
+    m_hasSpells = !(m_gaList.empty() && m_damageList.empty() && m_buffList.empty() && m_debuffList.empty() && m_healList.empty() && m_naList.empty() && m_raiseList.empty());
 }
 
 // Used in Gambits to see if the Trust can cast the spell
 // Used in mob/automaton AI to see if the spell is castable
 auto CMobSpellContainer::GetAvailable(SpellID spellId) -> Maybe<SpellID>
 {
-    if(!hasAvailableAtLevel(spellId)) {
-        return std::nullopt;
-    }
     auto* spell    = spell::GetSpell(spellId);
     bool  enoughMP = spell->getMPCost() <= m_PMob->health.mp ||
                      spell->getSkillType() == xi::SkillType::Ninjutsu ||
@@ -174,9 +154,6 @@ auto CMobSpellContainer::GetBestAvailable(SPELLFAMILY family) -> Maybe<SpellID>
         {
             auto* spell         = spell::GetSpell(id);
             bool  sameFamily    = (family == SPELLFAMILY_NONE) ? true : spell->getSpellFamily() == family;
-            if(sameFamily && !hasAvailableAtLevel(id)) {
-                continue;
-            }
             bool  enoughMP      = spell->getMPCost() <= m_PMob->health.mp ||
                                   spell->getSkillType() == xi::SkillType::Ninjutsu ||
                                   spell->getSkillType() == xi::SkillType::Singing ||

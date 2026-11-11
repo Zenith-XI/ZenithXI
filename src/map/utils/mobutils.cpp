@@ -37,6 +37,7 @@
 #include "status_effect_container.h"
 #include "trait.h"
 #include "utils/dataset_loader.h"
+#include "weapon_skill.h"
 #include "zone_entities.h"
 #include "zoneutils.h"
 
@@ -2045,7 +2046,7 @@ auto hasLearnedSpell(CMobEntity* PMob, uint16 spellID) -> uint16
         return 0;
     }
     auto castedSpellId = static_cast<SpellID>(spellID);
-    if (PMob->SpellContainer->hasAvailableAtLevel(castedSpellId))
+    if (PMob->SpellContainer->hasAvailableAtLevel(castedSpellId)) 
     {
         return spellID;
     }
