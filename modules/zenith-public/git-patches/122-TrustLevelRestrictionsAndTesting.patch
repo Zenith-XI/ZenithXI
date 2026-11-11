@@ -78,24 +78,6 @@ index 0000000000..a343651453
 +  HOWLING_FIST:   60
 +  DRAGON_KICK:    65
 +  ASURAN_FISTS:   70
-diff --git a/modules/zenith-public/sql/add_weaponskills_trusts.sql b/modules/zenith-public/sql/add_weaponskills_trusts.sql
-new file mode 100644
-index 0000000000..0191cbb15d
---- /dev/null
-+++ b/modules/zenith-public/sql/add_weaponskills_trusts.sql
-@@ -0,0 +1,11 @@
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Naji',1012,32); -- Fast Blade; Gives a lv 5 skill
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Kupipi',1013,160); -- Shining Strike; Gives a lv 5 skill
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Ayame',1015,149); -- Tachi: Koki
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Curilla',1017,32); -- Fast Blade; Gives a lv 5 skill
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Volker',1018,32); -- Fast Blade; Gives a lv 5 skill
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Trion',1020,32);   -- Fast Blade; Gives a lv 5 skill
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Trion',1020,969);   -- Flat Blade
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,636); -- Flaming Arrow (Semih Lafihna); Give lv 5 skill
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Halver',1087,112); -- Double Thrust; Gives a lv 5 skill
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Halver',1087,114); -- Raiden Thrust
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Halver',1087,116); -- Penta Thrust
-\ No newline at end of file
 diff --git a/settings/default/map.lua b/settings/default/map.lua
 index 8b6c2d0265..14f57142bc 100644
 --- a/settings/default/map.lua
