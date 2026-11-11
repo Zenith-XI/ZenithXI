@@ -52,7 +52,7 @@ enum class WeaknessType
     WHITE  = 3
 };
 
-using ModsMap_t = HashMap<uint32, ModsList_t*>;
+typedef HashMap<uint32, ModsList_t*> ModsMap_t;
 
 namespace mobutils
 {
@@ -119,5 +119,4 @@ auto InstantiateAlly(uint32 groupid, xi::ZoneId zoneID, CInstance* = nullptr) ->
 auto InstantiateDynamicMob(uint32 groupid, xi::ZoneId groupZoneId, xi::ZoneId targetZoneId) -> CMobEntity*;
 void WeaknessTrigger(CBaseEntity* PTarget, WeaknessType level);
 
-auto hasLearnedSpell(CMobEntity* PMob, uint16 spellID) -> uint16; // checking for the presence of a learned spell
 }; // namespace mobutils
