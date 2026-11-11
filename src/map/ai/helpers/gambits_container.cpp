@@ -31,7 +31,6 @@
 #include "enmity_container.h"
 #include "notoriety_container.h"
 #include "spell.h"
-#include "utils/trustutils.h"
 #include "utils/battleutils.h"
 #include "weapon_skill.h"
 
@@ -75,6 +74,7 @@ auto CGambitsContainer::AddGambit(const Gambit_t& gambit) -> std::string
     {
         return "";
     }
+
     // Make a modifiable copy, assign a new identifier and store it
     Gambit_t stored   = gambit;
     stored.identifier = NewGambitIdentifier(stored);
@@ -746,11 +746,8 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
                     // If SPECIFIC was validated earlier this shouldn't happen; skip this action.
                     continue;
                 }
+
                 auto mLevel = POwner->GetMLevel();
-                if (!trustutils::canUseAbility(POwner, action.select_arg))
-                {
-                    continue;
-                }
 
                 if (action.select == G_SELECT::HIGHEST_WALTZ)
                 {
@@ -1606,8 +1603,7 @@ auto CGambitsContainer::TryTrustSkill() -> bool
 
     Maybe<TrustSkill_t> chosen_skill;
     xi::SkillchainType  chosen_skillchain = xi::SkillchainType::None;
-    if ((settings::get<bool>("map.TRUST_SKILLS_BY_LEVEL") && POwner->GetMLevel() > 5)
-        && (checkTPTrigger() && !tp_skills.empty()))
+    if (checkTPTrigger() && !tp_skills.empty())
     {
         switch (tp_select)
         {
@@ -1861,12 +1857,11 @@ auto CGambitsContainer::PartyHasTank() -> bool
 {
     bool hasTank = false;
     // clang-format off
-        CCharEntity *master = static_cast<CCharEntity*>(POwner->PMaster);
-        master->ForPartyWithTrusts([&](CBattleEntity* PMember)
+        static_cast<CCharEntity*>(POwner->PMaster)->ForPartyWithTrusts([&](CBattleEntity* PMember)
         {
             auto jobType = PMember->GetMJob();
-            // Custom code for Trusts that need a tank. Select advanced job other, use WAR as the "beginner" tank
-            if ((jobType == xi::Job::NIN || jobType == xi::Job::PLD || jobType == xi::Job::RUN) || (jobType == xi::Job::WAR && master->GetMLevel() <= 30))
+
+            if (jobType == xi::Job::NIN || jobType == xi::Job::PLD || jobType == xi::Job::RUN)
             {
                 hasTank = true;
             }
