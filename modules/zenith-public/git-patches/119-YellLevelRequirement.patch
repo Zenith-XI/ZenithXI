@@ -7,6 +7,8 @@ The length is still map.YELL_COOLDOWN, and the zone check and broadcast are unch
 
 A yell-banned player is now told they are banned and how long the ban has left
 (read from the [YELL]Banned expiry), instead of the generic "cannot be used in this area".
+The expiry comes from the char var cache through the new CCharEntity::getCharVarExpiry
+(src/map/entities/char_entity.h/.cpp), so a banned player spamming /yell causes no DB query.
 !yell ban without a day count (scripts/commands/yell.lua) now stores expiry 0, a ban with
 no end; it used to store the current time, so the "indefinite" ban expired at once.
 ---
@@ -29,15 +31,52 @@ index 1973e0b9ab..e994a9ae62 100644
          player:printToPlayer(string.format('%s has been banned from using the /yell command.', targ:getName()))
      end
  end
+diff --git a/src/map/entities/char_entity.cpp b/src/map/entities/char_entity.cpp
+index 7c6e8a33ab..acf25451bf 100644
+--- a/src/map/entities/char_entity.cpp
++++ b/src/map/entities/char_entity.cpp
+@@ -3242,6 +3242,23 @@ auto CCharEntity::getCharVar(const std::string& varName) const -> int32
+     return value.first;
+ }
+ 
++// Zenith: read the expiry from the cache that getCharVar fills, so callers need no extra DB query.
++// Returns 0 when the var is unset or expired, or when it never expires.
++auto CCharEntity::getCharVarExpiry(const std::string& varName) const -> uint32
++{
++    if (getCharVar(varName) == 0)
++    {
++        return 0;
++    }
++
++    if (auto charVar = charVarCache.find(varName); charVar != charVarCache.end())
++    {
++        return charVar->second.second;
++    }
++
++    return 0;
++}
++
+ auto CCharEntity::getCharVarsWithPrefix(const std::string& prefix) -> std::vector<std::pair<std::string, int32>>
+ {
+     const auto currentTimestamp = earth_time::timestamp();
+diff --git a/src/map/entities/char_entity.h b/src/map/entities/char_entity.h
+index 4769721d4f..34d7712edc 100644
+--- a/src/map/entities/char_entity.h
++++ b/src/map/entities/char_entity.h
+@@ -821,6 +821,7 @@ public:
+     auto OnItemFinish(CItemState&, action_t&) -> bool;
+ 
+     auto getCharVar(const std::string& varName) const -> int32;
++    auto getCharVarExpiry(const std::string& varName) const -> uint32; // Zenith: expiry timestamp of a set char var (0 = none)
+     auto getCharVarsWithPrefix(const std::string& prefix) -> std::vector<std::pair<std::string, int32>>;
+     auto getCharVarsWithSuffix(const std::string& prefix) -> std::vector<std::pair<std::string, int32>>;
+     void setCharVar(const std::string& varName, int32 value, uint32 expiry = 0);
 diff --git a/src/map/packets/c2s/0x0b5_chat_std.cpp b/src/map/packets/c2s/0x0b5_chat_std.cpp
-index 6f9484760b..9ac5e5a7a9 100644
+index 6f9484760b..df70d6214c 100644
 --- a/src/map/packets/c2s/0x0b5_chat_std.cpp
 +++ b/src/map/packets/c2s/0x0b5_chat_std.cpp
-@@ -37,8 +37,11 @@
- #include "packets/s2c/0x029_battle_message.h"
- #include "roe.h"
+@@ -39,6 +39,8 @@
  #include "unitychat.h"
-+#include "utils/charutils.h"
  #include "utils/jailutils.h"
  
 +#include <algorithm>
@@ -45,7 +84,7 @@ index 6f9484760b..9ac5e5a7a9 100644
  namespace
  {
  
-@@ -257,20 +260,64 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
+@@ -257,20 +259,65 @@ void GP_CLI_COMMAND_CHAT_STD::process(MapSession* PSession, CCharEntity* PChar)
          break;
          case GP_CLI_COMMAND_CHAT_STD_KIND::Yell:
          {
@@ -66,7 +105,8 @@ index 6f9484760b..9ac5e5a7a9 100644
                  {
 -                    PChar->pushPacket<GP_SERV_COMMAND_BATTLE_MESSAGE>(PChar, PChar, 0, 0, MsgBasic::CannotUseInArea);
 +                    // Zenith: say why the yell was refused and when the ban ends (the end time is the var's expiry, 0 = no end).
-+                    const auto banExpiry = charutils::FetchCharVar(PChar->id, "[YELL]Banned").second;
++                    // Read from the char var cache, so spamming /yell while banned costs no DB query.
++                    const auto banExpiry = PChar->getCharVarExpiry("[YELL]Banned");
 +
 +                    if (banExpiry == 0)
 +                    {
