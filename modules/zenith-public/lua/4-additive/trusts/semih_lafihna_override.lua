@@ -6,7 +6,7 @@ require('scripts/globals/trust')
 require('scripts/globals/magic')
 require('scripts/globals/gambits')
 -----------------------------------
-local m = Module:new('semih_lafihna_override')
+local m = Module:new('a-t_semih_lafihna_override')
 
 m:addOverride('xi.actions.spells.trust.semih_lafihna.onMobSpawn', function(trust)
     xi.trust.teamworkMessage(trust, {
@@ -24,7 +24,7 @@ m:addOverride('xi.actions.spells.trust.semih_lafihna.onMobSpawn', function(trust
     -- mob:addGambit(ai.t.SELF, { ai.c.HAS_TOP_ENMITY, 0 }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.STEALTH_SHOT })
 
     trust:addListener('WEAPONSKILL_USE', 'SEMIH_LAFIHNA_WEAPONSKILL_USE', function(mobArg, target, skill, tp, action, damage)
-        if skill:getID() == 3490 then -- Stellar Arrow
+        if skill:getID() == xi.mobSkill.STELLAR_ARROW then
             -- I'll show you no quarter!
             xi.trust.message(mobArg, xi.trust.messageOffset.SPECIAL_MOVE_1)
         end

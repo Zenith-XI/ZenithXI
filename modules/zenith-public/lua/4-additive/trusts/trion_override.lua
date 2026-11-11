@@ -6,7 +6,7 @@ require('scripts/globals/trust')
 require('scripts/globals/magic')
 require('scripts/globals/gambits')
 -----------------------------------
-local m = Module:new('trion_override')
+local m = Module:new('a-t_trion_override')
 
 m:addOverride('xi.actions.spells.trust.trion.onMobSpawn', function(trust)
     xi.trust.teamworkMessage(trust, {
@@ -40,12 +40,15 @@ m:addOverride('xi.actions.spells.trust.trion.onMobSpawn', function(trust)
     trust:addMod(xi.mod.HPP, 10)
     trust:addMod(xi.mod.MPP, 10)
 
-    -- Mob Skill thats not a WS; keep it Specific --
+    -- Royal Bash follows Shield Bash's normal level (ZENITHDEV-200)
+    if trust:hasLearnedAbility(xi.jobAbility.SHIELD_BASH) then
         trust:addGambit(ai.t.TARGET, { ai.l.OR(
             { ai.c.CASTING_MA, 0 },
             { ai.c.READYING_JA, 0 },
             { ai.c.READYING_MS, 0 },
             { ai.c.READYING_WS, 0 }) }, { ai.r.MS, ai.s.SPECIFIC, xi.mobSkill.ROYAL_BASH_TRUST }, 60)
+    end
+
     trust:addGambit(ai.t.SELF, { ai.c.ALWAYS, 0 }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.PROVOKE })
     trust:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.SENTINEL }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.SENTINEL })
 

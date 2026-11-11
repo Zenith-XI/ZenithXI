@@ -6,7 +6,7 @@ require('scripts/globals/trust')
 require('scripts/globals/magic')
 require('scripts/globals/gambits')
 -----------------------------------
-local m = Module:new('ajido_marujido_override')
+local m = Module:new('a-t_ajido_marujido_override')
 
 m:addOverride('xi.actions.spells.trust.ajido-marujido.onMobSpawn', function(trust)
     xi.trust.teamworkMessage(trust, {

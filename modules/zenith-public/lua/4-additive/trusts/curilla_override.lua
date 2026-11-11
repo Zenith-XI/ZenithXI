@@ -6,7 +6,7 @@ require('scripts/globals/trust')
 require('scripts/globals/magic')
 require('scripts/globals/gambits')
 -----------------------------------
-local m = Module:new('curilla_override')
+local m = Module:new('a-t_curilla_override')
 
 m:addOverride('xi.actions.spells.trust.curilla.onMobSpawn', function(trust)
     xi.trust.teamworkMessage(trust, {
@@ -16,17 +16,20 @@ m:addOverride('xi.actions.spells.trust.curilla.onMobSpawn', function(trust)
         [xi.magic.spell.HALVER] = xi.trust.messageOffset.TEAMWORK_4,
     })
 
-    trust:addListener('ABILITY_USE', 'SENTINEL_USE' .. 'ABILITY', function(mobArg, target, skill, action)
+    -- Curilla's Trust profile has Guardian 5/5 and Sentinel Recast 5/5. Trusts have no merits, so the
+    -- timing parts are applied here directly; Guardian's enmity retention is intentionally not reproduced.
+    trust:addListener('ABILITY_USE', 'CURILLA_SENTINEL_USE', function(mobArg, target, skill, action)
         if skill:getID() == xi.jobAbility.SENTINEL then
-            skill:setRecast(skill:getRecast() - 50) -- Sentinel Recast merited (-50 sec)
-            mobArg:addStatusEffect(xi.effect.SENTINEL, { duration = 40 }) -- Set to 40s
-        end
-    end)
+            -- Sentinel Recast 5/5 equivalent: 300s -> 250s
+            skill:setRecast(skill:getRecast() - 50)
 
-    trust:addListener('COMBAT_TICK', 'CURILLA_CTICK', function(mobArg)
-        local effect = trust:getStatusEffect(xi.effect.SENTINEL)
-        if effect and effect:getSubPower() ~= 95 then
-            effect:setSubPower(95) -- Guardian (Sentinel enmity loss -95%)
+            -- Guardian 5/5 equivalent: Sentinel duration 30s -> 40s.
+            -- The listener runs after Sentinel is applied, so extend that effect instead of re-adding it.
+            local sentinel = mobArg:getStatusEffect(xi.effect.SENTINEL)
+            if sentinel then
+                sentinel:setDuration(40000)
+                sentinel:resetStartTime()
+            end
         end
     end)
 
@@ -54,7 +57,7 @@ m:addOverride('xi.actions.spells.trust.curilla.onMobSpawn', function(trust)
     trust:addMod(xi.mod.HPP, 10)
     trust:addMod(xi.mod.MPP, 30)
 
-    trust:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.SENTINEL }, { ai.r.JA, ai.s.BY_LEVEL, xi.ja.SENTINEL })
+    trust:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.SENTINEL }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.SENTINEL })
 
     trust:addGambit(ai.t.TARGET, { ai.c.NOT_STATUS, xi.effect.FLASH }, { ai.r.MA, ai.s.SPECIFIC, xi.magic.spell.FLASH      })
     trust:addGambit(ai.t.PARTY,  { ai.c.HPP_LT,     75              }, { ai.r.MA, ai.s.HIGHEST,  xi.magic.spellFamily.CURE })

@@ -6,7 +6,7 @@ require('scripts/globals/trust')
 require('scripts/globals/magic')
 require('scripts/globals/gambits')
 -----------------------------------
-local m = Module:new('shantotto_override')
+local m = Module:new('a-t_shantotto_override')
 
 m:addOverride('xi.actions.spells.trust.shantotto.onMobSpawn', function(trust)
     xi.trust.teamworkMessage(trust, {

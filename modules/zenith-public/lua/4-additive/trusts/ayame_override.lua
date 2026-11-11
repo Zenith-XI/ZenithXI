@@ -6,7 +6,7 @@ require('scripts/globals/trust')
 require('scripts/globals/magic')
 require('scripts/globals/gambits')
 -----------------------------------
-local m = Module:new('ayame_override')
+local m = Module:new('a-t_ayame_override')
 
 m:addOverride('xi.actions.spells.trust.ayame.onMobSpawn', function(trust)
     xi.trust.teamworkMessage(trust, {

@@ -6,7 +6,7 @@ require('scripts/globals/trust')
 require('scripts/globals/magic')
 require('scripts/globals/gambits')
 -----------------------------------
-local m = Module:new('halver_override')
+local m = Module:new('a-t_halver_override')
 
 m:addOverride('xi.actions.spells.trust.halver.onMobSpawn', function(trust)
     xi.trust.message(trust, xi.trust.messageOffset.SPAWN)
