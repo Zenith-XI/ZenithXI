@@ -19,6 +19,7 @@ m:addOverride('xi.actions.spells.trust.ajido-marujido.onMobSpawn', function(trus
     if not xi.pre(xi.expansion.ABYSSEA) then
         trust:setMod(xi.mod.CURE_POTENCY, 10)
     end
+
     trust:addGambit(ai.t.TARGET, { ai.c.MB_AVAILABLE, 0 }, { ai.r.MA, ai.s.MB_ELEMENT, xi.magic.spellFamily.NONE })
     trust:addGambit(ai.t.TARGET, { ai.c.HPP_GTE, 35 }, { ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.NONE }, 60)
     trust:addGambit(ai.t.TARGET, { ai.c.HPP_LT, 35 }, { ai.r.MA, ai.s.LOWEST, xi.magic.spellFamily.NONE }, 60)
