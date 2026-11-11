@@ -47,7 +47,6 @@ describe('Trust: TRION Integration Test #trusts #trion', function()
         assert(not trustEntity:hasLearnedAbility(xi.ja.PROVOKE))
         assert(not trustEntity:hasLearnedAbility(xi.ja.SENTINEL))
 
-
         player:clearTrusts()
         player:setLevel(5)
         trustEntity = player:spawnTrust(xi.magic.spell.TRION)
@@ -108,7 +107,6 @@ describe('Trust: TRION Integration Test #trusts #trion', function()
         assert(not trustEntity:hasLearnedWeaponskill(xi.trustskills.id.SAVAGE_BLADE))
         assert(trustEntity:hasLearnedWeaponskill(xi.trustskills.id.ROYAL_BASH))
         assert(trustEntity:hasLearnedWeaponskill(xi.trustskills.id.ROYAL_SAVIOR))
-
 
         player:clearTrusts()
         player:setLevel(75)

@@ -47,7 +47,6 @@ describe('Trust: AYAME Integration Test #trusts #ayame', function()
             assert(trustEntity:getMod(xi.mod.ZANSHIN) == 45)
     end)
 
-
     it('Trust WS check', function()
         -- Lv 1 check
         local trustEntity = player:spawnTrust(xi.magic.spell.AYAME)
