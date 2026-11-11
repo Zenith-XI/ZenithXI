@@ -7,7 +7,7 @@ describe('Trust: SEMIH_LAFIHNA Integration Test #trusts #semih_lafihna', functio
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -72,7 +72,7 @@ describe('Trust: SEMIH_LAFIHNA Integration Test #trusts #semih_lafihna', functio
         assert(not trustEntity:hasLearnedWeaponskill(xi.trustskills.id.STELLAR_ARROW))
         assert(not trustEntity:hasLearnedWeaponskill(xi.trustskills.id.LUX_ARROW))
         assert(not trustEntity:hasLearnedWeaponskill(xi.trustskills.id.ARCHING_ARROW))
-        
+
         player:clearTrusts()
         player:setLevel(55)
         trustEntity = player:spawnTrust(xi.magic.spell.SEMIH_LAFIHNA)

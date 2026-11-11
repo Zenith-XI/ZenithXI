@@ -5,7 +5,7 @@ describe('Trust: TRION Integration Test #trusts #trion', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -47,7 +47,7 @@ describe('Trust: TRION Integration Test #trusts #trion', function()
         assert(not trustEntity:hasLearnedAbility(xi.ja.PROVOKE))
         assert(not trustEntity:hasLearnedAbility(xi.ja.SENTINEL))
 
-        
+
         player:clearTrusts()
         player:setLevel(5)
         trustEntity = player:spawnTrust(xi.magic.spell.TRION)
@@ -97,7 +97,6 @@ describe('Trust: TRION Integration Test #trusts #trion', function()
         assert(not trustEntity:hasLearnedWeaponskill(xi.trustskills.id.ROYAL_BASH))
         assert(not trustEntity:hasLearnedWeaponskill(xi.trustskills.id.ROYAL_SAVIOR))
 
-        
         player:clearTrusts()
         player:setLevel(40)
         trustEntity = player:spawnTrust(xi.magic.spell.TRION)

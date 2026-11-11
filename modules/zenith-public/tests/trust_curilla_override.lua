@@ -5,7 +5,7 @@ describe('Trust: CURILLA Integration Test #trusts #curilla', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -83,7 +83,7 @@ describe('Trust: CURILLA Integration Test #trusts #curilla', function()
         assert(trustEntity:getMainLvl() == 5, 'Must be lv 5')
         assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.FAST_BLADE))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.SWIFT_BLADE))
-        
+
         player:clearTrusts()
         player:setLevel(65)
         trustEntity = player:spawnTrust(xi.magic.spell.CURILLA)

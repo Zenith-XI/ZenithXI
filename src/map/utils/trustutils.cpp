@@ -237,10 +237,10 @@ uint16 trustutils::hasLearnedWeaponskill(CTrustEntity* CTrust, uint16 skillId, u
         return 0;
     }
     uint16 returnValue = 0;
-    if(skillId <= 255) 
+    if(skillId <= 255)
     { // Player WSs
         CWeaponSkill* PWeaponSkill = battleutils::GetWeaponSkill(skillId);
-        if(PWeaponSkill) 
+        if(PWeaponSkill)
         {
             // If the WS is greater than the current skill level skip
             if (CTrust->GetMLevel() >= 5 && maxSkillLvl > PWeaponSkill->getSkillLevel())
@@ -248,8 +248,8 @@ uint16 trustutils::hasLearnedWeaponskill(CTrustEntity* CTrust, uint16 skillId, u
                 returnValue = skillId;
             }
         }
-    } 
-    else 
+    }
+    else
     {
         // Use the by level table look up since it's a mob skill
         auto it = mobSkillAsSkillValue.find(static_cast<xi::TrustSkillsId>(skillId));
@@ -278,13 +278,13 @@ uint16 trustutils::canUseAbility(CTrustEntity* CTrust, uint16 skillId)
         return 0;
     }
     CAbility* PAbility = ability::GetAbility(skillId);
-    bool meetsLevelRequirement = !settings::get<bool>("map.TRUST_SKILLS_BY_LEVEL") || 
-        (PAbility->getJob() == CTrust->GetMJob() && PAbility->getLevel() <= CTrust->GetMLevel()) || 
+    bool meetsLevelRequirement = !settings::get<bool>("map.TRUST_SKILLS_BY_LEVEL") ||
+        (PAbility->getJob() == CTrust->GetMJob() && PAbility->getLevel() <= CTrust->GetMLevel()) ||
         (PAbility->getJob() == CTrust->GetSJob() && PAbility->getLevel() <= CTrust->GetSLevel());
     if (meetsLevelRequirement) {
         return skillId;
     }
-    ShowDebug("canUseAbility: Trust Main: %d/%d (%d/%d), Ability: %s (%d) for Job: %d. Could not use", 
+    ShowDebug("canUseAbility: Trust Main: %d/%d (%d/%d), Ability: %s (%d) for Job: %d. Could not use",
         CTrust->GetMJob(), CTrust->GetSJob(), CTrust->GetMLevel(),CTrust->GetSLevel(), PAbility->getName(),  PAbility->getLevel(),  PAbility->getJob());
     return 0;
 }
@@ -812,7 +812,6 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
             TrustSkill_t skill;
             if (skill_id <= 255) // Player WSs
             {
-                
                 CWeaponSkill* PWeaponSkill = battleutils::GetWeaponSkill(skill_id);
                 if (!PWeaponSkill)
                 {

@@ -5,7 +5,7 @@ describe('Trust: Kupipi Integration Test #trusts #kupipi', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)

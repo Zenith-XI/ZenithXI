@@ -3,8 +3,8 @@
 -----------------------------------
 require('modules/module_utils')
 require('scripts/globals/trust')
-require("scripts/globals/magic")
-require("scripts/globals/gambits")
+require('scripts/globals/magic')
+require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('ayame_override')
 
@@ -13,10 +13,6 @@ m:addOverride('xi.actions.spells.trust.ayame.onMobSpawn', function(trust)
         [xi.magic.spell.NAJI] = xi.trust.messageOffset.TEAMWORK_1,
         [xi.magic.spell.GILGAMESH] = xi.trust.messageOffset.TEAMWORK_2,
     })
-
-    local lvl = trust:getMainLvl()
-    print("DEBUG: Trust Level is currently: " .. tostring(lvl)) -- Check your map server console
-    -- Add Zanshin traits based on Level --
 
     if not xi.pre(xi.expansion.TOAU) then
         trust:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.HASSO }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.HASSO })

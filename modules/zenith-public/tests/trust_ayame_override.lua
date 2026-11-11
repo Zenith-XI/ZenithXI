@@ -112,12 +112,10 @@ describe('Trust: AYAME Integration Test #trusts #ayame', function()
         assert(trustEntity:getMainLvl() == 50, 'Must be lv 50')
         assert(trustEntity:hasLearnedAbility(xi.ja.THIRD_EYE))
         assert(trustEntity:hasLearnedAbility(xi.ja.MEDITATE))
-
     end)
 
      -- Test traits for TOAU
     describe('Trust: Ayame Trait Test #toau', function()
-        local player
         before_each(function()
             xi.settings.main = { RESTRICT_CONTENT = 1, ENABLE_TOAU = 1 }
             assert(not xi.pre(xi.expansion.TOAU) == true, 'TOAU must be on')

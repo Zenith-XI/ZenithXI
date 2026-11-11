@@ -5,7 +5,7 @@ describe('Trust: NANAA_MIHGO Integration Test #trusts #nanaa_mihgo', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -61,7 +61,7 @@ describe('Trust: NANAA_MIHGO Integration Test #trusts #nanaa_mihgo', function()
         assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.WASP_STING))
         assert(not trustEntity:hasLearnedWeaponskill(kingCobraClampId))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.DANCING_EDGE))
-        
+
         player:clearTrusts()
         player:setLevel(30)
         trustEntity = player:spawnTrust(xi.magic.spell.NANAA_MIHGO)

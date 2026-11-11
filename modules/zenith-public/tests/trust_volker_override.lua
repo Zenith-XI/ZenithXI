@@ -5,7 +5,7 @@ describe('Trust: VOLKER Integration Test #trusts #volker', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -21,7 +21,7 @@ describe('Trust: VOLKER Integration Test #trusts #volker', function()
         assert(not trustEntity:hasLearnedAbility(xi.ja.WARCRY))
         assert(not trustEntity:hasLearnedAbility(xi.ja.AGGRESSOR))
         assert(not trustEntity:hasLearnedAbility(xi.ja.RETALIATION))
-        
+
         player:clearTrusts()
         player:setLevel(5)
         trustEntity = player:spawnTrust(xi.magic.spell.VOLKER)
@@ -101,7 +101,7 @@ describe('Trust: VOLKER Integration Test #trusts #volker', function()
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.SPIRITS_WITHIN))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.SAVAGE_BLADE))
         assert(not trustEntity:hasLearnedWeaponskill(976))
-        
+
         player:clearTrusts()
         player:setLevel(40)
         trustEntity = player:spawnTrust(xi.magic.spell.VOLKER)

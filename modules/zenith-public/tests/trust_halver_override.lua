@@ -5,7 +5,7 @@ describe('Trust: HALVER Integration Test #trusts #halver', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -48,7 +48,7 @@ describe('Trust: HALVER Integration Test #trusts #halver', function()
         assert(not trustEntity:hasLearnedAbility(xi.ja.RAMPART))
         assert(not trustEntity:hasLearnedAbility(xi.ja.BERSERK))
         assert(not trustEntity:hasLearnedAbility(xi.ja.SENTINEL))
-        
+
         player:clearTrusts()
         player:setLevel(10)
         trustEntity = player:spawnTrust(xi.magic.spell.HALVER)
@@ -105,7 +105,7 @@ describe('Trust: HALVER Integration Test #trusts #halver', function()
         assert(trustEntity:getMainLvl() == 5, 'Must be lv 5')
         assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.DOUBLE_THRUST))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.IMPULSE_DRIVE))
-        
+
         player:clearTrusts()
         player:setLevel(56)
         trustEntity = player:spawnTrust(xi.magic.spell.HALVER)

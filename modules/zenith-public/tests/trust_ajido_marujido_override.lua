@@ -5,7 +5,7 @@ describe('Trust: AJIDO_MARUJIDO Integration Test #trusts #ajido', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -48,7 +48,6 @@ describe('Trust: AJIDO_MARUJIDO Integration Test #trusts #ajido', function()
 
     -- Test traits for ABYSEA
     describe('Trust: AJIDO_MARUJIDO Trait Test #abyssea #trusts', function()
-        local player
         before_each(function()
             xi.settings.main = { RESTRICT_CONTENT = 1, ENABLE_ABYSSEA = 1 }
             assert(not xi.pre(xi.expansion.ABYSSEA) == true, 'ABYSSEA must be on')

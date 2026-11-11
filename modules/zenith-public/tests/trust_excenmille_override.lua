@@ -5,7 +5,7 @@ describe('Trust: EXCENMILLE Integration Test #trusts #excenmille', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -86,7 +86,7 @@ describe('Trust: EXCENMILLE Integration Test #trusts #excenmille', function()
         assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.DOUBLE_THRUST))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.LEG_SWEEP))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.PENTA_THRUST))
-        
+
         player:clearTrusts()
         player:setLevel(40)
         trustEntity = player:spawnTrust(xi.magic.spell.EXCENMILLE)

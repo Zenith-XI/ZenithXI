@@ -5,7 +5,7 @@ describe('Trust: NAJI Integration Test #trusts #naji', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -45,7 +45,7 @@ describe('Trust: NAJI Integration Test #trusts #naji', function()
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.BURNING_BLADE))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.RED_LOTUS_BLADE))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.VORPAL_BLADE))
-        
+
         player:clearTrusts()
         player:setLevel(40)
         trustEntity = player:spawnTrust(xi.magic.spell.NAJI)

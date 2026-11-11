@@ -5,7 +5,7 @@ describe('Trust: IRON EATER Integration Test #trusts #iron_eater', function()
     ---@type CClientEntityPair
     local player
     assert(xi.settings.map.TRUST_SKILLS_BY_LEVEL == true, 'Zenith: TRUST_SKILLS_BY_LEVEL Must be set to true')
-    
+
     before_each(function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.WAR, level = 1 })
         player:setGMLevel(5)
@@ -20,7 +20,7 @@ describe('Trust: IRON EATER Integration Test #trusts #iron_eater', function()
         assert(not trustEntity:hasLearnedAbility(xi.ja.RAMPART))
         assert(not trustEntity:hasLearnedAbility(xi.ja.BERSERK))
         assert(not trustEntity:hasLearnedAbility(xi.ja.SENTINEL))
-        
+
         player:clearTrusts()
         player:setLevel(5)
         trustEntity = player:spawnTrust(xi.magic.spell.IRON_EATER)
@@ -86,7 +86,7 @@ describe('Trust: IRON EATER Integration Test #trusts #iron_eater', function()
         assert(trustEntity:hasLearnedWeaponskill(xi.weaponskill.SHIELD_BREAK))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.ARMOR_BREAK))
         assert(not trustEntity:hasLearnedWeaponskill(xi.weaponskill.STEEL_CYCLONE))
-        
+
         player:clearTrusts()
         player:setLevel(35)
         trustEntity = player:spawnTrust(xi.magic.spell.IRON_EATER)

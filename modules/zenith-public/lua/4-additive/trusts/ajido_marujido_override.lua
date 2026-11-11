@@ -3,8 +3,8 @@
 -----------------------------------
 require('modules/module_utils')
 require('scripts/globals/trust')
-require("scripts/globals/magic")
-require("scripts/globals/gambits")
+require('scripts/globals/magic')
+require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('ajido_marujido_override')
 
@@ -16,11 +16,9 @@ m:addOverride('xi.actions.spells.trust.ajido-marujido.onMobSpawn', function(trus
         [xi.magic.spell.KARAHA_BARUHA] = xi.trust.messageOffset.TEAMWORK_4,
         [xi.magic.spell.SEMIH_LAFIHNA] = xi.trust.messageOffset.TEAMWORK_5,
     })
-    local lvl = trust:getMainLvl()
     if not xi.pre(xi.expansion.ABYSSEA) then
         trust:setMod(xi.mod.CURE_POTENCY, 10)
     end
-    
     trust:addGambit(ai.t.TARGET, { ai.c.MB_AVAILABLE, 0 }, { ai.r.MA, ai.s.MB_ELEMENT, xi.magic.spellFamily.NONE })
     trust:addGambit(ai.t.TARGET, { ai.c.HPP_GTE, 35 }, { ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.NONE }, 60)
     trust:addGambit(ai.t.TARGET, { ai.c.HPP_LT, 35 }, { ai.r.MA, ai.s.LOWEST, xi.magic.spellFamily.NONE }, 60)
@@ -35,4 +33,3 @@ m:addOverride('xi.actions.spells.trust.ajido-marujido.onMobSpawn', function(trus
 
     trust:setMobMod(xi.mobMod.TRUST_DISTANCE, xi.trust.movementType.NO_MOVE)
 end)
-

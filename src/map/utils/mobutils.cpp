@@ -2045,7 +2045,7 @@ auto hasLearnedSpell(CMobEntity* PMob, uint16 spellID) -> uint16
         return 0;
     }
     auto castedSpellId = static_cast<SpellID>(spellID);
-    if (PMob->SpellContainer->hasAvailableAtLevel(castedSpellId)) 
+    if (PMob->SpellContainer->hasAvailableAtLevel(castedSpellId))
     {
         return spellID;
     }

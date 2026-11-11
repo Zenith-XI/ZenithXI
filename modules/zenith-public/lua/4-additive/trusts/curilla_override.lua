@@ -3,8 +3,8 @@
 -----------------------------------
 require('modules/module_utils')
 require('scripts/globals/trust')
-require("scripts/globals/magic")
-require("scripts/globals/gambits")
+require('scripts/globals/magic')
+require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('curilla_override')
 
@@ -19,7 +19,7 @@ m:addOverride('xi.actions.spells.trust.curilla.onMobSpawn', function(trust)
     trust:addListener('ABILITY_USE', 'SENTINEL_USE' .. 'ABILITY', function(mobArg, target, skill, action)
         if skill:getID() == xi.jobAbility.SENTINEL then
             skill:setRecast(skill:getRecast() - 50) -- Sentinel Recast merited (-50 sec)
-            mobArg:addStatusEffect(xi.effect.SENTINEL, {duration = 40}) -- Set to 40s
+            mobArg:addStatusEffect(xi.effect.SENTINEL, { duration = 40 }) -- Set to 40s
         end
     end)
 
