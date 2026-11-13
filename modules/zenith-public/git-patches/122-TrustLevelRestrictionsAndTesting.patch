@@ -1,0 +1,196 @@
+Trust level restrictions (ZENITHDEV-200), engine side.
+- Trust job-ability gambits need the ability at the Trust's main job level, or at its support job level
+  (main-job-only abilities excluded), from the loaded ability data.
+- When a Trust is summoned, each TP skill in its list is offered to the Lua hook
+  xi.trust.canUseTpSkill(trust, skillId); a skill the hook rejects is dropped. With no hook, LSB behaviour.
+  The rules (level 5 floor, gates, fallbacks) live in modules/zenith-public/lua/2-base/trust_tp_skills.lua.
+- trust:hasLearnedWeaponskill(id) answers whether a Trust meets a weaponskill's normal skill requirement;
+  trust:hasLearnedAbility(id) answers the job-ability check above.
+- Corrects the reversed Stellar Arrow / Lux Arrow comments in mob_skill_lists.sql.
+---
+diff --git a/sql/mob_skill_lists.sql b/sql/mob_skill_lists.sql
+index ed3e21f1a9..60c28485db 100644
+--- a/sql/mob_skill_lists.sql
++++ b/sql/mob_skill_lists.sql
+@@ -3533,8 +3533,8 @@ INSERT INTO `mob_skill_lists` VALUES ('TRUST_Areuhat',1054,3438);  -- Dragon Bre
+ INSERT INTO `mob_skill_lists` VALUES ('TRUST_Areuhat',1054,3439); -- Hurricane Wing (Areuhat)
+ INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3487); -- Sidewinder (Semih Lafihna)
+ INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3488); -- Arching Arrow (Semih Lafihna)
+-INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3489); -- Lux Arrow
+-INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3490); -- Stellar Arrow
++INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3489); -- Stellar Arrow
++INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3490); -- Lux Arrow
+ -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Elivira',1056,0);
+ -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Noillurie',1057,0);
+ -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Lhu_Mhakaracca',1058,0);
+diff --git a/src/map/ai/helpers/gambits_container.cpp b/src/map/ai/helpers/gambits_container.cpp
+index a4c062e9e5..a1eae52641 100644
+--- a/src/map/ai/helpers/gambits_container.cpp
++++ b/src/map/ai/helpers/gambits_container.cpp
+@@ -32,6 +32,7 @@
+ #include "notoriety_container.h"
+ #include "spell.h"
+ #include "utils/battleutils.h"
++#include "utils/trustutils.h"
+ #include "weapon_skill.h"
+ 
+ #include "ai/controllers/player_controller.h"
+@@ -494,7 +495,8 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
+                 // Basic validation: SPECIFIC must exist
+                 if (action.select == G_SELECT::SPECIFIC)
+                 {
+-                    if (ability::GetAbility(action.select_arg) == nullptr)
++                    // Zenith: the Trust must have the ability at its job levels (ZENITHDEV-200)
++                    if (!trustutils::canUseAbility(POwner, static_cast<uint16>(action.select_arg)))
+                     {
+                         canExecute[i] = false;
+                     }
+diff --git a/src/map/lua/lua_base_entity.cpp b/src/map/lua/lua_base_entity.cpp
+index 721c1d46eb..e07fc7215a 100644
+--- a/src/map/lua/lua_base_entity.cpp
++++ b/src/map/lua/lua_base_entity.cpp
+@@ -11347,6 +11347,12 @@ void CLuaBaseEntity::addLearnedWeaponskill(uint8 wsUnlockId)
+ 
+ auto CLuaBaseEntity::hasLearnedWeaponskill(uint8 wsUnlockId) -> bool
+ {
++    // Zenith: for a Trust, whether it meets this weaponskill's normal skill requirement at its level
++    if (auto* PTrust = dynamic_cast<CTrustEntity*>(m_PBaseEntity))
++    {
++        return trustutils::meetsWeaponskillRequirement(PTrust, wsUnlockId);
++    }
++
+     if (m_PBaseEntity->objtype != TYPE_PC)
+     {
+         ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+@@ -11457,6 +11463,12 @@ void CLuaBaseEntity::addLearnedAbility(uint16 abilityID)
+ 
+ auto CLuaBaseEntity::hasLearnedAbility(uint16 abilityID) -> bool
+ {
++    // Zenith: for a Trust, whether it can use this job ability at its job levels
++    if (auto* PTrust = dynamic_cast<CTrustEntity*>(m_PBaseEntity))
++    {
++        return trustutils::canUseAbility(PTrust, abilityID);
++    }
++
+     if (m_PBaseEntity->objtype != TYPE_PC)
+     {
+         ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+diff --git a/src/map/utils/trustutils.cpp b/src/map/utils/trustutils.cpp
+index 162bea304c..2a1c1076bc 100644
+--- a/src/map/utils/trustutils.cpp
++++ b/src/map/utils/trustutils.cpp
+@@ -27,8 +27,11 @@
+ 
+ #include <algorithm>
+ 
++#include "ability.h"
+ #include "battleutils.h"
++#include "common/lua.h"
+ #include "data/loader.h"
++#include "lua/lua_base_entity.h"
+ #include "mobutils.h"
+ 
+ #include "grades.h"
+@@ -200,6 +203,53 @@ auto trustutils::SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntit
+     return PTrust;
+ }
+ 
++auto trustutils::canUseAbility(CTrustEntity* PTrust, CAbility* PAbility) -> bool
++{
++    if (PTrust == nullptr || PAbility == nullptr)
++    {
++        return false;
++    }
++
++    if (PAbility->getJob() == PTrust->GetMJob())
++    {
++        return PTrust->GetMLevel() >= PAbility->getLevel();
++    }
++
++    if (PTrust->GetSJob() != xi::Job::NONE && PAbility->getJob() == PTrust->GetSJob())
++    {
++        return PTrust->GetSLevel() >= PAbility->getLevel() && !(PAbility->getAddType() & ADDTYPE_MAIN_ONLY);
++    }
++
++    // Not one of the Trust's jobs: a deliberate Trust-specific action, not level-gated here.
++    return true;
++}
++
++auto trustutils::canUseAbility(CTrustEntity* PTrust, uint16 abilityId) -> bool
++{
++    return canUseAbility(PTrust, ability::GetAbility(abilityId));
++}
++
++auto trustutils::meetsWeaponskillRequirement(CTrustEntity* PTrust, uint16 weaponskillId) -> bool
++{
++    CWeaponSkill* PWeaponSkill = PTrust ? battleutils::GetWeaponSkill(weaponskillId) : nullptr;
++    if (PWeaponSkill == nullptr)
++    {
++        return false;
++    }
++
++    const auto skillType = static_cast<xi::SkillType>(PWeaponSkill->getType());
++    const auto level     = std::min<uint8>(PTrust->GetMLevel(), 99);
++    uint16     skill     = battleutils::GetMaxSkill(skillType, PTrust->GetMJob(), level);
++
++    // A Trust whose main job has no rank in this weapon falls back to its own working skill.
++    if (skill == 0)
++    {
++        skill = PTrust->GetSkill(skillType);
++    }
++
++    return skill >= PWeaponSkill->getSkillLevel();
++}
++
+ void BuildTrustData(uint32 TrustID)
+ {
+     const auto rset = db::preparedStmt("SELECT "
+@@ -713,9 +763,25 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
+     controller->m_GambitsContainer->tp_trigger = G_TP_TRIGGER::ASAP;
+     controller->m_GambitsContainer->tp_select  = G_SELECT::RANDOM;
+ 
+-    auto skillList = battleutils::GetMobSkillList(PTrust->m_MobSkillList);
++    auto       skillList     = battleutils::GetMobSkillList(PTrust->m_MobSkillList);
++    const auto canUseTpSkill = lua["xi"]["trust"]["canUseTpSkill"].get<sol::optional<sol::protected_function>>();
+     for (uint16 skill_id : skillList)
+     {
++        // Zenith: a module decides which TP skills the Trust may use at its level (ZENITHDEV-200)
++        if (canUseTpSkill)
++        {
++            const auto result = (*canUseTpSkill)(CLuaBaseEntity(PTrust), skill_id);
++            if (!result.valid())
++            {
++                const sol::error err = result;
++                ShowError("LoadTrustStatsAndSkills: xi.trust.canUseTpSkill: %s", err.what());
++            }
++            else if (!result.get<bool>(0))
++            {
++                continue;
++            }
++        }
++
+         TrustSkill_t skill;
+         if (skill_id <= 255) // Player WSs
+         {
+diff --git a/src/map/utils/trustutils.h b/src/map/utils/trustutils.h
+index 991e0d484d..b0cfd53d96 100644
+--- a/src/map/utils/trustutils.h
++++ b/src/map/utils/trustutils.h
+@@ -22,6 +22,7 @@
+ 
+ #include "common/cbasetypes.h"
+ 
++class CAbility;
+ class CCharEntity;
+ class CTrustEntity;
+ 
+@@ -32,4 +33,9 @@ namespace trustutils
+ void LoadTrustList();
+ auto SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntity*;
+ 
++// Zenith: level/job eligibility for Trust job abilities and weaponskills (ZENITHDEV-200)
++auto canUseAbility(CTrustEntity* PTrust, CAbility* PAbility) -> bool;
++auto canUseAbility(CTrustEntity* PTrust, uint16 abilityId) -> bool;
++auto meetsWeaponskillRequirement(CTrustEntity* PTrust, uint16 weaponskillId) -> bool;
++
+ }; // namespace trustutils

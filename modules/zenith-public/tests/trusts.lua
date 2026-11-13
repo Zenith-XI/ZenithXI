@@ -56,7 +56,7 @@ describe('Zenith trust limits', function()
         assert(canCast(xi.magic.spell.SHANTOTTO) == 0, 'precondition: a fresh solo player cannot call a trust here')
     end)
 
-    it('starts the slot 1 cooldown when a trust is called', function()
+    it('starts the slot 1 cooldown when a trust is called #trusts', function()
         player:addSpell(xi.magic.spell.SHANTOTTO)
         local before = GetSystemTime()
 
