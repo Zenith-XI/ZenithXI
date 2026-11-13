@@ -50,12 +50,12 @@ m:addOverride('xi.actions.spells.trust.curilla.onMobSpawn', function(trust)
     trust:setMobMod(xi.mobMod.CAN_PARRY, 3)
     trust:setMod(xi.mod.SHIELD_MASTERY_TP, shieldMasteryPower)
     trust:setMod(xi.mod.SHIELDBLOCKRATE, 20)
-    trust:addMod(xi.mod.CURE_CAST_TIME, 50)
+    trust:addMod(xi.mod.CURE_CAST_TIME, 50) -- Cure casting time -50%
     trust:addMod(xi.mod.CURE_POTENCY, 25)
-    trust:addMod(xi.mod.ENMITY, 15)
+    trust:addMod(xi.mod.ENMITY, 20)
     trust:addMod(xi.mod.DMG, -500) -- Damage Taken -5%
     trust:addMod(xi.mod.HPP, 10)
-    trust:addMod(xi.mod.MPP, 30)
+    trust:addMod(xi.mod.MPP, 50)
 
     trust:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.SENTINEL }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.SENTINEL })
 

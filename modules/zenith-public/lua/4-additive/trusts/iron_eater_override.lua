@@ -15,8 +15,18 @@ m:addOverride('xi.actions.spells.trust.iron_eater.onMobSpawn', function(trust)
 
     trust:addGambit(ai.t.MASTER, { ai.c.HPP_LT, 50 }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.PROVOKE })
     trust:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.BERSERK }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.BERSERK  })
+
     local lvl = trust:getMainLvl()
-    if lvl >= 10 then
+
+    if lvl >= 50 then
+        trust:addMod(xi.mod.STORETP, 20)
+    elseif lvl >= 30 then
+        trust:addMod(xi.mod.STORETP, 15)
+    elseif lvl >= 10 then
         trust:addMod(xi.mod.STORETP, 10)
+    end
+
+    if lvl >= 25 then
+        trust:addMod(xi.mod.DOUBLE_ATTACK, 5) -- Native 5% higher DA rate
     end
 end)
