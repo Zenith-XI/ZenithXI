@@ -1,0 +1,33 @@
+# ZENITHDEV-287: monster content tag audit (Zenith All Tagged Monsters Review).
+# none lifts the expansion gate; rotz/cop/toau moves the template to that expansion.
+
+templates:
+  Blackwater_Pugil:
+    content: none
+
+  Brazen_Bones:
+    content: none
+
+  Deviling_Bats:
+    content: none
+
+  Drowned_Bones:
+    content: none
+
+  Flume_Toad:
+    content: none
+
+  Plunderer_Crab:
+    content: none
+
+  Poroggo_Excavator:
+    content: none
+
+  Rapier_Scorpion:
+    content: none
+
+  Sodden_Bones:
+    content: none
+
+  Starborer:
+    content: none

@@ -1,0 +1,9 @@
+# ZENITHDEV-287: monster content tag audit (Zenith All Tagged Monsters Review).
+# none lifts the expansion gate; rotz/cop/toau moves the template to that expansion.
+
+templates:
+  Lii_Jixa_the_Somnolist:
+    content: none
+
+  Saa_Doyi_the_Fervid:
+    content: rotz

@@ -1,0 +1,39 @@
+# ZENITHDEV-287: monster content tag audit (Zenith All Tagged Monsters Review).
+# none lifts the expansion gate; rotz/cop/toau moves the template to that expansion.
+
+templates:
+  Ankou:
+    content: none
+
+  Barbastelle:
+    content: none
+
+  Gwyllgi:
+    content: none
+
+  Locus_Armet_Beetle:
+    content: none
+
+  Locus_Cutlass_Scorpion:
+    content: none
+
+  Locus_Dire_Bat:
+    content: none
+
+  Locus_Hati:
+    content: none
+
+  Locus_Lemures:
+    content: none
+
+  Locus_Spartoi_Sorcerer:
+    content: none
+
+  Locus_Spartoi_Warrior:
+    content: none
+
+  Locus_Thousand_Eyes:
+    content: none
+
+  Locus_Tomb_Worm:
+    content: none
