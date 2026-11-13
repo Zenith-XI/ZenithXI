@@ -45,22 +45,6 @@ index a4c062e9e5..a1eae52641 100644
                      {
                          canExecute[i] = false;
                      }
-@@ -1857,11 +1859,12 @@ auto CGambitsContainer::PartyHasTank() -> bool
- {
-     bool hasTank = false;
-     // clang-format off
--        static_cast<CCharEntity*>(POwner->PMaster)->ForPartyWithTrusts([&](CBattleEntity* PMember)
-+        CCharEntity *master = static_cast<CCharEntity*>(POwner->PMaster);
-+        master->ForPartyWithTrusts([&](CBattleEntity* PMember)
-         {
-             auto jobType = PMember->GetMJob();
--
--            if (jobType == xi::Job::NIN || jobType == xi::Job::PLD || jobType == xi::Job::RUN)
-+            // Custom code for Trusts that need a tank. Select advanced job other, use WAR as the "beginner" tank
-+            if ((jobType == xi::Job::NIN || jobType == xi::Job::PLD || jobType == xi::Job::RUN) || (jobType == xi::Job::WAR && master->GetMLevel() <= 30))
-             {
-                 hasTank = true;
-             }
 diff --git a/src/map/lua/lua_base_entity.cpp b/src/map/lua/lua_base_entity.cpp
 index 721c1d46eb..e07fc7215a 100644
 --- a/src/map/lua/lua_base_entity.cpp
