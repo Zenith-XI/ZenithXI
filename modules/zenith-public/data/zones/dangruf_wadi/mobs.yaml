@@ -1,0 +1,42 @@
+# ZENITHDEV-287: monster content tag audit (Zenith All Tagged Monsters Review).
+# none lifts the expansion gate; rotz/cop/toau moves the template to that expansion.
+
+templates:
+  Couloir_Leech:
+    content: none
+
+  Fume_Lizard:
+    content: none
+
+  Goblin_Bladesmith:
+    content: none
+
+  Goblin_Brigand:
+    content: none
+
+  Goblin_Bushwhacker:
+    content: none
+
+  Goblin_Conjurer:
+    content: none
+
+  Goblin_Headsman:
+    content: none
+
+  Goblin_Healer:
+    content: none
+
+  Natty_Gibbon:
+    content: none
+
+  Prim_Pika:
+    content: none
+
+  Teporingo:
+    content: toau
+
+  Trimmer:
+    content: none
+
+  Witchetty_Grub:
+    content: none

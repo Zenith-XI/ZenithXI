@@ -1,0 +1,36 @@
+# ZENITHDEV-287: monster content tag audit (Zenith All Tagged Monsters Review).
+# none lifts the expansion gate; rotz/cop/toau moves the template to that expansion.
+
+templates:
+  Covin_Bat:
+    content: none
+
+  Deathwatch_Beetle:
+    content: none
+
+  Goblin_Flesher:
+    content: none
+
+  Goblin_Lurcher:
+    content: none
+
+  Goblin_Metallurgist:
+    content: none
+
+  Goblin_Trailblazer:
+    content: none
+
+  Nocuous_Weapon:
+    content: toau
+
+  Skinnymajinx:
+    content: none
+
+  Skinnymalinks:
+    content: none
+
+  Slendlix_Spindlethumb:
+    content: none
+
+  Troika_Bats:
+    content: none

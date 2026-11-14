@@ -1,0 +1,24 @@
+# ZENITHDEV-287: monster content tag audit (Zenith All Tagged Monsters Review).
+# none lifts the expansion gate; rotz/cop/toau moves the template to that expansion.
+
+templates:
+  Agar_Agar:
+    content: toau
+
+  Bilis_Leech:
+    content: none
+
+  Bombast:
+    content: none
+
+  Buds_Bunny:
+    content: none
+
+  Donggu:
+    content: none
+
+  Swagger_Spruce:
+    content: none
+
+  Targe_Beetle:
+    content: none

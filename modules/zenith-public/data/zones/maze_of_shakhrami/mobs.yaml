@@ -1,0 +1,24 @@
+# ZENITHDEV-287: monster content tag audit (Zenith All Tagged Monsters Review).
+# none lifts the expansion gate; rotz/cop/toau moves the template to that expansion.
+
+templates:
+  Bleeder_Leech:
+    content: none
+
+  Chaser_Bats:
+    content: none
+
+  Crypterpillar:
+    content: none
+
+  Gloombound_Lurker:
+    content: none
+
+  Lesath:
+    content: none
+
+  Trembler_Tabitha:
+    content: none
+
+  Warren_Bat:
+    content: none
