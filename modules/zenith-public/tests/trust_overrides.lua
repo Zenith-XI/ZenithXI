@@ -242,14 +242,12 @@ describe('Zenith trust overrides #trusts', function()
 
         it('Shantotto has aggro', function()
             local trust = summon('SHANTOTTO', 10)
-            print("MPP "..tostring(trust:getMPP()))
             trust:setUnkillable(true)
             mob:addEnmity(trust, 10000, 10000)
             for _ = 1, 10 do
                 xi.test.world:skipTime(1)
             end
             player.actions:engage(mob)
-            print("MPP "..tostring(trust:getMPP()))
             assert(trust:getMPP() == 100, 'Shantotto should not do anything with top enmity')
         end)
     end)
