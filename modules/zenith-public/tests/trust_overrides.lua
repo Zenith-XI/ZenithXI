@@ -107,7 +107,7 @@ describe('Zenith trust overrides #trusts', function()
         })
     end)
 
-     it('applies Iron Eater\'s reviewed mods', function()
+    it('applies Iron Eater\'s reviewed mods', function()
         assertMods('IRON_EATER', 10,
         {
             { 'STORETP', 10 },
@@ -247,6 +247,7 @@ describe('Zenith trust overrides #trusts', function()
             for _ = 1, 10 do
                 xi.test.world:skipTime(1)
             end
+
             player.actions:engage(mob)
             assert(trust:getMPP() == 100, 'Shantotto should not do anything with top enmity')
         end)
