@@ -48,10 +48,10 @@ describe('Zenith trust overrides #trusts', function()
             { 'ENHANCES_GUARDIAN', 0 },
             { 'CURE_CAST_TIME', 50 },
             { 'CURE_POTENCY', 25 },
-            { 'ENMITY', 15 },
+            { 'ENMITY', 20 },
             { 'DMG', -500 },
             { 'HPP', 10 },
-            { 'MPP', 30 },
+            { 'MPP', 50 },
         }
 
         for _, row in ipairs({ { 24, 0 }, { 25, 10 }, { 50, 20 }, { 75, 30 } }) do
@@ -78,6 +78,50 @@ describe('Zenith trust overrides #trusts', function()
         })
     end)
 
+    it('applies Excenmille\'s reviewed mods', function()
+        assertMods('EXCENMILLE', 75,
+        {
+            { 'HPP', 10 },
+            { 'MPP', 20 },
+            { 'ENMITY', 10 },
+            { 'STORETP', 25 },
+        })
+    end)
+
+    it('applies Halver\'s reviewed mods', function()
+        assertMods('HALVER', 75,
+        {
+            { 'HPP', 10 },
+            { 'MPP', 30 },
+            { 'ENMITY', 10 },
+        })
+    end)
+
+    it('applies Volker\'s reviewed mods', function()
+        assertMods('VOLKER', 75,
+        {
+            { 'HPP', 15 },
+            { 'ALL_WSDMG_ALL_HITS', 10 },
+            -- Base 225 + 10 from added mod at 15
+            { 'ACC', 235 },
+        })
+    end)
+
+     it('applies Iron Eater\'s reviewed mods', function()
+        assertMods('IRON_EATER', 10,
+        {
+            { 'STORETP', 10 },
+        })
+        assertMods('IRON_EATER', 30,
+        {
+            { 'STORETP', 15 }, { 'DOUBLE_ATTACK', 15 }
+        })
+        assertMods('IRON_EATER', 50,
+        {
+            { 'STORETP', 20 },
+        })
+    end)
+
     it('gives Semih Lafihna Store TP +40', function()
         assertMods('SEMIH_LAFIHNA', 75, { { 'STORETP', 40 } })
     end)
@@ -99,14 +143,12 @@ describe('Zenith trust overrides #trusts', function()
         })
     end)
 
-    -- Controls: standard job traits still come from the central trait data, and the remaining override
-    -- mods that ZENITHDEV-200 did not ask for (Halver Double Attack, Iron Eater Store TP) are unchanged.
+    -- Controls: standard job traits still come from the central trait data
     it('keeps standard traits and the other override mods', function()
         assertMods('AYAME', 75, { { 'ZANSHIN', 45 } })
         assertMods('EXCENMILLE', 5, { { 'UNDEAD_KILLER', 8 } })
         assertMods('NANAA_MIHGO', 15, { { 'GILFINDER', 1 }, { 'TREASURE_HUNTER', 1 } })
         assertMods('HALVER', 15, { { 'DOUBLE_ATTACK', 10 } })
-        assertMods('IRON_EATER', 10, { { 'STORETP', 10 } })
     end)
 
     it('shows Semih Lafihna\'s special message on Stellar Arrow, not Lux Arrow', function()
@@ -175,6 +217,40 @@ describe('Zenith trust overrides #trusts', function()
             sentinel = trust:getStatusEffect(xi.effect.SENTINEL)
             assert(sentinel ~= nil, 'precondition: Sentinel wore off within 4 s')
             assert(sentinel:getSubPower() == 0, string.format('expected no Guardian enmity retention (subPower 0), got %d', sentinel:getSubPower()))
+        end)
+    end)
+
+    describe('Shantotto\'s override', function()
+        ---@type CTestEntity
+        local mob
+
+        before_each(function()
+            player:setCharVar('TrustEngageType', 1) -- engage with the master, no first swing needed
+
+            mob = player.entities:moveTo('Wild_Rabbit')
+            mob:respawn()
+            mob:setUnkillable(true)
+        end)
+
+        -- Leave West Ronfaure as other tests expect it: no trusts out and a fresh rabbit with no enmity,
+        -- or the next player (who may reuse this character ID) cannot call a trust.
+        after_each(function()
+            player:clearTrusts()
+            mob:setUnkillable(false)
+            mob:respawn()
+        end)
+
+        it('Shantotto has aggro', function()
+            local trust = summon('SHANTOTTO', 10)
+            print("MPP "..tostring(trust:getMPP()))
+            trust:setUnkillable(true)
+            mob:addEnmity(trust, 10000, 10000)
+            for _ = 1, 10 do
+                xi.test.world:skipTime(1)
+            end
+            player.actions:engage(mob)
+            print("MPP "..tostring(trust:getMPP()))
+            assert(trust:getMPP() == 100, 'Shantotto should not do anything with top enmity')
         end)
     end)
 end)
