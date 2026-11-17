@@ -107,7 +107,7 @@ describe('Zenith trust overrides #trusts', function()
         })
     end)
 
-     it('applies Iron Eater\'s reviewed mods', function()
+    it('applies Iron Eater\'s reviewed mods', function()
         assertMods('IRON_EATER', 10,
         {
             { 'STORETP', 10 },
