@@ -107,7 +107,7 @@ describe('Zenith trust overrides #trusts', function()
         })
     end)
 
-    it('applies Iron Eater\'s reviewed mods', function()
+     it('applies Iron Eater\'s reviewed mods', function()
         assertMods('IRON_EATER', 10,
         {
             { 'STORETP', 10 },
@@ -217,39 +217,6 @@ describe('Zenith trust overrides #trusts', function()
             sentinel = trust:getStatusEffect(xi.effect.SENTINEL)
             assert(sentinel ~= nil, 'precondition: Sentinel wore off within 4 s')
             assert(sentinel:getSubPower() == 0, string.format('expected no Guardian enmity retention (subPower 0), got %d', sentinel:getSubPower()))
-        end)
-    end)
-
-    describe('Shantotto\'s override', function()
-        ---@type CTestEntity
-        local mob
-
-        before_each(function()
-            player:setCharVar('TrustEngageType', 1) -- engage with the master, no first swing needed
-
-            mob = player.entities:moveTo('Wild_Rabbit')
-            mob:respawn()
-            mob:setUnkillable(true)
-        end)
-
-        -- Leave West Ronfaure as other tests expect it: no trusts out and a fresh rabbit with no enmity,
-        -- or the next player (who may reuse this character ID) cannot call a trust.
-        after_each(function()
-            player:clearTrusts()
-            mob:setUnkillable(false)
-            mob:respawn()
-        end)
-
-        it('Shantotto has aggro', function()
-            local trust = summon('SHANTOTTO', 10)
-            trust:setUnkillable(true)
-            mob:addEnmity(trust, 10000, 10000)
-            for _ = 1, 10 do
-                xi.test.world:skipTime(1)
-            end
-
-            player.actions:engage(mob)
-            assert(trust:getMPP() == 100, 'Shantotto should not do anything with top enmity')
         end)
     end)
 end)

@@ -18,7 +18,6 @@ m:addOverride('xi.actions.spells.trust.shantotto.onMobSpawn', function(trust)
 
     trust:addGambit(ai.t.TARGET, { ai.c.MB_AVAILABLE, 0 }, { ai.r.MA, ai.s.MB_ELEMENT, xi.magic.spellFamily.NONE })
     --Shantotto on retail is constantly casting. At 40%ish starts not always picking the highest. Under 10% she casts Stone constantly when testing.
-    trust:addGambit(ai.t.SELF, { ai.c.HAS_TOP_ENMITY, 0 }, {}) -- Do nothing with highest aggro
     trust:addGambit(ai.t.TARGET, { ai.c.HPP_GTE, 40 }, { ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.NONE })
     trust:addGambit(ai.t.TARGET, { ai.c.HPP_LT, 40 }, { ai.r.MA, ai.s.RANDOM, xi.magic.spellFamily.NONE })
     trust:addGambit(ai.t.TARGET, { ai.c.HPP_LT, 10 }, { ai.r.MA, ai.s.LOWEST, xi.magic.spellFamily.NONE })
