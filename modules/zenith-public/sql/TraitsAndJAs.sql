@@ -45,11 +45,13 @@ UPDATE `abilities` SET `level` = 65, `content_tag`= 'TOAU' WHERE `name` = 'consp
 UPDATE `abilities` SET `level` = 75 WHERE `name` = 'bully'; -- Abyssea
 
 -- PLD
+UPDATE `abilities` SET `recastTime` = 600 WHERE name = 'holy_circle'; -- 10 Minute recast (Era) but modern duration and bonuses preserved
 -- (Lvl 62) Rampart - ROTZ
 UPDATE `abilities` SET `level` = 65, `content_tag`= 'WOTG' WHERE `name` = 'divine_emblem';
 UPDATE `abilities` SET `level` = 75, `content_tag`= 'ROTZ' WHERE `name` = 'sepulcher';
 
 -- DRK
+UPDATE `abilities` SET `recastTime` = 600 WHERE name = 'arcane_circle'; -- 10 Minute recast (Era) but modern duration and bonuses preserved
 UPDATE `abilities` SET `content_tag`= 'COP' WHERE `name` = 'consume_mana';
 UPDATE `abilities` SET `level` = 65, `content_tag`= 'WOTG' WHERE `name` = 'nether_void';
 UPDATE `abilities` SET `level` = 75, `content_tag`= 'ROTZ' WHERE `name` = 'arcane_crest'; -- Duration changed from 180 to 120.
@@ -72,6 +74,7 @@ UPDATE `abilities` SET `level` = 60, `content_tag`= 'COP' WHERE `name` = 'bounty
 UPDATE `abilities` SET `level` = 75 WHERE `name` = 'double_shot'; -- Abyssea
 
 -- SAM
+UPDATE `abilities` SET `recastTime` = 600 WHERE name = 'warding_circle'; -- 10 Minute recast (Era) but modern duration and bonuses preserved
 -- (Lvl 25) Hasso - TOAU
 -- (Lvl 35) Seigan - TOAU
 -- (Lvl 40) Sekkanoki - WOTG
@@ -89,6 +92,7 @@ UPDATE `abilities` SET `recastTime`= 300 WHERE `name` = 'sange'; -- Reverts reca
 
 -- DRG
 UPDATE `abilities` SET `content_tag`= 'ROTZ' WHERE `name` = 'spirit_surge'; -- (Lvl 1)
+UPDATE `abilities` SET `recastTime` = 600 WHERE name = 'ancient_circle'; -- 10 Minute recast (Era) but modern duration and bonuses preserved
 UPDATE `abilities` SET `level` = 40, `content_tag`= 'ROTZ' WHERE `name` = 'smiting_breath';
 UPDATE `abilities` SET `level` = 60, `content_tag`= 'COP' WHERE `name` = 'steady_wing';
 -- UPDATE `abilities` SET `level` = 65, `content_tag`= 'TOAU' WHERE `name` = 'spirit_bond'; -- TODO: 50% damage split needs to be coded
