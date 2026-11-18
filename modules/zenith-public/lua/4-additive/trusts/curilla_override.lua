@@ -52,7 +52,7 @@ m:addOverride('xi.actions.spells.trust.curilla.onMobSpawn', function(trust)
     trust:setMod(xi.mod.SHIELDBLOCKRATE, 20)
     trust:addMod(xi.mod.CURE_CAST_TIME, 50) -- Cure casting time -50%
     trust:addMod(xi.mod.CURE_POTENCY, 25)
-    trust:addMod(xi.mod.ENMITY, 20)
+    trust:addMod(xi.mod.ENMITY, math.min(20, math.floor(trust:getMainLvl() / 15) * 5)) -- +5 enmity every 15 levels. Cap: 20
     trust:addMod(xi.mod.DMG, -500) -- Damage Taken -5%
     trust:addMod(xi.mod.HPP, 10)
     trust:addMod(xi.mod.MPP, 50)

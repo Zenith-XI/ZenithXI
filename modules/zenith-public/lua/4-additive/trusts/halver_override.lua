@@ -12,7 +12,7 @@ m:addOverride('xi.actions.spells.trust.halver.onMobSpawn', function(trust)
     xi.trust.message(trust, xi.trust.messageOffset.SPAWN)
 
     trust:setMobMod(xi.mobMod.CAN_PARRY, 3)
-    trust:addMod(xi.mod.ENMITY, 10)
+    trust:addMod(xi.mod.ENMITY, math.min(10, math.max(0, math.floor((trust:getMainLvl() - 15) / 15) * 5))) -- +5 enmity at level 30 and 45. Cap: 10
     trust:addMod(xi.mod.HPP, 10) -- HP+10%
     trust:addMod(xi.mod.MPP, 30) -- MP+30%
 

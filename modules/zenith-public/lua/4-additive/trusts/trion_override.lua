@@ -35,7 +35,7 @@ m:addOverride('xi.actions.spells.trust.trion.onMobSpawn', function(trust)
     trust:setMod(xi.mod.SHIELDBLOCKRATE, 25)
     trust:addMod(xi.mod.SPELLINTERRUPT, 30)
     trust:addMod(xi.mod.FASTCAST, 30)
-    trust:addMod(xi.mod.ENMITY, 15)
+    trust:addMod(xi.mod.ENMITY, math.min(15, math.max(0, math.floor((trust:getMainLvl() - 15) / 15) * 5))) -- +5 enmity every 15 levels. Cap: 15
     trust:addMod(xi.mod.DMG, -500) -- Damage Taken -5%
     trust:addMod(xi.mod.HPP, 10)
     trust:addMod(xi.mod.MPP, 10)
