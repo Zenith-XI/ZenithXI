@@ -3,9 +3,9 @@
 -- Public Module for ZenithXI
 --------------------------------
 
--------------------
--- Black Magic --
--------------------
+--------------------------------
+-- Black Magic
+--------------------------------
 
 -- Absorb spells' cast time reverted to pre-August 12, 2014 update values
 
@@ -116,3 +116,35 @@ UPDATE `spell_list` SET `mpCost` = 144 , `castTime` = 5000 , `recastTime` = 2250
 UPDATE `spell_list` SET `mpCost` = 258 , `castTime` = 7000 , `recastTime` = 30500 WHERE `name` = 'thundara_ii';
 UPDATE `spell_list` SET `mpCost` = 85 , `castTime` = 3500 , `recastTime` = 16500 WHERE `name` = 'watera';
 UPDATE `spell_list` SET `mpCost` = 177 , `castTime` = 5500 , `recastTime` = 24500 WHERE `name` = 'watera_ii';
+
+--------------------------------
+-- Summoning Magic
+--------------------------------
+-- Reverts cast time of avatars back to a 7 second casting time and 30 seconds recast
+-- This was changed to 5 seconds cast/recast in the September 2012 update https://forum.square-enix.com/ffxi/threads/27457-September-25-2012-%28JST%29-Version-Update
+--------------------------------
+UPDATE `spell_list` SET `castTime` = 7000, `recastTime` = 30000 WHERE `name` IN (
+    'carbuncle',
+    'fenrir',
+    'ifrit',
+    'titan',
+    'leviathan',
+    'garuda',
+    'shiva',
+    'ramuh',
+    'diabolos',
+    'cait_sith',
+    'siren'
+);
+
+-- Reverts elemental spirit recast times to 10 seconds. Casting times remain unchanged.
+UPDATE `spell_list` SET `recastTime` = 10000 WHERE `name` IN (
+    'fire_spirit',
+    'ice_spirit',
+    'air_spirit',
+    'earth_spirit',
+    'thunder_spirit',
+    'water_spirit',
+    'light_spirit',
+    'dark_spirit'
+);
