@@ -31,6 +31,16 @@ UPDATE synth_recipes
 SET ResultHQ1 = 19185, ResultHQ2 = 19185, ResultHQ3 = 19185, ResultQty = 3, ResultHQ1Qty = 3, ResultHQ2Qty = 3, ResultHQ3Qty = 6
 WHERE ID = 62548;
 
+-- Enable synthesis recipes required for the tutorial quest.
+UPDATE `synth_recipes`
+SET `content_tag` = NULL
+WHERE `ID` IN
+(
+    70009, -- Salted Hare
+    70010, -- Sweet Lizard
+    70011  -- Honeyed Egg
+);
+
 -- This section enables the Synthesis recipes for items dropped by Notorious
 -- Monsters from the Wings of the Goddess expansion. These NMs will be enabled
 -- on Zenith at launch, so setting the content_tag to NULL (Vanilla).
