@@ -33,7 +33,5 @@ m:addOverride('xi.actions.spells.trust.ajido-marujido.onMobSpawn', function(trus
 
     trust:addGambit(ai.t.TARGET, { ai.c.NOT_STATUS, xi.effect.SLOW }, { ai.r.MA, ai.s.HIGHEST, xi.magic.spellFamily.SLOW }, 60)
 
-    
-
     trust:setMobMod(xi.mobMod.TRUST_DISTANCE, xi.trust.movementType.NO_MOVE)
 end)
