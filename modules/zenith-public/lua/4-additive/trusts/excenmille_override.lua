@@ -15,7 +15,7 @@ m:addOverride('xi.actions.spells.trust.excenmille.onMobSpawn', function(trust)
 
     trust:addMod(xi.mod.HPP, 10)
     trust:addMod(xi.mod.MPP, 20)
-    trust:addMod(xi.mod.ENMITY, 10)
+    trust:addMod(xi.mod.ENMITY, math.min(10, math.floor(trust:getMainLvl() / 10) * 5)) -- +5 enmity every 10 levels. Cap: 10
     trust:addMod(xi.mod.STORETP, 25)
 
     trust:addGambit(ai.t.SELF, { ai.c.NOT_STATUS, xi.effect.SENTINEL }, { ai.r.JA, ai.s.SPECIFIC, xi.ja.SENTINEL })

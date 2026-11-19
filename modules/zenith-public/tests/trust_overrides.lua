@@ -1,10 +1,11 @@
+
 -- ZenithXI Trust overrides, ZENITHDEV-200 (modules/zenith-public/lua/4-additive/trusts/*_override.lua).
 --
 -- Balance values from the ticket, checked on the spawned Trust:
 -- - Curilla: Shield Block Rate 20 (LSB 25), no ENHANCES_GUARDIAN (LSB 30), Shield Mastery TP 10/20/30,
---   Cure cast time -50, Cure Potency 25, Enmity 15, DT -5%, HP +10%, MP +30%.
+--   Cure cast time -50, Cure Potency 25, Enmity +5/+10/+15/+20 at 15/30/45/60, DT -5%, HP +10%, MP +50%.
 -- - Curilla's Sentinel lasts 40 s (LSB 30 s) and her Guardian enmity retention (LSB subPower 95) is gone.
--- - Trion: Shield Block Rate 25 (LSB 35), keeps SIRD 30, Fast Cast 30, Enmity 15, DT -5%, HP/MP +10%.
+-- - Trion: Shield Block Rate 25 (LSB 35), keeps SIRD 30, Fast Cast 30, Enmity +5/+10/+15 at 30/45/60, DT -5%, HP/MP +10%.
 -- - Semih Lafihna: Store TP +40 (LSB +86); her special message is on Stellar Arrow (3489), not Lux Arrow
 --   (3490, which LSB checks).
 -- - Shantotto: Magic Attack / Accuracy from modGrowthValMax(39) (about 25 at 75; LSB adds level / 10),
@@ -48,14 +49,28 @@ describe('Zenith trust overrides #trusts', function()
             { 'ENHANCES_GUARDIAN', 0 },
             { 'CURE_CAST_TIME', 50 },
             { 'CURE_POTENCY', 25 },
-            { 'ENMITY', 20 },
             { 'DMG', -500 },
             { 'HPP', 10 },
             { 'MPP', 50 },
         }
 
-        for _, row in ipairs({ { 24, 0 }, { 25, 10 }, { 50, 20 }, { 75, 30 } }) do
-            local expected = { { 'SHIELD_MASTERY_TP', row[2] } }
+        for _, row in ipairs({
+            { 14,  0,  0 },
+            { 15,  0,  5 },
+            { 24,  0,  5 },
+            { 25, 10,  5 },
+            { 30, 10, 10 },
+            { 45, 10, 15 },
+            { 50, 20, 15 },
+            { 60, 20, 20 },
+            { 75, 30, 20 },
+        }) do
+            local expected =
+            {
+                { 'SHIELD_MASTERY_TP', row[2] },
+                { 'ENMITY', row[3] },
+            }
+
             for _, entry in ipairs(common) do
                 table.insert(expected, entry)
             end
@@ -95,6 +110,20 @@ describe('Zenith trust overrides #trusts', function()
             { 'MPP', 30 },
             { 'ENMITY', 10 },
         })
+    end)
+
+    it('scales tank Trust enmity bonuses by level', function()
+        assertMods('TRION', 29, { { 'ENMITY', 0 } })
+        assertMods('TRION', 30, { { 'ENMITY', 5 } })
+        assertMods('TRION', 45, { { 'ENMITY', 10 } })
+
+        assertMods('HALVER', 29, { { 'ENMITY', 0 } })
+        assertMods('HALVER', 30, { { 'ENMITY', 5 } })
+        assertMods('HALVER', 45, { { 'ENMITY', 10 } })
+
+        assertMods('EXCENMILLE', 9, { { 'ENMITY', 0 } })
+        assertMods('EXCENMILLE', 10, { { 'ENMITY', 5 } })
+        assertMods('EXCENMILLE', 20, { { 'ENMITY', 10 } })
     end)
 
     it('applies Volker\'s reviewed mods', function()
