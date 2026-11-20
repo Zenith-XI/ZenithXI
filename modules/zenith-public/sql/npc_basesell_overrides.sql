@@ -104,6 +104,16 @@ UPDATE `item_basic` SET `BaseSell` = FLOOR(11180 * 0.90) WHERE `name` = 'darkste
 UPDATE `item_basic` SET `BaseSell` = FLOOR(6895 * 0.90) WHERE `name` = 'mythril_pick';
 -- Trumpet Ring: 3,315 -> 1,000g (900g final base)
 UPDATE `item_basic` SET `BaseSell` = FLOOR(1000 * 0.90) WHERE `name` = 'trumpet_ring';
+-- Cermet Claws: 5,280 -> 3,696g (3,326g final base)
+UPDATE `item_basic` SET `BaseSell` = FLOOR(3696 * 0.90) WHERE `name` = 'cermet_claws';
+-- Cermet Knife: 5,850 -> 4,972g (4,474g final base)
+UPDATE `item_basic` SET `BaseSell` = FLOOR(4972 * 0.90) WHERE `name` = 'cermet_knife';
+-- Cermet Sword: 9,460 -> 8,041g (7,236g final base)
+UPDATE `item_basic` SET `BaseSell` = FLOOR(8041 * 0.90) WHERE `name` = 'cermet_sword';
+-- Cermet Lance: 2,650 -> 2,650g (2,650g final base) -- Exempt from the 10% global reduction
+UPDATE `item_basic` SET `BaseSell` = 2650 WHERE `name` = 'cermet_lance';
+-- Mahogany Pole: 7,700 -> 7,200g (6,480g final base)
+UPDATE `item_basic` SET `BaseSell` = FLOOR(7200 * 0.90) WHERE `name` = 'mahogany_pole';
 
 -- Fishing resale reductions (-25%)
 -- ----------------------------------------------------------------------
@@ -243,6 +253,11 @@ WHERE `name` IN (
     'darksteel_pick',
     'mythril_pick',
     'trumpet_ring',
+    'cermet_claws',
+    'cermet_knife',
+    'cermet_sword',
+    'cermet_lance',
+    'mahogany_pole',
     'giant_chirai',
     'pirarucu',
     'armored_pisces',
