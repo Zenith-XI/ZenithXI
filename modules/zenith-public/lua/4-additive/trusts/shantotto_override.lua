@@ -1,10 +1,9 @@
 -----------------------------------
 -- Override Trust: Shantotto (configurable)
+-- Replaces LSB's onMobSpawn instead of extending it: retail-checked gambits and the ticket's
+-- (ZENITHDEV-200) mod values replace LSB's.
 -----------------------------------
 require('modules/module_utils')
-require('scripts/globals/trust')
-require('scripts/globals/magic')
-require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('a-t_shantotto_override')
 

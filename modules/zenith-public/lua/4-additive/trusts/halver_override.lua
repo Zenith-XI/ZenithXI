@@ -1,15 +1,13 @@
 -----------------------------------
 -- Override Trust: Halver (configurable)
+-- Adds the ticket's (ZENITHDEV-200) mods and gambits on top of LSB's onMobSpawn.
 -----------------------------------
 require('modules/module_utils')
-require('scripts/globals/trust')
-require('scripts/globals/magic')
-require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('a-t_halver_override')
 
 m:addOverride('xi.actions.spells.trust.halver.onMobSpawn', function(trust)
-    xi.trust.message(trust, xi.trust.messageOffset.SPAWN)
+    super(trust)
 
     trust:setMobMod(xi.mobMod.CAN_PARRY, 3)
     trust:addMod(xi.mod.ENMITY, math.min(10, math.max(0, math.floor((trust:getMainLvl() - 15) / 15) * 5))) -- +5 enmity at level 30 and 45. Cap: 10

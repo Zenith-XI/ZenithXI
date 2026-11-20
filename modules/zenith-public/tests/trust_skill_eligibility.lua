@@ -9,7 +9,12 @@
 --   Royal Bash / Royal Savior follow Shield Bash / Sentinel, every other unique skill opens at level 5.
 -- - Five fallback weaponskills (Kupipi, Curilla, Semih, Volker, Trion) are used from level 5 only until
 --   their replacement is available; Halver gets Double Thrust, Leg Sweep, Raiden Thrust and Penta Thrust.
+--   Semih's fallback is the archery weaponskill Flaming Arrow (192), not mob skill 636 (Orc Warmachine).
+-- - LSB keeps a skill with a level 2 or 3 skillchain property from a Trust below 60 unless it is the first in
+--   its list. A skill the level rules drop still counts as first, so a level 10 Valaineral does not get Uriel
+--   Blade just because Circle, Savage and Sanguine Blade before it are not available yet.
 -- - Job abilities need the Trust's main job level, or its support job level (WAR support = level / 2).
+--   A support job ability is refused while the support job is restricted (Obliviscence, SJ restriction).
 --
 -- The TP skill rules live in the module's xi.trust.canUseTpSkill, which the patched engine calls for each
 -- skill when a Trust is summoned. The table cases call it directly; it relies on the patch's
@@ -94,11 +99,11 @@ local tpSkillCases =
         trust = 'SEMIH_LAFIHNA',
         checks =
         {
-            { 4, mobSkill.FLAME_ARROW, false, 'level 5 TP floor' },
-            { 5, mobSkill.FLAME_ARROW, true, 'Flaming Arrow fallback from level 5' },
-            { 54, mobSkill.FLAME_ARROW, true, 'fallback until Sidewinder' },
+            { 4, weaponskill.FLAMING_ARROW, false, 'level 5 TP floor' },
+            { 5, weaponskill.FLAMING_ARROW, true, 'Flaming Arrow fallback from level 5' },
+            { 54, weaponskill.FLAMING_ARROW, true, 'fallback until Sidewinder' },
             { 54, mobSkill.SEMIH_SIDEWINDER, false, 'Sidewinder copy follows archery 175' },
-            { 55, mobSkill.FLAME_ARROW, false, 'fallback replaced by Sidewinder' },
+            { 55, weaponskill.FLAMING_ARROW, false, 'fallback replaced by Sidewinder' },
             { 55, mobSkill.SEMIH_SIDEWINDER, true, 'Sidewinder copy at 55' },
             -- The engine's RNG archery cap is 223 at 65 and 227 at 66
             { 65, mobSkill.SEMIH_ARCHING_ARROW, false, 'Arching Arrow copy follows archery 225' },
@@ -310,6 +315,18 @@ describe('Zenith trust skill eligibility #trusts', function()
         end)
     end
 
+    it('refuses support job abilities while the support job is restricted', function()
+        local trust = summon('TRION', 30) -- PLD/WAR
+
+        assert(trust:hasLearnedAbility(ja.PROVOKE), 'precondition: a level 30 Trion has Provoke from his WAR support job')
+
+        trust:addStatusEffect(xi.effect.OBLIVISCENCE, { power = 0, duration = 60, origin = trust })
+        assert(trust:hasStatusEffect(xi.effect.OBLIVISCENCE), 'precondition: Obliviscence did not land on Trion')
+
+        assert(not trust:hasLearnedAbility(ja.PROVOKE), 'a level 30 Trion under Obliviscence still has Provoke from his restricted support job')
+        assert(trust:hasLearnedAbility(ja.SENTINEL), 'a level 30 Trion under Obliviscence lost Sentinel, a main job ability')
+    end)
+
     it('defines the Stellar Arrow and Lux Arrow mob skill enums', function()
         assert(mobSkill.STELLAR_ARROW == 3489, string.format('expected STELLAR_ARROW 3489, got %s', tostring(mobSkill.STELLAR_ARROW)))
         assert(mobSkill.LUX_ARROW == 3490, string.format('expected LUX_ARROW 3490, got %s', tostring(mobSkill.LUX_ARROW)))
@@ -329,9 +346,10 @@ describe('Zenith trust skill eligibility #trusts', function()
         end)
 
         -- Leave West Ronfaure as other tests expect it: no trusts out and a fresh rabbit with no enmity,
-        -- or the next player (who may reuse this character ID) cannot call a trust.
+        -- or the next player (who may reuse this character ID) cannot call a trust or inherits the engage type.
         after_each(function()
             player:clearTrusts()
+            player:setCharVar('TrustEngageType', 0)
             mob:setUnkillable(false)
             mob:respawn()
         end)
@@ -393,7 +411,7 @@ describe('Zenith trust skill eligibility #trusts', function()
             { 'CURILLA', weaponskill.BURNING_BLADE },
             { 'TRION', weaponskill.BURNING_BLADE },
             { 'VOLKER', weaponskill.FAST_BLADE },
-            { 'SEMIH_LAFIHNA', mobSkill.FLAME_ARROW },
+            { 'SEMIH_LAFIHNA', weaponskill.FLAMING_ARROW },
         }
 
         for _, fallback in ipairs(fallbacks) do
@@ -420,6 +438,22 @@ describe('Zenith trust skill eligibility #trusts', function()
             local used = observeTpSkills('NAJI', 5, 1, 15)
 
             assert(#used == 0, string.format('a level 5 Naji used TP skills %s; he has no fallback', describeUsed(used)))
+        end)
+
+        -- Valaineral's list is Circle Blade (sword 150), Savage Blade (240), Sanguine Blade (300) and Uriel Blade,
+        -- which has no skill requirement and a Light property. LSB keeps Uriel Blade from him below 60.
+        it('uses TP skills as a level 60 Valaineral', function()
+            local used = observeTpSkills('VALAINERAL', 60, 1, 15)
+
+            assert(#used >= 1, 'precondition: a level 60 Valaineral used no TP skill')
+        end)
+
+        it('keeps Uriel Blade from a level 10 Valaineral whose other skills are not available yet', function()
+            local used = observeTpSkills('VALAINERAL', 10, 1, 15)
+
+            for _, id in ipairs(used) do
+                assert(id ~= weaponskill.URIEL_BLADE, string.format('a level 10 Valaineral used Uriel Blade: %s', describeUsed(used)))
+            end
         end)
 
         it('gives Halver Leg Sweep at level 40 and holds Penta Thrust back', function()

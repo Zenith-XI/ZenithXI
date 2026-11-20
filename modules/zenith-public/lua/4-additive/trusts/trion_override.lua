@@ -1,10 +1,9 @@
 -----------------------------------
 -- Override Trust: Trion (configurable)
+-- Replaces LSB's onMobSpawn instead of extending it: the ticket (ZENITHDEV-200) changes its mod values
+-- and replaces its hardcoded gambit levels.
 -----------------------------------
 require('modules/module_utils')
-require('scripts/globals/trust')
-require('scripts/globals/magic')
-require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('a-t_trion_override')
 

@@ -1,10 +1,9 @@
 -----------------------------------
 -- Override Trust: Ayame (configurable)
+-- Replaces LSB's onMobSpawn instead of extending it: LSB always gives her the Hasso gambit, which this
+-- adds only once the era includes Treasures of Aht Urhgan.
 -----------------------------------
 require('modules/module_utils')
-require('scripts/globals/trust')
-require('scripts/globals/magic')
-require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('a-t_ayame_override')
 

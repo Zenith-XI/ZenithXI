@@ -1,10 +1,10 @@
-
 -- ZenithXI Trust overrides, ZENITHDEV-200 (modules/zenith-public/lua/4-additive/trusts/*_override.lua).
 --
 -- Balance values from the ticket, checked on the spawned Trust:
 -- - Curilla: Shield Block Rate 20 (LSB 25), no ENHANCES_GUARDIAN (LSB 30), Shield Mastery TP 10/20/30,
 --   Cure cast time -50, Cure Potency 25, Enmity +5/+10/+15/+20 at 15/30/45/60, DT -5%, HP +10%, MP +50%.
--- - Curilla's Sentinel lasts 40 s (LSB 30 s) and her Guardian enmity retention (LSB subPower 95) is gone.
+-- - Curilla's Sentinel lasts 40 s (LSB 30 s), its recast is 250 s (LSB 300 s, its listener's change came too
+--   late to count) and her Guardian enmity retention (LSB subPower 95) is gone.
 -- - Trion: Shield Block Rate 25 (LSB 35), keeps SIRD 30, Fast Cast 30, Enmity +5/+10/+15 at 30/45/60, DT -5%, HP/MP +10%.
 -- - Semih Lafihna: Store TP +40 (LSB +86); her special message is on Stellar Arrow (3489), not Lux Arrow
 --   (3490, which LSB checks).
@@ -213,14 +213,16 @@ describe('Zenith trust overrides #trusts', function()
         end)
 
         -- Leave West Ronfaure as other tests expect it: no trusts out and a fresh rabbit with no enmity,
-        -- or the next player (who may reuse this character ID) cannot call a trust.
+        -- or the next player (who may reuse this character ID) cannot call a trust or inherits the engage type.
         after_each(function()
             player:clearTrusts()
+            player:setCharVar('TrustEngageType', 0)
             mob:setUnkillable(false)
             mob:respawn()
         end)
 
-        it('lasts 40 seconds and has no Guardian enmity retention', function()
+        -- Summons a level 30 Curilla, engages the rabbit and waits for her first Sentinel.
+        local function summonAndAwaitSentinel()
             local trust = summon('CURILLA', 30)
 
             player.actions:engage(mob)
@@ -235,6 +237,35 @@ describe('Zenith trust overrides #trusts', function()
             end
 
             assert(sentinel ~= nil, 'precondition: Curilla did not use Sentinel within 20 s of engaging')
+
+            return trust, sentinel
+        end
+
+        it('has a 250 second recast', function()
+            local trust = summonAndAwaitSentinel()
+
+            assert(trust:hasRecast(xi.recast.ABILITY, xi.jobAbility.SENTINEL), 'precondition: Sentinel started no recast')
+
+            -- End the fight, so she cannot use Sentinel again once the recast is over
+            player:disengage()
+            mob:respawn()
+
+            for _ = 1, 24 do
+                xi.test.world:skipTime(10)
+            end
+
+            assert(trust:hasRecast(xi.recast.ABILITY, xi.jobAbility.SENTINEL), 'precondition: the Sentinel recast was gone after 240 s')
+
+            for _ = 1, 2 do
+                xi.test.world:skipTime(10)
+            end
+
+            assert(not trust:hasRecast(xi.recast.ABILITY, xi.jobAbility.SENTINEL), 'the Sentinel recast was still running after 260 s; expected 250 s')
+        end)
+
+        it('lasts 40 seconds and has no Guardian enmity retention', function()
+            local trust, sentinel = summonAndAwaitSentinel()
+
             assert(sentinel:getDuration() == 40000, string.format('expected a 40000 ms Sentinel, got %d', sentinel:getDuration()))
 
             -- A few combat ticks, where LSB's Curilla raises subPower to 95

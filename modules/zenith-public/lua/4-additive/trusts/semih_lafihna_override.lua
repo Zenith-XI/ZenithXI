@@ -1,10 +1,9 @@
 -----------------------------------
 -- Override Trust: Semih Lafihna (configurable)
+-- Replaces LSB's onMobSpawn instead of extending it: the ticket (ZENITHDEV-200) lowers her Store TP and
+-- LSB shows her special message on the wrong skill.
 -----------------------------------
 require('modules/module_utils')
-require('scripts/globals/trust')
-require('scripts/globals/magic')
-require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('a-t_semih_lafihna_override')
 

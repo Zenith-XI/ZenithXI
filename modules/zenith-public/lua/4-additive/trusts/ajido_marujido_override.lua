@@ -1,10 +1,8 @@
 -----------------------------------
 -- Override Trust: Ajido-Marujido (configurable)
+-- Replaces LSB's onMobSpawn instead of extending it: retail-checked gambits (ZENITHDEV-200) replace LSB's.
 -----------------------------------
 require('modules/module_utils')
-require('scripts/globals/trust')
-require('scripts/globals/magic')
-require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('a-t_ajido_marujido_override')
 

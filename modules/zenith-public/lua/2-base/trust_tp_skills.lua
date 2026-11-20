@@ -3,6 +3,8 @@
 --
 -- When a Trust is summoned, the engine asks xi.trust.canUseTpSkill(trust, skillId) for each skill in
 -- its TP list and drops the ones that return false. The Trust's level does not change while it is out.
+-- LSB's own rule still applies to what is left: below level 60 a Trust only gets a skill with a level 2
+-- or 3 skillchain property when it is the first in its list, and a skill dropped here still counts.
 -- Requires git patch: 122-TrustLevelRestrictionsAndTesting.patch (the hook, and hasLearnedWeaponskill /
 -- hasLearnedAbility answering for Trusts). Use in tandem with sql/add_weaponskills_trusts.sql.
 -----------------------------------
@@ -50,7 +52,7 @@ local fallbacks =
 {
     [xi.magic.spell.KUPIPI]        = { [xi.weaponskill.SHINING_STRIKE] = xi.weaponskill.STARLIGHT },
     [xi.magic.spell.CURILLA]       = { [xi.weaponskill.BURNING_BLADE] = xi.weaponskill.RED_LOTUS_BLADE },
-    [xi.magic.spell.SEMIH_LAFIHNA] = { [xi.mobSkill.FLAME_ARROW] = xi.mobSkill.SEMIH_SIDEWINDER },
+    [xi.magic.spell.SEMIH_LAFIHNA] = { [xi.weaponskill.FLAMING_ARROW] = xi.mobSkill.SEMIH_SIDEWINDER },
     [xi.magic.spell.VOLKER]        = { [xi.weaponskill.FAST_BLADE] = xi.weaponskill.RED_LOTUS_BLADE },
     [xi.magic.spell.TRION]         = { [xi.weaponskill.BURNING_BLADE] = xi.mobSkill.TRION_RED_LOTUS_BLADE },
 }
@@ -81,11 +83,7 @@ local function canUseTpSkill(trust, skillId)
     return trust:getMainLvl() >= (levelGates[skillId] or minimumLevel)
 end
 
--- The engine calls this hook only when it exists; LSB has no default
-xi.trust.canUseTpSkill = xi.trust.canUseTpSkill or function(trust, skillId)
-    return true
-end
-
+-- LSB has no xi.trust.canUseTpSkill; the module loader creates the path for this override
 m:addOverride('xi.trust.canUseTpSkill', function(trust, skillId)
     return canUseTpSkill(trust, skillId)
 end)

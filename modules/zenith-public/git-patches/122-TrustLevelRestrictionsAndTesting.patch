@@ -1,30 +1,15 @@
 Trust level restrictions (ZENITHDEV-200), engine side.
 - Trust job-ability gambits need the ability at the Trust's main job level, or at its support job level
-  (main-job-only abilities excluded), from the loaded ability data.
+  (main-job-only abilities excluded, and none while the support job is restricted), from the loaded ability data.
 - When a Trust is summoned, each TP skill in its list is offered to the Lua hook
   xi.trust.canUseTpSkill(trust, skillId); a skill the hook rejects is dropped. With no hook, LSB behaviour.
+  A dropped skill still counts for LSB's below-60 rule, so the hook can only take skills away from what LSB gives.
   The rules (level 5 floor, gates, fallbacks) live in modules/zenith-public/lua/2-base/trust_tp_skills.lua.
 - trust:hasLearnedWeaponskill(id) answers whether a Trust meets a weaponskill's normal skill requirement;
   trust:hasLearnedAbility(id) answers the job-ability check above.
-- Corrects the reversed Stellar Arrow / Lux Arrow comments in mob_skill_lists.sql.
 ---
-diff --git a/sql/mob_skill_lists.sql b/sql/mob_skill_lists.sql
-index ed3e21f1a9..60c28485db 100644
---- a/sql/mob_skill_lists.sql
-+++ b/sql/mob_skill_lists.sql
-@@ -3533,8 +3533,8 @@ INSERT INTO `mob_skill_lists` VALUES ('TRUST_Areuhat',1054,3438);  -- Dragon Bre
- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Areuhat',1054,3439); -- Hurricane Wing (Areuhat)
- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3487); -- Sidewinder (Semih Lafihna)
- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3488); -- Arching Arrow (Semih Lafihna)
--INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3489); -- Lux Arrow
--INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3490); -- Stellar Arrow
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3489); -- Stellar Arrow
-+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Semih_Lafihna',1055,3490); -- Lux Arrow
- -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Elivira',1056,0);
- -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Noillurie',1057,0);
- -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Lhu_Mhakaracca',1058,0);
 diff --git a/src/map/ai/helpers/gambits_container.cpp b/src/map/ai/helpers/gambits_container.cpp
-index a4c062e9e5..a1eae52641 100644
+index a4c062e9e5..2a28a770b9 100644
 --- a/src/map/ai/helpers/gambits_container.cpp
 +++ b/src/map/ai/helpers/gambits_container.cpp
 @@ -32,6 +32,7 @@
@@ -76,7 +61,7 @@ index 721c1d46eb..e07fc7215a 100644
      {
          ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
 diff --git a/src/map/utils/trustutils.cpp b/src/map/utils/trustutils.cpp
-index 162bea304c..2a1c1076bc 100644
+index 162bea304c..ee9e73feb9 100644
 --- a/src/map/utils/trustutils.cpp
 +++ b/src/map/utils/trustutils.cpp
 @@ -27,8 +27,11 @@
@@ -91,7 +76,7 @@ index 162bea304c..2a1c1076bc 100644
  #include "mobutils.h"
  
  #include "grades.h"
-@@ -200,6 +203,53 @@ auto trustutils::SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntit
+@@ -200,6 +203,56 @@ auto trustutils::SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntit
      return PTrust;
  }
  
@@ -107,9 +92,12 @@ index 162bea304c..2a1c1076bc 100644
 +        return PTrust->GetMLevel() >= PAbility->getLevel();
 +    }
 +
-+    if (PTrust->GetSJob() != xi::Job::NONE && PAbility->getJob() == PTrust->GetSJob())
++    // GetSJob() reports no support job under SJ restriction or Obliviscence, so match the real one and refuse
++    // its abilities while it is restricted, instead of letting them through as a non-job action below.
++    const auto supportJob = PTrust->GetSJob(true);
++    if (supportJob != xi::Job::NONE && PAbility->getJob() == supportJob)
 +    {
-+        return PTrust->GetSLevel() >= PAbility->getLevel() && !(PAbility->getAddType() & ADDTYPE_MAIN_ONLY);
++        return PTrust->GetSJob() == supportJob && PTrust->GetSLevel() >= PAbility->getLevel() && !(PAbility->getAddType() & ADDTYPE_MAIN_ONLY);
 +    }
 +
 +    // Not one of the Trust's jobs: a deliberate Trust-specific action, not level-gated here.
@@ -145,13 +133,14 @@ index 162bea304c..2a1c1076bc 100644
  void BuildTrustData(uint32 TrustID)
  {
      const auto rset = db::preparedStmt("SELECT "
-@@ -713,9 +763,25 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
+@@ -713,9 +766,27 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
      controller->m_GambitsContainer->tp_trigger = G_TP_TRIGGER::ASAP;
      controller->m_GambitsContainer->tp_select  = G_SELECT::RANDOM;
  
 -    auto skillList = battleutils::GetMobSkillList(PTrust->m_MobSkillList);
 +    auto       skillList     = battleutils::GetMobSkillList(PTrust->m_MobSkillList);
 +    const auto canUseTpSkill = lua["xi"]["trust"]["canUseTpSkill"].get<sol::optional<sol::protected_function>>();
++    bool       droppedSkill  = false;
      for (uint16 skill_id : skillList)
      {
 +        // Zenith: a module decides which TP skills the Trust may use at its level (ZENITHDEV-200)
@@ -165,12 +154,23 @@ index 162bea304c..2a1c1076bc 100644
 +            }
 +            else if (!result.get<bool>(0))
 +            {
++                droppedSkill = true;
 +                continue;
 +            }
 +        }
 +
          TrustSkill_t skill;
          if (skill_id <= 255) // Player WSs
+         {
+@@ -759,7 +830,8 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
+         bool canFormLv3Skillchain = skill.primary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.secondary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.tertiary >= std::to_underlying(xi::SkillchainType::Gravitation);
+ 
+         // Special case for Zeid II and others who only have Lv3+ skills
+-        bool onlyHasLv3Skillchains = canFormLv3Skillchain && controller->m_GambitsContainer->tp_skills.empty();
++        // Zenith: a skill dropped above still counts, so the hook only takes skills away from what LSB gives
++        bool onlyHasLv3Skillchains = canFormLv3Skillchain && controller->m_GambitsContainer->tp_skills.empty() && !droppedSkill;
+ 
+         if (!canFormLv3Skillchain || PTrust->GetMLevel() >= 60 || onlyHasLv3Skillchains)
          {
 diff --git a/src/map/utils/trustutils.h b/src/map/utils/trustutils.h
 index 991e0d484d..b0cfd53d96 100644

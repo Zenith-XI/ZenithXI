@@ -1,10 +1,9 @@
 -----------------------------------
 -- Override Trust: Curilla (configurable)
+-- Replaces LSB's onMobSpawn instead of extending it: the ticket (ZENITHDEV-200) drops LSB's Guardian
+-- emulation and changes several of its mod values.
 -----------------------------------
 require('modules/module_utils')
-require('scripts/globals/trust')
-require('scripts/globals/magic')
-require('scripts/globals/gambits')
 -----------------------------------
 local m = Module:new('a-t_curilla_override')
 
@@ -20,8 +19,12 @@ m:addOverride('xi.actions.spells.trust.curilla.onMobSpawn', function(trust)
     -- timing parts are applied here directly; Guardian's enmity retention is intentionally not reproduced.
     trust:addListener('ABILITY_USE', 'CURILLA_SENTINEL_USE', function(mobArg, target, skill, action)
         if skill:getID() == xi.jobAbility.SENTINEL then
-            -- Sentinel Recast 5/5 equivalent: 300s -> 250s
-            skill:setRecast(skill:getRecast() - 50)
+            -- Sentinel Recast 5/5 equivalent: 300s -> 250s.
+            -- The engine has already started the 300 s recast when this listener runs (a Trust's recast is
+            -- keyed by the ability ID), so restart it at 250 s. No recast means Sentinel did not go off.
+            if mobArg:hasRecast(xi.recast.ABILITY, xi.jobAbility.SENTINEL) then
+                mobArg:addRecast(xi.recast.ABILITY, xi.jobAbility.SENTINEL, 250)
+            end
 
             -- Guardian 5/5 equivalent: Sentinel duration 30s -> 40s.
             -- The listener runs after Sentinel is applied, so extend that effect instead of re-adding it.
