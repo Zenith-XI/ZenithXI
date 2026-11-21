@@ -8,6 +8,8 @@ describe('Ranged Attack Free Phase Delay', function()
     ---@type CTestEntity
     local target
 
+    local baseSpeed
+
     local function bulletCount()
         local ammo = player:getEquippedItem(xi.slot.AMMO)
         if ammo == nil then
@@ -21,17 +23,34 @@ describe('Ranged Attack Free Phase Delay', function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.WEST_RONFAURE, job = xi.job.THF, level = 99 })
         target = player.entities:moveTo('Wild_Rabbit')
         target:respawn()
+        baseSpeed = target:getBaseSpeed()
         target:setUnkillable(true)
         target:setBaseSpeed(0)
 
         local pos = target:getPos()
-        player:setPos(pos.x - 5, pos.y, pos.z, 0)
-        player:lookAt(target:getPos())
+        -- Roaming can leave the rabbit out of sight from one side.
+        local clearShot = false
+        for _, offset in ipairs({ { -5, 0 }, { 5, 0 }, { 0, -5 }, { 0, 5 } }) do
+            player:setPos(pos.x + offset[1], pos.y, pos.z + offset[2], 0)
+            player:lookAt(target:getPos())
+            if player:canSee(target) then
+                clearShot = true
+                break
+            end
+        end
+
+        assert(clearShot, 'No clear five-yalm shot for the ranged delay test')
 
         player:addItem(xi.item.PLATOON_GUN)
         player:addItem(xi.item.BULLET, 99)
         player:equipItem(xi.item.PLATOON_GUN)
         player:equipItem(xi.item.BULLET)
+    end)
+
+    -- Other files share these rabbits.
+    after_each(function()
+        target:setUnkillable(false)
+        target:setBaseSpeed(baseSpeed)
     end)
 
     -- skipTime() places a 400ms tick on top of each call, this is 6.2s, need to do this because the timing of this test is very specific.

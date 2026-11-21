@@ -95,6 +95,7 @@ local function addHandlers(secondLevel, lookupSecondLevel, checkFunc, container)
             'onZoneIn',
             'onZoneOut',
             'afterZoneIn',
+            'onFishingCheck',
         }
 
         for _, keyName in ipairs(wrappedDefinitions) do
@@ -497,4 +498,16 @@ end
 
 function InteractionLookup:onEventUpdate(player, csid, option, npc, fallbackFn)
     return onHandler(self.data, 'onEventUpdate', csid, { player, csid, option, npc }, fallbackFn)
+end
+
+function InteractionLookup:onFishingCheck(player, areaId)
+    return runHandlersInData(self.data, player, 'onFishingCheck', 1, { player, areaId })
+end
+
+function InteractionLookup:onFurniturePlaced(player, item, fallbackFn)
+    return onHandler(self.data, item:getName(), 'onFurniturePlaced', { player, item }, fallbackFn)
+end
+
+function InteractionLookup:onFurnitureRemoved(player, item, fallbackFn)
+    return onHandler(self.data, item:getName(), 'onFurnitureRemoved', { player, item }, fallbackFn)
 end

@@ -442,13 +442,15 @@ m:addOverrideByEra('xi.job_utils.corsair.useElementalShot', {
         target:updateClaim(actor)
 
         -- Calculate resist rate.
-        local bonusAcc   = actor:getMerit(xi.merit.QUICK_DRAW_ACCURACY) + actor:getMod(xi.mod.QUICK_DRAW_MACC)
+        -- Bonus macc taken from retail non-era testing
+        local bonusAcc   = 75 + actor:getMerit(xi.merit.QUICK_DRAW_ACCURACY) + actor:getMod(xi.mod.QUICK_DRAW_MACC)
         local maccParams =
         {
             effectId       = data.applyEffectId or 0,
             magicalElement = data.element,
             skillType      = xi.skill.MARKSMANSHIP,
             actorStat      = xi.mod.AGI,
+            targetStat     = xi.mod.AGI,
             bonusMacc      = bonusAcc,
         }
 
@@ -458,6 +460,13 @@ m:addOverrideByEra('xi.job_utils.corsair.useElementalShot', {
         local damage = 0
         if data.canDamage then
             damage = xi.job_utils.corsair.handleQuickDrawDamage(actor, target, action, data.element, resist)
+        end
+
+        -- Absorbed: report the heal and skip the effect boost
+        if damage < 0 then
+            ability:setMsg(xi.msg.basic.JA_RECOVERS_HP)
+
+            return damage
         end
 
         -- Handle effect boost.

@@ -21,9 +21,12 @@
 
 #include "profile_engine.h"
 
+#include "common/scheduler/task_utils.h"
+
 #include "irc/irc_session.h"
 #include "profile/profile_session.h"
 
+#include "common/cert_helpers.h"
 #include "common/logging.h"
 #include "common/settings.h"
 
@@ -32,7 +35,6 @@
 #include <array>
 #include <chrono>
 #include <cstring>
-#include <stdexcept>
 
 namespace
 {
@@ -50,21 +52,8 @@ constexpr uint16 kIrcPort = 51240;
 
 ProfileEngine::ProfileEngine(Scheduler& scheduler)
 : scheduler_(scheduler)
-, tls_(asio::ssl::context::tlsv13_server)
+, tls_(certificateHelpers::serverContext())
 {
-    auto ec = asio::error_code{};
-    tls_.set_options(asio::ssl::context::default_workarounds);
-    tls_.use_certificate_chain_file("profile.cert", ec);
-    if (!ec)
-    {
-        tls_.use_private_key_file("profile.key", asio::ssl::context::file_format::pem, ec);
-    }
-
-    if (ec)
-    {
-        throw std::runtime_error(fmt::format("Cannot load profile.cert and profile.key ({})", ec.message()));
-    }
-
     const auto profilePort = settings::get<uint16>("network.PROFILE_PORT");
     listen(profilePort,
            [this](profile::Stream stream, std::string peer, const profile::accounts::Credential credential)
@@ -122,7 +111,7 @@ auto ProfileEngine::serve(asio::ip::tcp::socket socket, Peer peer, const Session
 {
     auto stream = profile::Stream(std::move(socket), tls_);
 
-    const auto handshake = co_await Scheduler::withTimeout(stream.async_handshake(asio::ssl::stream_base::server, asio::as_tuple(asio::use_awaitable)), kHandshakeDeadline);
+    const auto handshake = co_await withTimeout(stream.async_handshake(asio::ssl::stream_base::server, asio::as_tuple(asio::use_awaitable)), kHandshakeDeadline);
     if (handshake && !std::get<0>(*handshake))
     {
         const auto credential = co_await authenticate(stream);
@@ -157,7 +146,7 @@ auto ProfileEngine::serve(asio::ip::tcp::socket socket, Peer peer, const Session
 auto ProfileEngine::authenticate(profile::Stream& stream) -> Task<Maybe<profile::accounts::Credential>>
 {
     auto       hello  = std::array<uint8, sizeof(uint32) + sizeof(profile::SessionHash)>{};
-    const auto result = co_await Scheduler::withTimeout(asio::async_read(stream, asio::buffer(hello), asio::as_tuple(asio::use_awaitable)), kHandshakeDeadline);
+    const auto result = co_await withTimeout(asio::async_read(stream, asio::buffer(hello), asio::as_tuple(asio::use_awaitable)), kHandshakeDeadline);
     if (!result || std::get<0>(*result))
     {
         co_return std::nullopt;

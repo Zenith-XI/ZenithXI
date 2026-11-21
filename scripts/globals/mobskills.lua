@@ -231,6 +231,27 @@ local function resolveMissMessage(skill, hitsLanded, hitsYaegasumi, hitsAnticipa
     return totalDamage
 end
 
+-- TODO: Check / Research Multi-Hit AOE Abilities - They seem to follow different rules than Single-target Multi-Hit Abilities
+---@param target CBaseEntity
+---@param skill CPetSkill|CMobSkill
+---@param params physicalSkillParams
+---@return xi.mobskills.shadowBehavior
+local function getShadowsToRemove(target, skill, params)
+    local targetShadows = math.max(target:getMod(xi.mod.UTSUSEMI), target:getMod(xi.mod.BLINK))
+
+    if
+        skill:isSingle() and
+        params.numHits > 1 and
+        params.shadowBehavior ~= xi.mobskills.shadowBehavior.WIPE_SHADOWS and
+        targetShadows < params.shadowBehavior
+    then
+        -- 1 Shadow removed per hit
+        return xi.mobskills.shadowBehavior.NUMSHADOWS_1
+    end
+
+    return params.shadowBehavior
+end
+
 -- passed to handleSinglePhysicalHit() inside xi.mobskills.mobPhysicalMove() and handleSingleRangedHit() inside xi.mobskills.mobRangedMove()
 ---@class physicalMobSkillHitParams
 ---@field hitNumber number
@@ -574,6 +595,8 @@ xi.mobskills.mobRangedMove = function(mob, target, skill, action, skillParams)
     ----------------------------------
     -- Calculate the hits
     ----------------------------------
+    local shadowsToRemove = getShadowsToRemove(target, skill, params)
+
     for hitNumber = 1, params.numHits do
         local hitInfo           = nil
         local hitChance         = 0
@@ -586,7 +609,7 @@ xi.mobskills.mobRangedMove = function(mob, target, skill, action, skillParams)
         ----------------------------------
         -- Handle Utsusemi and Blink
         ----------------------------------
-        hitAbsorbed, shadowsConsumed = xi.mobskills.handleShadowConsumption(mob, target, skill, params, params.shadowBehavior)
+        hitAbsorbed, shadowsConsumed = xi.mobskills.handleShadowConsumption(mob, target, skill, params, shadowsToRemove)
 
         ----------------------------------
         -- Calculate Hit Rate
@@ -648,7 +671,8 @@ xi.mobskills.mobRangedMove = function(mob, target, skill, action, skillParams)
         -- Third Eye treats multi hit attacks as a single hit.
         -- Exit early if there are remaining hits after the anticipated hit.
         if
-            hitAbsorbed or
+            (hitAbsorbed and
+            shadowsToRemove == params.shadowBehavior) or
             attackAnticipated or
             attackYaegasumi or
             (params.terminateOnMiss and attackMissed)
@@ -761,6 +785,8 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, action, skillParams)
     -- targetSpecialAttackEvasion gets transformed to a negative number since its a modifier on the target affecting the attacker's accuracy.
     local targetSpecialAttackEvasion = target:getMod(xi.mod.SPECIAL_ATTACK_EVASION) * -1
     local accuracyModifier           = 0
+    local petAccuracyBonus           = xi.mobskills.calculatePetMagicAccuracyBonus(mob)
+
     if params.accuracyModifier then
         accuracyModifier = xi.combat.physical.calculateTPfactor(tpValue, params.accuracyModifier)
     end
@@ -776,6 +802,8 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, action, skillParams)
         ignoreDefenseFactor = xi.combat.physical.calculateTPfactor(tpValue, params.ignoreDefense)
         hitIgnoreDefense    = true
     end
+
+    accuracyModifier = accuracyModifier + petAccuracyBonus + targetSpecialAttackEvasion
 
     ----------------------------------
     -- Params for the individual hits
@@ -809,6 +837,8 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, action, skillParams)
     -- Need research to see if bloodpacts/pets skills can multi attack.
     -- If so, do they carry fTP over from the first hit into subsequent hits?
 
+    local shadowsToRemove = getShadowsToRemove(target, skill, params)
+
     for hitNumber = 1, params.numHits do
         local hitInfo           = nil
         local hitChance         = 0
@@ -820,7 +850,7 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, action, skillParams)
         ----------------------------------
         -- Handle Utsusemi and Blink
         ----------------------------------
-        hitAbsorbed, shadowsConsumed = xi.mobskills.handleShadowConsumption(mob, target, skill, params, params.shadowBehavior)
+        hitAbsorbed, shadowsConsumed = xi.mobskills.handleShadowConsumption(mob, target, skill, params, shadowsToRemove)
 
         ----------------------------------
         -- Calculate Hit Rate
@@ -834,9 +864,9 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, action, skillParams)
             hitChance = 1
         elseif hitNumber == 1 then
             -- First hit gets bonus accuracy. TODO: Confirm this and the amount if true.
-            hitChance = xi.combat.physicalHitRate.getPhysicalHitRate(mob, target, 100 + accuracyModifier + targetSpecialAttackEvasion, xi.attackAnimation.RIGHT_ATTACK, false)
+            hitChance = xi.combat.physicalHitRate.getPhysicalHitRate(mob, target, 100 + accuracyModifier, xi.attackAnimation.RIGHT_ATTACK, false)
         else
-            hitChance = xi.combat.physicalHitRate.getPhysicalHitRate(mob, target, accuracyModifier + targetSpecialAttackEvasion, xi.attackAnimation.RIGHT_ATTACK, false)
+            hitChance = xi.combat.physicalHitRate.getPhysicalHitRate(mob, target, accuracyModifier, xi.attackAnimation.RIGHT_ATTACK, false)
         end
 
         if not hitInfo then
@@ -892,7 +922,8 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, action, skillParams)
         -- Third Eye treats multi hit attacks as a single hit.
         -- Exit early if there are remaining hits after the anticipated hit.
         if
-            hitAbsorbed or
+            (hitAbsorbed and
+            shadowsToRemove == params.shadowBehavior) or
             attackAnticipated or
             attackYaegasumi
         then
@@ -1043,7 +1074,7 @@ xi.mobskills.mobMagicalMove = function(mob, target, skill, action, skillParams)
     ----------------------------------
     -- Calculate Base Damage
     ----------------------------------
-    local wscMods = xi.combat.physical.calculateWSC(mob, skillParams.strWSC, skillParams.dexWSC, skillParams.vitWSC, skillParams.agiWSC, skillParams.intWSC, skillParams.mndWSC, skillParams.chrWSC)
+    local wscMods = xi.combat.physical.calculateWSC(mob, skillParams.str_wSC, skillParams.dex_wSC, skillParams.vit_wSC, skillParams.agi_wSC, skillParams.int_wSC, skillParams.mnd_wSC, skillParams.chr_wSC)
 
     -- TODO: Do mobs benefit from Fencer job trait's TP_BONUS?
     -- Best way to test will likely be to find a mob that uses a magical skill with fTP scaling and has varying jobs to compare (WAR 45 min for Fencer, 80 BST, 85 BRD).
@@ -1122,7 +1153,7 @@ xi.mobskills.mobMagicalMove = function(mob, target, skill, action, skillParams)
     mAttackBonus = xi.combat.physical.calculateTPfactor(tpValue, params.mATTBonus)
 
     -- Calculate bonus magic accuracy for pets
-    local petAccuracyBonus = xi.mobskills.calculatePetMagicAccuracyBonus(mob, target, params.element)
+    local petAccuracyBonus = xi.mobskills.calculatePetMagicAccuracyBonus(mob)
 
     -- Add all magic accuracy values together.
     mAccuracyBonus = mAccuracyBonus + petAccuracyBonus
@@ -1485,34 +1516,35 @@ xi.mobskills.mobDrainMove = function(mob, target, drainType, drain, attackType, 
     -- Is this also reflected in the damage messaging on retail?
     -- Currently we do not return the clamped drain afterwards so the damage messaging will not be updated to reflect this.
 
-    if not target:isUndead() then
-        if drainType == xi.mobskills.drainType.MP then
-            drain = math.min(drain, target:getMP())
+    if drainType == xi.mobskills.drainType.HP then
+        drain = math.min(drain, target:getHP())
 
-            target:delMP(drain)
-            mob:addMP(drain)
+        -- Drains on undead still do damage but will not add HP to the caster.
+        -- Uses standard mobskill damage message when used on undead.
+        target:takeDamage(drain, mob, attackType, damageType)
 
-            return xi.msg.basic.SKILL_DRAIN_MP
-        elseif drainType == xi.mobskills.drainType.TP then
-            drain = math.min(drain, target:getTP())
-
-            target:delTP(drain)
-            mob:addTP(drain)
-
-            return xi.msg.basic.SKILL_DRAIN_TP
-        elseif drainType == xi.mobskills.drainType.HP then
-            drain = math.min(drain, target:getHP())
-
-            target:takeDamage(drain, mob, attackType, damageType)
+        if not target:isUndead() then
             mob:addHP(drain)
 
             return xi.msg.basic.SKILL_DRAIN_HP
         end
-    else
-        drain = math.min(drain, target:getHP())
 
-        target:takeDamage(drain, mob, attackType, damageType)
         return xi.msg.basic.DAMAGE
+    elseif drainType == xi.mobskills.drainType.MP then
+        if not target:isUndead() then
+            drain = math.min(drain, target:getMP())
+            target:delMP(drain)
+            mob:addMP(drain)
+
+            return xi.msg.basic.SKILL_DRAIN_MP
+        end
+    -- TP Drain Kiss (Mobskill) DOES work on undead targets.
+    elseif drainType == xi.mobskills.drainType.TP then
+        drain = math.min(drain, target:getTP())
+        target:delTP(drain)
+        mob:addTP(drain)
+
+        return xi.msg.basic.SKILL_DRAIN_TP
     end
 
     return xi.msg.basic.SKILL_NO_EFFECT
@@ -1799,7 +1831,7 @@ xi.mobskills.handleShadowConsumption = function(mob, target, skill, params, shad
     return hitAbsorbed, shadowsConsumed
 end
 
-xi.mobskills.calculatePetMagicAccuracyBonus = function(mob, target, actionElement)
+xi.mobskills.calculatePetMagicAccuracyBonus = function(mob)
     if not mob:isPet() then
         return 0
     end
@@ -1830,7 +1862,7 @@ xi.mobskills.handleHybridDamage = function(mob, target, physicalDamage, element)
     local magicDamageAdjustment = 1
     local dayAndWeather         = xi.spells.damage.calculateDayAndWeather(mob, element, false)
     local magicBonusDiff        = xi.spells.damage.calculateMagicBonusDiff(mob, target, 0, 0, element, 0)
-    local petAccBonus           = xi.mobskills.calculatePetMagicAccuracyBonus(mob, target, element)
+    local petAccBonus           = xi.mobskills.calculatePetMagicAccuracyBonus(mob)
     -- Note: Elemental absorb mechanics such as Liement are calculated BEFORE resist/damage adjustments (such as shell/magic bursts).
 
     if absorbDamage > 0 then

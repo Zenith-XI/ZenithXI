@@ -9,7 +9,7 @@ message(STATUS "TRACY_ENABLE: ${TRACY_ENABLE}")
 
 if(TRACY_ENABLE)
     # Tracy version tag, without the leading 'v'
-    set(TRACY_VERSION 0.14.1)
+    set(TRACY_VERSION 0.15.0)
 
     # Download client library
     CPMAddPackage(
@@ -30,21 +30,20 @@ if(TRACY_ENABLE)
             "TRACY_LIBBACKTRACE_ELF_DYNLOAD_SUPPORT ON"
     )
 
-    # Download Win32 server executables
+    include(ExternalProject)
+
+    # Download Win32 server executables at build time, into the build tree, and stage them in the
+    # repo root like the Linux and macOS tools below.
     if(MSVC)
-        message(STATUS "Downloading Tracy client")
-        file(DOWNLOAD
-            https://github.com/wolfpld/tracy/releases/download/v${TRACY_VERSION}/windows-${TRACY_VERSION}.zip
-            ${CMAKE_SOURCE_DIR}/tracy.tar.gz
-            TIMEOUT 60
-        )
-        execute_process(COMMAND "${CMAKE_COMMAND}" -E
-                tar xvf "${CMAKE_SOURCE_DIR}/tracy.tar.gz"
-                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/
+        ExternalProject_Add(tracy-windows-tools
+            URL https://github.com/wolfpld/tracy/releases/download/v${TRACY_VERSION}/windows-${TRACY_VERSION}.zip
+            URL_HASH SHA256=3549555e0ce253932b9e37dc2c2b72af9fe46f65c64391cbf1762a4a510f67c7 # update with TRACY_VERSION
+            DOWNLOAD_EXTRACT_TIMESTAMP ON
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND ""
+            INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory <SOURCE_DIR> ${CMAKE_SOURCE_DIR}
         )
     else() # UNIX (Linux / macOS)
-        include(ExternalProject)
-
         # target name:source subdirectory
         set(TRACY_TOOLS
             "tracy-capture:capture"

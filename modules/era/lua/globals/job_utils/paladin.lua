@@ -141,25 +141,27 @@ m:addOverrideByEra('xi.job_utils.paladin.useShieldBash', {
             not xi.data.statusEffect.isTargetResistant(player, target, xi.effect.STUN) and
             not xi.data.statusEffect.isEffectNullified(target, xi.effect.STUN, 0)
         then
+            -- macc bonus based on retail testing
             local maccParams =
             {
                 effectId       = xi.effect.STUN,
                 magicalElement = xi.element.THUNDER,
-                skillRank      = xi.skillRank.A_PLUS,
+                skillType      = xi.skill.SHIELD, -- Guessed
                 actorStat      = xi.mod.INT,
+                bonusMacc      = 512,
             }
 
             local resistanceRate = xi.combat.magicHitRate.calculateResistRate(player, target, maccParams)
             if xi.data.statusEffect.isResistRateSuccessfull(xi.effect.STUN, resistanceRate, 0) then
-                target:addStatusEffect(xi.effect.STUN, { power = 1, duration = math.randomInt(2, 8) * resistanceRate, origin = player })
+                target:addStatusEffect(xi.effect.STUN, { power = 1, duration = math.randomFloat(4.2, 6.2) * resistanceRate, origin = player })
             end
         end
 
         -- Randomize damage
-        local randomizer = 1 + (math.randomInt(1, 5) / 100)
+        local randomizer = 1 + math.randomInt(1, 5) / 100
 
-        damage = damage * randomizer
-        damage = utils.handleStoneskin(target, damage)
+        damage = math.floor(damage * randomizer)
+        damage = utils.handleStoneskin(target, damage, xi.attackType.PHYSICAL)
 
         target:takeDamage(damage, player, xi.attackType.PHYSICAL, xi.damageType.BLUNT)
         target:updateEnmityFromDamage(player, damage)
