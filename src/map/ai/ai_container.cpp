@@ -44,12 +44,12 @@
 #include "states/weaponskill_state.h"
 #include "status_effect_container.h"
 
-CAIContainer::CAIContainer(CBaseEntity* _PEntity)
-: CAIContainer(_PEntity, nullptr, nullptr, nullptr)
+CAIContainer::CAIContainer(CBaseEntity* entity)
+: CAIContainer(entity, nullptr, nullptr, nullptr)
 {
 }
 
-CAIContainer::CAIContainer(CBaseEntity*                   _PEntity,
+CAIContainer::CAIContainer(CBaseEntity*                   entity,
                            std::unique_ptr<CPathFind>&&   _pathfind,
                            std::unique_ptr<CController>&& _controller,
                            std::unique_ptr<CTargetFind>&& _targetfind)
@@ -58,8 +58,8 @@ CAIContainer::CAIContainer(CBaseEntity*                   _PEntity,
 , Controller(std::move(_controller))
 , m_Tick(timer::now())
 , m_PrevTick(timer::now())
-, PEntity(_PEntity)
-, ActionQueue(_PEntity)
+, PEntity(entity)
+, ActionQueue(entity)
 {
 }
 
@@ -502,16 +502,6 @@ auto CAIContainer::Tick(const timer::time_point tick) -> Task<void>
         }
     }
 
-    if (Controller && Controller->canUpdate)
-    {
-        co_await Controller->Tick(tick);
-    }
-
-    //
-    // The current state is held in m_currentState (not on the stack) while it runs, and finished states sit in m_retiredStates until the end of the tick.
-    // A re-entrant change can suspend or retire the state we are executing in, but never free it.
-    //
-
     // magic and mobskill states resolve their own interrupt at their finish.
     const auto shouldGoInactive = [&]() -> bool
     {
@@ -521,6 +511,22 @@ auto CAIContainer::Tick(const timer::time_point tick) -> Task<void>
                !IsCurrentState<CMagicState>() && !IsCurrentState<CMobSkillState>() &&
                battle->StatusEffectContainer->HasPreventActionEffect(true);
     };
+
+    // A prevent-action effect that landed since our last tick must stop the controller acting on this one.
+    if (shouldGoInactive())
+    {
+        Inactive(0ms, false);
+    }
+
+    if (Controller && Controller->canUpdate)
+    {
+        co_await Controller->Tick(tick);
+    }
+
+    //
+    // The current state is held in m_currentState (not on the stack) while it runs, and finished states sit in m_retiredStates until the end of the tick.
+    // A re-entrant change can suspend or retire the state we are executing in, but never free it.
+    //
 
     // The guard is a backstop against
     // a state that completes and re-enters itself every iteration (the stack is capped at

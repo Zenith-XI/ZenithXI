@@ -114,30 +114,19 @@
 #include "weapon_skill.h"
 
 CCharEntity::CCharEntity()
-: m_PlayTime(0s)
+: eventPreparation(new EventPrep())
+, currentEvent(new EventInfo())
+, TradeContainer(new CTradeContainer())
+, Container(new CTradeContainer())
+, UContainer(new CUContainer())
+, m_PlayTime(0s)
 {
     TracyZoneScoped;
 
     objtype     = TYPE_PC;
     m_EcoSystem = xi::Ecosystem::Humanoid;
 
-    eventPreparation = new EventPrep();
-    currentEvent     = new EventInfo();
-
-    inSequence   = false;
-    gotMessage   = false;
-    m_Locked     = false;
-    m_isPCHidden = false;
-
-    accid        = 0;
-    m_GMlevel    = 0;
-    m_isGMHidden = false;
-
     allegiance = xi::Allegiance::Player;
-
-    TradeContainer = new CTradeContainer();
-    Container      = new CTradeContainer();
-    UContainer     = new CUContainer();
 
     m_Inventory  = std::make_unique<CItemContainer>(LOC_INVENTORY, this);
     m_Mogsafe    = std::make_unique<CItemContainer>(LOC_MOGSAFE, this);
@@ -157,8 +146,6 @@ CCharEntity::CCharEntity()
     m_Wardrobe7  = std::make_unique<CItemContainer>(LOC_WARDROBE7, this);
     m_Wardrobe8  = std::make_unique<CItemContainer>(LOC_WARDROBE8, this);
     m_RecycleBin = std::make_unique<CItemContainer>(LOC_RECYCLEBIN, this);
-
-    keys = {};
 
     m_SpellList.reset();
     std::memset(&m_LearnedAbilities, 0, sizeof(m_LearnedAbilities));
@@ -393,16 +380,6 @@ auto CCharEntity::getPacketList() const -> const std::deque<std::unique_ptr<CBas
     return PacketList;
 }
 
-auto CCharEntity::getPacketListCopy() -> std::deque<std::unique_ptr<CBasicPacket>>
-{
-    std::deque<std::unique_ptr<CBasicPacket>> PacketListCopy;
-    for (const auto& packet : PacketList)
-    {
-        PacketListCopy.emplace_back(packet->copy());
-    }
-    return PacketListCopy;
-}
-
 void CCharEntity::clearPacketList()
 {
     while (!PacketList.empty())
@@ -518,6 +495,23 @@ void CCharEntity::erasePackets(uint8 num)
     {
         std::ignore = popPacket();
     }
+}
+
+// Only for types popPacket keeps no bookkeeping for
+void CCharEntity::erasePacketsOfType(const std::span<const uint16> types)
+{
+    std::erase_if(
+        PacketList,
+        [&](const auto& PPacket)
+        {
+            return std::ranges::contains(types, PPacket->getType());
+        });
+}
+
+void CCharEntity::movePacketsToFront(const std::size_t count)
+{
+    const auto moved = std::min(count, PacketList.size());
+    std::rotate(PacketList.begin(), PacketList.end() - static_cast<std::ptrdiff_t>(moved), PacketList.end());
 }
 
 auto CCharEntity::isPacketFiltered(std::unique_ptr<CBasicPacket>& packet) const -> bool
@@ -3206,14 +3200,27 @@ void CCharEntity::setLocked(bool locked)
     m_Locked = locked;
     if (locked)
     {
-        // Player and pet enmity are handled in mobcontroler.cpp, CheckLock() fucntion.
         // Mob casting interruption handled in magic_state.cpp, CMagicState::Update boolean.
         PAI->Disengage();
         if (PPet)
         {
             PPet->PAI->Disengage();
         }
-        battleutils::RelinquishClaim(this);
+
+        // Create a copy of the Notoriety Container and iterate over that.
+        // battleutils::ForceDeaggro eventually removes entries from that list which would be undefined behavior without a copy
+        CNotorietyContainer NotorietyCopy = *PNotorietyContainer;
+        for (auto PBattle : NotorietyCopy)
+        {
+            if (auto PMob = dynamic_cast<CMobEntity*>(PBattle); PMob)
+            {
+                battleutils::ForceDeaggro(PMob, this);
+                if (PPet)
+                {
+                    battleutils::ForceDeaggro(PMob, PPet);
+                }
+            }
+        }
     }
 }
 

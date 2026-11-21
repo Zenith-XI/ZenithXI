@@ -27,7 +27,7 @@ class CCharEntity;
 
 // https://github.com/atom0s/XiPackets/tree/main/world/server/0x008E
 // This packet is sent by the server to populate the clients alter ego points information. This packet is also used to update alter ego points when the client spends alter ego points.
-class GP_SERV_PACKET_ALTER_EGO_POINTS final : public GP_SERV_PACKET<PacketS2C::GP_SERV_PACKET_ALTER_EGO_POINTS, GP_SERV_PACKET_ALTER_EGO_POINTS>
+class GP_SERV_COMMAND_TRUST_ASCENSION_POINTS final : public GP_SERV_PACKET<PacketS2C::GP_SERV_COMMAND_TRUST_ASCENSION_POINTS, GP_SERV_COMMAND_TRUST_ASCENSION_POINTS>
 {
 public:
     struct PacketData
@@ -38,5 +38,5 @@ public:
         uint16_t Costs[32];
     };
 
-    GP_SERV_PACKET_ALTER_EGO_POINTS(CCharEntity* PChar);
+    GP_SERV_COMMAND_TRUST_ASCENSION_POINTS(CCharEntity* PChar);
 };

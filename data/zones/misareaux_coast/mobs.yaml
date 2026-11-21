@@ -190,6 +190,8 @@ templates:
         type: [scripted]
       stats:
         hp: 7600
+      mob_mods:
+        base_damage_multiplier: 150
 
   Bugard:
     id:            557
@@ -210,6 +212,8 @@ templates:
         aggressive: true
       spawn:
         respawn: 300
+      mob_mods:
+        base_damage_multiplier: 150
     loot:
       drops:
         - chance: common
@@ -774,6 +778,8 @@ templates:
         aggressive: true
       spawn:
         respawn: 300
+      mob_mods:
+        base_damage_multiplier: 150
     loot:
       drops:
         - chance: very_common
@@ -1245,6 +1251,8 @@ templates:
         respawn: 300
     loot:
       drops:
+        - chance: uncommon
+          item:   bulb_of_misareaux_garlic
         - chance: rare
           item:   tavnazian_sheep_liver
       steal: [bulb_of_misareaux_garlic, silver_beastcoin] # audit needed
@@ -1301,6 +1309,9 @@ templates:
       spawn:
         respawn: 300
     loot:
+      drops:
+        - chance: uncommon
+          item:   bulb_of_misareaux_garlic
       steal: [bulb_of_misareaux_garlic, silver_beastcoin] # audit needed
       despoil:
         strip_of_meat_jerky:    0
@@ -1357,6 +1368,9 @@ templates:
       spawn:
         respawn: 300
     loot:
+      drops:
+        - chance: uncommon
+          item:   bulb_of_misareaux_garlic
       steal: [bulb_of_misareaux_garlic, silver_beastcoin] # audit needed
       despoil:
         strip_of_meat_jerky:    0
@@ -1385,6 +1399,8 @@ templates:
         links:      true
       spawn:
         respawn: 300
+      mob_mods:
+        base_damage_multiplier: 150
     loot:
       drops:
         - chance: common

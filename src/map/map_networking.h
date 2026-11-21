@@ -24,7 +24,7 @@
 #include <common/blowfish.h>
 #include <common/cbasetypes.h>
 #include <common/ipp.h>
-#include <common/scheduler.h>
+#include <common/scheduler/scheduler.h>
 
 #include <map/map_config.h>
 #include <map/map_constants.h>
@@ -95,6 +95,9 @@ public:
     auto scheduler() -> Scheduler&;
     auto socket() -> Socket&;
     auto packetSystem() -> PacketSystem&;
+
+    // The test server has no socket until a test installs one
+    void setSocket(std::unique_ptr<Socket> socket);
 
 private:
     Scheduler&              scheduler_;

@@ -35,6 +35,8 @@ set(SOURCES
     test_lua_environment.cpp
     test_matcher.h
     test_matcher.cpp
+    test_network_client.h
+    test_network_client.cpp
     test_suite.h
     test_suite.cpp
 )
@@ -51,7 +53,9 @@ endif()
 xi_add_executable(xi_test testserver.rc
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/bitset_tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/char_points_queries_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/data_binding_tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/database_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/ecosystems_tree_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/experience_dataset_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/merits_dataset_tests.cpp
@@ -62,11 +66,16 @@ xi_add_executable(xi_test testserver.rc
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/zones/regions_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/zones/settings_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/entity_list_tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/fishing_tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/huffman_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/item_container_tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/map_session_container_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/rng_runtime_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/pathfind_region_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/roam_region_tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/scheduler_tests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/transport_voyage_tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/ximesh_query_tests.cpp
 )
 add_dependencies(xi_test data_schema_generate)
 
@@ -88,3 +97,11 @@ xi_precompile_headers(xi_test)
 if(TRACY_ENABLE)
     set_target_properties(xi_test PROPERTIES OUTPUT_NAME xi_test_tracy)
 endif()
+
+# `ctest` runs the copy staged in the repo root, from the repo root, as CI does. It needs the
+# database set up first (tools/dbtool.py update). Catch2's tests run inside it at startup.
+add_test(NAME xi_test
+    COMMAND ${CMAKE_SOURCE_DIR}/$<TARGET_FILE_NAME:xi_test> --keep-going
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+set_tests_properties(xi_test PROPERTIES LABELS "needs-db")

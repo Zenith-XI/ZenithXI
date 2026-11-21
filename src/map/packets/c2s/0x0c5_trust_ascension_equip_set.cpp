@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2015 Darkstar Dev Teams
+  Copyright (c) 2026 LandSandBoat Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,15 +19,16 @@
 ===========================================================================
 */
 
-#pragma once
+#include "0x0c5_trust_ascension_equip_set.h"
 
-#include "common/cbasetypes.h"
+#include "packets/c2s/validation.h"
 
-static inline auto zlib_compressed_size(const size_t sz) -> size_t
+auto GP_CLI_COMMAND_TRUST_ASCENSION_EQUIP_SET::validate(MapSession* PSession, const CCharEntity* PChar) const -> PacketValidationResult
 {
-    return (sz + 7) / 8;
+    // TODO: Trust equipment is not implemented.
+    return PacketValidator(PChar);
 }
 
-auto zlib_init() -> int32;
-auto zlib_compress(const int8* in, uint32 in_sz, int8* out, uint32 out_sz) -> int32;
-auto zlib_decompress(const int8* in, uint32 in_sz, int8* out, uint32 out_sz) -> int32;
+void GP_CLI_COMMAND_TRUST_ASCENSION_EQUIP_SET::process(MapSession* PSession, CCharEntity* PChar) const
+{
+}

@@ -21,11 +21,12 @@
 
 #include "map_networking.h"
 
+#include <common/huffman.h>
 #include <common/md52.h>
 #include <common/tracy.h>
-#include <common/zlib.h>
 
 #include "entities/char_entity.h"
+#include "enums/packet_s2c.h"
 
 #include "packets/basic.h"
 #include "packets/s2c/0x00b_logout.h"
@@ -58,6 +59,36 @@ auto hasZoneOutReply(const uint8* buff, const size_t buffsize) -> bool
     }
 
     return false;
+}
+
+// What retail sends before C2S 0x00C. The client drops and still acks anything else, so it would never be resent.
+auto isSentBeforeGameOk(const PacketS2C type, const bool loginReplyQueued) -> bool
+{
+    // First the zone-in reply, alone in its datagram. The client drops this GRAP_LIST, and retail resends it after C2S 0x00C.
+    if (loginReplyQueued)
+    {
+        switch (type)
+        {
+            case PacketS2C::GP_SERV_COMMAND_LOGIN:
+            case PacketS2C::GP_SERV_COMMAND_ITEM_MAX:
+            case PacketS2C::GP_SERV_COMMAND_EQUIP_CLEAR:
+            case PacketS2C::GP_SERV_COMMAND_GRAP_LIST:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    // Then only the equip list and party lists
+    switch (type)
+    {
+        case PacketS2C::GP_SERV_COMMAND_EQUIP_LIST:
+        case PacketS2C::GP_SERV_COMMAND_GROUP_TBL:
+        case PacketS2C::GP_SERV_COMMAND_GROUP_LIST:
+            return true;
+        default:
+            return false;
+    }
 }
 
 } // namespace
@@ -154,7 +185,7 @@ void MapNetworking::handle_incoming_packet(ByteSpan buffer, const IPP& ipp)
             auto maybePacketSize = compressPacket(PBuff.data(), size);
             if (!maybePacketSize)
             {
-                ShowWarningFmt("zlib compression error from charid '{}', attempted pre-compression packet size '{}'", PSession->charID, size);
+                ShowWarningFmt("Huffman encode failed for charid '{}', payload size '{}'", PSession->charID, size);
                 size = 0;
             }
             else
@@ -174,8 +205,8 @@ void MapNetworking::handle_incoming_packet(ByteSpan buffer, const IPP& ipp)
         std::swap(size, PSession->server_packet_size);
     }
 
-    // If client is logging out, just close it.
-    if (PSession->shuttingDown == 1)
+    // If client is logging out, close it once its 0x00B has gone out
+    if (PSession->shuttingDown == 1 && PSession->PChar == nullptr)
     {
         mapSessions_.destroySession(PSession);
     }
@@ -194,9 +225,9 @@ auto MapNetworking::map_decipher_packet(uint8* buff, size_t buffsize, MapSession
     const auto ip = PSession->client_ipp.getIP();
 
     // tmp is an even count of 4-byte words, i.e. 2 words (one 64-bit block) per cipher step.
-    blowfish_decipher_blocks((uint32*)buff + 7, tmp / 2, pbfkey->P, pbfkey->S[0]);
+    blowfish_decipher_blocks(reinterpret_cast<uint32*>(buff) + 7, tmp / 2, pbfkey->P, pbfkey->S[0]);
 
-    if (checksum((uint8*)(buff + FFXI_HEADER_SIZE), (uint32)(buffsize - (FFXI_HEADER_SIZE + 16)), (char*)(buff + buffsize - 16)) == 0)
+    if (checksum((uint8*)(buff + FFXI_HEADER_SIZE), (uint32)(buffsize - (FFXI_HEADER_SIZE + 16)), reinterpret_cast<char*>(buff + buffsize - 16)) == 0)
     {
         return 0;
     }
@@ -223,7 +254,7 @@ auto MapNetworking::recv_parse(uint8* buff, size_t* buffsize, MapSession*& PSess
         {
             return -1;
         }
-        checksumResult = checksum((uint8*)(buff + FFXI_HEADER_SIZE), (uint32)(size - (FFXI_HEADER_SIZE + 16)), (char*)(buff + size - 16));
+        checksumResult = checksum((uint8*)(buff + FFXI_HEADER_SIZE), (uint32)(size - (FFXI_HEADER_SIZE + 16)), reinterpret_cast<char*>(buff + size - 16));
     }
     catch (...)
     {
@@ -267,27 +298,33 @@ auto MapNetworking::recv_parse(uint8* buff, size_t* buffsize, MapSession*& PSess
             return -1;
         }
 
-        uint32 packetCharID = loginPacket.UniqueNo;
+        const auto packetCharID = loginPacket.UniqueNo;
+        const auto loginSeq     = ref<uint16>(buff, 0);
 
         // client may zone in from a new address, find the session by char instead
-        // unknown00 goes up by one on every client retry
         if (PSession == nullptr)
         {
             if (auto* existing = mapSessions_.getSessionByCharId(packetCharID))
             {
                 if (existing->blowfish.status == BLOWFISH_ACCEPTED && existing->hasDecryptedPacket)
                 {
-                    ShowWarningFmt("recv_parse: 0x00A for charid {} from {} ignored, session is bound to {} (retry {})", packetCharID, ipp.toString(), existing->client_ipp.toString(), loginPacket.unknown00);
+                    ShowWarningFmt("recv_parse: 0x00A for charid {} from {} ignored, session is bound to {} (client state {}, recv status {:08X})", packetCharID, ipp.toString(), existing->client_ipp.toString(), loginPacket.unknown00, loginPacket.unknown01);
                     return -1;
                 }
 
                 if (timer::now() < existing->addressChanged + std::chrono::seconds(1))
                 {
-                    ShowWarningFmt("recv_parse: 0x00A for charid {} from {} ignored, session moved to {} less than a second ago (retry {})", packetCharID, ipp.toString(), existing->client_ipp.toString(), loginPacket.unknown00);
+                    ShowWarningFmt("recv_parse: 0x00A for charid {} from {} ignored, session moved to {} less than a second ago (client state {}, recv status {:08X})", packetCharID, ipp.toString(), existing->client_ipp.toString(), loginPacket.unknown00, loginPacket.unknown01);
                     return -1;
                 }
 
-                ShowInfoFmt("recv_parse: session for charid {} moved from {} to {} (retry {})", packetCharID, existing->client_ipp.toString(), ipp.toString(), loginPacket.unknown00);
+                if (existing->isStaleLogin(loginSeq, ipp))
+                {
+                    ShowWarningFmt("recv_parse: stale 0x00A for charid {} from {} ignored, session stays at {} (seq {}, last {})", packetCharID, ipp.toString(), existing->client_ipp.toString(), loginSeq, existing->loginSeq);
+                    return -1;
+                }
+
+                ShowInfoFmt("recv_parse: session for charid {} moved from {} to {} (client state {}, recv status {:08X})", packetCharID, existing->client_ipp.toString(), ipp.toString(), loginPacket.unknown00, loginPacket.unknown01);
                 mapSessions_.moveSession(existing, ipp);
                 existing->addressChanged = timer::now();
                 PSession                 = existing;
@@ -299,7 +336,7 @@ auto MapNetworking::recv_parse(uint8* buff, size_t* buffsize, MapSession*& PSess
             }
             else
             {
-                ShowWarningFmt("recv_parse: 0x00A for charid {} from {} ignored, no session or pending session (retry {})", packetCharID, ipp.toString(), loginPacket.unknown00);
+                ShowWarningFmt("recv_parse: 0x00A for charid {} from {} ignored, no session or pending session (client state {}, recv status {:08X})", packetCharID, ipp.toString(), loginPacket.unknown00, loginPacket.unknown01);
                 return -1;
             }
         }
@@ -312,6 +349,18 @@ auto MapNetworking::recv_parse(uint8* buff, size_t* buffsize, MapSession*& PSess
         if (PSession->blowfish.status == BLOWFISH_ACCEPTED && PSession->hasDecryptedPacket)
         {
             return -1;
+        }
+
+        if (PSession->isStaleLogin(loginSeq, ipp))
+        {
+            ShowWarningFmt("recv_parse: stale 0x00A for charid {} ignored (seq {}, last {})", packetCharID, loginSeq, PSession->loginSeq);
+            return -1;
+        }
+
+        // The client is retrying, so it never got S2C 0x00A. Its receive status says why.
+        if (PSession->loginSeq != 0)
+        {
+            ShowWarningFmt("recv_parse: 0x00A retry for charid {} (seq {}, client state {}, recv status {:08X})", packetCharID, loginSeq, loginPacket.unknown00, loginPacket.unknown01);
         }
 
         // We can only get here if an 0x00A (not encrypted) packet was here.
@@ -360,8 +409,30 @@ auto MapNetworking::recv_parse(uint8* buff, size_t* buffsize, MapSession*& PSess
 
             PChar->PSession = PSession;
 
+            // No process hosts this zone, so send the char home. A zone another process owns could be a jail
+            if (static_cast<uint16>(PChar->loc.destination) >= MAX_ZONEID || zoneutils::GetZoneIPP(PChar->loc.destination) == 0)
+            {
+                ShowWarningFmt("recv_parse: {} can't enter zone {}, sending them to their home point", PChar->getName(), PChar->loc.destination);
+
+                PChar->loc.destination = PChar->profile.home_point.destination;
+                PChar->loc.p           = PChar->profile.home_point.p;
+                PChar->loc.boundary    = 0;
+                PChar->m_moghouseID    = 0;
+
+                db::preparedStmt("UPDATE chars SET pos_zone = ?, pos_rot = ?, pos_x = ?, pos_y = ?, pos_z = ?, moghouse = 0, boundary = 0 WHERE charid = ?",
+                                 PChar->loc.destination,
+                                 PChar->loc.p.rotation,
+                                 PChar->loc.p.x,
+                                 PChar->loc.p.y,
+                                 PChar->loc.p.z,
+                                 PChar->id);
+            }
+
             // the 0x00A handler puts the char in this zone, so it has to be loaded before it gets there
-            zoneutils::EnsureZoneLoaded(scheduler_, config_, PChar->loc.destination);
+            if (static_cast<uint16>(PChar->loc.destination) < MAX_ZONEID)
+            {
+                zoneutils::EnsureZoneLoaded(scheduler_, config_, PChar->loc.destination);
+            }
 
             // If we're a new char on a new instance and prevzone != zone
             if (PSession->blowfish.status == BLOWFISH_WAITING && PChar->loc.destination != PChar->loc.prevzone)
@@ -372,10 +443,15 @@ auto MapNetworking::recv_parse(uint8* buff, size_t* buffsize, MapSession*& PSess
             }
         }
 
+        PSession->takeLogin(loginSeq, ipp);
+
         PSession->client_packet_id = 0;
         PSession->server_packet_id = 0;
         PSession->zone_ipp         = {};
         PSession->zone_type        = GP_GAME_LOGOUT_STATE::NONE;
+
+        // Tap now, or a slow zone change flags the new char link-dead before its first encrypted packet
+        PSession->tapLastUpdate();
 
         return 0;
     }
@@ -414,22 +490,26 @@ auto MapNetworking::recv_parse(uint8* buff, size_t* buffsize, MapSession*& PSess
             PSession->hasDecryptedPacket = true;
         }
 
-        // reading data size
-        uint32 PacketDataSize = ref<uint32>(buff, *buffsize - sizeof(int32) - 16);
-
-        // it's decompressing data and getting new size
-        PacketDataSize = zlib_decompress((int8*)(buff + FFXI_HEADER_SIZE), PacketDataSize, (int8*)PScratchBuffer.data(), kMaxBufferSize);
-
-        // Not sure why zlib_decompress is defined to return a uint32 when it returns -1 in situations.
-        if (static_cast<int32>(PacketDataSize) != -1)
+        // The payload is followed by its size in bits, then the MD5
+        if (*buffsize < FFXI_HEADER_SIZE + sizeof(uint32) + 16)
         {
-            // it's making result buff
-            // don't need std::memcpy header
-            std::memcpy(buff + FFXI_HEADER_SIZE, PScratchBuffer.data(), PacketDataSize);
-            *buffsize = FFXI_HEADER_SIZE + PacketDataSize;
-
-            return decryptCount;
+            *buffsize = 0;
+            return -1;
         }
+
+        const auto encodedBits = ref<uint32>(buff, *buffsize - sizeof(uint32) - 16);
+        const auto encoded     = std::span<const uint8>(buff + FFXI_HEADER_SIZE, *buffsize - FFXI_HEADER_SIZE - sizeof(uint32) - 16);
+
+        // Bounded so the decoded payload still fits behind the header in buff
+        const auto decodedSize = huffman_decode(encoded, encodedBits, std::span(PScratchBuffer).first(kMaxBufferSize - FFXI_HEADER_SIZE));
+        if (!decodedSize)
+        {
+            *buffsize = 0;
+            return -1;
+        }
+
+        std::memcpy(buff + FFXI_HEADER_SIZE, PScratchBuffer.data(), *decodedSize);
+        *buffsize = FFXI_HEADER_SIZE + *decodedSize;
 
         return decryptCount;
     }
@@ -474,6 +554,13 @@ auto MapNetworking::parse(uint8* buff, size_t* buffsize, MapSession* PSession) -
             continue;
         }
 
+        // The client sends this once it has loaded the zone, whether or not the handler takes it
+        if (SmallPD_Type == static_cast<uint16>(PacketC2S::GP_CLI_COMMAND_GAMEOK) && !PSession->hasSentGameOk)
+        {
+            PSession->hasSentGameOk = true;
+            PSession->gameOkTime    = timer::now();
+        }
+
         if (SmallPD_Type != static_cast<uint16>(PacketC2S::GP_CLI_COMMAND_POS))
         {
             DebugPackets("parse: %03hX | %04hX %04hX %02hX from user: %s",
@@ -495,8 +582,11 @@ auto MapNetworking::parse(uint8* buff, size_t* buffsize, MapSession* PSession) -
         else
         {
             // Reuse one CBasicPacket (parseScratchPacket_) across the loop instead of re-allocating per inbound packet.
-            // We're copying in and bounding only exactly what we want, so it's safe.
-            std::memcpy(&parseScratchPacket_.ref<uint8>(0), SmallPD_ptr, PACKET_SIZE);
+            // Zero the tail so a field the client didn't send reads as empty.
+            // Retail doesn't do this, and its packets can carry stale bytes in unused fields.
+            const auto subPacketSize = static_cast<std::size_t>(SmallPD_Size) * 2;
+            std::memcpy(&parseScratchPacket_.ref<uint8>(0), SmallPD_ptr, subPacketSize);
+            std::memset(&parseScratchPacket_.ref<uint8>(subPacketSize), 0, PACKET_SIZE - subPacketSize);
             ShowTraceFmt("map::parse: Char: {} ({}): {}", PChar->getName(), PChar->id, hex16ToString(parseScratchPacket_.getType()));
             packetSystem_.dispatch(SmallPD_Type, PSession, PChar, parseScratchPacket_);
         }
@@ -566,128 +656,128 @@ auto MapNetworking::send_parse(uint8* buff, size_t* buffsize, MapSession* PSessi
     auto* PChar = PSession->PChar.get();
     TracyZoneString(PChar->name);
 
-    std::unique_ptr<CBasicPacket> PSmallPacket = nullptr;
-
-    size_t PacketSize               = static_cast<size_t>(UINT32_MAX);
-    size_t PacketCount              = std::clamp<size_t>(PChar->getPacketCount(), 0, kMaxPacketPerCompression);
-    uint8  packets                  = 0;
-    bool   incrementKeyAfterEncrypt = false;
-
     mapStatistics_.increment(MapStatistics::Key::TotalPacketsToSendPerTick, static_cast<uint32>(PChar->getPacketCount()));
 
-    uint32 attempts = 0;
+    // Keeps the datagram at 1300 bytes with header and MD5, under the client's 1360-byte receive limit
+    constexpr auto kMaxEncodedSize = 1300 - FFXI_HEADER_SIZE - 16;
 
-    do
+    // One packet of the longest (12-bit) codes always fits, so the queue can't stall behind it
+    static_assert(1 + sizeof(uint32) + (PACKET_SIZE * 12 + 7) / 8 <= kMaxEncodedSize);
+
+    bool          incrementKeyAfterEncrypt = false;
+    uint8         packets                  = 0;
+    CBasicPacket* PZoneOutPacket           = nullptr;
+
+    // Flag byte and trailing bit count
+    auto encodedSize = size_t{ 1 + sizeof(uint32) };
+
+    // The 0x00A handler puts its reply at the front, so the reply goes out before anything else
+    const auto loginReplyQueued = !PSession->hasLoadedZone() &&
+                                  std::ranges::any_of(
+                                      PChar->getPacketList(),
+                                      [](const auto& PPacket)
+                                      {
+                                          return PPacket->getType() == static_cast<uint16>(PacketS2C::GP_SERV_COMMAND_LOGIN);
+                                      });
+
+    *buffsize = FFXI_HEADER_SIZE;
+
+    // Estimate each packet's encoded size, as the client's send queue does, and stop before the batch passes the limit
+    for (const auto& PSmallPacket : PChar->getPacketList())
     {
-        do
+        if (packets >= kMaxPacketPerCompression)
         {
-            ++attempts;
-
-            TracyZoneNamed(attemptZone, "send_parse: attempt");
-
-            *buffsize = FFXI_HEADER_SIZE;
-            packets   = 0;
-
-            auto packetList = [&]
-            {
-                TracyZoneNamed(copyZone, "send_parse: copy packet list");
-
-                return PChar->getPacketListCopy();
-            }();
-
-            while (!packetList.empty() && *buffsize + packetList.front()->getSize() < kMaxBufferSize && static_cast<size_t>(packets) < PacketCount)
-            {
-                // hold 0x00B until the client decrypts a packet with the current key
-                if (packetList.front()->getType() == 0x00B && !PSession->hasDecryptedPacket)
-                {
-                    break;
-                }
-
-                PSmallPacket = std::move(packetList.front());
-                packetList.pop_front();
-
-                PSmallPacket->setSequence(PSession->server_packet_id);
-                auto type = PSmallPacket->getType();
-
-                // Store zoneout packet in case we need to re-send this
-                if (type == 0x00B)
-                {
-                    const auto IPPacket = static_cast<GP_SERV_COMMAND_LOGOUT*>(PSmallPacket.get());
-
-                    PSession->zone_ipp  = IPPacket->zoneIPP();
-                    PSession->zone_type = IPPacket->zoneType();
-
-                    incrementKeyAfterEncrypt = true;
-
-                    if (PSession->zone_type != GP_GAME_LOGOUT_STATE::LOGOUT)
-                    {
-                        auto ip   = PSession->zone_ipp.getIP();
-                        auto port = PSession->zone_ipp.getPort();
-
-                        // Set client port to zero, indicating the client tried to zone out and no longer has a port until the next 0x00A
-                        db::preparedStmt("UPDATE accounts_sessions SET server_addr = ?, server_port = ?, client_port = 0, last_zoneout_time = NOW() WHERE charid = ?", ip, port, PSession->charID);
-                    }
-                    else
-                    {
-                        // This probably isn't necessary - the session should be deleted shortly.
-                        db::preparedStmt("UPDATE accounts_sessions SET client_port = 0, last_zoneout_time = NOW() WHERE charid = ?", PSession->charID);
-                    }
-                }
-
-                std::memcpy(buff + *buffsize, *PSmallPacket, PSmallPacket->getSize());
-
-                *buffsize += PSmallPacket->getSize();
-
-                packets++;
-            }
-
-            PacketCount -= PacketCount / 3;
-
-            // Compress the data without regard to the header
-            // The returned size is 8 times the real data
-            const auto maybePacketSize = [&]
-            {
-                TracyZoneNamed(compressZone, "send_parse: compress");
-
-                return compressPacket(buff, static_cast<size_t>(*buffsize));
-            }();
-
-            if (!maybePacketSize)
-            {
-                ShowWarningFmt("zlib compression error from charid '{}', attempted pre-compression packet size '{}'", PSession->charID, *buffsize);
-                continue;
-            }
-            PacketSize = *maybePacketSize;
-        } while (PacketCount > 0 && PacketSize > 1300 - FFXI_HEADER_SIZE - 16); // max size for client to accept
-
-        if (PacketSize == static_cast<uint32>(-1))
-        {
-            if (PChar->getPacketCount() > 0)
-            {
-                PChar->erasePackets(1);
-                PacketCount = PChar->getPacketCount();
-            }
-            else
-            {
-                *buffsize = 0;
-                return -1;
-            }
+            break;
         }
-    } while (PacketSize == static_cast<uint32>(-1));
+
+        // Until C2S 0x00C everything else waits in order, 0x00B and entity spawns included
+        if (!PSession->hasLoadedZone() && !isSentBeforeGameOk(static_cast<PacketS2C>(PSmallPacket->getType()), loginReplyQueued))
+        {
+            break;
+        }
+
+        // Hold 0x00B until the client decrypts with the current key and has settled after loading
+        if (PSmallPacket->getType() == static_cast<uint16>(PacketS2C::GP_SERV_COMMAND_LOGOUT) && (!PSession->hasDecryptedPacket || !PSession->canZoneOut()))
+        {
+            break;
+        }
+
+        // The sequence is part of the encoded bytes, so set it before measuring
+        PSmallPacket->setSequence(PSession->server_packet_id);
+
+        const auto size        = PSmallPacket->getSize();
+        const auto encodedNext = huffman_encoded_size({ static_cast<const uint8*>(*PSmallPacket), size });
+        if (*buffsize + size >= kMaxBufferSize || encodedSize + encodedNext > kMaxEncodedSize)
+        {
+            break;
+        }
+
+        if (PSmallPacket->getType() == 0x00B)
+        {
+            PZoneOutPacket = PSmallPacket.get();
+        }
+
+        std::memcpy(buff + *buffsize, *PSmallPacket, size);
+        *buffsize += size;
+        encodedSize += encodedNext;
+
+        packets++;
+
+        // Retail ends the datagram with 0x00A, and the equip list follows in the next one
+        if (PSmallPacket->getType() == static_cast<uint16>(PacketS2C::GP_SERV_COMMAND_LOGIN))
+        {
+            break;
+        }
+    }
+
+    const auto maybePacketSize = [&]
+    {
+        TracyZoneNamed(compressZone, "send_parse: compress");
+
+        return compressPacket(buff, *buffsize);
+    }();
+
+    if (!maybePacketSize)
+    {
+        ShowCriticalFmt("Huffman encode failed for charid '{}' although the batch was sized to fit, payload size '{}'", PSession->charID, *buffsize);
+        *buffsize = 0;
+        return -1;
+    }
+
+    // Store zoneout packet in case we need to re-send this
+    if (PZoneOutPacket != nullptr)
+    {
+        const auto IPPacket = static_cast<GP_SERV_COMMAND_LOGOUT*>(PZoneOutPacket);
+
+        PSession->zone_ipp  = IPPacket->zoneIPP();
+        PSession->zone_type = IPPacket->zoneType();
+
+        incrementKeyAfterEncrypt = true;
+
+        if (PSession->zone_type != GP_GAME_LOGOUT_STATE::LOGOUT)
+        {
+            auto ip   = PSession->zone_ipp.getIP();
+            auto port = PSession->zone_ipp.getPort();
+
+            // Set client port to zero, indicating the client tried to zone out and no longer has a port until the next 0x00A
+            db::preparedStmt("UPDATE accounts_sessions SET server_addr = ?, server_port = ?, client_port = 0, last_zoneout_time = NOW() WHERE charid = ?", ip, port, PSession->charID);
+        }
+        else
+        {
+            // This probably isn't necessary - the session should be deleted shortly.
+            db::preparedStmt("UPDATE accounts_sessions SET client_port = 0, last_zoneout_time = NOW() WHERE charid = ?", PSession->charID);
+        }
+    }
 
     PChar->erasePackets(packets);
 
     mapStatistics_.increment(MapStatistics::Key::TotalPacketsSentPerTick, static_cast<uint32>(packets));
     TracyZoneString(fmt::format("Sending {} packets", packets));
 
-    // Every extra attempt re-copies the whole outgoing list and re-runs zlib, so this is the
-    // number to watch when send_parse spikes.
-    TracyReportGraphNumber("send_parse Attempts", static_cast<int64>(attempts));
-
     {
         TracyZoneNamed(finalizeZone, "send_parse: finalize");
 
-        finalizePacket(buff, buffsize, PacketSize, PSession, usePreviousKey);
+        finalizePacket(buff, buffsize, *maybePacketSize, PSession, usePreviousKey);
     }
 
     auto remainingPackets = PChar->getPacketCount();
@@ -758,21 +848,19 @@ auto MapNetworking::compressPacket(uint8* buff, size_t buffsize) -> Maybe<size_t
 {
     TracyZoneScoped;
 
-    // Compress the data without regard to the header
-    // The returned size is 8 times the real data
-    int32 result = zlib_compress((int8*)(buff + FFXI_HEADER_SIZE), (uint32)(buffsize - FFXI_HEADER_SIZE), (int8*)PScratchBuffer.data(), kMaxBufferSize);
+    // Leaves room for the trailing bit count and MD5. The result is in bits.
+    const auto result = huffman_encode({ buff + FFXI_HEADER_SIZE, buffsize - FFXI_HEADER_SIZE }, std::span(PScratchBuffer).first(kMaxBufferSize - FFXI_HEADER_SIZE - sizeof(uint32) - 16));
 
-    // handle compression error
-    if (result == -1)
+    if (!result)
     {
         return std::nullopt;
     }
 
-    auto packetSize = static_cast<size_t>(result);
+    auto packetSize = static_cast<size_t>(*result);
 
-    ref<uint32>(PScratchBuffer.data(), zlib_compressed_size(packetSize)) = static_cast<uint32>(packetSize);
+    ref<uint32>(PScratchBuffer.data(), huffman_byte_size(packetSize)) = static_cast<uint32>(packetSize);
 
-    packetSize = zlib_compressed_size(packetSize) + 4;
+    packetSize = huffman_byte_size(packetSize) + 4;
 
     return packetSize;
 }
@@ -809,7 +897,7 @@ void MapNetworking::finalizePacket(uint8* buff, size_t* buffsize, size_t PacketS
     }
 
     // cypherSize is an even count of 4-byte words, i.e. 2 words (one 64-bit block) per cipher step.
-    blowfish_encipher_blocks((uint32*)(buff) + 7, cypherSize / 2, pbfkey->P, pbfkey->S[0]);
+    blowfish_encipher_blocks(reinterpret_cast<uint32*>(buff) + 7, cypherSize / 2, pbfkey->P, pbfkey->S[0]);
 
     *buffsize = PacketSize + FFXI_HEADER_SIZE;
 }
@@ -880,4 +968,9 @@ auto MapNetworking::socket() -> Socket&
 auto MapNetworking::packetSystem() -> PacketSystem&
 {
     return packetSystem_;
+}
+
+void MapNetworking::setSocket(std::unique_ptr<Socket> socket)
+{
+    socket_ = std::move(socket);
 }

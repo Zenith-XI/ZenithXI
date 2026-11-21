@@ -122,9 +122,10 @@ auto IPCServer::getIPPsForParty(uint32 partyId) -> std::vector<IPP>
     // TODO: We know when chars move, we could be caching this info
 
     // TODO: Simplify query now that there's alliance versions?
-    const auto query = "SELECT server_addr, server_port, MIN(charid) FROM accounts_sessions JOIN accounts_parties USING (charid) "
-                       "WHERE (allianceid <> 0 AND allianceid = (SELECT MAX(allianceid) FROM accounts_parties WHERE partyid = ?)) "
-                       "OR (allianceid = 0 AND partyid = ?) GROUP BY server_addr, server_port";
+    constexpr auto query = db::Query(
+        "SELECT server_addr, server_port, MIN(charid) FROM accounts_sessions JOIN accounts_parties USING (charid) "
+        "WHERE (allianceid <> 0 AND allianceid = (SELECT MAX(allianceid) FROM accounts_parties WHERE partyid = ?)) "
+        "OR (allianceid = 0 AND partyid = ?) GROUP BY server_addr, server_port");
 
     const auto rset = db::preparedStmt(query, partyId, partyId);
     if (rset && rset->rowsCount())
@@ -149,9 +150,10 @@ auto IPCServer::getIPPsForAlliance(uint32 allianceId) -> std::vector<IPP>
 
     // TODO: We know when chars move, we could be caching this info
 
-    const auto query = "SELECT server_addr, server_port, MIN(charid) FROM accounts_sessions JOIN accounts_parties USING (charid) "
-                       "WHERE allianceid = ? "
-                       "GROUP BY server_addr, server_port";
+    constexpr auto query = db::Query(
+        "SELECT server_addr, server_port, MIN(charid) FROM accounts_sessions JOIN accounts_parties USING (charid) "
+        "WHERE allianceid = ? "
+        "GROUP BY server_addr, server_port");
 
     const auto rset = db::preparedStmt(query, allianceId);
     if (rset && rset->rowsCount())
@@ -176,8 +178,9 @@ auto IPCServer::getIPPsForLinkshell(uint32 linkshellId) -> std::vector<IPP>
 
     // TODO: We know when chars move, we could be caching this info
 
-    const auto query = "SELECT server_addr, server_port FROM accounts_sessions "
-                       "WHERE linkshellid1 = ? OR linkshellid2 = ? GROUP BY server_addr, server_port";
+    constexpr auto query = db::Query(
+        "SELECT server_addr, server_port FROM accounts_sessions "
+        "WHERE linkshellid1 = ? OR linkshellid2 = ? GROUP BY server_addr, server_port");
 
     const auto rset = db::preparedStmt(query, linkshellId, linkshellId);
     if (rset && rset->rowsCount())
@@ -202,8 +205,9 @@ auto IPCServer::getIPPsForUnity(uint32 unityId) -> std::vector<IPP>
 
     // TODO: We know when chars move, we could be caching this info
 
-    const auto query = "SELECT server_addr, server_port FROM accounts_sessions "
-                       "WHERE unitychat = ? GROUP BY server_addr, server_port";
+    constexpr auto query = db::Query(
+        "SELECT server_addr, server_port FROM accounts_sessions "
+        "WHERE unitychat = ? GROUP BY server_addr, server_port");
 
     const auto rset = db::preparedStmt(query, unityId);
     if (rset && rset->rowsCount())
@@ -630,23 +634,28 @@ void IPCServer::handleMessage_KillSession(const IPP& ipp, const ipc::KillSession
         const auto prevZoneID = rset->get<xi::ZoneId>("pos_prevzone");
         const auto nextZoneID = rset->get<xi::ZoneId>("pos_zone");
 
-        if (prevZoneID != nextZoneID)
+        if (prevZoneID == nextZoneID)
         {
-            const auto zoneSettings = zoneSettings_.zoneSettingsMap_.at(prevZoneID);
-
-            DebugIPCFmt("Message: -> rerouting to {}", zoneSettings.ipp.toString());
-
-            sendMessage(zoneSettings.ipp, message);
+            return;
         }
+
+        if (const auto it = zoneSettings_.zoneSettingsMap_.find(prevZoneID); it != zoneSettings_.zoneSettingsMap_.end())
+        {
+            DebugIPCFmt("Message: -> rerouting to {}", it->second.ipp.toString());
+
+            sendMessage(it->second.ipp, message);
+            return;
+        }
+
+        ShowWarningFmt("IPCServer::handleMessage_KillSession: no zone settings for zone {}, sending to every map", prevZoneID);
     }
-    else // Otherwise, send to all zones
-    {
-        for (const auto& ipp : zoneSettings_.mapEndpoints_)
-        {
-            DebugIPCFmt("Message: -> rerouting to {}", ipp.toString());
 
-            sendMessage(ipp, message);
-        }
+    // Otherwise, send to all zones
+    for (const auto& ipp : zoneSettings_.mapEndpoints_)
+    {
+        DebugIPCFmt("Message: -> rerouting to {}", ipp.toString());
+
+        sendMessage(ipp, message);
     }
 }
 
@@ -725,7 +734,7 @@ void IPCServer::handleMessage_GMCallRequest(const IPP& ipp, const ipc::GMCallReq
 {
     TracyZoneScoped;
 
-    ShowInfoFmt("GM Call #{} from {} (charId: {}, accId: {}, zone: {}): {}",
+    ShowInfoFmt("GM Call #{} from {} (charId: {}, accId: {}, zone: {}): {:?}",
                 message.callId,
                 message.charName,
                 message.charId,
