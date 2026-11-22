@@ -103,6 +103,13 @@ describe('Zenith disabled NMs', function()
         xi.test.world:tick(xi.tick.SPAWN)
     end
 
+    -- claim_shield holds a fresh NM unkillable for its 30 s engage window (ZXIALPHA-118). skipTime ticks
+    -- once per call, so the window timer gets its own tick after the clock has passed it.
+    local function passEngageWindow()
+        xi.test.world:skipTime(31)
+        xi.test.world:skipTime(1)
+    end
+
     local function assertDown(nm, mob, when)
         assert(not mob:isSpawned(), string.format('%s (%d) is spawned %s', nm.name, mob:getID(), when))
 
@@ -152,6 +159,7 @@ describe('Zenith disabled NMs', function()
                 SpawnMob(mob:getID()) -- what !spawnmob does
                 assert(mob:isSpawned(), string.format('a GM spawn of %s (%d) did not spawn it', nm.name, mob:getID()))
 
+                passEngageWindow()
                 player:claimAndKillMob(mob) -- waits for the full despawn, so onMobDespawn has run
                 assertDown(nm, mob, 'after it was killed')
 
