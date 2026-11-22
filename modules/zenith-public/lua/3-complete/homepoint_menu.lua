@@ -1,6 +1,6 @@
 -----------------------------------
 -- Home Point menu without teleports (ZENITHDEV-248)
--- Copy of LSB's modules/era/lua/globals/homepoint.lua without its xi.pre(xi.expansion.SOA) condition,
+-- Copy of LSB's modules/custom/lua/homepoint.lua without its xi.pre(xi.expansion.SOA) condition,
 -- so the Home Points stay a plain "set your home point" menu when SoA content is enabled.
 -- Source: https://www.bg-wiki.com/ffxi/Home_Point
 -----------------------------------
@@ -54,6 +54,9 @@ local function showHomepointCustomMenu(player, npc)
 end
 
 m:addOverride('xi.homepoint.onTrigger', function(player, csid, index)
+    -- Examine a Home Point (M): kept from LSB's xi.homepoint.onTrigger, which this override replaces
+    xi.roe.onRecordTrigger(player, 3769)
+
     local npc = player:getCursorTarget()
     showHomepointCustomMenu(player, npc)
 end)
