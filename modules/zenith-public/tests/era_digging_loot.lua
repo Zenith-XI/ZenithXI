@@ -15,6 +15,9 @@ describe('Zenith era chocobo digging loot', function()
     local zone
     local layerRoll
     local pick
+    -- One moon stub per case: a case changes it with returnValue. A second stub on the same path is restored
+    -- in install order, which leaves VanadielMoonPhase pointing at the first, already freed, stub.
+    local moonPhase
 
     local historicalZones =
     {
@@ -79,7 +82,7 @@ describe('Zenith era chocobo digging loot', function()
         layerRoll = 1
         pick      = 'first'
 
-        stub('VanadielMoonPhase', 25)
+        moonPhase = stub('VanadielMoonPhase', 25)
         stub('VanadielDayOfTheWeek', xi.day.FIRESDAY)
 
         stub('math.randomInt', function(low, high)
@@ -171,7 +174,7 @@ describe('Zenith era chocobo digging loot', function()
 
         assert(dig(xi.zone.BATALLIA_DOWNS, layer.REGULAR) == xi.item.BONE_CHIP, 'moon 25: 60 should pass Bone Chip (61)')
 
-        stub('VanadielMoonPhase', 50) -- multiplier 1.5: the roll becomes 90
+        moonPhase:returnValue(50) -- multiplier 1.5: the roll becomes 90
         assert(dig(xi.zone.BATALLIA_DOWNS, layer.REGULAR) == xi.item.PEBBLE, 'moon 50: 90 should pass Pebble (94) only')
     end)
 
@@ -203,7 +206,7 @@ describe('Zenith era chocobo digging loot', function()
     it('awards elemental ore at a roll of 15 and no higher', function()
         weather = xi.weather.HOT_SPELL
         pick    = 'last'
-        stub('VanadielMoonPhase', 20)
+        moonPhase:returnValue(20)
 
         layerRoll = 17
         local found = dig(xi.zone.BATALLIA_DOWNS, layer.REGULAR)
@@ -219,7 +222,7 @@ describe('Zenith era chocobo digging loot', function()
         weather   = xi.weather.HOT_SPELL
         pick      = 'last'
         layerRoll = 16 -- becomes 15
-        stub('VanadielMoonPhase', 22)
+        moonPhase:returnValue(22)
 
         local found = dig(xi.zone.BATALLIA_DOWNS, layer.REGULAR)
         assert(found == xi.item.RED_ROCK, string.format('moon 22 should give no ore, got %s', tostring(found)))
