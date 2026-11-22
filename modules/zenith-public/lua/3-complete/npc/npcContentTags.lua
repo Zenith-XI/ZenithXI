@@ -70,8 +70,8 @@ local contentNpcs =
     {
         [17723627] = { name = 'Macuillie',       tag = 'COP', x = -191.738, y = 11.001,  z =  138.656, status = xi.status.NORMAL }, -- Guild Point: Smithing
         [17723628] = { name = 'Andreas',         tag = 'COP', x = -189.282, y = 10.999,  z =  262.626, status = xi.status.NORMAL }, -- Guild Point: Woodworking
-        [17723852] = { name = 'Ore_Guzzler',     tag = 'SOA', x = -180.0,   y = 12.0,    z =  143.0,   status = xi.status.NORMAL }, -- Crafter Point: Smithing
-        [17723851] = { name = 'Luren',           tag = 'SOA', x = -171.71,  y = 12.0,    z =  258.7,   status = xi.status.NORMAL }, -- Crafter Point: Woodworking
+        [17723851] = { name = 'Ore_Guzzler',     tag = 'SOA', x = -180.0,   y = 12.0,    z =  143.0,   status = xi.status.NORMAL }, -- Crafter Point: Smithing
+        [17723850] = { name = 'Luren',           tag = 'SOA', x = -171.71,  y = 12.0,    z =  258.7,   status = xi.status.NORMAL }, -- Crafter Point: Woodworking
         [17723648] = { name = 'Explorer_Moogle', tag = false, x =  116.44,  y = -0.199,  z =   -8.459 },
     },
 

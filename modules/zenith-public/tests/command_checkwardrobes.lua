@@ -52,6 +52,7 @@ describe('Zenith checkwardrobes command', function()
 
     -- Type a chat line as the client would, and return what came back to the player
     local function say(who, text)
+        xi.test.world:skipTime(1) -- clear LSB's 200 ms chat rate limit, or a second command is dropped unread
         who.packets:clear()
 
         local packet = ffi.new('ZENITH_GP_CLI_COMMAND_CHAT_STD')

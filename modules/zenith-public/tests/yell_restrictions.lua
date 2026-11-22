@@ -117,6 +117,7 @@ describe('Zenith yell restrictions', function()
         it('refuses a second yell and does not extend the cooldown', function()
             local player = spawn(xi.zone.BASTOK_MARKETS, 75)
             yell(player)
+            xi.test.world:skipTime(1) -- clear LSB's 200 ms chat rate limit, or the second yell is dropped unread
 
             local cooldownEnd = player:getCharVar(cooldownVar)
             local lines       = yell(player)

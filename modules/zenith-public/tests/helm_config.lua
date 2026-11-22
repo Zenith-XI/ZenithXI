@@ -63,6 +63,12 @@ describe('Zenith HELM config', function()
         assert(weightOf(drops, xi.item.SPRIG_OF_FRESH_MUGWORT) == 10, string.format('expected Fresh Mugwort at 10 (additionalDropsROTZ), got %d', weightOf(drops, xi.item.SPRIG_OF_FRESH_MUGWORT)))
     end)
 
+    -- Zone load hides every HELM point for respawnTime (xi.helm.initZone -> movePoint), and a find can hide
+    -- it again, so wait that out (plus movePoint's 3 s reposition) before trading at a Mining Point.
+    local function waitForMiningPoint()
+        xi.test.world:skipTime(xi.helm.dataTable[xi.helmType.MINING].respawnTime + 5)
+    end
+
     -- The real trade at a Mining Point with every float roll at 40: below the 89.88 obtain rate (an item
     -- is found) and between LSB's 38.32 and the module's 45 break rate, so only the module breaks it.
     it('breaks the pickaxe on a roll LSB would let it survive', function()
@@ -71,6 +77,7 @@ describe('Zenith HELM config', function()
         player:addItem(xi.item.PICKAXE)
         assert(player:getItemCount(xi.item.PICKAXE) == 1, 'precondition: the player has no pickaxe')
 
+        waitForMiningPoint()
         player.entities:moveTo('Mining_Point')
         player.actions:tradeNpc('Mining_Point', { xi.item.PICKAXE }, { eventId = 165 })
 
@@ -121,6 +128,7 @@ describe('Zenith HELM config', function()
             assert(player:getFreeSlotsCount() == 0, 'precondition: the inventory should be full')
         end
 
+        waitForMiningPoint()
         player.entities:moveTo('Mining_Point')
         player.packets:clear()
         player.actions:tradeNpc('Mining_Point', { xi.item.PICKAXE }, { eventId = 165 })

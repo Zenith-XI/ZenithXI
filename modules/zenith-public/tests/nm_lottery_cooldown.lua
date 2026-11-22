@@ -21,6 +21,13 @@ describe('Zenith NM lottery cooldown', function()
         nm:setLocalVar('pop', 0)
     end
 
+    -- claim_shield holds a fresh NM unkillable for its 30 s engage window (ZXIALPHA-118). skipTime ticks
+    -- once per call, so the window timer gets its own tick after the clock has passed it.
+    local function passEngageWindow()
+        xi.test.world:skipTime(31)
+        xi.test.world:skipTime(1)
+    end
+
     before_each(function()
         player  = xi.test.world:spawnPlayer({ zone = xi.zone.KONSCHTAT_HIGHLANDS })
         ph      = player.entities:get(ID.mob.TREMOR_RAM[1])
@@ -60,6 +67,7 @@ describe('Zenith NM lottery cooldown', function()
         assert(GetServerVariable(varName) == 1, 'priming the NM did not save it')
 
         nm.assert:isSpawned()
+        passEngageWindow()
         player:claimAndKillMob(nm)
         for _ = 1, 3 do
             xi.test.world:skipTime(5)
