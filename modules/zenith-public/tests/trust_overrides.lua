@@ -279,4 +279,83 @@ describe('Zenith trust overrides #trusts', function()
             assert(sentinel:getSubPower() == 0, string.format('expected no Guardian enmity retention (subPower 0), got %d', sentinel:getSubPower()))
         end)
     end)
+
+    describe('Shantotto Casting #shantotto', function()
+        ---@type CTestEntity
+        local mob
+
+        before_each(function()
+            player:setCharVar('TrustEngageType', 1) -- engage with the master, no first swing needed
+
+            mob = player.entities:moveTo('Wild_Rabbit')
+            mob:respawn()
+            mob:setUnkillable(true)
+        end)
+
+        -- Leave West Ronfaure as other tests expect it: no trusts out and a fresh rabbit with no enmity,
+        -- or the next player (who may reuse this character ID) cannot call a trust.
+        after_each(function()
+            player:clearTrusts()
+            mob:setUnkillable(false)
+            mob:respawn()
+        end)
+
+        it('Lowest check', function()
+            mob:setMaxHP(100)
+            mob:setHP(9)
+            -- So we don't deal with Conserve MP
+            local trust = summon('SHANTOTTO', 15)
+            player.actions:engage(mob)
+            local mpStart = trust:getMP()
+            for _ = 1, 5 do
+                xi.test.world:skipTime(1)
+            end
+
+            local mpEnd = trust:getMP()
+            -- Stone costs 9 mp
+            assert(mpStart - mpEnd == 9, 'Stone needs to be cast')
+
+            mpStart = trust:getMP()
+            for _ = 1, 5 do
+                xi.test.world:skipTime(1)
+            end
+
+            mpEnd = trust:getMP()
+            -- Water costs 13 mp
+            print(string.format('MP Start %d MP End %d', mpStart, mpEnd))
+            assert(mpStart - mpEnd == 13, 'Water needs to be cast')
+        end)
+
+        it('Random check', function()
+            mob:setMaxHP(100)
+            mob:setHP(40)
+            -- So we don't deal with Conserve MP
+            local trust = summon('SHANTOTTO', 15)
+            player.actions:engage(mob)
+            local mpStart = trust:getMP()
+            for _ = 1, 6 do
+                xi.test.world:skipTime(1)
+            end
+
+            local mpEnd = trust:getMP()
+            -- Stone costs 9 mp
+            assert(mpStart ~= mpEnd, 'Some spell cast')
+        end)
+
+        it('Highest check', function()
+            mob:setMaxHP(100)
+            mob:setHP(50)
+            -- So we don't deal with Conserve MP
+            local trust = summon('SHANTOTTO', 15)
+            player.actions:engage(mob)
+            local mpStart = trust:getMP()
+            for _ = 1, 6 do
+                xi.test.world:skipTime(1)
+            end
+
+            local mpEnd = trust:getMP()
+            -- Fire costs 24 mp
+            assert(mpStart - mpEnd == 24, 'Fire needs to be cast')
+        end)
+    end)
 end)

@@ -1,0 +1,22 @@
+diff --git a/src/map/ai/helpers/gambits_container.cpp b/src/map/ai/helpers/gambits_container.cpp
+index 3a0d2c3c81..e392d4f63c 100644
+--- a/src/map/ai/helpers/gambits_container.cpp
++++ b/src/map/ai/helpers/gambits_container.cpp
+@@ -337,7 +337,16 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
+             }
+             else if (action.select == G_SELECT::LOWEST)
+             {
+-                // Not implemented yet: treat as unavailable
++                //m_damageList works by loadings spells in order so going from the front SHOULD find the weakest spell
++                for (auto spellId : POwner->SpellContainer->m_damageList)
++                {
++                    auto spell = POwner->SpellContainer->GetAvailable(spellId);
++                    if (spell) 
++                    {
++                        ShowDebug("Lowest Spell ID to cast: %d", static_cast<uint16>(spellId));
++                        return spell;
++                    }
++                }
+                 return std::nullopt;
+             }
+             else if (action.select == G_SELECT::BEST_INDI)
