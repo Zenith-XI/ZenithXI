@@ -11,7 +11,7 @@ index 3a0d2c3c81..e392d4f63c 100644
 +                for (auto spellId : POwner->SpellContainer->m_damageList)
 +                {
 +                    auto spell = POwner->SpellContainer->GetAvailable(spellId);
-+                    if (spell) 
++                    if (spell)
 +                    {
 +                        ShowDebug("Lowest Spell ID to cast: %d", static_cast<uint16>(spellId));
 +                        return spell;
