@@ -1,0 +1,3 @@
+npcs:
+  17797255: # Tya Padolih (Retains sleepga scroll rather than reverting and removing the vendor)
+    content: rotz

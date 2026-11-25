@@ -100,10 +100,14 @@ local npcOverrides =
                 { xi.item.COTTON_KYAHAN,            3738, 1 },
                 { xi.item.SILVER_OBI,               3643, 1 },
                 { xi.item.BAMBOO_STICK,              144, 2 },
+                { xi.item.PICKAXE,                   200, 3 },
+            },
+            stockROTZafter = xi.item.BAMBOO_STICK,
+            stockROTZ =
+            {
                 { xi.item.TOOLBAG_INOSHISHINOFUDA, 17325, 3 }, -- *
                 { xi.item.TOOLBAG_SHIKANOFUDA,     20000, 3 },
                 { xi.item.TOOLBAG_CHONOFUDA,       20000, 3 },
-                { xi.item.PICKAXE,                   200, 3 },
             },
         },
         ['Sawyer'] =
@@ -305,7 +309,6 @@ local npcOverrides =
                 { xi.item.SCROLL_OF_DIA_II,        11200, 2 },
                 { xi.item.SCROLL_OF_BANISH_II,      9000, 2 },
                 { xi.item.SCROLL_OF_PROTECT_II,     7074, 2 },
-                { xi.item.SCROLL_OF_DISPEL,        77600, 3 },
                 { xi.item.SCROLL_OF_SHELL_II,      17600, 2 },
                 { xi.item.SCROLL_OF_HASTE,         20000, 1 },
                 { xi.item.SCROLL_OF_ENFIRE,         5160, 2 },
@@ -319,6 +322,11 @@ local npcOverrides =
             {
                 { xi.item.SCROLL_OF_PROTECT_IV,   100000, 3 },
                 { xi.item.SCROLL_OF_PROTECTRA_IV,  95000, 3 },
+            },
+            stockROTZafter = xi.item.SCROLL_OF_PROTECT_II,
+            stockROTZ =
+            {
+                { xi.item.SCROLL_OF_DISPEL,        77600, 3 },
             },
         },
     },
@@ -515,7 +523,6 @@ local npcOverrides =
             stock50 =
             {
                 { xi.item.SCROLL_OF_SLEEP_II,      18720 },
-                { xi.item.SCROLL_OF_SLEEPGA,       11200 },
             },
             stock55 =
             {
@@ -551,6 +558,11 @@ local npcOverrides =
                 { xi.item.SCROLL_OF_BURST_II,     119180 },
                 { xi.item.SCROLL_OF_BIO_III,      139125 },
                 { xi.item.SCROLL_OF_BLIND_II,     139125 },
+            },
+            stockROTZafter = xi.item.SCROLL_OF_SLEEP_II,
+            stockROTZ =
+            {
+                { xi.item.SCROLL_OF_SLEEPGA,       11200 },
             },
         },
         ['Hasim'] =
@@ -1037,10 +1049,7 @@ local npcOverrides =
             shopDialog = 'CHICHIROON_SHOP_DIALOG',
             stock =
             {
-                { xi.item.BOLTERS_DIE,      99224, },
-            },
-            stockABYSSEA =
-            {
+                { xi.item.BOLTERS_DIE,      99224, }, -- Abyssea
                 { xi.item.CASTERS_DIE,      85500, },
             },
             stockSOA =
@@ -1751,11 +1760,11 @@ m:addOverride('xi.zones.Upper_Jeuno.npcs.Leillaine.onTrigger', function(player, 
     xi.shop.general(player, stock)
 end)
 
--- Kid Mithra shop: stock grows with the server-wide takings of the day (xi.kidMithraShop).
+-- Kid Mithra shop (WOTG): stock grows with the server-wide takings of the day (xi.kidMithraShop).
 -- Same as base except the stock tables; base's onShopBuy still raises the shop level.
 local macchiLevelUpSales = { 10000, 20000 }
-local macchiMilkPrice    = { 300, 150, 100 }
-local macchiCheesePrice  = { 600, 300, 250 }
+local macchiMilkPrice    = { 500, 400, 250 } -- *
+local macchiCheesePrice  = { 2500, 2000, 1500 } -- *
 local macchiExtraStock   =
 {
     [2] =
@@ -1767,7 +1776,7 @@ local macchiExtraStock   =
     [3] =
     {
         { xi.item.BUFFALO_MILK_CASE,          5000 },
-        { xi.item.SLICE_OF_BUFFALO_MEAT,      1280 },
+        { xi.item.SLICE_OF_BUFFALO_MEAT,      3980 }, -- *
         { xi.item.SCROLL_OF_ENFIRE_II,       31878 },
         { xi.item.SCROLL_OF_ENBLIZZARD_II,   30492 },
         { xi.item.SCROLL_OF_ENAERO_II,       27968 },
