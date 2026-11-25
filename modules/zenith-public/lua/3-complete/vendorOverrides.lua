@@ -182,6 +182,28 @@ local npcOverrides =
                 { xi.item.BOTTLE_OF_MELON_JUICE,     1200, 2 }, -- *
             },
         },
+        ['Neigepance'] =
+        {
+            nationShop = xi.nation.BASTOK,
+            shopDialog = 'NEIGEPANCE_SHOP_DIALOG',
+            stock =
+            {
+                { xi.item.BUNCH_OF_GYSAHL_GREENS,      68, 3 },
+                { xi.item.CHOCOBO_FEATHER,              8, 3 },
+                { xi.item.DART,                        10, 1 },
+                { xi.item.BLACK_CHOCOBO_FEATHER,     1239, 1 },
+                { xi.item.PET_FOOD_ALPHA_BISCUIT,      12, 3 },
+                { xi.item.PET_FOOD_BETA_BISCUIT,       90, 3 },
+                { xi.item.JUG_OF_CARROT_BROTH,         90, 3 }, -- *Era
+                { xi.item.JUG_OF_BUG_BROTH,           756, 3 }, -- *Era
+                { xi.item.JUG_OF_HERBAL_BROTH,        138, 3 }, -- *Era
+                { xi.item.JUG_OF_CARRION_BROTH,       756, 3 }, -- *Era
+            },
+            stock75 =
+            {
+                { xi.item.SCROLL_OF_CHOCOBO_MAZURKA, 55200, 3 },
+            },
+        },
     },
     [xi.zone.METALWORKS] =
     {
@@ -202,6 +224,35 @@ local npcOverrides =
                 { xi.item.FLASK_OF_DISTILLED_WATER,    12, 3 },
                 { xi.item.BOTTLE_OF_MELON_JUICE,     1100, 2 },
                 { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  624, 1 }, -- *
+            },
+        },
+    },
+    [xi.zone.SOUTHERN_SAN_DORIA] =
+    {
+        ['Ferdoulemiont'] =
+        {
+            nationShop = xi.nation.SANDORIA,
+            shopDialog = 'FERDOULEMIONT_SHOP_DIALOG',
+            stock =
+            {
+                { xi.item.BUNCH_OF_GYSAHL_GREENS,       68, 3 },
+                { xi.item.CHOCOBO_FEATHER,               8, 3 },
+                { xi.item.SCROLL_OF_KNIGHTS_MINNE,      18, 3 },
+                { xi.item.SCROLL_OF_KNIGHTS_MINNE_II,  960, 3 },
+                { xi.item.SCROLL_OF_KNIGHTS_MINNE_III,5720, 3 },
+                { xi.item.DART,                        10, 2 },
+                { xi.item.BLACK_CHOCOBO_FEATHER,     1250, 1 },
+                { xi.item.PET_FOOD_ALPHA_BISCUIT,      12, 3 },
+                { xi.item.PET_FOOD_BETA_BISCUIT,       90, 3 },
+                { xi.item.JUG_OF_CARROT_BROTH,         90, 3 }, -- *Era
+                { xi.item.JUG_OF_BUG_BROTH,           756, 3 }, -- *Era
+                { xi.item.JUG_OF_HERBAL_BROTH,        138, 3 }, -- *Era
+                { xi.item.JUG_OF_CARRION_BROTH,       756, 3 }, -- *Era
+                { xi.item.LA_THEINE_MILLET,          2205, 3 },
+            },
+            stock75 =
+            {
+                { xi.item.SCROLL_OF_CHOCOBO_MAZURKA, 55200, 3 },
             },
         },
     },
@@ -332,6 +383,28 @@ local npcOverrides =
     },
     [xi.zone.WINDURST_WOODS] =
     {
+        ['Quesse'] =
+        {
+            nationShop = xi.nation.WINDURST,
+            shopDialog = 'QUESSE_SHOP_DIALOG',
+            stock =
+            {
+                { xi.item.BUNCH_OF_GYSAHL_GREENS,       67, 3 },
+                { xi.item.CHOCOBO_FEATHER,               8, 3 },
+                { xi.item.DART,                         10, 2 },
+                { xi.item.BLACK_CHOCOBO_FEATHER,      1250, 1 },
+                { xi.item.PET_FOOD_ALPHA_BISCUIT,       12, 3 },
+                { xi.item.PET_FOOD_BETA_BISCUIT,        89, 3 },
+                { xi.item.JUG_OF_CARROT_BROTH,          90, 3 }, -- *Era
+                { xi.item.JUG_OF_BUG_BROTH,            756, 3 }, -- *Era
+                { xi.item.JUG_OF_HERBAL_BROTH,         138, 3 }, -- *Era
+                { xi.item.JUG_OF_CARRION_BROTH,        756, 3 }, -- *Era
+            },
+            stock75 =
+            {
+                { xi.item.SCROLL_OF_CHOCOBO_MAZURKA, 55200, 3 },
+            },
+        },
         ['Wije_Tiren'] =
         {
             fameArea = xi.fameArea.WINDURST,
@@ -836,7 +909,7 @@ local npcOverrides =
                 { xi.item.PEELED_CRAYFISH,              71 },
                 { xi.item.BALL_OF_INSECT_PASTE,         40 },
                 { xi.item.JUG_OF_FISH_BROTH,           179 }, -- *Era
-                { xi.item.JUG_OF_WORMY_BROTH,          100 }, -- *
+                { xi.item.JUG_OF_WORMY_BROTH,          200 }, -- *
                 { xi.item.JUG_OF_SEEDBED_SOIL,         998 }, -- *
                 { xi.item.HATCHET,                     500 },
                 { xi.item.SCROLL_OF_ARMYS_PAEON_III,  3600 },
@@ -935,9 +1008,41 @@ local npcOverrides =
                 { xi.item.SCROLL_OF_CRUSADE,      155925 },
             },
         },
+        ['Generoit'] =
+        {
+            fameArea = xi.fameArea.SELBINA_RABAO,
+            shopDialog = 'GENEROIT_SHOP_DIALOG',
+            stock =
+            {
+                { xi.item.BUNCH_OF_GYSAHL_GREENS,       67 },
+                { xi.item.CHOCOBO_FEATHER,               8 },
+                { xi.item.PET_FOOD_ALPHA_BISCUIT,       12 },
+                { xi.item.PET_FOOD_BETA_BISCUIT,        89 },
+                { xi.item.JUG_OF_CARROT_BROTH,          90 }, -- *Era
+                { xi.item.JUG_OF_BUG_BROTH,            756 }, -- *Era
+                { xi.item.JUG_OF_HERBAL_BROTH,         138 }, -- *Era
+                { xi.item.JUG_OF_CARRION_BROTH,        756 }, -- *Era
+            },
+            stock75 =
+            {
+                { xi.item.SCROLL_OF_CHOCOBO_MAZURKA, 55200 },
+            },
+        },
     },
     [xi.zone.AHT_URHGAN_WHITEGATE] =
     {
+        ['Dwago'] =
+        {
+            shopDialog = 'DWAGO_SHOP_DIALOG',
+            stock =
+            {
+                { xi.item.LUGWORM,                  9 },
+                { xi.item.LITTLE_WORM,              3 },
+                { xi.item.PET_FOOD_ALPHA_BISCUIT,  11 },
+                { xi.item.PET_FOOD_BETA_BISCUIT,   82 },
+                { xi.item.JUG_OF_BUG_BROTH,       786 }, -- *Era
+            },
+        },
         ['Mulnith'] =
         {
             shopDialog = 'MULNITH_SHOP_DIALOG',
