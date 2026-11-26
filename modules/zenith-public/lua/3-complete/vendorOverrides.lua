@@ -235,20 +235,20 @@ local npcOverrides =
             shopDialog = 'FERDOULEMIONT_SHOP_DIALOG',
             stock =
             {
-                { xi.item.BUNCH_OF_GYSAHL_GREENS,       68, 3 },
-                { xi.item.CHOCOBO_FEATHER,               8, 3 },
-                { xi.item.SCROLL_OF_KNIGHTS_MINNE,      18, 3 },
-                { xi.item.SCROLL_OF_KNIGHTS_MINNE_II,  960, 3 },
-                { xi.item.SCROLL_OF_KNIGHTS_MINNE_III,5720, 3 },
-                { xi.item.DART,                        10, 2 },
-                { xi.item.BLACK_CHOCOBO_FEATHER,     1250, 1 },
-                { xi.item.PET_FOOD_ALPHA_BISCUIT,      12, 3 },
-                { xi.item.PET_FOOD_BETA_BISCUIT,       90, 3 },
-                { xi.item.JUG_OF_CARROT_BROTH,         90, 3 }, -- *Era
-                { xi.item.JUG_OF_BUG_BROTH,           756, 3 }, -- *Era
-                { xi.item.JUG_OF_HERBAL_BROTH,        138, 3 }, -- *Era
-                { xi.item.JUG_OF_CARRION_BROTH,       756, 3 }, -- *Era
-                { xi.item.LA_THEINE_MILLET,          2205, 3 },
+                { xi.item.BUNCH_OF_GYSAHL_GREENS,        68, 3 },
+                { xi.item.CHOCOBO_FEATHER,                8, 3 },
+                { xi.item.SCROLL_OF_KNIGHTS_MINNE,       18, 3 },
+                { xi.item.SCROLL_OF_KNIGHTS_MINNE_II,   960, 3 },
+                { xi.item.SCROLL_OF_KNIGHTS_MINNE_III, 5720, 3 },
+                { xi.item.DART,                          10, 2 },
+                { xi.item.BLACK_CHOCOBO_FEATHER,       1250, 1 },
+                { xi.item.PET_FOOD_ALPHA_BISCUIT,        12, 3 },
+                { xi.item.PET_FOOD_BETA_BISCUIT,         90, 3 },
+                { xi.item.JUG_OF_CARROT_BROTH,           90, 3 }, -- *Era
+                { xi.item.JUG_OF_BUG_BROTH,             756, 3 }, -- *Era
+                { xi.item.JUG_OF_HERBAL_BROTH,          138, 3 }, -- *Era
+                { xi.item.JUG_OF_CARRION_BROTH,         756, 3 }, -- *Era
+                { xi.item.LA_THEINE_MILLET,            2205, 3 },
             },
             stock75 =
             {
