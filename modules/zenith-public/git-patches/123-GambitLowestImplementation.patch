@@ -1,22 +1,76 @@
+Implements the LOWEST gambit selector (ai.s.LOWEST), which LSB leaves returning nothing.
+Adds CMobSpellContainer::GetWorstAvailable, the mirror of GetBestAvailable: same lists and
+spell-family filter, but it returns the first castable match (spell lists load ORDER BY
+min_level), so LOWEST honours its spell-family argument the same way HIGHEST does.
+---
 diff --git a/src/map/ai/helpers/gambits_container.cpp b/src/map/ai/helpers/gambits_container.cpp
-index 3a0d2c3c81..e392d4f63c 100644
+index df990646d7..baa5a14625 100644
 --- a/src/map/ai/helpers/gambits_container.cpp
 +++ b/src/map/ai/helpers/gambits_container.cpp
-@@ -337,7 +337,16 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
+@@ -338,8 +338,7 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
              }
              else if (action.select == G_SELECT::LOWEST)
              {
 -                // Not implemented yet: treat as unavailable
-+                //m_damageList works by loadings spells in order so going from the front SHOULD find the weakest spell
-+                for (auto spellId : POwner->SpellContainer->m_damageList)
-+                {
-+                    auto spell = POwner->SpellContainer->GetAvailable(spellId);
-+                    if (spell)
-+                    {
-+                        ShowDebug("Lowest Spell ID to cast: %d", static_cast<uint16>(spellId));
-+                        return spell;
-+                    }
-+                }
-                 return std::nullopt;
+-                return std::nullopt;
++                return POwner->SpellContainer->GetWorstAvailable(static_cast<SPELLFAMILY>(action.select_arg));
              }
              else if (action.select == G_SELECT::BEST_INDI)
+             {
+diff --git a/src/map/mob_spell_container.cpp b/src/map/mob_spell_container.cpp
+index 908ceaa99c..84ffbfc151 100644
+--- a/src/map/mob_spell_container.cpp
++++ b/src/map/mob_spell_container.cpp
+@@ -188,6 +188,40 @@ auto CMobSpellContainer::GetBestAvailable(SPELLFAMILY family) -> Maybe<SpellID>
+     return (!matches.empty()) ? Maybe<SpellID>{ matches.back() } : std::nullopt;
+ }
+ 
++// Used in Gambits: the mirror of GetBestAvailable. Spell lists load ORDER BY min_level,
++// so the first castable match is the lowest tier.
++auto CMobSpellContainer::GetWorstAvailable(SPELLFAMILY family) -> Maybe<SpellID>
++{
++    auto searchInList = [&](const std::vector<SpellID>& list) -> Maybe<SpellID>
++    {
++        for (const auto id : list)
++        {
++            const bool sameFamily = family == SPELLFAMILY_NONE || spell::GetSpell(id)->getSpellFamily() == family;
++            if (sameFamily && GetAvailable(id))
++            {
++                return id;
++            }
++        }
++
++        return std::nullopt;
++    };
++
++    if (family == SPELLFAMILY_NONE)
++    {
++        return searchInList(m_damageList);
++    }
++
++    for (const auto* list : { &m_gaList, &m_damageList, &m_buffList, &m_debuffList, &m_healList, &m_naList, &m_raiseList })
++    {
++        if (auto spellId = searchInList(*list))
++        {
++            return spellId;
++        }
++    }
++
++    return std::nullopt;
++}
++
+ auto CMobSpellContainer::GetBestIndiSpell(CBattleEntity* PTarget) -> Maybe<SpellID>
+ {
+     auto mJob          = PTarget->GetMJob();
+diff --git a/src/map/mob_spell_container.h b/src/map/mob_spell_container.h
+index 4a19f82618..123c5ce54d 100644
+--- a/src/map/mob_spell_container.h
++++ b/src/map/mob_spell_container.h
+@@ -65,6 +65,7 @@ public:
+ 
+     auto GetAvailable(SpellID spellId) -> Maybe<SpellID>;
+     auto GetBestAvailable(SPELLFAMILY family) -> Maybe<SpellID>;
++    auto GetWorstAvailable(SPELLFAMILY family) -> Maybe<SpellID>;
+     auto GetBestIndiSpell(CBattleEntity* PMaster) -> Maybe<SpellID>;
+     auto GetBestEntrustedSpell(CBattleEntity* PMaster) -> Maybe<SpellID>;
+     auto GetBestAgainstTargetWeakness(CBattleEntity* PTarget, SpellID spellId) -> Maybe<SpellID>;
