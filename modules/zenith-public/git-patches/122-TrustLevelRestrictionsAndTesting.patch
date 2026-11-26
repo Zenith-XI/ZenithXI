@@ -9,7 +9,7 @@ Trust level restrictions (ZENITHDEV-200), engine side.
   trust:hasLearnedAbility(id) answers the job-ability check above.
 ---
 diff --git a/src/map/ai/helpers/gambits_container.cpp b/src/map/ai/helpers/gambits_container.cpp
-index a4c062e9e5..2a28a770b9 100644
+index 3a0d2c3c81..df990646d7 100644
 --- a/src/map/ai/helpers/gambits_container.cpp
 +++ b/src/map/ai/helpers/gambits_container.cpp
 @@ -32,6 +32,7 @@
@@ -20,7 +20,7 @@ index a4c062e9e5..2a28a770b9 100644
  #include "weapon_skill.h"
  
  #include "ai/controllers/player_controller.h"
-@@ -494,7 +495,8 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
+@@ -485,7 +486,8 @@ auto CGambitsContainer::Tick(timer::time_point tick) -> Task<void>
                  // Basic validation: SPECIFIC must exist
                  if (action.select == G_SELECT::SPECIFIC)
                  {
@@ -31,10 +31,10 @@ index a4c062e9e5..2a28a770b9 100644
                          canExecute[i] = false;
                      }
 diff --git a/src/map/lua/lua_base_entity.cpp b/src/map/lua/lua_base_entity.cpp
-index 721c1d46eb..e07fc7215a 100644
+index e5ca8b2540..8aae0666bf 100644
 --- a/src/map/lua/lua_base_entity.cpp
 +++ b/src/map/lua/lua_base_entity.cpp
-@@ -11347,6 +11347,12 @@ void CLuaBaseEntity::addLearnedWeaponskill(uint8 wsUnlockId)
+@@ -11340,6 +11340,12 @@ void CLuaBaseEntity::addLearnedWeaponskill(uint8 wsUnlockId)
  
  auto CLuaBaseEntity::hasLearnedWeaponskill(uint8 wsUnlockId) -> bool
  {
@@ -47,7 +47,7 @@ index 721c1d46eb..e07fc7215a 100644
      if (m_PBaseEntity->objtype != TYPE_PC)
      {
          ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
-@@ -11457,6 +11463,12 @@ void CLuaBaseEntity::addLearnedAbility(uint16 abilityID)
+@@ -11450,6 +11456,12 @@ void CLuaBaseEntity::addLearnedAbility(uint16 abilityID)
  
  auto CLuaBaseEntity::hasLearnedAbility(uint16 abilityID) -> bool
  {
@@ -61,7 +61,7 @@ index 721c1d46eb..e07fc7215a 100644
      {
          ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
 diff --git a/src/map/utils/trustutils.cpp b/src/map/utils/trustutils.cpp
-index 162bea304c..ee9e73feb9 100644
+index 3e748df8b6..993caf15ef 100644
 --- a/src/map/utils/trustutils.cpp
 +++ b/src/map/utils/trustutils.cpp
 @@ -27,8 +27,11 @@
@@ -76,7 +76,7 @@ index 162bea304c..ee9e73feb9 100644
  #include "mobutils.h"
  
  #include "grades.h"
-@@ -200,6 +203,56 @@ auto trustutils::SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntit
+@@ -205,6 +208,56 @@ auto trustutils::SpawnTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntit
      return PTrust;
  }
  
@@ -130,10 +130,10 @@ index 162bea304c..ee9e73feb9 100644
 +    return skill >= PWeaponSkill->getSkillLevel();
 +}
 +
- void BuildTrustData(uint32 TrustID)
+ namespace
  {
-     const auto rset = db::preparedStmt("SELECT "
-@@ -713,9 +766,27 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
+ 
+@@ -721,9 +774,27 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
      controller->m_GambitsContainer->tp_trigger = G_TP_TRIGGER::ASAP;
      controller->m_GambitsContainer->tp_select  = G_SELECT::RANDOM;
  
@@ -162,7 +162,7 @@ index 162bea304c..ee9e73feb9 100644
          TrustSkill_t skill;
          if (skill_id <= 255) // Player WSs
          {
-@@ -759,7 +830,8 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
+@@ -767,7 +838,8 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
          bool canFormLv3Skillchain = skill.primary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.secondary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.tertiary >= std::to_underlying(xi::SkillchainType::Gravitation);
  
          // Special case for Zeid II and others who only have Lv3+ skills

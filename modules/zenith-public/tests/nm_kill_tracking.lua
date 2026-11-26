@@ -44,12 +44,20 @@ describe('Zenith NM kill tracking', function()
         player = xi.test.world:spawnPlayer({ zone = xi.zone.SOUTH_GUSTABERG })
     end)
 
+    -- claim_shield holds a fresh NM unkillable for its 30 s engage window (ZXIALPHA-118). skipTime ticks
+    -- once per call, so the window timer gets its own tick after the clock has passed it.
+    local function passEngageWindow()
+        xi.test.world:skipTime(31)
+        xi.test.world:skipTime(1)
+    end
+
     it('records a real kill of a tracked NM', function()
         local nm = player.entities:get('Leaping_Lizzy')
         nm:respawn()
         assert(nm:isNM(), 'precondition: Leaping_Lizzy is not an NM')
         assert(player:getCharVar('NM_Kills_Base') == 0, 'precondition: a new character already has NM kills')
 
+        passEngageWindow()
         player:claimAndKillMob(nm)
 
         assert(bitOf('NM_Kills_Base', 0), string.format('killing Leaping Lizzy did not set NM_Kills_Base bit 0 (var %d)', player:getCharVar('NM_Kills_Base')))
