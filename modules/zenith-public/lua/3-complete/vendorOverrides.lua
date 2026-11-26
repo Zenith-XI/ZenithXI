@@ -124,7 +124,7 @@ local npcOverrides =
                 { xi.item.BOWL_OF_PEBBLE_SOUP,        200, 3 },
                 { xi.item.BOWL_OF_EGG_SOUP,          3269, 1 },
                 { xi.item.FLASK_OF_DISTILLED_WATER,    12, 3 },
-                { xi.item.BOTTLE_OF_MELON_JUICE,     1200, 2 }, -- *
+                { xi.item.BOTTLE_OF_MELON_JUICE,     1100, 2 }, -- *
                 { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  624, 1 }, -- *
                 { xi.item.SLICE_OF_ROAST_MUTTON,      720, 2 },
             },
@@ -143,7 +143,7 @@ local npcOverrides =
                 { xi.item.BOWL_OF_PEBBLE_SOUP,        200, 3 },
                 { xi.item.BOWL_OF_EGG_SOUP,          3300, 1 },
                 { xi.item.FLASK_OF_DISTILLED_WATER,    12, 3 },
-                { xi.item.BOTTLE_OF_MELON_JUICE,     1200, 2 }, -- *
+                { xi.item.BOTTLE_OF_MELON_JUICE,     1100, 2 }, -- *
                 { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  624, 1 }, -- *
                 { xi.item.SLICE_OF_ROAST_MUTTON,      720, 2 },
             },
@@ -179,7 +179,7 @@ local npcOverrides =
                 { xi.item.PICKLED_HERRING,           1440, 2 }, -- *
                 { xi.item.FLASK_OF_DISTILLED_WATER,    12, 3 },
                 { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  624, 1 }, -- *
-                { xi.item.BOTTLE_OF_MELON_JUICE,     1200, 2 }, -- *
+                { xi.item.BOTTLE_OF_MELON_JUICE,     1100, 2 }, -- *
             },
         },
         ['Neigepance'] =
@@ -752,7 +752,7 @@ local npcOverrides =
                 { xi.item.FLASK_OF_DISTILLED_WATER,       12 },
                 { xi.item.BOTTLE_OF_ORANGE_JUICE,        200 },
                 { xi.item.BOTTLE_OF_APPLE_JUICE,         325 }, -- *
-                { xi.item.BOTTLE_OF_MELON_JUICE,        1200 }, -- *
+                { xi.item.BOTTLE_OF_MELON_JUICE,        1100 }, -- *
                 { xi.item.BOTTLE_OF_GRAPE_JUICE,         930 },
                 { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,     624 }, -- *
                 { xi.item.SERVING_OF_ICECAP_ROLANBERRY, 4712 }, -- *
@@ -788,9 +788,9 @@ local npcOverrides =
                 { xi.item.SERVING_OF_HERB_QUUS,      4734 }, -- *
                 { xi.item.BOTTLE_OF_ORANGE_JUICE,     200 },
                 { xi.item.BOTTLE_OF_APPLE_JUICE,      310 }, -- *
-                { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  600 }, -- *
-                { xi.item.BOTTLE_OF_MELON_JUICE,     1180 }, -- *
-                { xi.item.BOTTLE_OF_GRAPE_JUICE,      930 },
+                { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  580 }, -- *
+                { xi.item.BOTTLE_OF_MELON_JUICE,     1080 }, -- *
+                { xi.item.BOTTLE_OF_GRAPE_JUICE,      900 },
                 { xi.item.FLASK_OF_ORANGE_AU_LAIT,    400 }, -- *
                 { xi.item.FLASK_OF_APPLE_AU_LAIT,     570 }, -- *
             },
