@@ -72,11 +72,11 @@ local npcOverrides =
             shopDialog = 'OLWYN_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,  1362, 3 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,   700, 3 }, -- *
                 { xi.item.ANTIDOTE,             316, 3 },
                 { xi.item.FLASK_OF_ECHO_DROPS,  800, 2 },
                 { xi.item.POTION,               910, 2 },
-                { xi.item.ETHER,               1658, 1 }, -- *
+                { xi.item.ETHER,               1775, 1 }, -- *
             },
         },
     },
@@ -154,11 +154,11 @@ local npcOverrides =
             shopDialog = 'GALVIN_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,  1362, 3 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,   700, 3 }, -- *
                 { xi.item.ANTIDOTE,             316, 3 },
                 { xi.item.FLASK_OF_ECHO_DROPS,  800, 2 },
                 { xi.item.POTION,               910, 2 },
-                { xi.item.ETHER,               1658, 1 }, -- *
+                { xi.item.ETHER,               1775, 1 }, -- *
                 { xi.item.WOODEN_ARROW,           4, 2 },
                 { xi.item.IRON_ARROW,             8, 3 },
                 { xi.item.CROSSBOW_BOLT,          6, 3 },
@@ -176,7 +176,7 @@ local npcOverrides =
                 { xi.item.LOAF_OF_IRON_BREAD,         100, 3 },
                 { xi.item.BRETZEL,                     25, 2 },
                 { xi.item.STRIP_OF_MEAT_JERKY,        120, 3 },
-                { xi.item.PICKLED_HERRING,           1497, 2 }, -- *
+                { xi.item.PICKLED_HERRING,           1440, 2 }, -- *
                 { xi.item.FLASK_OF_DISTILLED_WATER,    12, 3 },
                 { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  624, 1 }, -- *
                 { xi.item.BOTTLE_OF_MELON_JUICE,     1200, 2 }, -- *
@@ -271,11 +271,11 @@ local npcOverrides =
                 { xi.item.CHESTNUT_SABOTS,      9180, 1, },
                 { xi.item.WOODEN_ARROW,            4, 3, },
                 { xi.item.CROSSBOW_BOLT,           6, 2, },
-                { xi.item.FLASK_OF_EYE_DROPS,   1362, 3, }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,    700, 3, }, -- *
                 { xi.item.ANTIDOTE,              316, 3, },
                 { xi.item.FLASK_OF_ECHO_DROPS,   800, 2, },
                 { xi.item.POTION,                910, 1, },
-                { xi.item.ETHER,                1658, 1, }, -- *
+                { xi.item.ETHER,                1775, 1, }, -- *
 -- { xi.item.KINGDOM_WAYSTONE,    10500, 3, }, (Synergy)
             },
         },
@@ -296,11 +296,11 @@ local npcOverrides =
                 { xi.item.SITABAKI,             995, 2, },
                 { xi.item.KYAHAN,               635, 2, },
                 { xi.item.BAMBOO_STICK,         144, 2, },
-                { xi.item.FLASK_OF_EYE_DROPS,  1362, 3, }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,   700, 3, }, -- *
                 { xi.item.ANTIDOTE,             316, 3, },
                 { xi.item.FLASK_OF_ECHO_DROPS,  800, 2, },
                 { xi.item.POTION,               910, 1, },
-                { xi.item.ETHER,               1658, 1, }, -- *
+                { xi.item.ETHER,               1775, 1, }, -- *
                 { xi.item.GRENADE,             1204, 1, },
             },
         },
@@ -320,7 +320,7 @@ local npcOverrides =
                 { xi.item.CARP_SUSHI,                720, 1 },
                 { xi.item.FLASK_OF_DISTILLED_WATER,   12, 3 },
                 { xi.item.BOTTLE_OF_ORANGE_JUICE,    200, 2 },
-                { xi.item.BOTTLE_OF_TOMATO_JUICE,    320, 1 },
+                { xi.item.BOTTLE_OF_TOMATO_JUICE,    450, 1 }, -- *
                 { xi.item.ROAST_PIPIRA,             2760, 3 }, -- *
                 { xi.item.BOILED_CRAB,              1540, 2 }, -- *
                 { xi.item.NEBIMONITE_BAKE,          1800, 1 },
@@ -346,7 +346,7 @@ local npcOverrides =
                 { xi.item.CUP_OF_WINDURSTIAN_TEA,          260, 3 }, -- *
                 { xi.item.ORANGE_KUCHEN,                  1115, 1 }, -- *
                 { xi.item.DHALMEL_STEAK,                  1647, 2 }, -- *
-                { xi.item.WINDURST_SALAD,                 2901, 3 }, -- *
+                { xi.item.WINDURST_SALAD,                 2790, 3 }, -- *
             },
         },
         ['Shohrun-Tuhrun'] =
@@ -411,11 +411,11 @@ local npcOverrides =
             shopDialog = 'WIJETIREN_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,        1362 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,         700 }, -- *
                 { xi.item.ANTIDOTE,                   316 },
                 { xi.item.FLASK_OF_ECHO_DROPS,        800 },
                 { xi.item.POTION,                     910 },
-                { xi.item.ETHER,                     1658 }, -- *
+                { xi.item.ETHER,                     1775 }, -- *
                 { xi.item.SCROLL_OF_HERB_PASTORAL,    108 },
                 { xi.item.FLASK_OF_DISTILLED_WATER,    12 },
 -- { xi.item.FEDERATION_WAYSTONE,      10400 }, (Synergy)
@@ -430,17 +430,17 @@ local npcOverrides =
             shopDialog = 'PIKINIMIKINI_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,        1362 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,         700 }, -- *
                 { xi.item.ANTIDOTE,                   316 },
                 { xi.item.FLASK_OF_ECHO_DROPS,        800 },
                 { xi.item.POTION,                     910 },
-                { xi.item.ETHER,                     1658 }, -- *
+                { xi.item.ETHER,                     1775 }, -- *
                 { xi.item.FLASK_OF_DISTILLED_WATER,    12 },
                 { xi.item.SHEET_OF_PARCHMENT,        1980 },
                 { xi.item.LUGWORM,                     12 },
                 { xi.item.HATCHET,                    500 },
                 { xi.item.STRIP_OF_MEAT_JERKY,        120 },
-                { xi.item.DISH_OF_SALSA,              306 }, -- *
+                { xi.item.DISH_OF_SALSA,              296 }, -- *
                 -- { xi.item.MHAURA_WAYSTONE,          10500 }, (Synergy)
             },
         },
@@ -469,13 +469,13 @@ local npcOverrides =
             {
                 { xi.item.BAG_OF_RYE_FLOUR,            40 },
                 { xi.item.SCROLL_OF_SHEEPFOE_MAMBO,   259 },
-                { xi.item.FLASK_OF_EYE_DROPS,        1362 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,         700 }, -- *
                 { xi.item.ANTIDOTE,                   316 },
                 { xi.item.FLASK_OF_DISTILLED_WATER,    12 },
                 { xi.item.POTION,                     910 },
                 { xi.item.LUGWORM,                     12 },
                 { xi.item.JUG_OF_SELBINA_MILK,         61 },
-                { xi.item.PICKLED_HERRING,           1497 }, -- *
+                { xi.item.PICKLED_HERRING,           1440 }, -- *
                 { xi.item.SERVING_OF_HERB_QUUS,      4984 },
 -- { xi.item.SELBINA_WAYSTONE,         10500 }, (Synergy)
             },
@@ -516,11 +516,11 @@ local npcOverrides =
             shopDialog = 'CHHAYA_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,      1294 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,       700 }, -- *
                 { xi.item.ANTIDOTE,                 316 },
                 { xi.item.FLASK_OF_ECHO_DROPS,      800 },
                 { xi.item.POTION,                   910 },
-                { xi.item.ETHER,                   1575 }, -- *
+                { xi.item.ETHER,                   1775 }, -- *
             },
         },
     },
@@ -531,11 +531,11 @@ local npcOverrides =
             shopDialog = 'CHHAYA_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,      1294 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,       700 }, -- *
                 { xi.item.ANTIDOTE,                 316 },
                 { xi.item.FLASK_OF_ECHO_DROPS,      800 },
                 { xi.item.POTION,                   910 },
-                { xi.item.ETHER,                   1575 }, -- *
+                { xi.item.ETHER,                   1775 }, -- *
             },
         },
     },
@@ -546,11 +546,11 @@ local npcOverrides =
             shopDialog = 'MAERA_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,      1294 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,       700 }, -- *
                 { xi.item.ANTIDOTE,                 316 },
                 { xi.item.FLASK_OF_ECHO_DROPS,      800 },
                 { xi.item.POTION,                   910 },
-                { xi.item.ETHER,                   1575 }, -- *
+                { xi.item.ETHER,                   1775 }, -- *
             },
         },
     },
@@ -561,11 +561,11 @@ local npcOverrides =
             shopDialog = 'MAERA_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,      1294 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,       700 }, -- *
                 { xi.item.ANTIDOTE,                 316 },
                 { xi.item.FLASK_OF_ECHO_DROPS,      800 },
                 { xi.item.POTION,                   910 },
-                { xi.item.ETHER,                   1575 }, -- *
+                { xi.item.ETHER,                   1775 }, -- *
             },
         },
     },
@@ -576,11 +576,11 @@ local npcOverrides =
             shopDialog = 'DUTY_FREE_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,                1294 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,                 700 }, -- *
                 { xi.item.ANTIDOTE,                           316 },
                 { xi.item.FLASK_OF_ECHO_DROPS,                800 },
                 { xi.item.POTION,                             910 },
-                { xi.item.ETHER,                             1575 }, -- *
+                { xi.item.ETHER,                             1775 }, -- *
                 { xi.item.ROLANBERRY,                         120 },
                 { xi.item.COPY_OF_AUTUMNS_END_IN_GUSTABERG, 36000 },
                 { xi.item.COPY_OF_ACOLYTES_GRIEF,           31224 },
@@ -751,7 +751,7 @@ local npcOverrides =
             {
                 { xi.item.FLASK_OF_DISTILLED_WATER,       12 },
                 { xi.item.BOTTLE_OF_ORANGE_JUICE,        200 },
-                { xi.item.BOTTLE_OF_APPLE_JUICE,         430 }, -- *
+                { xi.item.BOTTLE_OF_APPLE_JUICE,         325 }, -- *
                 { xi.item.BOTTLE_OF_MELON_JUICE,        1200 }, -- *
                 { xi.item.BOTTLE_OF_GRAPE_JUICE,         930 },
                 { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,     624 }, -- *
@@ -782,16 +782,16 @@ local npcOverrides =
                 { xi.item.CHEESE_SANDWICH,            820 }, -- *
                 { xi.item.BOILED_CRAB,               1540 }, -- *
                 { xi.item.SLICE_OF_ROAST_MUTTON,      720 },
-                { xi.item.PICKLED_HERRING,           1497 }, -- *
+                { xi.item.PICKLED_HERRING,           1440 }, -- *
                 { xi.item.BAKED_APPLE,                540 }, -- *
-                { xi.item.WINDURST_SALAD,            2804 }, -- *
+                { xi.item.WINDURST_SALAD,            2790 }, -- *
                 { xi.item.SERVING_OF_HERB_QUUS,      4734 }, -- *
                 { xi.item.BOTTLE_OF_ORANGE_JUICE,     200 },
-                { xi.item.BOTTLE_OF_APPLE_JUICE,      410 }, -- *
+                { xi.item.BOTTLE_OF_APPLE_JUICE,      310 }, -- *
                 { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  600 }, -- *
                 { xi.item.BOTTLE_OF_MELON_JUICE,     1180 }, -- *
                 { xi.item.BOTTLE_OF_GRAPE_JUICE,      930 },
-                { xi.item.FLASK_OF_ORANGE_AU_LAIT,    360 }, -- *
+                { xi.item.FLASK_OF_ORANGE_AU_LAIT,    400 }, -- *
                 { xi.item.FLASK_OF_APPLE_AU_LAIT,     570 }, -- *
             },
             stockTOAUafter = xi.item.BAKED_APPLE,
@@ -831,13 +831,13 @@ local npcOverrides =
             stock =
             {
                 { xi.item.FLASK_OF_DISTILLED_WATER,   12 },
-                { xi.item.FLASK_OF_EYE_DROPS,       1362 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,        700 }, -- *
                 { xi.item.ANTIDOTE,                  316 },
                 { xi.item.FLASK_OF_ECHO_DROPS,       800 },
                 { xi.item.POTION,                    910 },
-                { xi.item.ETHER,                    1658 }, -- *
+                { xi.item.ETHER,                    1775 }, -- *
                 { xi.item.VIAL_OF_FIEND_BLOOD,       605 },
-                { xi.item.PINCH_OF_POISON_DUST,      571 }, -- *
+                { xi.item.PINCH_OF_POISON_DUST,      560 }, -- *
             },
         },
         ['Nuh_Celodehki'] =
@@ -846,12 +846,12 @@ local npcOverrides =
             shopDialog = 'NUHCELODENKI_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FISH_MITHKABOB,            3402 }, -- *
+                { xi.item.FISH_MITHKABOB,            3240 }, -- *
                 { xi.item.BLACKENED_FROG,            3406 },
-                { xi.item.ROAST_MUSHROOM,             722 }, -- *
+                { xi.item.ROAST_MUSHROOM,             688 }, -- *
                 { xi.item.EEL_KABOB,                 3000 },
                 { xi.item.BOTTLE_OF_PINEAPPLE_JUICE,  624 }, -- *
-                { xi.item.WINDURST_SALAD,            2901 }, -- *
+                { xi.item.WINDURST_SALAD,            2790 }, -- *
             },
         },
         ['Ghemi_Sinterilo'] =
@@ -867,9 +867,13 @@ local npcOverrides =
                 { xi.item.STICK_OF_CINNAMON,         260 },
                 { xi.item.KUKURU_BEAN,               120 },
                 { xi.item.ELSHIMO_COCONUT,           172 },
-                { xi.item.ELSHIMO_PACHIRA_FRUIT,     352 }, -- *
                 -- { xi.item.KAZHAM_WAYSTONE,         10500 }, (Synergy)
                 { xi.item.AQUILARIA_LOG,            3128 },
+            },
+            stockWOTGafter = xi.item.ELSHIMO_COCONUT,
+            stockWOTG =
+            {
+                { xi.item.ELSHIMO_PACHIRA_FRUIT,     352 }, -- *
             },
         },
         ['Khifo_Ryuhkowa'] =
@@ -879,15 +883,15 @@ local npcOverrides =
             stock =
             {
                 { xi.item.KUKRI,            6210 },
-                { xi.item.RAM_DAO,         96050 }, -- *174,636  (x.55)
+                { xi.item.RAM_DAO,         91476 }, -- *166,320 (x.55)
                 { xi.item.BRONZE_SPEAR,      880 },
                 { xi.item.SPEAR,           17640 },
-                { xi.item.PARTISAN,        68972 }, -- *86,215 (x.8)
+                { xi.item.PARTISAN,        65688 }, -- *82,110 (x.8)
                 { xi.item.CHESTNUT_CLUB,    1740 },
                 { xi.item.BONE_CUDGEL,      5376 },
                 { xi.item.CHESTNUT_WAND,    5712 },
                 { xi.item.MAHOGANY_STAFF,  32340 },
-                { xi.item.MAHOGANY_POLE,   67914 }, -- *113,190 (x.6)
+                { xi.item.MAHOGANY_POLE,   64680 }, -- *107,800 (x.6)
                 { xi.item.BATTLE_BOW,      43200 },
                 { xi.item.HAWKEYE,            60 },
                 { xi.item.BOOMERANG,        1750 },
@@ -904,7 +908,6 @@ local npcOverrides =
                 { xi.item.BLOOD_STONE,                 104 },
                 { xi.item.FANG_NECKLACE,              3816 },
                 { xi.item.BONE_EARRING,               1812 },
-                { xi.item.SCROLL_OF_MONOMI_ICHI,      9590 },
                 { xi.item.GEMSHORN,                   5160 },
                 { xi.item.PEELED_CRAYFISH,              71 },
                 { xi.item.BALL_OF_INSECT_PASTE,         40 },
@@ -913,6 +916,11 @@ local npcOverrides =
                 { xi.item.JUG_OF_SEEDBED_SOIL,         998 }, -- *
                 { xi.item.HATCHET,                     500 },
                 { xi.item.SCROLL_OF_ARMYS_PAEON_III,  3600 },
+            },
+            stockWOTGafter = xi.item.BONE_EARRING,
+            stockWOTG =
+            {
+                { xi.item.SCROLL_OF_MONOMI_ICHI,      9590 },
             },
         },
         ['Mamerie'] =
@@ -972,7 +980,7 @@ local npcOverrides =
                 { xi.item.LOAF_OF_GOBLIN_BREAD,        300 },
                 { xi.item.CACTUS_ARM,                  800 },
                 -- { xi.item.RABAO_WAYSTONE,            10500 }, (Synergy)
-                { xi.item.ETHER,                      1658 }, -- *
+                { xi.item.ETHER,                      1775 }, -- *
                 { xi.item.THUNDERMELON,                325 },
                 { xi.item.WATERMELON,                  200 },
                 { xi.item.POTION,                      910 },
@@ -994,10 +1002,6 @@ local npcOverrides =
                 { xi.item.SCROLL_OF_STUN,          35000 },
                 { xi.item.SCROLL_OF_FLASH,         35000 },
                 { xi.item.SCROLL_OF_BANISH_III,    86000 },
-                { xi.item.SCROLL_OF_CURA,          21840 },
-                { xi.item.SCROLL_OF_SACRIFICE,     67600 },
-                { xi.item.SCROLL_OF_ESUNA,         70200 },
-                { xi.item.SCROLL_OF_AUSPICE,       33660 },
             },
             stock70 =
             {
@@ -1006,6 +1010,14 @@ local npcOverrides =
             stock75 =
             {
                 { xi.item.SCROLL_OF_CRUSADE,      155925 },
+            },
+            stockWOTGafter = xi.item.SCROLL_OF_BANISH_III,
+            stockWOTG =
+            {
+                { xi.item.SCROLL_OF_CURA,          21840 },
+                { xi.item.SCROLL_OF_SACRIFICE,     67600 },
+                { xi.item.SCROLL_OF_ESUNA,         70200 },
+                { xi.item.SCROLL_OF_AUSPICE,       33660 },
             },
         },
         ['Generoit'] =
@@ -1090,11 +1102,11 @@ local npcOverrides =
             shopDialog = 'GAVRIE_SHOP_DIALOG',
             stock =
             {
-                { xi.item.FLASK_OF_EYE_DROPS,      1294 }, -- *
+                { xi.item.FLASK_OF_EYE_DROPS,       700 }, -- *
                 { xi.item.ANTIDOTE,                 316 },
                 { xi.item.FLASK_OF_ECHO_DROPS,      800 },
                 { xi.item.POTION,                   910 },
-                { xi.item.ETHER,                   1575 }, -- *
+                { xi.item.ETHER,                   1775 }, -- *
                 { xi.item.REMEDY,                  3360 },
                 { xi.item.FLASK_OF_DISTILLED_WATER,  12 },
                 { xi.item.CAN_OF_AUTOMATON_OIL,     500 }, -- *
@@ -1402,7 +1414,7 @@ m:addOverride('xi.zones.Tavnazian_Safehold.npcs.Nilerouche.onTrigger', function(
 -- Bonus wares after mission 3-5
     if player:getCurrentMission(xi.mission.log_id.COP) >= xi.mission.id.cop.SHELTERING_DOUBT then
         table.insert(stock, 2, { xi.item.LITTLE_WORM,                 4 }) -- *
-        table.insert(stock, 4, { xi.item.SINGLE_HOOK_FISHING_ROD, 12800 }) -- *
+        table.insert(stock, 4, { xi.item.SINGLE_HOOK_FISHING_ROD, 11000 }) -- *
         table.insert(stock, 7, { xi.item.HATCHET,                   500 }) -- *
     end
 
@@ -1420,8 +1432,8 @@ end)
 m:addOverride('xi.zones.Tavnazian_Safehold.npcs.Mazuro-Oozuro.onTrigger', function(player, npc)
     local stock =
     {
-        { xi.item.SCROLL_OF_CURE_II,    676, }, -- *
-        { xi.item.SCROLL_OF_BANISH_II, 9360, }, -- *
+        { xi.item.SCROLL_OF_CURE_II,    650, }, -- *
+        { xi.item.SCROLL_OF_BANISH_II, 9000, }, -- *
     }
 
     -- Bonus wares after mission 3-5
@@ -1434,9 +1446,9 @@ m:addOverride('xi.zones.Tavnazian_Safehold.npcs.Mazuro-Oozuro.onTrigger', functi
     if player:getCurrentMission(xi.mission.log_id.COP) >= xi.mission.id.cop.DAWN then
         table.insert(stock, 5, { xi.item.SCROLL_OF_PROTECTRA_IV, 77500 }) -- *
         table.insert(stock, 6, { xi.item.SCROLL_OF_SHELLRA_IV,   82172 }) -- *
-        table.insert(stock, 7, { xi.item.SCROLL_OF_INVISIBLE,     5984 }) -- *
-        table.insert(stock, 8, { xi.item.SCROLL_OF_SNEAK,         2600 }) -- *
-        table.insert(stock, 9, { xi.item.SCROLL_OF_DEODORIZE,     1346 }) -- *
+        table.insert(stock, 7, { xi.item.SCROLL_OF_INVISIBLE,     5754 }) -- *
+        table.insert(stock, 8, { xi.item.SCROLL_OF_SNEAK,         2500 }) -- *
+        table.insert(stock, 9, { xi.item.SCROLL_OF_DEODORIZE,     1295 }) -- *
     end
 
     player:showText(npc, zones[player:getZoneID()].text.MAZUROOOZURO_SHOP_DIALOG)
@@ -1500,7 +1512,7 @@ end)
 m:addOverride('xi.zones.Tavnazian_Safehold.npcs.Migran.onTrigger', function(player, npc)
     local stock =
     {
-        { xi.item.TUNIC,         1456, }, -- *
+        { xi.item.TUNIC,         1400, }, -- *
         { xi.item.HOLLY_CLOGS,   1625, },
     }
 
@@ -1524,13 +1536,13 @@ m:addOverride('xi.zones.Tavnazian_Safehold.npcs.Misseulieu.onTrigger', function(
     local stock =
     {
         { xi.item.BRASS_HARNESS,  2485, },
-        { xi.item.BRASS_LEGGINGS, 1289, }, -- *
+        { xi.item.BRASS_LEGGINGS, 1240, }, -- *
     }
 
     -- Bonus wares after mission 3-5
     if player:getCurrentMission(xi.mission.log_id.COP) >= xi.mission.id.cop.SHELTERING_DOUBT then
-        table.insert(stock, 3, { xi.item.PADDED_ARMOR, 32747 }) -- *
-        table.insert(stock, 4, { xi.item.LEGGINGS,     16373 }) -- *
+        table.insert(stock, 3, { xi.item.PADDED_ARMOR, 31188 }) -- *
+        table.insert(stock, 4, { xi.item.LEGGINGS,     15594 }) -- *
     end
 
     -- Bonus wares for COP completion
@@ -1554,7 +1566,7 @@ m:addOverride('xi.zones.Tavnazian_Safehold.npcs.Caiphimonride.onTrigger', functi
     -- Bonus wares after mission 3-5
     if player:getCurrentMission(xi.mission.log_id.COP) >= xi.mission.id.cop.SHELTERING_DOUBT then
         table.insert(stock, 3, { xi.item.IRON_ARROW, 8 }) -- *
-        table.insert(stock, 4, { xi.item.BULLET,   104 }) -- *
+        table.insert(stock, 4, { xi.item.BULLET,   100 }) -- *
         table.insert(stock, 5, { xi.item.VOULGE, 20762 })
     end
 
@@ -1571,7 +1583,7 @@ m:addOverride('xi.zones.Tavnazian_Safehold.npcs.Melleupaux.onTrigger', function(
 
     -- Bonus wares after mission 3-5
     if player:getCurrentMission(xi.mission.log_id.COP) >= xi.mission.id.cop.SHELTERING_DOUBT then
-        table.insert(stock, 3, { xi.item.MYTHRIL_BOLT, 27 }) -- *
+        table.insert(stock, 3, { xi.item.MYTHRIL_BOLT, 25 }) -- *
         table.insert(stock, 3, { xi.item.DART,         10 }) -- *
         table.insert(stock, 4, { xi.item.FALX,      37296 })
     end
@@ -1594,11 +1606,11 @@ m:addOverride('xi.zones.Southern_San_dOria.npcs.Ostalie.onTrigger', function(pla
         { xi.item.ROBE,                  240, 3 },
         { xi.item.CUFFS,                 132, 3 },
         { xi.item.SLOPS,                 192, 3 },
-        { xi.item.FLASK_OF_EYE_DROPS,   1362, 3 }, -- *
+        { xi.item.FLASK_OF_EYE_DROPS,    700, 3 }, -- *
         { xi.item.ANTIDOTE,              316, 3 },
         { xi.item.FLASK_OF_ECHO_DROPS,   800, 2 },
         { xi.item.POTION,                910, 1 },
-        { xi.item.ETHER,                1658, 1 }, -- *
+        { xi.item.ETHER,                1775, 1 }, -- *
         { xi.item.PICKAXE,               200, 3 },
         { xi.item.HATCHET,               500, 3 },
     }
@@ -1628,11 +1640,11 @@ m:addOverride('xi.zones.Bastok_Mines.npcs.Boytz.onTrigger', function(player, npc
     {
         { xi.item.BRASS_FLOWERPOT,      1000, 3 },
         { xi.item.PICKAXE,               200, 3 },
-        { xi.item.FLASK_OF_EYE_DROPS,   1362, 3 }, -- *
+        { xi.item.FLASK_OF_EYE_DROPS,    700, 3 }, -- *
         { xi.item.ANTIDOTE,              316, 3 },
         { xi.item.FLASK_OF_ECHO_DROPS,   800, 2 },
         { xi.item.POTION,                910, 2 },
-        { xi.item.ETHER,                1658, 1 }, -- *
+        { xi.item.ETHER,                1775, 1 }, -- *
         { xi.item.WOODEN_ARROW,            4, 2 },
         { xi.item.IRON_ARROW,              8, 3 },
         { xi.item.CROSSBOW_BOLT,           6, 3 },
@@ -1693,11 +1705,11 @@ m:addOverride('xi.zones.Windurst_Waters.npcs.Upih_Khachla.onTrigger', function(p
         { xi.item.PINCH_OF_DRIED_MARJORAM,   48, 3 },
         { xi.item.CHAMOMILE,                130, 2 },
         { xi.item.WIJNRUIT,                 120, 1 },
-        { xi.item.FLASK_OF_EYE_DROPS,      1362, 3 }, -- *
+        { xi.item.FLASK_OF_EYE_DROPS,       700, 3 }, -- *
         { xi.item.ANTIDOTE,                 316, 3 },
         { xi.item.FLASK_OF_ECHO_DROPS,      800, 2 },
         { xi.item.POTION,                   910, 1 },
-        { xi.item.ETHER,                   1658, 2 }, -- *
+        { xi.item.ETHER,                   1775, 2 }, -- *
         { xi.item.GRENADE,                 1204, 1 },
         { xi.item.PINCH_OF_TWINKLE_POWDER,  385, 3 },
         { xi.item.ONZ_OF_DESALINATOR,      4400, 3 },
@@ -1748,7 +1760,7 @@ m:addOverride('xi.zones.Upper_Jeuno.npcs.Antonia.onTrigger', function(player, np
         table.insert(stock, 2, { xi.item.DARKSTEEL_ROD,   53122 }) -- *
         table.insert(stock, 5, { xi.item.DARKSTEEL_MACE,  62348 }) -- *
         table.insert(stock, 9, { xi.item.DARKSTEEL_LANCE, 68912 }) -- *
-        table.insert(stock, 12, { xi.item.SILVER_ARROW,      20 }) -- *
+        table.insert(stock, 12, { xi.item.SILVER_ARROW,      18 }) -- *
     end
 
     player:showText(npc, zones[player:getZoneID()].text.VIETTES_SHOP_DIALOG)
@@ -1842,17 +1854,17 @@ m:addOverride('xi.zones.Upper_Jeuno.npcs.Leillaine.onTrigger', function(player, 
     local stock =
     {
         { xi.item.FLASK_OF_DISTILLED_WATER,   12 },
-        { xi.item.FLASK_OF_EYE_DROPS,       1294 }, -- *
+        { xi.item.FLASK_OF_EYE_DROPS,        700 }, -- *
         { xi.item.ANTIDOTE,                  316 },
         { xi.item.FLASK_OF_ECHO_DROPS,       800 },
         { xi.item.POTION,                    910 },
-        { xi.item.ETHER,                    1575 }, -- *
+        { xi.item.ETHER,                    1775 }, -- *
         { xi.item.REMEDY,                   3360 },
     }
 -- Bonus wares after mission 3-5
     if player:getCurrentMission(xi.mission.log_id.COP) >= xi.mission.id.cop.SHELTERING_DOUBT then
         table.insert(stock, 6, { xi.item.POTION_P1, 1001 }) -- *
-        table.insert(stock, 8, { xi.item.ETHER_P1, 1858 }) -- *
+        table.insert(stock, 8, { xi.item.ETHER_P1,  2000 }) -- *
     end
 
     -- Bonus wares after mission 5-3
@@ -1983,10 +1995,10 @@ end)
 m:addOverride('xi.zones.Nashmau.npcs.Pipiroon.onTrigger', function(player, npc)
     local stock =
     {
-        { xi.item.PEBBLE,                   31, }, -- *
+        { xi.item.PEBBLE,                   25, }, -- *
         { xi.item.GRENADE,                1204, },
         { xi.item.RIOT_GRENADE,           6000, },
-        { xi.item.CHAKRAM,               10395, }, -- *
+        { xi.item.CHAKRAM,                9996, }, -- *
         { xi.item.PINCH_OF_BOMB_ASH,       515, },
         { xi.item.FLASK_OF_DISTILLED_WATER, 12, }, -- *
         { xi.item.LITTLE_WORM,               3, }, -- *
@@ -2011,20 +2023,20 @@ end
 m:addOverride('xi.shop.outpost', function(player, npc)
     local stock =
     {
-        { xi.item.ANTIDOTE,                  316 },
-        { xi.item.FLASK_OF_ECHO_DROPS,       800 },
-        { xi.item.ETHER,                    1575 }, -- *
-        { xi.item.FLASK_OF_EYE_DROPS,       1294 }, -- *
-        { xi.item.POTION,                    910 },
+        { xi.item.ANTIDOTE,                  347 }, -- *
+        { xi.item.FLASK_OF_ECHO_DROPS,       880 }, -- *
+        { xi.item.ETHER,                    1952 }, -- *
+        { xi.item.FLASK_OF_EYE_DROPS,        770 }, -- *
+        { xi.item.POTION,                   1000 }, -- *
         { xi.item.FLASK_OF_DISTILLED_WATER,   12 }, -- *
-        { xi.item.BOTTLE_OF_ORANGE_JUICE,    210 }, -- *
+        { xi.item.BOTTLE_OF_ORANGE_JUICE,    220 }, -- *
         { xi.item.SLICE_OF_SALTED_HARE,      150 }, -- *
         { xi.item.CHUNK_OF_SWEET_LIZARD,     150 }, -- *
         { xi.item.MUG_OF_HONEYED_EGG,        150 }, -- *
         { xi.item.PET_FOOD_ALPHA_BISCUIT,     20 }, -- *
         { xi.item.PET_FOOD_BETA_BISCUIT,     110 }, -- *
-        { xi.item.PET_FOOD_GAMMA_BISCUIT,    415 }, -- *
-        { xi.item.PET_FOOD_DELTA_BISCUIT,    680 }, -- *
+        { xi.item.PET_FOOD_GAMMA_BISCUIT,    350 }, -- *
+        { xi.item.PET_FOOD_DELTA_BISCUIT,    550 }, -- *
     }
     -- Bonus wares if Rank 6 or higher
     if player:getRank(player:getNation()) >= 6 then
@@ -2032,7 +2044,7 @@ m:addOverride('xi.shop.outpost', function(player, npc)
         table.insert(stock, 10, { xi.item.STRIP_OF_MEAT_JERKY, 300 }) -- *
         table.insert(stock, 12, { xi.item.BOILED_CRAYFISH, 450 }) -- *
         table.insert(stock, 14, { xi.item.BAKED_APPLE, 560 }) -- *
-        table.insert(stock, 19, { xi.item.PET_FOOD_EPSILON_BISCUIT, 1160 }) -- *
+        table.insert(stock, 19, { xi.item.PET_FOOD_EPSILON_BISCUIT, 850 }) -- *
     end
 
     xi.shop.general(player, stock)
@@ -2097,7 +2109,7 @@ m:addOverride('xi.shop.handleValerianoShop', function(player, npc)
 
     -- fail-safe in case npc didnt despawn.
     if GetNationRank(zoneTable[zoneId][1]) ~= 1 then
-        --return
+        return
     end
 
     player:showText(npc, zones[zoneId].text.VALERIANO_SHOP_DIALOG)
