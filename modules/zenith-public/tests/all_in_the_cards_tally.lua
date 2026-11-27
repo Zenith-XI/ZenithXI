@@ -3,6 +3,9 @@
 -- Chululu's next batch of Tarut Cards, and the next repeat of the quest, wait for the conquest tally
 -- instead of JST midnight. The cards themselves and the quest completion are unchanged.
 -- The module changes the quest on server start, which xi_test does not run by itself.
+-- ZXIALPHA-148: with Collect Tarut Cards completed and Rubbish Day not yet offered, Rubbish Day's
+-- compatibility test (progress event 199) outranked the base new-batch event 10112, so talking to
+-- Chululu never gave a new batch. The module raises 10112 above progress priority.
 
 describe('Zenith All in the Cards', function()
     ---@type CClientEntityPair
@@ -55,6 +58,31 @@ describe('Zenith All in the Cards', function()
 
         assert(cardsHeld() == 5, string.format('expected 5 Tarut Cards, got %d', cardsHeld()))
         assert(quest:getVar(player, 'Date') == NextConquestTally(), 'the next batch waits for JST midnight, not the conquest tally')
+    end)
+
+    it('gives a new batch on talking to Chululu before Rubbish Day is offered', function()
+        player:completeQuest(xi.questLog.JEUNO, xi.quest.id.jeuno.COLLECT_TARUT_CARDS)
+        player:addQuest(xi.questLog.JEUNO, xi.quest.id.jeuno.ALL_IN_THE_CARDS)
+        quest:setVar(player, 'Date', 1) -- the wait for the next batch is over
+
+        assert(player:getQuestStatus(xi.questLog.JEUNO, xi.quest.id.jeuno.RUBBISH_DAY) == xi.questStatus.QUEST_AVAILABLE, 'precondition: Rubbish Day is not available')
+
+        player.entities:gotoAndTrigger('Chululu', { eventId = 10112, finishOption = 0 })
+
+        assert(cardsHeld() == 5, string.format('expected 5 Tarut Cards, got %d', cardsHeld()))
+        assert(quest:getVar(player, 'Date') == NextConquestTally(), 'the next batch waits for JST midnight, not the conquest tally')
+    end)
+
+    -- Control, passes with or without the module: the reminder keeps the base priority on purpose, so
+    -- Rubbish Day's compatibility test is still reachable while the timer runs.
+    it('still plays the Rubbish Day compatibility test while the timer runs', function()
+        player:completeQuest(xi.questLog.JEUNO, xi.quest.id.jeuno.COLLECT_TARUT_CARDS)
+        player:addQuest(xi.questLog.JEUNO, xi.quest.id.jeuno.ALL_IN_THE_CARDS)
+        quest:setVar(player, 'Date', NextConquestTally())
+
+        player.entities:gotoAndTrigger('Chululu', { eventId = 199, finishOption = 0 })
+
+        assert(cardsHeld() == 0, string.format('expected no Tarut Cards, got %d', cardsHeld()))
     end)
 
     it('completes the quest and makes the repeat wait for the conquest tally', function()
