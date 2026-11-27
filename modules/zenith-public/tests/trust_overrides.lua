@@ -10,6 +10,8 @@
 --   (3490, which LSB checks).
 -- - Shantotto: Magic Attack / Accuracy from modGrowthValMax(39) (about 25 at 75; LSB adds level / 10),
 --   Fast Cast 10, MP +100%, Magic Haste 10%.
+-- - LOWEST gambit (123-GambitLowestImplementation.patch): Shantotto and Ajido-Marujido cast their lowest
+--   tier below 10% HP (LSB casts nothing there), and the selector honours its spell family.
 -- The other overrides' gambits and mods are still under review and are only covered as controls below.
 
 describe('Zenith trust overrides #trusts', function()
@@ -277,6 +279,140 @@ describe('Zenith trust overrides #trusts', function()
             sentinel = trust:getStatusEffect(xi.effect.SENTINEL)
             assert(sentinel ~= nil, 'precondition: Sentinel wore off within 4 s')
             assert(sentinel:getSubPower() == 0, string.format('expected no Guardian enmity retention (subPower 0), got %d', sentinel:getSubPower()))
+        end)
+    end)
+
+    -- The LOWEST gambit selector (123-GambitLowestImplementation.patch; LSB casts nothing for it) and the
+    -- Shantotto / Ajido-Marujido gambits that use it. Level 15 keeps the spell lists short and is below
+    -- Conserve MP: Stone (1), Water (5), Aero (9), Fire (13) for both, plus Cure (1), Cure II (11) and
+    -- Paralyze (12) for Ajido-Marujido. Casts are read from MAGIC_START, so no MP arithmetic is needed.
+    describe('LOWEST gambit #gambits', function()
+        ---@type CTestEntity
+        local mob
+
+        before_each(function()
+            player:setCharVar('TrustEngageType', 1) -- engage with the master, no first swing needed
+
+            mob = player.entities:moveTo('Wild_Rabbit')
+            mob:respawn()
+            mob:setUnkillable(true)
+            mob:setMaxHP(100) -- so setHP(n) is n% HP
+        end)
+
+        -- Leave West Ronfaure as other tests expect it: no trusts out and a fresh rabbit with no enmity,
+        -- or the next player (who may reuse this character ID) cannot call a trust or inherits the engage type.
+        after_each(function()
+            player:clearTrusts()
+            player:setCharVar('TrustEngageType', 0)
+            mob:setUnkillable(false)
+            mob:respawn()
+        end)
+
+        -- Summons the trust and records every spell it starts to cast, with its target's HP% at the time.
+        local function summonRecordingCasts(trustName)
+            local trust = summon(trustName, 15)
+            local casts = {}
+
+            trust:addListener('MAGIC_START', 'ZENITH_TEST_CASTS', function(caster, target, spell)
+                table.insert(casts, { id = spell:getID(), hpp = target:getHPP() })
+            end)
+
+            return trust, casts
+        end
+
+        local function assertCast(casts, n, spellId, spellName)
+            local cast = casts[n]
+            local got  = cast and string.format('spell %d at %d%% HP', cast.id, cast.hpp) or 'nothing'
+
+            assert(cast and cast.id == spellId, string.format('cast %d: expected %s (%d), got %s', n, spellName, spellId, got))
+        end
+
+        -- Removes every gambit the trust's onMobSpawn added, so a test can add exactly one.
+        -- Gambit ids are '<index>_<predicate groups>_<actions>' (CGambitsContainer::NewGambitIdentifier).
+        local function clearGambits(trust)
+            for index = 0, 15 do
+                for predicates = 1, 4 do
+                    for actions = 1, 4 do
+                        trust:removeGambit(string.format('%d_%d_%d', index, predicates, actions))
+                    end
+                end
+            end
+        end
+
+        local function fightUntil(casts, count)
+            player.actions:engage(mob)
+
+            for _ = 1, 20 do
+                if #casts >= count then
+                    return
+                end
+
+                xi.test.world:skipTime(1)
+            end
+        end
+
+        local function setMobHPP(hpp)
+            mob:setHP(hpp)
+            assert(mob:getHPP() == hpp, string.format('precondition: rabbit at %d%% HP, expected %d%%', mob:getHPP(), hpp))
+        end
+
+        it('Shantotto casts Stone below 10% HP, then the next lowest tier while Stone recasts', function()
+            setMobHPP(9)
+            local _, casts = summonRecordingCasts('SHANTOTTO')
+
+            fightUntil(casts, 2)
+
+            assertCast(casts, 1, xi.magic.spell.STONE, 'Stone')
+            assertCast(casts, 2, xi.magic.spell.WATER, 'Water')
+        end)
+
+        -- Controls for the other two bands, which pass without the patch too
+        it('Shantotto casts her highest tier at exactly 40% HP', function()
+            setMobHPP(40)
+            local _, casts = summonRecordingCasts('SHANTOTTO')
+
+            fightUntil(casts, 1)
+
+            assertCast(casts, 1, xi.magic.spell.FIRE, 'Fire')
+        end)
+
+        it('Shantotto still casts in the 10-40% band at exactly 10% HP', function()
+            setMobHPP(10)
+            local _, casts = summonRecordingCasts('SHANTOTTO')
+
+            fightUntil(casts, 1)
+
+            assert(casts[1] ~= nil, 'Shantotto cast nothing at 10% HP')
+            assert(casts[1].hpp >= 10 and casts[1].hpp < 40, string.format('precondition: cast at %d%% HP, outside the 10-40%% band', casts[1].hpp))
+        end)
+
+        it('Ajido-Marujido casts Stone below 10% HP', function()
+            setMobHPP(9)
+            local _, casts = summonRecordingCasts('AJIDO_MARUJIDO')
+
+            fightUntil(casts, 1)
+
+            assertCast(casts, 1, xi.magic.spell.STONE, 'Stone')
+        end)
+
+        it('honours its spell family', function()
+            local trust, casts = summonRecordingCasts('SHANTOTTO')
+
+            clearGambits(trust)
+            trust:addGambit(ai.t.TARGET, { ai.c.ALWAYS, 0 }, { ai.r.MA, ai.s.LOWEST, xi.magic.spellFamily.WATER })
+            fightUntil(casts, 1)
+
+            assertCast(casts, 1, xi.magic.spell.WATER, 'Water, her only Water-family spell')
+        end)
+
+        it('finds a family outside the damage list, lowest tier first', function()
+            local trust, casts = summonRecordingCasts('AJIDO_MARUJIDO')
+
+            clearGambits(trust)
+            trust:addGambit(ai.t.SELF, { ai.c.ALWAYS, 0 }, { ai.r.MA, ai.s.LOWEST, xi.magic.spellFamily.CURE })
+            fightUntil(casts, 1)
+
+            assertCast(casts, 1, xi.magic.spell.CURE, 'Cure, not Cure II')
         end)
     end)
 end)
